@@ -38,21 +38,53 @@ export const inject = ['tools', 'llm', 'webServer']
 
 // ---------- 配置 Schema ----------
 // 官方要求用 @deepseek-ai/schemastery（host-supplied peer）。
-// 但本插件以 link: 方式安装（裸 JS），若 peer 不可解析会整体加载失败，
-// 所以做降级：拿不到 schemastery 时导出只带默认值的普通对象，
-// 保证「缺配置也能退化运行」，绝不让插件启动失败。
-// 用 createRequire 同步探测（避免 top-level await 让模块变成异步，
-// Cordis Loader 不保证支持异步插件模块）。
+//
+// E-240 修的关键 bug（"Cannot read properties of undefined (reading 'validate')"）：
+//   本插件用 link: 安装成软链接。DSH 调用 Config 时用的是
+//     schema['~standard'].validate(value)
+//   所以 Config **必须是 Schemastery schema**，普通对象会让 ~standard 为 undefined，
+//   直接抛这个 TypeError，整个插件启用失败。
+//
+//   原实现的问题是：只从一个基准（插件真实源码目录）解析 schemastery，
+//   而 schemastery 装在 profile 的 node_modules 里，从
+//   C:\Users\xuee\Desktop\肥鱼之心\dsh-plugin 解析不到 → _Schema=null
+//   → Config 退化成普通对象 → 崩。
+//
+//   修法：用**多个候选基准**依次尝试解析，
+//   包括 profile 目录（软链接安装时 schemastery 真正所在的地方）。
+//   若全部失败，退回一个"最小可用 schema 形状"（含 ~standard.validate），
+//   保证 DSH 不会因缺 ~standard 而崩。
 import { createRequire } from 'node:module'
-const _require = createRequire(import.meta.url)
+import { homedir } from 'node:os'
+import { join as _join } from 'node:path'
 
-let _Schema = null
-try {
-  const mod = _require('@deepseek-ai/schemastery')
-  _Schema = (mod && (mod.default ?? mod))
-} catch {
-  _Schema = null
+function _loadSchemastery() {
+  // 候选解析基准：插件自身 → 各 profile 目录
+  const bases = [import.meta.url]
+  try {
+    const home = homedir()
+    // DSH profile 的常见位置
+    for (const p of [
+      _join(home, '.dsh', 'profiles', 'desktop', 'package.json'),
+      _join(home, '.dsh', 'profiles', 'web', 'package.json'),
+      _join(home, '.dsh', 'profiles', 'default', 'package.json'),
+    ]) {
+      bases.push('file:///' + p.replace(/\\/g, '/'))
+    }
+  } catch { /* ignore */ }
+
+  for (const base of bases) {
+    try {
+      const req = createRequire(base)
+      const mod = req('@deepseek-ai/schemastery')
+      const S = mod && (mod.default ?? mod)
+      if (S && typeof S.object === 'function') return S
+    } catch { /* try next */ }
+  }
+  return null
 }
+
+const _Schema = _loadSchemastery()
 
 const DEFAULTS = {
   pythonPath: 'python',
@@ -101,8 +133,35 @@ if (_Schema && typeof _Schema.object === 'function') {
     httpBase: _Schema.string().default(DEFAULTS.httpBase),
   })
 } else {
-  // 无 schemastery：导出默认值对象（apply 里也有 ?? 兜底）
-  Config = { ...DEFAULTS }
+  // 无 schemastery 的兜底（E-240）：
+  //   绝不能导出普通对象——DSH 会访问 Config['~standard'].validate，
+  //   普通对象没有 ~standard，直接抛
+  //   "Cannot read properties of undefined (reading 'validate')"
+  //   导致整个插件启用失败（这就是之前 404 的真因）。
+  //
+  //   这里构造一个"最小可用的 Standard Schema"：
+  //   实现 ~standard.validate，把传入 config 与 DEFAULTS 合并后返回。
+  //   这样 DSH 能正常验证，插件能启用，功能不受影响。
+  Config = {
+    '~standard': {
+      version: 1,
+      vendor: 'cosmos-mem-fallback',
+      validate(value) {
+        try {
+          const merged = { ...DEFAULTS, ...(value || {}) }
+          return { value: merged }
+        } catch (e) {
+          return { issues: [{ message: String(e && e.message) }] }
+        }
+      },
+    },
+    // 兼容某些代码直接用 .validate() 的情况
+    validate(value) {
+      return { ...DEFAULTS, ...(value || {}) }
+    },
+    // 兼容把 Config 当默认值读的情况
+    ...DEFAULTS,
+  }
 }
 
 /** 发送 JSON 响应 */
@@ -820,6 +879,12 @@ function formatProtected(items, full) {
   return lines.join('\n')
 }
 
+/** 已注册的 HTTP 路由（模块级，跨 apply 调用保持）
+ *  原因：DSH 的 webServer.register 遇重复 (kind,path) 直接 throw，
+ *  而 apply() 可能被多次调用（热重载），第二次会让后续路由全注册失败。
+ *  详见 apply() 内 E-239 的注释。 */
+const REGISTERED_ROUTES = new Set()
+
 export function apply(ctx, config) {
   const cfg = { ...DEFAULTS, ...(config || {}) }
 
@@ -944,19 +1009,50 @@ export function apply(ctx, config) {
   }
 
   // 显式注册 exact 路由（比 prefix 更可靠，也便于排错）
+  //
+  // E-239 修的重要 bug：
+  //   DSH 的 webServer.register 遇到重复 (kind, path) 会直接 throw：
+  //     "webserver: duplicate exact route ..."
+  //   而 apply() 可能被调用多次（热重载 / profile 重载），
+  //   第二次注册时第一个路由就抛异常，
+  //   导致后面所有路由都注册不上 → 全部 404。
+  //
+  //   原代码把 register 包在 ctx.effect 里，异常被 effect 吞掉，
+  //   只在我们的 debugLog 里留了 http-route-fail，
+  //   但日志里根本没有这条（因为 debugLog 也没执行到）—— 极难排查。
+  //
+  // 修法：
+  //   ① 用模块级 Set 记录已注册的 path，跨 apply 调用保持
+  //   ② 已注册的跳过，不重复注册
+  //   ③ 注册失败时记录到 stderr，不只靠 debugLog
   const routes = ['/list', '/invalidate', '/revise', '/stats', '/config', '/inject-history', '/sleep-history', '/audit', '/hook', '/seed']
+  let routeOk = 0
+  let routeSkip = 0
+  let routeFail = 0
   for (const r of routes) {
+    const full = base + r
+    if (REGISTERED_ROUTES.has(full)) {
+      routeSkip++
+      continue
+    }
     try {
       ctx.effect(() => ctx.webServer.register({
         kind: 'exact',
-        path: base + r,
+        path: full,
         handler: httpHandler,
       }))
-      debugLog(cfg, 'http-route-ok', { path: base + r })
+      REGISTERED_ROUTES.add(full)
+      routeOk++
+      debugLog(cfg, 'http-route-ok', { path: full })
     } catch (e) {
-      debugLog(cfg, 'http-route-fail', { path: base + r, error: String(e && e.message) })
+      routeFail++
+      const msg = String(e && e.message)
+      debugLog(cfg, 'http-route-fail', { path: full, error: msg })
+      // 也写 stderr：debugLog 可能因配置关闭而丢失，stderr 一定可见
+      try { console.error('[cosmos-mem] 路由注册失败', full, msg) } catch { /* ignore */ }
     }
   }
+  debugLog(cfg, 'http-route-summary', { ok: routeOk, skip: routeSkip, fail: routeFail })
 
   // ================= 启动即预热 =================
   // 插件加载时立刻拉起内核并加载 BGE，避免第一次对话撞上 7 秒冷启动
