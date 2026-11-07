@@ -1,0 +1,19 @@
+{
+ "experiment": "E-260",
+ "triage_counts": {
+  "core": 5,
+  "common": 7,
+  "critical": 14,
+  "minor": 41
+ },
+ "valid_memories": 67,
+ "triggers_empty": 66,
+ "triggers_total": 1,
+ "top_triggers": [
+  [
+   "夕阳",
+   1
+  ]
+ ],
+ "scrap_count": 0
+}

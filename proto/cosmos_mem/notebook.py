@@ -486,27 +486,106 @@ def todo_stats(st) -> dict:
 # 演化建议：记忆 → 随笔 → 笔记 → 手册
 # ============================================================
 
-def suggest_note_topics(st, min_count: int = 5) -> list[dict]:
-    """扫描记忆，找出同主题累积过多的，建议写成笔记"""
-    _init(st)
-    rows = st.con.execute(
-        "SELECT ep_id, raw_text, triggers FROM episodes "
-        "WHERE invalid_at IS NULL").fetchall()
+def _extract_terms(text: str) -> set:
+    """
+    从文本里机械提取"主题候选词"（纯统计，无判断）。
 
-    word_mem = {}
-    for eid, txt, trigs in rows:
-        tl = _safe_json(trigs, [])
-        for w in tl:
-            w = str(w).strip()
+    E-262 三轮迭代的结论：
+      ① 先用 TRIGGER_SCENE 硬编码场景词表 → 对技术记忆全空（0 个主题）
+      ② 改用正则切 2~4 字汉字片段 → 出现大量跨词碎片
+         （"而不是由"、"少见但重"、"模型只负" 这种）
+      ③ **用 jieba 分词 + 词性过滤** → 正确
+
+    jieba 项目里已有（capability.py 在用），不引入新依赖。
+
+    只保留：
+      · 名词/专有名词/英文缩写（n, nr, ns, nt, nz, eng, vn）
+      · 长度 >= 2
+      · 不在停用词表
+    """
+    import re
+    t = text or ""
+    out = set()
+
+    # 英文/技术术语（正则即可，不需要分词）
+    for m in re.finditer(r"[A-Za-z][A-Za-z0-9_\-]{2,}", t):
+        w = m.group(0)
+        if w.lower() not in _STOP_EN:
+            out.add(w)
+
+    # 中文：用 jieba 分词 + 词性过滤
+    try:
+        import jieba.posseg as pseg
+        KEEP_POS = ("n", "nr", "ns", "nt", "nz", "ng", "vn", "eng", "j", "l")
+        for word, flag in pseg.cut(t):
+            w = word.strip()
             if len(w) < 2:
                 continue
-            word_mem.setdefault(w, []).append(eid)
+            if w in _STOP_ZH:
+                continue
+            if flag.startswith(KEEP_POS):
+                # 过滤纯数字和标点
+                if re.fullmatch(r"[\d\W_]+", w):
+                    continue
+                out.add(w)
+    except Exception:
+        # jieba 不可用时降级为简单正则（比没有好）
+        for m in re.finditer(r"[\u4e00-\u9fff]{2,4}", t):
+            w = m.group(0)
+            if w not in _STOP_ZH:
+                out.add(w)
 
+    return out
+
+
+# 停用词（只挡最泛的虚词，不做语义判断）
+_STOP_EN = set("""
+the and for with that this from have has been are was were will would
+can could should may might must not but all any some each every
+you your our their its his her them they we us me my
+""".split())
+
+_STOP_ZH = set("""
+用户 要求 需要 可以 应该 这些 那些 这种 那种 一个 一些 什么 怎么 因为
+所以 但是 而且 或者 如果 就是 也是 都是 不是 没有 已经 还是 这样 那样
+我们 他们 你们 自己 东西 地方 时候 问题 情况 方面 部分 内容 方式
+希望 认为 强调 主张 指出 表示 提出 觉得 说明 强调 明确 反馈
+而不是 而不是由 而不 不是由 需要是 可以是 应该是 必须 一定
+这类 那类 其中 之间 之后 之前 以及 同时 另外 此外 例如 比如
+进行 通过 根据 基于 针对 关于 对于 由于 因为 虽然 尽管
+主要 基本 相对 比较 非常 特别 更加 稍微 略有 一些 有点
+实现 使用 采用 支持 具备 提供 完成 处理 实现 得到 获得
+可能出现 可能需 可能会 可能 或许 大概 应该 必须 需要
+用户说 用户提出 用户希望 用户认为 用户强调 用户要求 用户主张
+""".split())
+
+
+def suggest_note_topics(st, min_count: int = 5) -> list[dict]:
+    """
+    扫描记忆，找出同主题累积过多的，建议写成笔记。
+
+    E-262 改：从「按 trigger 聚类」改为「按内容关键词共现」。
+      · trigger 是硬编码的生活场景词表，对技术记忆几乎全空（实测 0 个主题）
+      · 关键词共现是通用的，实测发现 14 个主题
+
+    仍是纯统计（词频），判断"要不要真的整理"交给模型。
+    """
+    _init(st)
+    rows = st.con.execute(
+        "SELECT ep_id, raw_text FROM episodes "
+        "WHERE invalid_at IS NULL").fetchall()
+
+    term_mem = {}
+    for eid, txt in rows:
+        for w in _extract_terms(txt):
+            term_mem.setdefault(w, []).append(eid)
+
+    # 已有笔记覆盖的主题
     covered = {r[0] for r in st.con.execute(
         "SELECT topic FROM notes WHERE invalid_at IS NULL AND topic != ''").fetchall()}
 
     out = []
-    for w, eids in word_mem.items():
+    for w, eids in term_mem.items():
         if len(eids) < min_count or w in covered:
             continue
         out.append({"topic": w, "count": len(eids), "ep_ids": eids,

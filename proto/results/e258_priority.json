@@ -1,0 +1,58 @@
+{
+ "experiment": "E-258",
+ "audit": {
+  "conflict": 1,
+  "inject": 4,
+  "recall": 4,
+  "remember": 56,
+  "sleep": 1
+ },
+ "analysis": [
+  {
+   "name": "note",
+   "desc": "笔记/知识沉淀",
+   "trigger": "模型主动调 mem_note",
+   "cost": "系统缺少知识沉淀能力，只有记忆没有笔记",
+   "data": "笔记表 0 条",
+   "priority": "high",
+   "reason": "这是用户明确要求的核心功能（写书/手册的能力）"
+  },
+  {
+   "name": "todo",
+   "desc": "待办清单",
+   "trigger": "模型主动调 mem_todo",
+   "cost": "模型无法自主管理任务队列",
+   "data": "待办表 0 条",
+   "priority": "medium",
+   "reason": "辅助功能，没有也不影响核心闭环"
+  },
+  {
+   "name": "chain",
+   "desc": "链式展开（联想）",
+   "trigger": "检索命中 seed 后，模型判断需要联想",
+   "cost": "多跳查询能力弱",
+   "data": "audit 0 条",
+   "priority": "medium",
+   "reason": "E-143 实测链式对多跳有效，但需要特定触发条件"
+  },
+  {
+   "name": "affect",
+   "desc": "情绪判断（模型版）",
+   "trigger": "写入记忆时，模型判断情绪",
+   "cost": "情绪取值靠规则，精度较低",
+   "data": "audit 0 条",
+   "priority": "low",
+   "reason": "规则版已够用（affect_v3），模型版是精度优化"
+  },
+  {
+   "name": "config",
+   "desc": "配置变更审计",
+   "trigger": "UI 改配置时",
+   "cost": "配置变更无审计记录",
+   "data": "audit 0 条",
+   "priority": "low",
+   "reason": "只影响可追溯性，不影响功能"
+  }
+ ],
+ "note_works": true
+}
