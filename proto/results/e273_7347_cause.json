@@ -1,0 +1,7 @@
+{
+ "experiment": "E-273",
+ "first_search_ms": 7635.9,
+ "second_search_ms": 13.0,
+ "load_vectors_ms": 1.2,
+ "kernel_start_events": 42
+}

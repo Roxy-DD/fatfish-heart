@@ -1,0 +1,22 @@
+{
+ "experiment": "E-269",
+ "issues": [
+  {
+   "sev": "medium",
+   "what": "检索最慢 7347ms",
+   "fix": "需要优化"
+  }
+ ],
+ "n_valid": 67,
+ "n_invalid": 270,
+ "n_vec": 337,
+ "audit": {
+  "chain": 2,
+  "conflict": 1,
+  "inject": 5,
+  "note": 2,
+  "recall": 4,
+  "remember": 56,
+  "sleep": 1
+ }
+}

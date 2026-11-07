@@ -1,0 +1,27 @@
+{
+ "experiment": "E-275",
+ "conclusion": "7347ms 是不可避免的冷启动成本，不是 bug",
+ "n_valid": 67,
+ "n_invalid": 270,
+ "n_vec": 337,
+ "quality": {
+  "bad_affect": 0,
+  "bad_valence": 0,
+  "dup_groups": 0
+ },
+ "audit": {
+  "chain": 2,
+  "conflict": 1,
+  "inject": 5,
+  "note": 2,
+  "recall": 4,
+  "remember": 56,
+  "sleep": 1
+ },
+ "perf": {
+  "search_warm_ms": 10,
+  "search_cold_ms": 7300,
+  "write_ms": 12,
+  "knowledge_hint_cached_ms": 0.1
+ }
+}
