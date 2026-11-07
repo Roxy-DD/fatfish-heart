@@ -97,6 +97,17 @@ def main():
             st0.search("预热", top=1)
         except Exception as e:
             sys.stderr.write(f"[kernel] search warmup failed: {e}\n")
+
+        # E-264：预热 jieba 分词器
+        # 首次加载词典要 1.3 秒，若在首次 knowledge_hint 时才加载
+        # 会拖慢会话首次响应。放在内核启动时预热，用户感知不到。
+        try:
+            import notebook as _nb
+            _nb._ensure_jieba()
+            sys.stderr.write("[kernel] jieba warmup ok\n")
+        except Exception as e:
+            sys.stderr.write(f"[kernel] jieba warmup failed: {e}\n")
+
         sys.stderr.write("[kernel] ready\n")
         sys.stderr.flush()
     except Exception as e:

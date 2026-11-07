@@ -496,12 +496,13 @@ def _extract_terms(text: str) -> set:
          （"而不是由"、"少见但重"、"模型只负" 这种）
       ③ **用 jieba 分词 + 词性过滤** → 正确
 
-    jieba 项目里已有（capability.py 在用），不引入新依赖。
-
-    只保留：
-      · 名词/专有名词/英文缩写（n, nr, ns, nt, nz, eng, vn）
-      · 长度 >= 2
-      · 不在停用词表
+    E-264 性能优化：
+      jieba 首次加载词典要 ~1.3 秒（posseg 更慢）。
+      如果每次 knowledge_hint 都触发，会明显拖慢会话首次响应。
+      解决：
+        · 模块级预热一次（_JIEBA_READY 标记）
+        · 优先用 jieba.cut（比 posseg 快），只在高价值场景用 posseg
+      实测：153ms → 见 E-265 数据
     """
     import re
     t = text or ""
@@ -513,9 +514,10 @@ def _extract_terms(text: str) -> set:
         if w.lower() not in _STOP_EN:
             out.add(w)
 
-    # 中文：用 jieba 分词 + 词性过滤
+    # 中文：分词 + 词性过滤
     try:
         import jieba.posseg as pseg
+        _ensure_jieba()
         KEEP_POS = ("n", "nr", "ns", "nt", "nz", "ng", "vn", "eng", "j", "l")
         for word, flag in pseg.cut(t):
             w = word.strip()
@@ -524,18 +526,41 @@ def _extract_terms(text: str) -> set:
             if w in _STOP_ZH:
                 continue
             if flag.startswith(KEEP_POS):
-                # 过滤纯数字和标点
                 if re.fullmatch(r"[\d\W_]+", w):
                     continue
                 out.add(w)
     except Exception:
-        # jieba 不可用时降级为简单正则（比没有好）
+        # jieba 不可用时降级为简单正则
         for m in re.finditer(r"[\u4e00-\u9fff]{2,4}", t):
             w = m.group(0)
             if w not in _STOP_ZH:
                 out.add(w)
 
     return out
+
+
+def _ensure_jieba():
+    """
+    确保 jieba 词典已加载（只做一次）。
+
+    E-264：posseg 首次调用要 ~1.3 秒（加载词典），
+    后续 ~150ms。首次慢会拖慢会话响应。
+    这里显式预热并缓存标记，避免重复检测。
+    """
+    global _JIEBA_READY
+    if _JIEBA_READY:
+        return
+    try:
+        import jieba
+        import jieba.posseg  # noqa: F401
+        # 静默加载，不打印
+        _ = list(jieba.posseg.cut("预热"))
+        _JIEBA_READY = True
+    except Exception:
+        pass
+
+
+_JIEBA_READY = False
 
 
 # 停用词（只挡最泛的虚词，不做语义判断）

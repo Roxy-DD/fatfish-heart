@@ -1159,6 +1159,28 @@ def cmd_knowledge_hint(st, payload) -> dict:
     enable_topic = payload.get("enable_topic", True)
     enable_compose = payload.get("enable_compose", True)
 
+    # E-264：缓存结果（按记忆数+笔记数做 key，数据变了才重算）
+    # 首次分词要 1.3 秒（jieba 词典），每次 assemble 都算会明显拖慢
+    import json as _json
+    try:
+        n_ep = st.con.execute(
+            "SELECT COUNT(*) FROM episodes WHERE invalid_at IS NULL").fetchone()[0]
+        n_nt = st.con.execute(
+            "SELECT COUNT(*) FROM notes WHERE invalid_at IS NULL").fetchone()[0]
+        cache_key = f"knowledge_hint:{n_ep}:{n_nt}:{min_count}:{max_items}"
+        row = st.con.execute("SELECT val FROM meta WHERE key=?",
+                             (cache_key,)).fetchone()
+        if row and not payload.get("force"):
+            try:
+                cached = _json.loads(row[0])
+                if cached.get("ok"):
+                    cached["cached"] = True
+                    return cached
+            except Exception:
+                pass
+    except Exception:
+        cache_key = None
+
     hints = []
     try:
         if enable_triage:
@@ -1195,7 +1217,9 @@ def cmd_knowledge_hint(st, payload) -> dict:
         return {"ok": False, "error": f"{type(e).__name__}: {e}"}
 
     if not hints:
-        return {"ok": True, "hints": [], "text": "", "count": 0}
+        result = {"ok": True, "hints": [], "text": "", "count": 0}
+        _save_kh_cache(st, cache_key, result)
+        return result
 
     lines = [
         "### 可以整理成知识的内容（系统扫描发现）",
@@ -1211,8 +1235,23 @@ def cmd_knowledge_hint(st, payload) -> dict:
             if s:
                 lines.append(f"    例: {str(s)[:48]}")
 
-    return {"ok": True, "hints": hints, "text": "\n".join(lines),
-            "count": len(hints)}
+    result = {"ok": True, "hints": hints, "text": "\n".join(lines),
+              "count": len(hints)}
+    _save_kh_cache(st, cache_key, result)
+    return result
+
+
+def _save_kh_cache(st, cache_key, result):
+    """缓存 knowledge_hint 结果（E-264 性能优化）"""
+    if not cache_key:
+        return
+    try:
+        import json as _json
+        st.con.execute("INSERT OR REPLACE INTO meta VALUES (?,?)",
+                       (cache_key, _json.dumps(result, ensure_ascii=False)))
+        st.con.commit()
+    except Exception:
+        pass
 
 
 def cmd_scan_conflicts(st, payload) -> dict:
