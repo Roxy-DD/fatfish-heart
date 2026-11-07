@@ -1067,6 +1067,45 @@ def cmd_triage(st, payload) -> dict:
         return {"ok": False, "error": f"{type(e).__name__}: {e}"}
 
 
+def cmd_history(st, payload) -> dict:
+    """
+    内容历史版本查询（R4 可塑性的完整实现）。
+
+    E-244 修：原来 revise 直接覆盖，旧文本永久丢失。
+    现在每次修订前自动快照进 history 表，可查任意版本。
+
+    payload:
+      kind    episode | note | stats
+      id      ep_id 或 note_id
+    """
+    import history as _hist
+
+    kind = payload.get("kind") or "stats"
+    try:
+        if kind == "stats":
+            return {"ok": True, "stats": _hist.stats(st)}
+
+        if kind == "episode":
+            eid = payload.get("id") or ""
+            if not eid:
+                return {"ok": False, "error": "id 不能为空"}
+            h = _hist.episode_history(st, eid)
+            return {"ok": True, "ep_id": eid, "versions": h,
+                    "count": len(h)}
+
+        if kind == "note":
+            nid = payload.get("id") or ""
+            if not nid:
+                return {"ok": False, "error": "id 不能为空"}
+            h = _hist.note_history(st, nid)
+            return {"ok": True, "note_id": nid, "versions": h,
+                    "count": len(h)}
+
+        return {"ok": False, "error": f"未知 kind: {kind}"}
+    except Exception as e:
+        return {"ok": False, "error": f"{type(e).__name__}: {e}"}
+
+
 def cmd_scan_conflicts(st, payload) -> dict:
     import conflict as _conflict
     from store_v1 import Embedder as _Emb
@@ -1267,6 +1306,7 @@ def main():
         "todo": cmd_todo,
         "compose": cmd_compose,
         "triage": cmd_triage,
+        "history": cmd_history,
     }
     fn = handlers.get(args.cmd)
     if not fn:

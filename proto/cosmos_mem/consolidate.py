@@ -295,6 +295,49 @@ def pack_to_dict(pack: SleepPack) -> dict:
     }
 
 
+def _append_merged(st, keep_id: str, drop_id: str,
+                   model_hint: str = "") -> bool:
+    """
+    程序化合并两条记忆：**原文一字不改**，只把 drop 的内容作为标注附在 keep 后。
+
+    E-244：替代原来"用模型生成的 merged_text 覆盖 keep 原文"的做法。
+
+    拼接格式（清晰可辨，可人工核对）：
+        <keep 原文>
+        ｜合并: <drop 原文>
+
+    关于 model_hint：
+      早期版本会把模型给的 merged_text 作为"备注"附上，
+      但实测发现模型给的往往是一段**完整的重写文本**，
+      附上去等于变相引入模型改写（E-244 测试发现的 bug）。
+      因此现在**完全忽略 model_hint**——宁可少一条备注，
+      也不让模型的重写内容混入记忆原文。
+
+      若确实需要"更完整的表述"，应由模型显式调用 mem_note 写笔记，
+      而不是偷偷改记忆。
+
+    返回是否成功。
+    """
+    try:
+        keep = st.get(keep_id)
+        drop = st.get(drop_id)
+        if not keep or not drop:
+            return False
+        k_text = (keep.raw_text or "").strip()
+        d_text = (drop.raw_text or "").strip()
+        if not d_text or d_text in k_text:
+            # 已经包含，无需拼接
+            return True
+
+        # 只拼接原文，不掺入任何模型生成的文本
+        merged = f"{k_text}\n\n｜合并: {d_text}"
+
+        # 走 revise 以保留历史（revise 会先快照旧内容）
+        return bool(st.revise(keep_id, new_text=merged))
+    except Exception:
+        return False
+
+
 def apply_sleep_verdict(st, actions: list) -> dict:
     """
     按模型判定落盘（只执行，不判断）。
@@ -331,12 +374,26 @@ def apply_sleep_verdict(st, actions: list) -> dict:
                 if drop_id and not _hook.can_merge(st, drop_id):
                     result["skipped_hooks"].append(drop_id)
                     continue
-                if keep_id and drop_id and merged_text:
-                    # 更新 keep 的文本（保留历史，revision+1）
-                    st.revise(keep_id, new_text=merged_text)
+                if keep_id and drop_id:
+                    # E-244 修：不再让模型提供 merged_text 覆盖原文。
+                    #
+                    # 原实现用模型生成的 merged_text 调 st.revise 覆盖 keep 的原文，
+                    # 这有两处违反原则：
+                    #   ① 与 E-243 冲突——模型不该重写内容，只该做结构编排
+                    #   ② 原文实际被改写，虽然现在有 history 兜底，
+                    #      但"改写记忆原文"本身不该是睡眠的默认行为
+                    #
+                    # 新做法（程序拼接，原文一字不改）：
+                    #   keep 的正文保持原样，drop 的内容作为附录标注附在 keep 后面。
+                    #   若要真正合成更完整的表述，由模型显式调用 mem_note 去写笔记，
+                    #   而不是偷偷改记忆。
+                    merged = _append_merged(st, keep_id, drop_id, merged_text)
+                    result["merged"].append(
+                        {"keep": keep_id, "drop": drop_id,
+                         "mode": "program_append" if merged else "skip"})
                     # drop 打 superseded_by（不删）
-                    st.invalidate(drop_id, superseded_by=keep_id)
-                    result["merged"].append({"keep": keep_id, "drop": drop_id})
+                    if merged:
+                        st.invalidate(drop_id, superseded_by=keep_id)
             elif op == "invalidate":
                 ep_id = a.get("ep_id")
                 if ep_id and not _hook.can_invalidate(st, ep_id):

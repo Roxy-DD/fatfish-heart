@@ -1,0 +1,142 @@
+{
+ "experiment": "E-244",
+ "n_pass": 27,
+ "n_total": 27,
+ "results": [
+  {
+   "name": "原文正确",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "有 2 个版本",
+   "ok": true,
+   "detail": "2"
+  },
+  {
+   "name": "rev1 是旧文本",
+   "ok": true,
+   "detail": "登录密码是 8848"
+  },
+  {
+   "name": "rev2 是新文本",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "当前版本标记正确",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "三次修订后有 3 个版本",
+   "ok": true,
+   "detail": "3"
+  },
+  {
+   "name": "中间版本也在",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "笔记有 2 个版本",
+   "ok": true,
+   "detail": "2"
+  },
+  {
+   "name": "旧正文保留",
+   "ok": true,
+   "detail": "第一版内容：JOIN 会回表。"
+  },
+  {
+   "name": "新正文生效",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "merge 成功",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "标注为程序拼接",
+   "ok": true,
+   "detail": "program_append"
+  },
+  {
+   "name": "keep 原文开头未被改写",
+   "ok": true,
+   "detail": "测试服务器在 A 机房\n\n｜合并: A 机房今天停电了"
+  },
+  {
+   "name": "drop 内容被追加",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "有合并标注",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "drop 已失效",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "drop 指向 keep",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "合并前原文进历史",
+   "ok": true,
+   "detail": "2 个版本"
+  },
+  {
+   "name": "原文开头仍在",
+   "ok": true,
+   "detail": "项目使用 Python 3.12\n\n｜合并: 项目依赖 on"
+  },
+  {
+   "name": "模型文本未出现（完全忽略 merged_text）",
+   "ok": true,
+   "detail": "项目使用 Python 3.12\n\n｜合并: 项目依赖 onnxruntime"
+  },
+  {
+   "name": "也没有备注行",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "查询记忆历史",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "查询笔记历史",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "历史统计",
+   "ok": true,
+   "detail": "{\"episodes\": {\"history_records\": 4, \"memories_with_history\": 3}, \"notes\": {\"hist"
+  },
+  {
+   "name": "history 表独立存在",
+   "ok": true,
+   "detail": "4 条历史"
+  },
+  {
+   "name": "episodes 总数符合预期（5 条写入）",
+   "ok": true,
+   "detail": "5 条（失效的也在库内）"
+  },
+  {
+   "name": "失效的仍在库（R2 不遗忘）",
+   "ok": true,
+   "detail": "总 5 / 有效 3"
+  }
+ ]
+}

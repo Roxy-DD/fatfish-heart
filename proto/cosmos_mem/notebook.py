@@ -227,6 +227,13 @@ def note_revise(st, note_id: str, title: str | None = None,
     _init(st)
     if not get_note(st, note_id):
         return None
+    # R4 可塑性：修订前快照旧内容（E-244 修）
+    if body is not None or title is not None:
+        try:
+            import history as _hist
+            _hist.archive_note(st, note_id, reason="revise 前快照")
+        except Exception:
+            pass
     sets = ["revision=revision+1", "updated_at=?"]
     args = [_now()]
     if title is not None:

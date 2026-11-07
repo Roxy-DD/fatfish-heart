@@ -1,0 +1,59 @@
+{
+ "experiment": "E-244",
+ "issues": [
+  {
+   "id": "sleep-merge-rewrite",
+   "desc": "sleep merge 让模型重写 keep 原文，与 E-243 修正的原则冲突",
+   "severity": "high",
+   "fix": "改成：merge 只做'保留哪条 + 标注关联'或'程序拼接'，不让模型重写"
+  },
+  {
+   "id": "revise-no-history",
+   "desc": "revise 直接覆盖旧文本，无历史版本（R4 可塑性受损）",
+   "severity": "high",
+   "fix": "增加 note/episode 历史表，或 revision 存快照"
+  },
+  {
+   "id": "sleep-never-run",
+   "desc": "sleep 从未真实触发",
+   "severity": "low",
+   "fix": "需真实对话触发，或接受它低频"
+  }
+ ],
+ "audit_stats": {
+  "inject": 1,
+  "recall": 4,
+  "remember": 40
+ },
+ "note_stats": {
+  "total": 0,
+  "valid": 0,
+  "invalid": 0,
+  "by_tier": {},
+  "scrap": 0,
+  "note": 0,
+  "manual": 0,
+  "by_topic": {}
+ },
+ "todo_stats": {
+  "total": 0,
+  "pending": 0,
+  "doing": 0,
+  "done": 0,
+  "dropped": 0,
+  "by_status": {},
+  "by_kind": {}
+ },
+ "memory_stats": {
+  "total": 321,
+  "valid": 52,
+  "invalid": 269,
+  "vectors": 321,
+  "high_cost": 104,
+  "high_affect": 35,
+  "size_mb": 2.07,
+  "incomplete": 28,
+  "identity_can": 31
+ },
+ "channel_records": 3
+}

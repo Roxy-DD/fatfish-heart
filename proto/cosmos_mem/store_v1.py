@@ -393,6 +393,14 @@ class MemoryStore:
                 return False
         except Exception:
             pass
+        # R4 可塑性：修订前先把旧内容快照进历史（E-244 修）
+        # 原来直接 UPDATE 覆盖，旧文本永久丢失，违反"旧值可溯源"。
+        if new_text is not None:
+            try:
+                import history as _hist
+                _hist.archive_episode(self, ep_id, reason="revise 前快照")
+            except Exception:
+                pass
         if new_text is not None:
             el = extract_elements(new_text)
             cost = estimate_cost(new_text)
