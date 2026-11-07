@@ -1130,6 +1130,91 @@ def cmd_history(st, payload) -> dict:
         return {"ok": False, "error": f"{type(e).__name__}: {e}"}
 
 
+def cmd_knowledge_hint(st, payload) -> dict:
+    """
+    知识整理提示（机械发现"该写笔记了"，判断权交模型）。
+
+    E-263：note 功能完整但零使用，因为没有触发时机。
+    本命令让系统在会话开始时机械扫描，把"可整理的内容"送到模型面前。
+
+    三类信号：
+      1. triage   少见但重要的记忆 → 该写详细笔记
+      2. topic    同主题记忆累积 → 该写笔记
+      3. compose  scrap 随笔够多 → 可装订成册
+
+    payload:
+      min_count       最少条数（默认 3）
+      max_items       每类最多几条（默认 4）
+      enable_triage   是否启用分诊检测（默认 true）
+      enable_topic    是否启用主题检测（默认 true）
+      enable_compose  是否启用装订检测（默认 true）
+    """
+    import triage as _tg
+    import notebook as _nb
+    import compose as _cp
+
+    min_count = int(payload.get("min_count") or 3)
+    max_items = int(payload.get("max_items") or 4)
+    enable_triage = payload.get("enable_triage", True)
+    enable_topic = payload.get("enable_topic", True)
+    enable_compose = payload.get("enable_compose", True)
+
+    hints = []
+    try:
+        if enable_triage:
+            for x in _tg.suggest_from_triage(st, note_hint_min=min_count):
+                tier_name = "详细笔记" if x["suggest_tier"] == "note" else "简短随笔"
+                hints.append({
+                    "kind": "triage",
+                    "quadrant": x["quadrant"],
+                    "count": x["count"],
+                    "suggest_tier": x["suggest_tier"],
+                    "text": f"{x['count']} 条{x['quadrant']}类记忆，建议整理成{tier_name}",
+                    "samples": (x.get("samples") or [])[:2],
+                })
+        if enable_topic:
+            for x in _nb.suggest_note_topics(st, min_count=min_count)[:max_items]:
+                hints.append({
+                    "kind": "topic",
+                    "topic": x["topic"],
+                    "count": x["count"],
+                    "suggest_tier": "note",
+                    "text": f"主题「{x['topic']}」已有 {x['count']} 条记忆",
+                })
+        if enable_compose:
+            for x in _cp.compile_all_topics(st, tier="scrap",
+                                            min_items=min_count)[:max_items]:
+                hints.append({
+                    "kind": "compose",
+                    "topic": x["topic"],
+                    "count": x["count"],
+                    "suggest_tier": "manual",
+                    "text": f"主题「{x['topic']}」已有 {x['count']} 条随笔可装订",
+                })
+    except Exception as e:
+        return {"ok": False, "error": f"{type(e).__name__}: {e}"}
+
+    if not hints:
+        return {"ok": True, "hints": [], "text": "", "count": 0}
+
+    lines = [
+        "### 可以整理成知识的内容（系统扫描发现）",
+        "",
+        "以下是已积累到一定量的内容。你可以自主决定是否整理：",
+        "- 写笔记 → mem_note(action=add, tier=scrap|note)",
+        "- 装订成册 → mem_compose(action=compose, topic=...)",
+        "",
+    ]
+    for h in hints[:8]:
+        lines.append(f"- {h['text']}")
+        for s in h.get("samples", []):
+            if s:
+                lines.append(f"    例: {str(s)[:48]}")
+
+    return {"ok": True, "hints": hints, "text": "\n".join(lines),
+            "count": len(hints)}
+
+
 def cmd_scan_conflicts(st, payload) -> dict:
     import conflict as _conflict
     from store_v1 import Embedder as _Emb
@@ -1337,6 +1422,7 @@ def main():
         "todo": cmd_todo,
         "compose": cmd_compose,
         "triage": cmd_triage,
+        "knowledge_hint": cmd_knowledge_hint,
         "history": cmd_history,
     }
     fn = handlers.get(args.cmd)

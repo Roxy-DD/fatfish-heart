@@ -1062,6 +1062,11 @@ export function apply(ctx, config) {
         const r = await callKernel(cfg, 'compose', body, undefined, 30000)
         return sendJson(res, 200, r)
       }
+      // 知识整理提示（机械扫描）
+      if (sub === '/knowledge-hint' && method === 'GET') {
+        const r = await callKernel(cfg, 'knowledge_hint', {}, undefined, 15000)
+        return sendJson(res, 200, r)
+      }
       // 分诊
       if (sub === '/triage' && method === 'GET') {
         const r = await callKernel(cfg, 'triage',
@@ -1082,7 +1087,7 @@ export function apply(ctx, config) {
   // E-254：去重记录必须**按 ctx 隔离**（见 routesOf 的注释）。
   //        模块级 Set 会在宿主重建 webServer 后仍记着"已注册"，
   //        导致全部 skip、一条都不注册 → 所有端点 404。
-  const routes = ['/list', '/invalidate', '/revise', '/stats', '/config', '/inject-history', '/sleep-history', '/audit', '/hook', '/seed', '/note', '/todo', '/compose', '/triage']
+  const routes = ['/list', '/invalidate', '/revise', '/stats', '/config', '/inject-history', '/sleep-history', '/audit', '/hook', '/seed', '/note', '/todo', '/compose', '/triage', '/knowledge-hint']
   let routeOk = 0
   let routeSkip = 0
   let routeFail = 0
@@ -1927,6 +1932,20 @@ export function apply(ctx, config) {
         (cfg.autoInjectMaxChars ?? 1500) - (st.injected ? 0 : 0)
       )
       const body = formatMemories(items, remainChars)
+
+      // E-263：知识整理提示（仅在会话首次注入，且是机械扫描，无模型调用）
+      // 目的：让 note 从"有代码零使用"变成"模型能看到该整理了"
+      let knowledgeHint = ''
+      if (!st.injected) {
+        try {
+          const kh = await callKernel(cfg, 'knowledge_hint',
+            { min_count: 3, max_items: 4 }, undefined, 8000)
+          if (kh && kh.ok && kh.text) knowledgeHint = kh.text
+        } catch (e) {
+          debugLog(cfg, 'knowledge-hint-fail', { error: String(e && e.message) })
+        }
+      }
+
       let prewarmText = ''
       if (st.prewarm && st.prewarm.prediction) {
         prewarmText =
@@ -1986,6 +2005,8 @@ export function apply(ctx, config) {
           '以下是与当前话题相关的过往记忆。回答时优先依据它们；' +
           '若标注了答不出的维度，请如实说明记不清，不要编造。\n\n' + body)
       }
+      // E-263：知识整理提示（机械扫描结果，是否整理由模型决定）
+      if (knowledgeHint) parts.push(knowledgeHint)
       // 自主记忆准则（短，每轮都带）
       parts.push(memoryPolicy)
 

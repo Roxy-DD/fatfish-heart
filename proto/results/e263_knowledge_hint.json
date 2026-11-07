@@ -1,0 +1,87 @@
+{
+ "experiment": "E-263",
+ "hints_count": 6,
+ "text_len": 496,
+ "hints": [
+  {
+   "kind": "triage",
+   "quadrant": "critical",
+   "count": 14,
+   "suggest_tier": "note",
+   "text": "14 条critical类记忆，建议整理成详细笔记",
+   "samples": [
+    "插件热重载的铁律：凡是跨 apply() 调用要保持的状态，必须绑定到实例（ctx），不能放在模块级。因为模块可能被缓存",
+    "前端崩溃教训（E-253/254/255 三次连续）：node -c 语法通过不等于运行时正确。三次崩溃分别是：①ren"
+   ]
+  },
+  {
+   "kind": "triage",
+   "quadrant": "minor",
+   "count": 41,
+   "suggest_tier": "scrap",
+   "text": "41 条minor类记忆，建议整理成简短随笔",
+   "samples": [
+    "React.createElement 别名 h 是极短的名字，容易被 .map((h, i) => ...) 这类回调",
+    "用户对成册环节的要求：模型只负责结构层面的工作——定制大纲、分类、排序、重新调整内容顺序、做上下文链接与脉络梳理；册子中"
+   ]
+  },
+  {
+   "kind": "topic",
+   "topic": "记忆",
+   "count": 20,
+   "suggest_tier": "note",
+   "text": "主题「记忆」已有 20 条记忆",
+   "ep_ids": [
+    "cdaaba52ab1544fb",
+    "2af74cb0a0e24d04",
+    "3cb9c7c97ab347c5",
+    "3665a6c8d0994dbd",
+    "df9c0b2be9754b9c"
+   ]
+  },
+  {
+   "kind": "topic",
+   "topic": "模型",
+   "count": 20,
+   "suggest_tier": "note",
+   "text": "主题「模型」已有 20 条记忆",
+   "ep_ids": [
+    "cdaaba52ab1544fb",
+    "3cb9c7c97ab347c5",
+    "5f720e0b05ae4c03",
+    "e998d1ff801d4cf4",
+    "3589294fda64434f"
+   ]
+  },
+  {
+   "kind": "topic",
+   "topic": "记忆系统",
+   "count": 19,
+   "suggest_tier": "note",
+   "text": "主题「记忆系统」已有 19 条记忆",
+   "ep_ids": [
+    "5c97223c1dca434a",
+    "d1738c8cf1a34bd5",
+    "a15440bd07f04dbc",
+    "05258b2fdf4346e8",
+    "02d9c0e205cb40e4"
+   ]
+  },
+  {
+   "kind": "topic",
+   "topic": "记录",
+   "count": 16,
+   "suggest_tier": "note",
+   "text": "主题「记录」已有 16 条记忆",
+   "ep_ids": [
+    "5f720e0b05ae4c03",
+    "3589294fda64434f",
+    "0747113ba1894b73",
+    "9be77b30dce4408c",
+    "a4958bcbe9e44cf4"
+   ]
+  }
+ ],
+ "empty_ok": true,
+ "toggle_ok": true
+}
