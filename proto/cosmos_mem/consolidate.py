@@ -54,6 +54,7 @@ class SleepPack:
     l3_candidates: list = field(default_factory=list)
     window: str = "recent"                           # "fresh" | "recent"
     cursor: float = 0.0                              # 上次睡眠时间戳
+    skipped_judged: int = 0                          # 跳过的已判定对数
 
 
 # ============================================================
@@ -61,6 +62,67 @@ class SleepPack:
 # ============================================================
 
 CURSOR_KEY = "sleep:cursor"
+# E-247：已判定过的候选对，避免每次 sleep 都重复问同一批
+JUDGED_KEY = "sleep:judged_pairs"
+MAX_JUDGED = 2000
+
+
+def _pair_key(a_id: str, b_id: str) -> str:
+    """候选对的稳定 key（顺序无关）"""
+    return "|".join(sorted([a_id, b_id]))
+
+
+def get_judged_pairs(st) -> set:
+    """已判定过的候选对（归一化 key 集合）"""
+    try:
+        row = st.con.execute("SELECT val FROM meta WHERE key=?",
+                             (JUDGED_KEY,)).fetchone()
+        if not row:
+            return set()
+        v = json.loads(row[0])
+        return set(v) if isinstance(v, list) else set()
+    except Exception:
+        return set()
+
+
+def mark_pairs_judged(st, pairs: list) -> int:
+    """
+    记录这些候选对已被判定（不论结论是合并还是保持不动）。
+
+    纯机械记账，无判断成分。下次 prepare 时跳过它们。
+    """
+    if not pairs:
+        return 0
+    cur = get_judged_pairs(st)
+    before = len(cur)
+    for p in pairs:
+        try:
+            a = p.a_id if hasattr(p, "a_id") else p.get("a_id")
+            b = p.b_id if hasattr(p, "b_id") else p.get("b_id")
+            if a and b:
+                cur.add(_pair_key(a, b))
+        except Exception:
+            continue
+    # 控制体积（保留最近的，非精确 LRU，够用）
+    if len(cur) > MAX_JUDGED:
+        cur = set(list(cur)[-MAX_JUDGED:])
+    try:
+        st.con.execute("INSERT OR REPLACE INTO meta VALUES (?,?)",
+                       (JUDGED_KEY, json.dumps(sorted(cur), ensure_ascii=False)))
+        st.con.commit()
+    except Exception:
+        pass
+    return len(cur) - before
+
+
+def clear_judged_pairs(st) -> bool:
+    """清空已判定记录（测试/重置用）"""
+    try:
+        st.con.execute("DELETE FROM meta WHERE key=?", (JUDGED_KEY,))
+        st.con.commit()
+        return True
+    except Exception:
+        return False
 
 
 def get_cursor(st) -> float:
@@ -259,9 +321,16 @@ def prepare_sleep_pack(st, embedder, limit: int = MAX_SLEEP_PAIRS,
 
     sim_mat = sub_vec @ sub_vec.T
     text_of = {r["ep_id"]: r["text"] for r in recent}
+    # E-247：跳过已判定过的候选对，避免每次 sleep 重复问同一批
+    judged = get_judged_pairs(st)
     pairs = []
+    skipped_judged = 0
     for i in range(len(recent_ids)):
         for j in range(i + 1, len(recent_ids)):
+            key = _pair_key(recent_ids[i], recent_ids[j])
+            if key in judged:
+                skipped_judged += 1
+                continue
             cos = float(sim_mat[i, j])
             pairs.append(SleepPair(
                 a_id=recent_ids[i], a_text=text_of[recent_ids[i]],
@@ -280,6 +349,7 @@ def prepare_sleep_pack(st, embedder, limit: int = MAX_SLEEP_PAIRS,
         l3_candidates=l3_candidates,
         window=window,
         cursor=cursor,
+        skipped_judged=skipped_judged,
     )
 
 
@@ -292,6 +362,7 @@ def pack_to_dict(pack: SleepPack) -> dict:
         "l3_candidates": pack.l3_candidates,
         "window": pack.window,
         "cursor": pack.cursor,
+        "skipped_judged": pack.skipped_judged,
     }
 
 
@@ -338,7 +409,8 @@ def _append_merged(st, keep_id: str, drop_id: str,
         return False
 
 
-def apply_sleep_verdict(st, actions: list) -> dict:
+def apply_sleep_verdict(st, actions: list,
+                        judged_pairs: list | None = None) -> dict:
     """
     按模型判定落盘（只执行，不判断）。
 
@@ -411,6 +483,15 @@ def apply_sleep_verdict(st, actions: list) -> dict:
                     result["bumped"].append(ep_id)
         except Exception:
             continue
+
+    # E-247：记录本次判定过的候选对，下次 prepare 跳过
+    # （无论模型结论是合并还是保持不动，都算"已判定"）
+    if judged_pairs:
+        try:
+            n = mark_pairs_judged(st, judged_pairs)
+            result["newly_judged"] = n
+        except Exception:
+            pass
 
     return result
 

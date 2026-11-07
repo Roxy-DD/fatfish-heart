@@ -1,0 +1,17 @@
+{
+ "experiment": "E-245",
+ "issues": [],
+ "buckets": {
+  "种子": 16,
+  "系统自述": 13,
+  "用户事实": 26,
+  "其他": 3
+ },
+ "recall_hit": 5,
+ "recall_total": 5,
+ "audit_by_kind": {
+  "inject": 2,
+  "recall": 4,
+  "remember": 46
+ }
+}

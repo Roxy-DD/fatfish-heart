@@ -1388,9 +1388,14 @@ export function apply(ctx, config) {
         return { ok: false, error: '模型输出无法解析' }
       }
 
-      // 第 3 步：落盘
+      // 第 3 步：落盘（并把本次判定过的对记下来，下次跳过）
       const apply = await callKernel(cfg, 'sleep_apply',
-        { actions: parsed.actions }, runCtx && runCtx.signal)
+        {
+          actions: parsed.actions,
+          judged_pairs: (prep.pairs || []).map((p) => ({
+            a_id: p.a_id, b_id: p.b_id,
+          })),
+        }, runCtx && runCtx.signal)
       debugLog(cfg, 'sleep-done', {
         actions: (parsed.actions || []).length,
         result: apply && apply.result,

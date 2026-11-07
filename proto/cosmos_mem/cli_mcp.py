@@ -421,6 +421,7 @@ def cmd_sleep_prepare(st, payload) -> dict:
             "n_pairs": len(pack.pairs),
             "window": pack.window,            # "fresh"=增量 / "recent"=兜底
             "cursor": pack.cursor,            # 上次睡眠时间戳
+            "skipped_judged": pack.skipped_judged,  # 跳过的已判定对数
             "fresh": pack.fresh,              # 本次新增记忆
             "l3_candidates": pack.l3_candidates,  # 待模型判断是否过时的 L3
             "recent": pack.recent,
@@ -455,7 +456,9 @@ def cmd_sleep_apply(st, payload) -> dict:
         return {"ok": False, "error": "actions 必须是数组"}
 
     try:
-        result = _con.apply_sleep_verdict(st, actions)
+        # E-247：本次判定过的候选对（下次 prepare 跳过）
+        judged = payload.get("judged_pairs") or []
+        result = _con.apply_sleep_verdict(st, actions, judged_pairs=judged)
         _con.log_sleep(st, actions, result)
         # 推进睡眠游标：下次只扫这之后新增的（避免老记忆永远扫不到）
         new_cursor = None

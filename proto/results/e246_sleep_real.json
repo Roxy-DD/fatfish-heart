@@ -1,0 +1,18 @@
+{
+ "experiment": "E-246",
+ "before": {
+  "valid": 58,
+  "invalid": 269
+ },
+ "after": {
+  "valid": 57,
+  "invalid": 270
+ },
+ "n_pairs": 20,
+ "n_l3": 34,
+ "merged": 1,
+ "window_first": "recent",
+ "window_second": "recent",
+ "cursor": 1794065702.466109,
+ "ok": true
+}

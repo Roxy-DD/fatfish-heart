@@ -1,0 +1,70 @@
+{
+ "experiment": "E-247",
+ "n_pass": 12,
+ "n_total": 12,
+ "first_pairs": 6,
+ "second_pairs": 0,
+ "skipped": 6,
+ "results": [
+  {
+   "name": "有候选对",
+   "ok": true,
+   "detail": "6 对"
+  },
+  {
+   "name": "初始无跳过",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "apply 成功",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "记录了新判定",
+   "ok": true,
+   "detail": "6 对"
+  },
+  {
+   "name": "候选对减少到 0",
+   "ok": true,
+   "detail": "0 对"
+  },
+  {
+   "name": "记录了跳过数",
+   "ok": true,
+   "detail": "跳过 6 对"
+  },
+  {
+   "name": "跳过数等于首次对数",
+   "ok": true,
+   "detail": "6 vs 6"
+  },
+  {
+   "name": "出现新的候选对",
+   "ok": true,
+   "detail": "9 对"
+  },
+  {
+   "name": "新对与旧对不重叠",
+   "ok": true,
+   "detail": "重叠 0"
+  },
+  {
+   "name": "清空后候选对恢复",
+   "ok": true,
+   "detail": "15 对"
+  },
+  {
+   "name": "新连接仍能读到判定记录",
+   "ok": true,
+   "detail": "0 条（清空后应为 0）"
+  },
+  {
+   "name": "重新标记后可持久化读取",
+   "ok": true,
+   "detail": "15 条"
+  }
+ ]
+}
