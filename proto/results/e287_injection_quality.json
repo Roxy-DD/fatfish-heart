@@ -1,0 +1,11 @@
+{
+ "experiment": "E-287",
+ "present_count": 11,
+ "present_chars": 2856,
+ "budget": 1500,
+ "avg_precision": 0.8,
+ "noise_count": 3,
+ "issues": [
+  "常驻记忆占用 190% 预算"
+ ]
+}

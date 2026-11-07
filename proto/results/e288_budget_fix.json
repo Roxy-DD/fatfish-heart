@@ -1,0 +1,23 @@
+{
+ "experiment": "E-288",
+ "n_pass": 2,
+ "n_total": 2,
+ "budget": 1500,
+ "protected_total_chars": 2856,
+ "l0_chars": 608,
+ "l1_chars": 2248,
+ "first_round_total": 3156,
+ "later_round_total": 1500,
+ "results": [
+  {
+   "name": "后续模式精确符合预算",
+   "ok": true,
+   "detail": "1500 vs 1500"
+  },
+  {
+   "name": "修复后总注入减少",
+   "ok": true,
+   "detail": "3156 < 4356"
+  }
+ ]
+}

@@ -1971,10 +1971,24 @@ export function apply(ctx, config) {
 
       // E-231：L0/L1 首轮给全文，后续只给标题（省 token 且避免挤占用户记忆）
       const protectedText = formatProtected(protectedItems, !st.injected)
-      // 普通记忆用剩余预算（先扣掉 L0/L1 摘要占用的部分）
+
+      // E-288 修：普通记忆必须用**真正剩余**的预算。
+      //
+      // 原代码：
+      //   const remainChars = Math.max(300,
+      //     (cfg.autoInjectMaxChars ?? 1500) - (st.injected ? 0 : 0))
+      //                                              ^^^^^^^^^^^^^^^^^^^
+      //   两个三元分支都是 0 —— 等于没扣任何东西！
+      //
+      // 后果：首轮 L0/L1 全文 2856 字 + 检索结果 1500 字 = 4356 字，
+      //       是预算（1500）的 2.9 倍，用户记忆被常驻准则挤爆。
+      //
+      // 现在：从总预算里扣掉常驻实际占用的字符数，再给检索结果。
+      const totalBudget = cfg.autoInjectMaxChars ?? 1500
+      const protectedChars = (protectedText || '').length
       const remainChars = Math.max(
-        300,
-        (cfg.autoInjectMaxChars ?? 1500) - (st.injected ? 0 : 0)
+        300,                                   // 至少留一点，避免为 0
+        totalBudget - protectedChars
       )
       const body = formatMemories(items, remainChars)
 
