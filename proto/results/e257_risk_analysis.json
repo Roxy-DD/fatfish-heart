@@ -1,0 +1,46 @@
+{
+ "experiment": "E-257",
+ "analysis": [
+  {
+   "name": "sessions",
+   "code": "const sessions = new Map()",
+   "semantics": "会话状态 sid -> {prewarm, processed, injected}",
+   "after_reload": "旧 sid 不再出现，残留条目无害（查不到就用不到）",
+   "risk": "low",
+   "action": "保留（可考虑加清理）"
+  },
+  {
+   "name": "injectHistory",
+   "code": "const injectHistory = []",
+   "semantics": "注入历史（内存）",
+   "after_reload": "历史保留，用于 UI 展示，无害",
+   "risk": "low",
+   "action": "保留"
+  },
+  {
+   "name": "scanCursor",
+   "code": "const scanCursor = new Map()",
+   "semantics": "扫描游标 sid -> lastSeq",
+   "after_reload": "旧 sid 的游标无用，新会话会重置",
+   "risk": "low",
+   "action": "保留"
+  },
+  {
+   "name": "kernelPools",
+   "code": "const kernelPools = new Map()",
+   "semantics": "内核进程池 dbPath -> {proc, ...}",
+   "after_reload": "旧进程还在跑，复用可省 7 秒启动",
+   "risk": "medium",
+   "action": "保留但需检查进程存活"
+  },
+  {
+   "name": "REGISTERED_BY_CTX",
+   "code": "const REGISTERED_BY_CTX = new WeakMap()",
+   "semantics": "路由注册记录，按 ctx 隔离",
+   "after_reload": "ctx 换 → 新 Set → 重新注册",
+   "risk": "none",
+   "action": "已修正，无风险"
+  }
+ ],
+ "kernelPools_has_alive_check": true
+}

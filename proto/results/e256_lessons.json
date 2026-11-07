@@ -1,0 +1,43 @@
+{
+ "experiment": "E-256",
+ "memories_added": 3,
+ "module_level_risks": [
+  {
+   "name": "sessions",
+   "line": 225,
+   "code": "const sessions = new Map()",
+   "risk": "模块级可变状态，热重载时可能错位"
+  },
+  {
+   "name": "injectHistory",
+   "line": 237,
+   "code": "const injectHistory = []   // [{ at, sid, query, mode, items:[{ep_id,t",
+   "risk": "模块级可变状态，热重载时可能错位"
+  },
+  {
+   "name": "scanCursor",
+   "line": 251,
+   "code": "const scanCursor = new Map()   // sid -> lastSeq",
+   "risk": "模块级可变状态，热重载时可能错位"
+  },
+  {
+   "name": "kernelPools",
+   "line": 300,
+   "code": "const kernelPools = new Map()   // dbPath -> { proc, pending: Map, nex",
+   "risk": "模块级可变状态，热重载时可能错位"
+  },
+  {
+   "name": "REGISTERED_BY_CTX",
+   "line": 898,
+   "code": "const REGISTERED_BY_CTX = new WeakMap()",
+   "risk": "模块级可变状态，热重载时可能错位"
+  }
+ ],
+ "check_coverage": {
+  "h 遮蔽检查": true,
+  "作用域检查": true,
+  "组件定义检查": true,
+  "样式定义检查": true,
+  "分支完整性检查": true
+ }
+}
