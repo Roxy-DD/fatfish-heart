@@ -1333,100 +1333,107 @@ window.__ModuleLoader__.load({
             )
           : null,
 
-        tab === 'config'
-          ? h(ConfigPage, null)
-          : tab === 'inject'
-            ? h(InjectHistoryView, null)
-            : tab === 'sleep'
-              ? h(SleepHistoryView, null)
-              : tab === 'audit'
-                ? h(AuditView, null)
-                : tab === 'note'
-                  ? h(NoteView, null)
-                  : tab === 'todo'
-                    ? h(TodoView, null)
-                    : tab === 'timeline'
-                  ? h(TimelineView, { items: displayItems })
-                  : h('div', null,
-                      h('div', { style: S.stats },
-                        cards.map((c, i) => h('div', { key: 'c' + i, style: S.statCard },
-                          h('div', { style: S.statLabel }, c[0]),
-                          h('div', { style: S.statValue }, String(c[1] == null ? '-' : c[1]))
-                        ))
-                      ),
-                h('div', { style: S.toolbar },
-                  h('input', {
-                    style: S.input,
-                    placeholder: '搜索记忆内容…',
-                    value: q,
-                    onChange: (e) => setQ(e.target.value),
-                    onKeyDown: (e) => { if (e.key === 'Enter') load(q, showInvalid); },
-                  }),
-                  h('button', { style: S.btnPrimary, onClick: () => load(q, showInvalid) }, '搜索'),
-                  h('select', {
-                    style: Object.assign({}, S.btn, { padding: '6px 8px' }),
-                    value: sortBy,
-                    onChange: (e) => setSortBy(e.target.value),
-                  },
-                    h('option', { value: 'time' }, '按时间'),
-                    h('option', { value: 'cost' }, '按代价'),
-                    h('option', { value: 'affect' }, '按情绪')
-                  ),
-                  h('select', {
-                    style: Object.assign({}, S.btn, { padding: '6px 8px' }),
-                    value: filter,
-                    onChange: (e) => setFilter(e.target.value),
-                  },
-                    h('option', { value: 'all' }, '全部'),
-                    h('option', { value: 'high_cost' }, '高代价'),
-                    h('option', { value: 'high_affect' }, '强情绪'),
-                    h('option', { value: 'negative' }, '负向情绪'),
-                    h('option', { value: 'positive' }, '正向情绪')
-                  ),
-                  h('label', {
-                    style: {
-                      fontSize: 12, display: 'flex', alignItems: 'center', gap: 6,
-                      color: 'var(--dsw-alias-label-secondary)',
-                      whiteSpace: 'nowrap', cursor: 'pointer',
-                    },
-                  },
-                    h('input', {
-                      type: 'checkbox',
-                      checked: showInvalid,
-                      onChange: (e) => {
-                        const next = e.target.checked;
-                        setShowInvalid(next);
-                        load(q, next);
-                      },
-                    }),
-                    '包含已失效'
-                  )
-                ),
-                loading && items.length === 0
-                  ? h('div', { style: S.empty }, '加载中…')
-                  : displayItems.length === 0
-                    ? h('div', { style: S.empty }, items.length === 0
-                        ? '还没有记忆。跟助手聊几句，它会自己判断该记什么。'
-                        : '当前筛选条件下没有记忆。')
-                    : h('div', { style: S.list },
-                        displayItems.map((it) => h(MemoryRow, {
-                          key: it.ep_id, item: it, busy: busy,
-                          onDelete: onDelete, onRevise: onRevise,
-                        })
-                      )
-                    ),
-                h('div', { style: S.hint },
-                  '记忆永不物理删除，删除只是标记失效，仍可查证历史。',
-                  h('br', null),
-                  '系统会自动判断该记什么，也可以直接对助手说「记住 …」。'
-                )
-              )
+        renderTab()
       );
+
+      // 说明：原来用一长串嵌套三元表达式决定渲染哪个 Tab，
+      // 嵌套层级过深（7 层），缩进和理解都极易出错，曾导致渲染异常。
+      // 现在改成独立函数 + if/else。
+      // 关键：这两个函数必须定义在 MemoryPage 内部（闭包），
+      // 才能访问 tab / displayItems / cards 等局部变量。
+      // （曾经定义在外部，导致渲染时 ReferenceError，界面白屏）
+      function renderTab() {
+        if (tab === 'config') return h(ConfigPage, null)
+        if (tab === 'inject') return h(InjectHistoryView, null)
+        if (tab === 'sleep') return h(SleepHistoryView, null)
+        if (tab === 'audit') return h(AuditView, null)
+        if (tab === 'note') return h(NoteView, null)
+        if (tab === 'todo') return h(TodoView, null)
+        if (tab === 'timeline') return h(TimelineView, { items: displayItems })
+        return renderList()
+      }
+
+      function renderList() {
+        return h('div', null,
+        h('div', { style: S.stats },
+          cards.map((c, i) => h('div', { key: 'c' + i, style: S.statCard },
+            h('div', { style: S.statLabel }, c[0]),
+            h('div', { style: S.statValue }, String(c[1] == null ? '-' : c[1]))
+          ))
+        ),
+        h('div', { style: S.toolbar },
+          h('input', {
+            style: S.input,
+            placeholder: '搜索记忆内容…',
+            value: q,
+            onChange: (e) => setQ(e.target.value),
+            onKeyDown: (e) => { if (e.key === 'Enter') load(q, showInvalid); },
+          }),
+          h('button', { style: S.btnPrimary, onClick: () => load(q, showInvalid) }, '搜索'),
+          h('select', {
+            style: Object.assign({}, S.btn, { padding: '6px 8px' }),
+            value: sortBy,
+            onChange: (e) => setSortBy(e.target.value),
+          },
+            h('option', { value: 'time' }, '按时间'),
+            h('option', { value: 'cost' }, '按代价'),
+            h('option', { value: 'affect' }, '按情绪')
+          ),
+          h('select', {
+            style: Object.assign({}, S.btn, { padding: '6px 8px' }),
+            value: filter,
+            onChange: (e) => setFilter(e.target.value),
+          },
+            h('option', { value: 'all' }, '全部'),
+            h('option', { value: 'high_cost' }, '高代价'),
+            h('option', { value: 'high_affect' }, '强情绪'),
+            h('option', { value: 'negative' }, '负向情绪'),
+            h('option', { value: 'positive' }, '正向情绪')
+          ),
+          h('label', {
+            style: {
+              fontSize: 12, display: 'flex', alignItems: 'center', gap: 6,
+              color: 'var(--dsw-alias-label-secondary)',
+              whiteSpace: 'nowrap', cursor: 'pointer',
+            },
+          },
+            h('input', {
+              type: 'checkbox',
+              checked: showInvalid,
+              onChange: (e) => {
+                const next = e.target.checked;
+                setShowInvalid(next);
+                load(q, next);
+              },
+            }),
+            '包含已失效'
+          )
+        ),
+        loading && items.length === 0
+          ? h('div', { style: S.empty }, '加载中…')
+          : displayItems.length === 0
+            ? h('div', { style: S.empty }, items.length === 0
+                ? '还没有记忆。跟助手聊几句，它会自己判断该记什么。'
+                : '当前筛选条件下没有记忆。')
+            : h('div', { style: S.list },
+                displayItems.map((it) => h(MemoryRow, {
+                  key: it.ep_id, item: it, busy: busy,
+                  onDelete: onDelete, onRevise: onRevise,
+                })
+              )
+            ),
+        h('div', { style: S.hint },
+          '记忆永不物理删除，删除只是标记失效，仍可查证历史。',
+          h('br', null),
+          '系统会自动判断该记什么，也可以直接对助手说「记住 …」。'
+        )
+        )
+      }
     }
 
-    // ============================================================
-    // 导出（照官方模板：返回 { inject, apply }）
-    // ============================================================
+  // ============================================================
+  // 导出（照官方模板：返回 { inject, apply }）
+  // ============================================================
     return {
       inject: ['slots'],
       apply(ctx) {
