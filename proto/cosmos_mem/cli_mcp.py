@@ -742,17 +742,25 @@ def cmd_inject_history(st, payload) -> dict:
 
 def cmd_note(st, payload) -> dict:
     """
-    笔记管理（记忆系统的另一半：把可复用的记忆沉淀成知识）。
+    知识沉淀管理（三层：随笔 → 笔记 → 手册）。
 
     用户要求（2026-11-07）：
-      "记忆系统应该记录应该记住的内容以及长期记忆。
-       像编程语言等技术性和体系性的内容，新学的人也不可能一直记着。
-       所以需要定期把可复用的记忆整理出来记录成笔记。
-       这就是记笔记的能力，也就是写书、写手册的能力。"
+      "我们不可能去背诵书，也不可能记住所有的自然规律，
+       但是我们会记住一些重要或者常用的东西。
+       而那些不常用的、少见但重要的，或者少见又不重要的东西，
+       我们经常会把它体系性地记录在笔记本里。
+       有的时候，可以在闲暇时候把这些笔记整理成体系性的书籍、参考手册等等。
+       所以，先是像随笔一样的零散笔记，然后是体系化的书籍、手册等等。"
+
+    三层：
+      scrap  随笔  零散灵感、踩坑记录（随时记，不成体系）
+      note   笔记  按主题整理，能独立看懂
+      manual 手册  体系化的书，可有章节（parent_id + order_idx）
 
     payload:
-      action  add | get | revise | invalidate | list | search | stats | suggest
-      ...     各 action 的字段
+      action  add | get | revise | promote | children | invalidate
+              | list | search | stats | suggest | suggest_manual | suggest_scrap
+      tier    scrap | note | manual
     """
     import notebook as _nb
 
@@ -763,13 +771,18 @@ def cmd_note(st, payload) -> dict:
                 st,
                 title=payload.get("title") or "",
                 body=payload.get("body") or "",
+                tier=payload.get("tier") or "note",
                 topic=payload.get("topic") or "",
                 tags=payload.get("tags") or [],
                 source_ep_ids=payload.get("source_ep_ids") or [],
+                source_note_ids=payload.get("source_note_ids") or [],
+                parent_id=payload.get("parent_id") or "",
+                order_idx=int(payload.get("order_idx") or 0),
                 level=payload.get("level") or "")
-            _audit(st, "note", msg=f"新建笔记 {r['title'][:40]}",
-                   extra={"note_id": r["note_id"], "chars": r["chars"],
-                          "topic": r["topic"]})
+            _audit(st, "note",
+                   msg=f"新建{r['tier_name']} {r['title'][:40]}",
+                   extra={"note_id": r["note_id"], "tier": r["tier"],
+                          "chars": r["chars"]})
             return {"ok": True, "note": r}
 
         if action == "get":
@@ -782,11 +795,26 @@ def cmd_note(st, payload) -> dict:
                 title=payload.get("title"),
                 body=payload.get("body"),
                 topic=payload.get("topic"),
-                tags=payload.get("tags"))
+                tags=payload.get("tags"),
+                tier=payload.get("tier"))
             if n:
-                _audit(st, "note", msg=f"修订笔记 {n['title'][:40]}",
+                _audit(st, "note", msg=f"修订{n['tier_name']} {n['title'][:40]}",
                        extra={"note_id": n["note_id"], "revision": n["revision"]})
             return {"ok": bool(n), "note": n}
+
+        if action == "promote":
+            # 升层：scrap → note → manual
+            n = _nb.note_promote(st, payload.get("note_id") or "",
+                                 payload.get("to_tier") or "note")
+            if n:
+                _audit(st, "note", msg=f"升层到{n['tier_name']} {n['title'][:36]}",
+                       extra={"note_id": n["note_id"], "tier": n["tier"]})
+            return {"ok": bool(n), "note": n}
+
+        if action == "children":
+            return {"ok": True,
+                    "children": _nb.note_children(st,
+                                                  payload.get("note_id") or "")}
 
         if action == "invalidate":
             ok = _nb.note_invalidate(st, payload.get("note_id") or "",
@@ -796,22 +824,37 @@ def cmd_note(st, payload) -> dict:
         if action == "list":
             return {"ok": True,
                     "notes": _nb.note_list(
-                        st, topic=payload.get("topic") or "",
+                        st, tier=payload.get("tier") or "",
+                        topic=payload.get("topic") or "",
                         include_invalid=bool(payload.get("include_invalid")),
-                        limit=int(payload.get("limit") or 100)),
+                        limit=int(payload.get("limit") or 200)),
                     "stats": _nb.note_stats(st)}
 
         if action == "search":
             return {"ok": True,
                     "notes": _nb.note_search(st, payload.get("query") or "",
-                                             int(payload.get("limit") or 20))}
+                                             tier=payload.get("tier") or "",
+                                             limit=int(payload.get("limit") or 30))}
 
         if action == "stats":
             return {"ok": True, "stats": _nb.note_stats(st)}
 
         if action == "suggest":
-            return {"ok": True,
+            # 记忆 → 笔记
+            return {"ok": True, "stage": "episode→note",
                     "topics": _nb.suggest_note_topics(
+                        st, int(payload.get("min_count") or 5))}
+
+        if action == "suggest_scrap":
+            # 随笔 → 笔记
+            return {"ok": True, "stage": "scrap→note",
+                    "topics": _nb.suggest_scrap_promote(
+                        st, int(payload.get("min_count") or 3))}
+
+        if action == "suggest_manual":
+            # 笔记 → 手册
+            return {"ok": True, "stage": "note→manual",
+                    "topics": _nb.suggest_manual_topics(
                         st, int(payload.get("min_count") or 5))}
 
         return {"ok": False, "error": f"未知 action: {action}"}
@@ -869,6 +912,155 @@ def cmd_todo(st, payload) -> dict:
 
         if action == "stats":
             return {"ok": True, "stats": _nb.todo_stats(st)}
+
+        return {"ok": False, "error": f"未知 action: {action}"}
+    except Exception as e:
+        return {"ok": False, "error": f"{type(e).__name__}: {e}"}
+
+
+def cmd_compose(st, payload) -> dict:
+    """
+    知识册装配（三段式，避免模型非必要的上下文整理）。
+
+    用户指出的架构（2026-11-07）：
+      "这种随笔到手册书籍应该是流程性的，
+       不应该是每一个东西都需要大模型从头到尾自己重新生成。
+       模型每次生成的是随笔，积累到一定量之后，
+       模型不需要去处理，只需要调用那个程序，
+       程序直接把这些东西合并成一个册子，
+       之后模型再对这个册子进行重新重构和梳理。
+       也就是说，要避免模型这种非必要的上下文整理。"
+
+    阶段：
+      1. 模型写随笔（外部完成）
+      2. **程序**机械合并成册子（本命令的 action=digest，零模型）
+      3. 模型对册子重构（本命令返回 prompt，由插件层调模型；
+         结果用 action=finalize 写回）
+
+    payload:
+      action   digest  | list_topics | finalize
+      topic    主题
+      tier     源层级（默认 scrap）
+      min_items 最少条目数
+      digest    （finalize 时）模型重构后的正文
+      note_ids  （finalize 时）来源条目 id
+    """
+    import compose as _cp
+
+    action = payload.get("action") or "digest"
+    try:
+        if action == "list_topics":
+            # 程序判定：哪些主题够格合并（零模型）
+            return {"ok": True,
+                    "topics": _cp.compile_all_topics(
+                        st, tier=payload.get("tier") or "scrap",
+                        min_items=int(payload.get("min_items") or 3))}
+
+        if action == "digest":
+            r = _cp.compose_flow(
+                st, topic=payload.get("topic") or "",
+                tier=payload.get("tier") or "scrap",
+                min_items=int(payload.get("min_items") or 3),
+                call_model=None)
+            _audit(st, "note",
+                   msg=f"合并册子 {r.get('topic', '')} ({r.get('n_items', 0)}条)",
+                   extra={"stage": r.get("stage"),
+                          "chars": r.get("digest_chars", 0)})
+            return {"ok": r.get("stage") != "insufficient", **r}
+
+        if action == "finalize":
+            # 两种输入：
+            #   outline_raw  — 模型输出的结构方案 JSON（推荐）
+            #   digest       — 已组装好的正文（兼容旧调用）
+            import compose as _cp
+
+            topic = payload.get("topic") or ""
+            note_ids = payload.get("note_ids") or []
+            title = payload.get("title") or ""
+
+            outline_raw = payload.get("outline_raw") or ""
+            items = payload.get("items") or []
+
+            if outline_raw:
+                outline = _cp.parse_outline(outline_raw)
+                if not outline:
+                    return {"ok": False,
+                            "error": "模型输出无法解析为结构方案",
+                            "raw": outline_raw[:300]}
+                body = _cp.assemble_manual(st, outline, items,
+                                           topic=topic, title=title)
+                m = _cp.finalize_manual(
+                    st, topic=topic, manual_body=body,
+                    source_note_ids=note_ids,
+                    title=title or outline.get("title") or "")
+                _audit(st, "note",
+                       msg=f"装订手册 {m['title'][:40]}（模型定大纲+程序组装）",
+                       extra={"note_id": m["note_id"],
+                              "sources": len(note_ids),
+                              "chars": m["chars"],
+                              "sections": len(outline.get("outline") or [])})
+                return {"ok": True, "manual": m, "outline": outline,
+                        "assembly": "program"}
+
+            # 兼容：直接给正文
+            body = payload.get("digest") or ""
+            if not body.strip():
+                return {"ok": False, "error": "需要 outline_raw 或 digest"}
+            m = _cp.finalize_manual(st, topic=topic, manual_body=body,
+                                    source_note_ids=note_ids, title=title)
+            _audit(st, "note", msg=f"生成手册 {m['title'][:40]}",
+                   extra={"note_id": m["note_id"], "sources": len(note_ids)})
+            return {"ok": True, "manual": m}
+
+        return {"ok": False, "error": f"未知 action: {action}"}
+    except Exception as e:
+        return {"ok": False, "error": f"{type(e).__name__}: {e}"}
+
+
+def cmd_triage(st, payload) -> dict:
+    """
+    记忆分诊：用现有数据决定"该记在哪"（详见 triage.py）。
+
+    不需要发明新指标——系统已有两维数据：
+      常用度 ← channel 访问计数
+      重要性 ← cost（失去代价）
+
+    payload:
+      action   one | all | suggest | stats
+      ep_id    （one 时）单条记忆
+    """
+    import triage as _tg
+
+    action = payload.get("action") or "stats"
+    try:
+        if action == "one":
+            eid = payload.get("ep_id") or ""
+            if not eid:
+                return {"ok": False, "error": "ep_id 不能为空"}
+            return {"ok": True, **_tg.classify(st, eid)}
+
+        if action == "all":
+            t = _tg.triage_all(
+                st,
+                freq_high=int(payload.get("freq_high") or 3),
+                cost_high=float(payload.get("cost_high") or 0.7),
+                limit=int(payload.get("limit") or 500))
+            return {"ok": True,
+                    "counts": t["counts"], "thresholds": t["thresholds"],
+                    "critical": t["critical"][:20],
+                    "core": t["core"][:10],
+                    "minor": t["minor"][:20]}
+
+        if action == "suggest":
+            return {"ok": True,
+                    "suggestions": _tg.suggest_from_triage(
+                        st,
+                        note_hint_min=int(payload.get("min_items") or 3),
+                        freq_high=int(payload.get("freq_high") or 3),
+                        cost_high=float(payload.get("cost_high") or 0.7))}
+
+        if action == "stats":
+            return {"ok": True, "stats": _tg.stats(st)}
 
         return {"ok": False, "error": f"未知 action: {action}"}
     except Exception as e:
@@ -1073,6 +1265,8 @@ def main():
         "inject_history": cmd_inject_history,
         "note": cmd_note,
         "todo": cmd_todo,
+        "compose": cmd_compose,
+        "triage": cmd_triage,
     }
     fn = handlers.get(args.cmd)
     if not fn:

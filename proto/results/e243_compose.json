@@ -1,0 +1,104 @@
+{
+ "experiment": "E-243",
+ "n_pass": 19,
+ "n_total": 19,
+ "raw_chars": 282,
+ "digest_chars": 380,
+ "results": [
+  {
+   "name": "产出册子",
+   "ok": true,
+   "detail": "6 条"
+  },
+  {
+   "name": "去重生效",
+   "ok": true,
+   "detail": "去掉 2 条重复"
+  },
+  {
+   "name": "册子有内容",
+   "ok": true,
+   "detail": "380 字"
+  },
+  {
+   "name": "册子含标题",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "册子含条目编号",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "内核命令可独立产出册子",
+   "ok": true,
+   "detail": "stage=digest_ready"
+  },
+  {
+   "name": "返回了待用 prompt",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "新方案上下文不更大",
+   "ok": true,
+   "detail": "380 vs 282"
+  },
+  {
+   "name": "模型调用次数为 1（不是 N 次）",
+   "ok": true,
+   "detail": "程序合并 0 次 + 重构 1 次"
+  },
+  {
+   "name": "生成手册",
+   "ok": true,
+   "detail": "stage=manual_created"
+  },
+  {
+   "name": "明确标注程序组装",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "手册层级正确",
+   "ok": true,
+   "detail": "manual"
+  },
+  {
+   "name": "记录来源条目",
+   "ok": true,
+   "detail": "6 条"
+  },
+  {
+   "name": "原文原样保留（未改写）",
+   "ok": true,
+   "detail": "6 条原样在文内"
+  },
+  {
+   "name": "含章节标题",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "含条目关联",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "source_note_ids 非空",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "来源 id 都能查到",
+   "ok": true,
+   "detail": "5/5"
+  },
+  {
+   "name": "发现 sqlite 主题",
+   "ok": true,
+   "detail": "共 1 个"
+  }
+ ]
+}

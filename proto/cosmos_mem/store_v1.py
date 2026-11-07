@@ -683,6 +683,18 @@ class MemoryStore:
                 out.append((ep, round(scores.get(eid, 0.0), 3),
                             1 if eid in fixed else 0))
 
+        # 记录访问（E-242 修：原来 channel 计数只被睡眠调用，
+        # 真实检索命中从未记账，导致"常用度"永远是 0，
+        # 分诊（triage）无法区分常用/少见）。
+        # 这里在**检索命中**时记账：这是"被用到"的真实证据。
+        try:
+            import channel as _ch
+            hit_ids = [ep.ep_id for ep, _, _ in out]
+            if hit_ids:
+                _ch.bump_many(self, hit_ids, "recall_by_query", 1)
+        except Exception:
+            pass
+
         # L0/L1 记忆永远在场（docs/72）：
         # 红线（L0）与常驻准则（L1）必须每次都参与，缺了模型行为就变。
         # 与固定席位一样是**追加**而非替换，flag=2 标识受保护。

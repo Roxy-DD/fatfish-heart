@@ -257,10 +257,11 @@ window.__ModuleLoader__.load({
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.json();
       },
-      async getNotes(q, topic) {
+      async getNotes(q, topic, tier) {
         const p = new URLSearchParams();
         if (q) p.set('q', q);
         if (topic) p.set('topic', topic);
+        if (tier) p.set('tier', tier);
         const r = await fetch(BASE + '/note?' + p.toString());
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.json();
@@ -824,27 +825,50 @@ window.__ModuleLoader__.load({
     }
 
     // ============================================================
-    // 笔记视图（记忆系统的另一半：知识沉淀）
+    // 笔记视图（三层知识：随笔 → 笔记 → 手册）
     // ============================================================
+    const TIER_META = {
+      scrap: { name: '随笔', icon: '✎', desc: '零散灵光、踩坑记录' },
+      note: { name: '笔记', icon: '▤', desc: '按主题整理' },
+      manual: { name: '手册', icon: '▣', desc: '体系化成书' },
+    };
+
     function NoteView(props) {
       const [notes, setNotes] = useState([]);
       const [stats, setStats] = useState({});
+      const [tier, setTier] = useState('');
       const [busy, setBusy] = useState(false);
       const [showNew, setShowNew] = useState(false);
-      const [form, setForm] = useState({ title: '', body: '', topic: '' });
+      const [form, setForm] = useState({ title: '', body: '', topic: '', tier: 'scrap' });
       const [expanded, setExpanded] = useState({});
+      const [err, setErr] = useState('');
+      const [suggests, setSuggests] = useState([]);
 
-      const load = useCallback(async () => {
+      const load = useCallback(async (t) => {
+        setErr('');
         try {
-          const r = await api.getNotes();
+          const r = await api.getNotes('', '', t || '');
           setNotes((r && r.notes) || []);
           setStats((r && r.stats) || {});
         } catch (e) {
-          console.error('读取笔记失败', e);
+          setErr('读取知识库失败：' + (e && e.message ? e.message : String(e)));
         }
       }, []);
 
-      useEffect(() => { load(); }, [load]);
+      const loadSuggest = useCallback(async () => {
+        try {
+          const out = [];
+          for (const a of ['suggest', 'suggest_scrap', 'suggest_manual']) {
+            const r = await api.postNote({ action: a });
+            if (r && r.ok && (r.topics || []).length) {
+              out.push({ stage: r.stage, topics: r.topics });
+            }
+          }
+          setSuggests(out);
+        } catch (e) { /* ignore */ }
+      }, []);
+
+      useEffect(() => { load(''); loadSuggest(); }, [load, loadSuggest]);
 
       const onCreate = async () => {
         if (!form.title.trim() || !form.body.trim()) {
@@ -852,70 +876,137 @@ window.__ModuleLoader__.load({
           return;
         }
         setBusy(true);
+        setErr('');
         try {
-          await api.postNote({ action: 'add', ...form });
-          setForm({ title: '', body: '', topic: '' });
-          setShowNew(false);
-          await load();
+          const r = await api.postNote({ action: 'add', ...form });
+          if (r && r.ok) {
+            setForm({ title: '', body: '', topic: '', tier: form.tier });
+            setShowNew(false);
+            await load(tier);
+          } else {
+            setErr('保存失败：' + ((r && r.error) || '未知'));
+          }
         } finally {
           setBusy(false);
         }
       };
 
-      const [err, setErr] = useState('');
+      const onPromote = async (id, to) => {
+        setBusy(true);
+        try {
+          await api.postNote({ action: 'promote', note_id: id, to_tier: to });
+          await load(tier);
+        } finally {
+          setBusy(false);
+        }
+      };
+
+      const tierCounts = [['scrap', stats.scrap], ['note', stats.note], ['manual', stats.manual]];
 
       return h('div', null,
         h('div', { style: S.header },
-          h('div', { style: S.title }, '笔记'),
-          h('button', {
-            style: S.btnPrimary,
-            onClick: () => setShowNew(!showNew),
-          }, showNew ? '取消' : '写笔记')
+          h('div', { style: S.title }, '知识库'),
+          h('button', { style: S.btnPrimary, onClick: () => setShowNew(!showNew) },
+            showNew ? '取消' : '写一条')
         ),
         err ? h('div', { style: S.err }, err) : null,
         h('div', { style: S.hint },
-          '记忆记录「我经历过什么」，笔记沉淀「我总结出了什么」。' +
-          '把可复用的知识整理成体系化的笔记，以后查阅而不是反复记忆。'
+          '三层沉淀：随笔（随时记）→ 笔记（按主题整理）→ 手册（体系化成书）。' +
+          '常用→记在记忆里；少见但重要→写成详细笔记；少见又不重要→简短随笔。'
         ),
 
-        showNew ? h('div', {
-          style: { margin: '14px 0', padding: 14, border: '1px solid var(--dsw-alias-border-l1)', borderRadius: 6 },
+        // 层级切换
+        h('div', { style: { display: 'flex', gap: 8, margin: '12px 0', flexWrap: 'wrap' } },
+          h('button', {
+            style: tier === '' ? S.btnPrimary : S.btn,
+            onClick: () => { setTier(''); load(''); },
+          }, '全部 (' + (stats.valid || 0) + ')'),
+          tierCounts.map(([t, c]) =>
+            h('button', {
+              key: t,
+              style: tier === t ? S.btnPrimary : S.btn,
+              onClick: () => { setTier(t); load(t); },
+            }, TIER_META[t].icon + ' ' + TIER_META[t].name + ' (' + (c || 0) + ')')
+          )
+        ),
+
+        // 演化建议
+        suggests.length ? h('div', {
+          style: {
+            margin: '10px 0', padding: 12, borderRadius: 6,
+            background: 'var(--dsw-alias-state-business-tertiary)',
+            borderLeft: '3px solid var(--dsw-alias-state-business-primary)',
+            fontSize: 12,
+          },
         },
+          h('div', { style: { fontWeight: 600, marginBottom: 6 } }, '💡 可以整理了'),
+          suggests.map((s, i) =>
+            h('div', { key: 'sg' + i, style: { marginBottom: 4 } },
+              h('span', { style: { color: 'var(--dsw-alias-label-secondary)' } },
+                '[' + s.stage + '] '),
+              s.topics.slice(0, 3).map((t) => t.topic + '(' + t.count + ')').join('、')
+            )
+          )
+        ) : null,
+
+        // 新建表单
+        showNew ? h('div', {
+          style: {
+            margin: '14px 0', padding: 14,
+            border: '1px solid var(--dsw-alias-border-l1)', borderRadius: 6,
+          },
+        },
+          h('div', { style: { display: 'flex', gap: 8, marginBottom: 8 } },
+            h('select', {
+              style: Object.assign({}, S.input, { width: 110, flex: 'none' }),
+              value: form.tier,
+              onChange: (e) => setForm({ ...form, tier: e.target.value }),
+            },
+              h('option', { value: 'scrap' }, '✎ 随笔'),
+              h('option', { value: 'note' }, '▤ 笔记'),
+              h('option', { value: 'manual' }, '▣ 手册')
+            ),
+            h('input', {
+              style: Object.assign({}, S.input, { flex: 1 }),
+              placeholder: '标题（如：FTS5 JOIN 会回表）',
+              value: form.title,
+              onChange: (e) => setForm({ ...form, title: e.target.value }),
+            })
+          ),
           h('input', {
             style: Object.assign({}, S.input, { width: '100%', marginBottom: 8 }),
-            placeholder: '标题（如：Python 装饰器原理）',
-            value: form.title,
-            onChange: (e) => setForm({ ...form, title: e.target.value }),
-          }),
-          h('input', {
-            style: Object.assign({}, S.input, { width: '100%', marginBottom: 8 }),
-            placeholder: '主题分类（如：python / 数据库 / 项目架构）',
+            placeholder: '主题（如：sqlite / python / 项目架构）',
             value: form.topic,
             onChange: (e) => setForm({ ...form, topic: e.target.value }),
           }),
           h('textarea', {
             style: Object.assign({}, S.input, {
-              width: '100%', minHeight: 160, fontFamily: 'monospace', resize: 'vertical',
+              width: '100%', minHeight: 140, fontFamily: 'monospace', resize: 'vertical',
             }),
-            placeholder: '正文，支持 Markdown...',
+            placeholder: form.tier === 'scrap'
+              ? '随手记下就行，不用成体系...'
+              : (form.tier === 'manual' ? '体系化内容，支持 Markdown 章节...' : '按主题写清楚，能独立看懂...'),
             value: form.body,
             onChange: (e) => setForm({ ...form, body: e.target.value }),
           }),
           h('button', {
             style: Object.assign({}, S.btnPrimary, { marginTop: 8 }),
-            disabled: busy,
-            onClick: onCreate,
+            disabled: busy, onClick: onCreate,
           }, busy ? '保存中…' : '保存')
         ) : null,
 
+        // 列表
         notes.length === 0
-          ? h('div', { style: S.empty }, '还没有笔记。当某个主题的记忆攒多了，就把它整理成笔记。')
+          ? h('div', { style: S.empty },
+              tier ? '这一层还没有内容。' : '知识库还是空的。踩到坑就随手记一条随笔。')
           : h('div', { style: S.list },
               notes.map((n) => {
                 const isOpen = !!expanded[n.note_id];
+                const meta = TIER_META[n.tier] || TIER_META.note;
                 const date = n.updated_at
                   ? new Date(n.updated_at * 1000).toLocaleDateString('zh-CN')
                   : '';
+                const canPromote = n.tier === 'scrap' || n.tier === 'note';
                 return h('div', {
                   key: n.note_id,
                   style: {
@@ -928,17 +1019,26 @@ window.__ModuleLoader__.load({
                     onClick: () => setExpanded({ ...expanded, [n.note_id]: !isOpen }),
                   },
                     h('div', { style: { fontSize: 13, fontWeight: 600 } },
-                      (isOpen ? '▾ ' : '▸ ') + n.title),
-                    h('div', { style: { fontSize: 11, color: 'var(--dsw-alias-label-caption)' } },
-                      (n.topic ? n.topic + ' · ' : '') + n.chars + ' 字 · ' + date)
+                      (isOpen ? '▾ ' : '▸ ') + meta.icon + ' ' + n.title),
+                    h('div', { style: { fontSize: 11, color: 'var(--dsw-alias-label-caption)', whiteSpace: 'nowrap' } },
+                      (n.topic ? n.topic + ' · ' : '') + n.chars + ' 字' +
+                      (n.revision > 1 ? ' · rev' + n.revision : '') + ' · ' + date)
                   ),
-                  isOpen ? h('div', {
-                    style: {
-                      marginTop: 10, paddingLeft: 10,
-                      borderLeft: '2px solid var(--dsw-alias-border-l1)',
-                      fontSize: 12, whiteSpace: 'pre-wrap', lineHeight: 1.7,
-                    },
-                  }, n.body) : null
+                  isOpen ? h('div', null,
+                    h('div', {
+                      style: {
+                        marginTop: 10, paddingLeft: 10,
+                        borderLeft: '2px solid var(--dsw-alias-border-l1)',
+                        fontSize: 12, whiteSpace: 'pre-wrap', lineHeight: 1.75,
+                      },
+                    }, n.body),
+                    canPromote ? h('div', { style: { marginTop: 10, display: 'flex', gap: 8 } },
+                      h('button', {
+                        style: S.btnSmall, disabled: busy,
+                        onClick: () => onPromote(n.note_id, n.tier === 'scrap' ? 'note' : 'manual'),
+                      }, n.tier === 'scrap' ? '↑ 升为笔记' : '↑ 升为手册')
+                    ) : null
+                  ) : null
                 );
               })
             )

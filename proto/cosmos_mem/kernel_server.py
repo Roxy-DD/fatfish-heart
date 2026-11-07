@@ -66,6 +66,8 @@ def handle(st, cmd: str, payload: dict) -> dict:
         "inject_history": cli_mcp.cmd_inject_history,
         "note": cli_mcp.cmd_note,
         "todo": cli_mcp.cmd_todo,
+        "compose": cli_mcp.cmd_compose,
+        "triage": cli_mcp.cmd_triage,
     }
     fn = handlers.get(cmd)
     if not fn:

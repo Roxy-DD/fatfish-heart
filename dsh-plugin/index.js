@@ -1005,9 +1005,10 @@ export function apply(ctx, config) {
       if (sub === '/note' && method === 'GET') {
         const q = url.searchParams.get('q') || ''
         const topic = url.searchParams.get('topic') || ''
+        const tier = url.searchParams.get('tier') || ''
         const r = q
-          ? await callKernel(cfg, 'note', { action: 'search', query: q }, undefined, 15000)
-          : await callKernel(cfg, 'note', { action: 'list', topic }, undefined, 15000)
+          ? await callKernel(cfg, 'note', { action: 'search', query: q, tier }, undefined, 15000)
+          : await callKernel(cfg, 'note', { action: 'list', topic, tier }, undefined, 15000)
         return sendJson(res, 200, r)
       }
       if (sub === '/note' && method === 'POST') {
@@ -1026,6 +1027,24 @@ export function apply(ctx, config) {
       if (sub === '/todo' && method === 'POST') {
         const body = await readBody(req)
         const r = await callKernel(cfg, 'todo', body, undefined, 15000)
+        return sendJson(res, 200, r)
+      }
+      // 知识册装配（三段式：程序合并 → 模型重构）
+      if (sub === '/compose' && method === 'GET') {
+        const r = await callKernel(cfg, 'compose',
+          { action: 'list_topics', tier: 'scrap', min_items: 3 }, undefined, 15000)
+        return sendJson(res, 200, r)
+      }
+      if (sub === '/compose' && method === 'POST') {
+        const body = await readBody(req)
+        // digest 阶段是纯程序，快；finalize 是写库，也快
+        const r = await callKernel(cfg, 'compose', body, undefined, 30000)
+        return sendJson(res, 200, r)
+      }
+      // 分诊
+      if (sub === '/triage' && method === 'GET') {
+        const r = await callKernel(cfg, 'triage',
+          { action: 'stats' }, undefined, 20000)
         return sendJson(res, 200, r)
       }
       return sendJson(res, 404, { ok: false, error: 'unknown endpoint ' + sub })
@@ -1052,7 +1071,7 @@ export function apply(ctx, config) {
   //   ① 用模块级 Set 记录已注册的 path，跨 apply 调用保持
   //   ② 已注册的跳过，不重复注册
   //   ③ 注册失败时记录到 stderr，不只靠 debugLog
-  const routes = ['/list', '/invalidate', '/revise', '/stats', '/config', '/inject-history', '/sleep-history', '/audit', '/hook', '/seed', '/note', '/todo']
+  const routes = ['/list', '/invalidate', '/revise', '/stats', '/config', '/inject-history', '/sleep-history', '/audit', '/hook', '/seed', '/note', '/todo', '/compose', '/triage']
   let routeOk = 0
   let routeSkip = 0
   let routeFail = 0
@@ -1491,36 +1510,52 @@ export function apply(ctx, config) {
 
   ctx.tools.register({
     name: 'mem_note',
-    description: '记笔记（写书/写手册的能力）。记忆记录"我经历过什么"，笔记沉淀"我总结出了什么"——把可复用的知识整理成体系化的笔记，避免重复记忆。支持：add 新建、search 查找、list 列表、suggest 查看哪些主题该整理了。',
+    description: '知识沉淀（三层：随笔→笔记→手册）。记忆记录"我经历过什么"，笔记沉淀"我总结出了什么"。常用→记在记忆；少见但重要→写成详细笔记；少见又不重要→简短随笔。攒够同类可升层，最终整理成手册。action: add/get/revise/promote/list/search/suggest/suggest_scrap/suggest_manual。',
     parameters: {
       type: 'object',
       properties: {
-        action: { type: 'string', description: 'add | get | revise | search | list | stats | suggest' },
-        title: { type: 'string', description: '标题（add/revise）' },
-        body: { type: 'string', description: '正文，Markdown（add/revise）' },
-        topic: { type: 'string', description: '主题分类，如 python / 数据库 / 项目架构' },
+        action: { type: 'string', description: 'add | get | revise | promote | children | list | search | stats | suggest（记忆→笔记）| suggest_scrap（随笔→笔记）| suggest_manual（笔记→手册）' },
+        tier: { type: 'string', description: 'scrap 随笔（零散灵光）| note 笔记（按主题整理）| manual 手册（体系化成书）' },
+        title: { type: 'string', description: '标题' },
+        body: { type: 'string', description: '正文，Markdown' },
+        topic: { type: 'string', description: '主题分类，如 sqlite / python / 项目架构' },
         tags: { type: 'array', items: { type: 'string' }, description: '标签' },
-        source_ep_ids: { type: 'array', items: { type: 'string' }, description: '由哪些记忆整理而来（可溯源）' },
-        note_id: { type: 'string', description: '笔记 ID（get/revise）' },
-        query: { type: 'string', description: '搜索关键词（search）' },
+        source_ep_ids: { type: 'array', items: { type: 'string' }, description: '由哪些记忆整理而来' },
+        source_note_ids: { type: 'array', items: { type: 'string' }, description: '由哪些笔记整理而来' },
+        parent_id: { type: 'string', description: '手册的章节指向手册 note_id' },
+        order_idx: { type: 'number', description: '章节顺序' },
+        note_id: { type: 'string', description: '笔记 ID' },
+        to_tier: { type: 'string', description: 'promote 的目标层级' },
+        query: { type: 'string', description: '搜索关键词' },
       },
       required: ['action'],
     },
     output: {
       schema: { type: 'object' },
       render: (_a, v) => {
-        if (!v || !v.ok) return [{ type: 'text', text: '笔记操作失败：' + ((v && v.error) || '未知') }]
+        if (!v || !v.ok) return [{ type: 'text', text: '知识库操作失败：' + ((v && v.error) || '未知') }]
         if (v.note) {
           const n = v.note
-          return [{ type: 'text', text: `[${n.note_id}] ${n.title}（${n.chars}字，rev${n.revision}）\n${String(n.body).slice(0, 200)}` }]
+          return [{ type: 'text', text: `[${n.tier_name}] ${n.title}（${n.chars}字，rev${n.revision}）\n${String(n.body).slice(0, 250)}` }]
         }
         if (v.notes) {
-          const lines = v.notes.map((n) => `[${n.note_id.slice(0, 8)}] ${n.title}（${n.chars}字）`)
-          return [{ type: 'text', text: `共 ${v.notes.length} 篇笔记\n` + lines.join('\n') }]
+          const s = v.stats || {}
+          const groups = { scrap: [], note: [], manual: [] }
+          v.notes.forEach((n) => { (groups[n.tier] || groups.note).push(n) })
+          const out = []
+          if (groups.scrap.length) out.push('【随笔】\n' + groups.scrap.map((n) => `· ${n.title}`).join('\n'))
+          if (groups.note.length) out.push('【笔记】\n' + groups.note.map((n) => `· ${n.title}（${n.chars}字）`).join('\n'))
+          if (groups.manual.length) out.push('【手册】\n' + groups.manual.map((n) => `· ${n.title}`).join('\n'))
+          return [{ type: 'text', text: `随笔 ${s.scrap || 0} / 笔记 ${s.note || 0} / 手册 ${s.manual || 0}\n\n` + out.join('\n\n') }]
+        }
+        if (v.children) {
+          const lines = v.children.map((c) => `${c.order_idx}. ${c.title}`)
+          return [{ type: 'text', text: `章节（${v.children.length}）\n` + lines.join('\n') }]
         }
         if (v.topics) {
-          const lines = v.topics.map((t) => `· ${t.topic}：${t.count} 条记忆，建议整理成笔记`)
-          return [{ type: 'text', text: lines.length ? '建议整理的主题：\n' + lines.join('\n') : '暂无需要整理的主题' }]
+          const stage = v.stage || ''
+          const lines = v.topics.map((t) => `· ${t.topic}：${t.count} 条，建议整理成${t.suggest_tier === 'manual' ? '手册' : '笔记'}`)
+          return [{ type: 'text', text: (stage ? `[${stage}] ` : '') + (lines.length ? '建议：\n' + lines.join('\n') : '暂无建议') }]
         }
         return [{ type: 'text', text: JSON.stringify(v).slice(0, 500) }]
       },
@@ -1568,6 +1603,118 @@ export function apply(ctx, config) {
     },
     async execute(args, runCtx) {
       return await callKernel(cfg, 'todo', args, runCtx && runCtx.signal)
+    },
+  })
+
+  ctx.tools.register({
+    name: 'mem_compose',
+    description: '把攒够的随笔装订成手册。三段式：①程序把同主题随笔机械合并成册子（零上下文）②你只负责定大纲/分类/排序/标注关联——不重写内容 ③程序按你的结构原样组装成手册。所以你的输出量很小，只是结构方案，原文一字不改。action: list_topics（看哪些主题够格）| digest（只做程序合并）| compose（全流程）',
+    parameters: {
+      type: 'object',
+      properties: {
+        action: { type: 'string', description: 'list_topics | digest | compose' },
+        topic: { type: 'string', description: '主题（compose/digest 需要）' },
+        tier: { type: 'string', description: '源层级，默认 scrap 随笔' },
+        min_items: { type: 'number', description: '最少条目数，默认 3' },
+        title: { type: 'string', description: '可选：指定手册标题' },
+      },
+      required: ['action'],
+    },
+    output: {
+      schema: { type: 'object' },
+      render: (_a, v) => {
+        if (!v || !v.ok) return [{ type: 'text', text: '装订失败：' + ((v && v.error) || '未知') }]
+        if (v.topics) {
+          const lines = v.topics.map((t) => `· ${t.topic}：${t.count} 条随笔，可以装订成册`)
+          return [{ type: 'text', text: lines.length ? '可装订的主题：\n' + lines.join('\n') : '暂无可装订的主题' }]
+        }
+        if (v.manual) {
+          const ol = v.outline || {}
+          const secs = (ol.outline || []).map((s, i) => `${i + 1}. ${s.section}（${(s.items || []).length} 条）`)
+          return [{
+            type: 'text',
+            text: `手册已生成：《${v.manual.title}》${v.manual.chars} 字\n` +
+              `来源 ${(v.source_note_ids || []).length} 条随笔，正文由程序原样组装（未改写）\n\n` +
+              `大纲：\n${secs.join('\n')}`,
+          }]
+        }
+        if (v.stage === 'digest_ready') {
+          return [{ type: 'text', text: `原始册子已生成（${v.n_items} 条，${v.digest_chars} 字）。下一步只需给它定大纲。\n\n${String(v.digest).slice(0, 500)}` }]
+        }
+        return [{ type: 'text', text: JSON.stringify(v).slice(0, 500) }]
+      },
+    },
+    async execute(args, runCtx) {
+      const act = args.action || 'list_topics'
+      if (act === 'list_topics') {
+        return await callKernel(cfg, 'compose', { action: 'list_topics', ...args }, runCtx && runCtx.signal)
+      }
+      if (act === 'digest') {
+        return await callKernel(cfg, 'compose', { action: 'digest', ...args }, runCtx && runCtx.signal)
+      }
+      // compose 全流程：程序合并 → 模型定大纲 → 程序组装
+      const dg = await callKernel(cfg, 'compose',
+        { action: 'digest', topic: args.topic, tier: args.tier || 'scrap', min_items: args.min_items || 3 },
+        runCtx && runCtx.signal)
+      if (!dg || !dg.ok) return dg || { ok: false, error: '合并失败' }
+      if (dg.stage !== 'digest_ready') return dg
+
+      // 模型只输出结构方案（JSON），不写正文
+      const p = dg.prompt || {}
+      const r = await callModel(ctx, cfg, p.system, p.user, 2000, runCtx && runCtx.signal)
+      if (!r.ok) return { ok: false, error: '模型定大纲失败：' + r.error }
+
+      // 交给内核解析结构 + 程序组装
+      return await callKernel(cfg, 'compose', {
+        action: 'finalize',
+        topic: args.topic,
+        title: args.title || '',
+        outline_raw: r.text,
+        items: dg.items || [],
+        note_ids: dg.note_ids || [],
+      }, runCtx && runCtx.signal)
+    },
+  })
+
+  ctx.tools.register({
+    name: 'mem_triage',
+    description: '记忆分诊：用现有数据决定"该记在哪"。常用度看访问计数，重要性看 cost。四象限：常用+重要→留记忆；少见+重要→留记忆且写详细笔记；少见+不重要→写简短随笔。action: stats | all | suggest | one',
+    parameters: {
+      type: 'object',
+      properties: {
+        action: { type: 'string', description: 'stats | all | suggest | one' },
+        ep_id: { type: 'string', description: '单条记忆 ID（one）' },
+      },
+      required: ['action'],
+    },
+    output: {
+      schema: { type: 'object' },
+      render: (_a, v) => {
+        if (!v || !v.ok) return [{ type: 'text', text: '分诊失败：' + ((v && v.error) || '未知') }]
+        if (v.stats) {
+          const s = v.stats
+          return [{ type: 'text', text: `记忆分诊（共 ${s.total} 条）\n` +
+            `· 常用+重要（留记忆）：${s.counts.core}\n` +
+            `· 常用+不重要（留记忆）：${s.counts.common}\n` +
+            `· 少见+重要（该写详细笔记）：${s.counts.critical}\n` +
+            `· 少见+不重要（该写随笔）：${s.counts.minor}` }]
+        }
+        if (v.counts) {
+          return [{ type: 'text', text: `四象限：core=${v.counts.core} common=${v.counts.common} critical=${v.counts.critical} minor=${v.counts.minor}` }]
+        }
+        if (v.suggestions) {
+          const lines = v.suggestions.map((s) =>
+            `· ${s.quadrant} ${s.count} 条 → 写${s.suggest_tier === 'note' ? '详细笔记' : '简短随笔'}（${s.reason}）`)
+          return [{ type: 'text', text: lines.length ? '建议：\n' + lines.join('\n') : '暂无建议' }]
+        }
+        if (v.quadrant) {
+          return [{ type: 'text', text: `[${v.quadrant}] cost=${v.cost} 访问=${v.visits}\n策略：${v.strategy}` }]
+        }
+        return [{ type: 'text', text: JSON.stringify(v).slice(0, 400) }]
+      },
+    },
+    async execute(args, runCtx) {
+      return await callKernel(cfg, 'triage', args, runCtx && runCtx.signal)
     },
   })
 
