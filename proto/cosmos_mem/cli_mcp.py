@@ -664,6 +664,82 @@ def cmd_trace(st, payload) -> dict:
         return {"ok": False, "error": f"{type(e).__name__}: {e}"}
 
 
+def cmd_inject_log(st, payload) -> dict:
+    """
+    注入审计落库（E-236）。
+
+    背景：原来注入历史只存在插件内存里，重启即丢，
+          导致无法事后评估「这条记忆注入后有没有用」。
+          落库后才能做效果回测。
+
+    payload:
+      query            触发注入的用户消息
+      mode             query / slots
+      sid              会话 id
+      ep_ids           注入的记忆 id 数组
+      protected_count  L0/L1 条数
+      content_chars    注入内容总字符数
+      has_prewarm      是否有前瞻
+    """
+    import json as _json
+
+    try:
+        ep_ids = payload.get("ep_ids") or []
+        query = (payload.get("query") or "")[:120]
+        _audit(st, "inject",
+               msg=f"注入 {len(ep_ids)} 条 ← {query[:40]}",
+               sid=payload.get("sid") or "",
+               extra={
+                   "query": query,
+                   "mode": payload.get("mode"),
+                   "ep_ids": ep_ids,
+                   "protected_count": payload.get("protected_count", 0),
+                   "content_chars": payload.get("content_chars", 0),
+                   "has_prewarm": bool(payload.get("has_prewarm")),
+               })
+        return {"ok": True, "logged": len(ep_ids)}
+    except Exception as e:
+        return {"ok": False, "error": f"{type(e).__name__}: {e}"}
+
+
+def cmd_inject_history(st, payload) -> dict:
+    """
+    读注入历史（从 DB，持久化，跨重启可查）。
+
+    payload:
+      limit  默认 100
+      sid    可选，按会话过滤
+    """
+    import json as _json
+
+    limit = int(payload.get("limit") or 100)
+    sid = payload.get("sid") or None
+    try:
+        rows = st.con.execute(
+            "SELECT at, sid, msg, extra FROM audit_log "
+            "WHERE kind='inject'" +
+            (" AND sid=?" if sid else "") +
+            " ORDER BY seq DESC LIMIT ?",
+            ((sid, limit) if sid else (limit,))).fetchall()
+        out = []
+        for at, s, msg, extra in rows:
+            try:
+                d = _json.loads(extra) if extra else {}
+            except Exception:
+                d = {}
+            out.append({
+                "at": at, "sid": s or "", "query": d.get("query", ""),
+                "mode": d.get("mode", ""), "n_items": len(d.get("ep_ids") or []),
+                "ep_ids": d.get("ep_ids") or [],
+                "protected_count": d.get("protected_count", 0),
+                "content_chars": d.get("content_chars", 0),
+                "has_prewarm": d.get("has_prewarm", False),
+            })
+        return {"ok": True, "history": out, "count": len(out)}
+    except Exception as e:
+        return {"ok": False, "error": f"{type(e).__name__}: {e}"}
+
+
 def cmd_scan_conflicts(st, payload) -> dict:
     import conflict as _conflict
     from store_v1 import Embedder as _Emb
@@ -858,6 +934,8 @@ def main():
         "hook": cmd_hook,
         "seed": cmd_seed,
         "trace": cmd_trace,
+        "inject_log": cmd_inject_log,
+        "inject_history": cmd_inject_history,
     }
     fn = handlers.get(args.cmd)
     if not fn:

@@ -1,0 +1,62 @@
+{
+ "experiment": "E-236",
+ "n_pass": 11,
+ "n_total": 11,
+ "results": [
+  {
+   "name": "写入成功",
+   "ok": true,
+   "detail": "logged=2"
+  },
+  {
+   "name": "读取成功",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "有 2 条记录",
+   "ok": true,
+   "detail": "2"
+  },
+  {
+   "name": "含 query",
+   "ok": true,
+   "detail": "项目进度如何"
+  },
+  {
+   "name": "含 ep_ids",
+   "ok": true,
+   "detail": "1 个"
+  },
+  {
+   "name": "含 content_chars",
+   "ok": true,
+   "detail": "800"
+  },
+  {
+   "name": "含 protected_count",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "按 sid 过滤有效",
+   "ok": true,
+   "detail": "2"
+  },
+  {
+   "name": "不存在的 sid 返回 0",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "audit 统计含 inject",
+   "ok": true,
+   "detail": "2"
+  },
+  {
+   "name": "新进程仍能读到 2 条",
+   "ok": true,
+   "detail": "COUNT=2"
+  }
+ ]
+}

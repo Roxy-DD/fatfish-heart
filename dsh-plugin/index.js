@@ -1577,15 +1577,29 @@ export function apply(ctx, config) {
         msTotal: Date.now() - tSearch0,
       })
       // 记录注入历史（供 UI「注入历史」Tab 展示）
-      injectHistory.unshift({
+      const injectRec = {
         at: Date.now(),
         sid: sid.slice(0, 20),
         query: latest.slice(0, 120),
         mode,
         items: items.map((it) => ({ ep_id: it.ep_id, text: it.text })),
+        protectedCount: protectedItems.length,
         prewarm: prewarmText ? st.prewarm.prediction.slice(0, 200) : '',
-      })
+      };
+      injectHistory.unshift(injectRec)
       if (injectHistory.length > MAX_INJECT_HISTORY) injectHistory.length = MAX_INJECT_HISTORY
+
+      // E-236：注入审计落库（原来只在内存，重启即丢 → 无法事后评估效果）
+      // 异步写入，不阻塞本轮响应
+      callKernel(cfg, 'inject_log', {
+        query: injectRec.query,
+        mode,
+        sid: injectRec.sid,
+        ep_ids: injectRec.items.map((it) => it.ep_id),
+        protected_count: protectedItems.length,
+        content_chars: (protectedText || '').length + (body || '').length,
+        has_prewarm: !!prewarmText,
+      }, undefined, 8000).catch(() => { /* 审计失败不影响主流程 */ })
 
       const contexts = Array.isArray(result.contexts) ? result.contexts : []
       const parts = []
