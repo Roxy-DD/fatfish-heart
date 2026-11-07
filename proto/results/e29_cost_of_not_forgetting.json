@@ -1,0 +1,132 @@
+{
+ "experiment": "E-29",
+ "question": "不遗忘的代价是什么",
+ "feature": "hog128+center",
+ "threshold": 0.56,
+ "scaling": [
+  {
+   "n_train": 1000,
+   "n_stars": 406,
+   "acc": 0.904,
+   "bytes": 211120,
+   "build_sec": 0.03,
+   "query_ms": 0.28,
+   "stars_per_1k": 406.0
+  },
+  {
+   "n_train": 2000,
+   "n_stars": 798,
+   "acc": 0.925,
+   "bytes": 414960,
+   "build_sec": 0.06,
+   "query_ms": 0.443,
+   "stars_per_1k": 399.0
+  },
+  {
+   "n_train": 4000,
+   "n_stars": 1600,
+   "acc": 0.9375,
+   "bytes": 832000,
+   "build_sec": 0.14,
+   "query_ms": 0.625,
+   "stars_per_1k": 400.0
+  },
+  {
+   "n_train": 8000,
+   "n_stars": 3222,
+   "acc": 0.95,
+   "bytes": 1675440,
+   "build_sec": 0.35,
+   "query_ms": 1.072,
+   "stars_per_1k": 402.8
+  },
+  {
+   "n_train": 16000,
+   "n_stars": 6460,
+   "acc": 0.955,
+   "bytes": 3359200,
+   "build_sec": 0.7,
+   "query_ms": 1.935,
+   "stars_per_1k": 403.8
+  },
+  {
+   "n_train": 32000,
+   "n_stars": 12954,
+   "acc": 0.9635,
+   "bytes": 6736080,
+   "build_sec": 1.9,
+   "query_ms": 3.861,
+   "stars_per_1k": 404.8
+  }
+ ],
+ "fit": {
+  "slope": 0.405,
+  "intercept": -12.9
+ },
+ "extrapolation": [
+  {
+   "events": 100000,
+   "stars": 40491,
+   "bytes": 21055385,
+   "size": "20.1 MB",
+   "note": "约 3 年的每日记录"
+  },
+  {
+   "events": 1000000,
+   "stars": 405027,
+   "bytes": 210614344,
+   "size": "200.9 MB",
+   "note": "约 10 年"
+  },
+  {
+   "events": 10000000,
+   "stars": 4050392,
+   "bytes": 2106203939,
+   "size": "2.0 GB",
+   "note": "一个人一生的经历量级"
+  },
+  {
+   "events": 100000000,
+   "stars": 40504038,
+   "bytes": 21062099888,
+   "size": "19.6 GB",
+   "note": "超出一生"
+  }
+ ],
+ "pruning": [
+  {
+   "n_train": 4000,
+   "stars_before": 1600,
+   "stars_after": 794,
+   "acc_before": 0.9375,
+   "acc_after": 0.932,
+   "bytes_after": 412880
+  },
+  {
+   "n_train": 8000,
+   "stars_before": 3222,
+   "stars_after": 1583,
+   "acc_before": 0.95,
+   "acc_after": 0.9425,
+   "bytes_after": 823160
+  },
+  {
+   "n_train": 16000,
+   "stars_before": 6460,
+   "stars_after": 3246,
+   "acc_before": 0.955,
+   "acc_after": 0.9475,
+   "bytes_after": 1687920
+  },
+  {
+   "n_train": 32000,
+   "stars_before": 12954,
+   "stars_after": 6514,
+   "acc_before": 0.9635,
+   "acc_after": 0.958,
+   "bytes_after": 3387280
+  }
+ ],
+ "per_star_bytes": 520,
+ "elapsed_sec": 64.8
+}

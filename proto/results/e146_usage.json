@@ -1,0 +1,125 @@
+{
+ "experiment": "E-146",
+ "n_queries": 20,
+ "baseline": {
+  "recall": 1.0,
+  "hit": 20,
+  "avg_rank": 1.0,
+  "by_kind": {
+   "high": 1.0,
+   "mid": 1.0,
+   "low": 1.0,
+   "noise": 1.0
+  },
+  "crowd": 12,
+  "fam": 0.0
+ },
+ "best": {
+  "recall": 1.0,
+  "hit": 20,
+  "avg_rank": 1.0,
+  "by_kind": {
+   "high": 1.0,
+   "mid": 1.0,
+   "low": 1.0,
+   "noise": 1.0
+  },
+  "crowd": 12,
+  "fam": 0.0
+ },
+ "delta_recall": 0.0,
+ "delta_low": 0.0,
+ "scan": [
+  {
+   "recall": 1.0,
+   "hit": 20,
+   "avg_rank": 1.0,
+   "by_kind": {
+    "high": 1.0,
+    "mid": 1.0,
+    "low": 1.0,
+    "noise": 1.0
+   },
+   "crowd": 12,
+   "fam": 0.0
+  },
+  {
+   "recall": 1.0,
+   "hit": 20,
+   "avg_rank": 1.0,
+   "by_kind": {
+    "high": 1.0,
+    "mid": 1.0,
+    "low": 1.0,
+    "noise": 1.0
+   },
+   "crowd": 12,
+   "fam": 0.1
+  },
+  {
+   "recall": 1.0,
+   "hit": 20,
+   "avg_rank": 1.0,
+   "by_kind": {
+    "high": 1.0,
+    "mid": 1.0,
+    "low": 1.0,
+    "noise": 1.0
+   },
+   "crowd": 12,
+   "fam": 0.2
+  },
+  {
+   "recall": 1.0,
+   "hit": 20,
+   "avg_rank": 1.0,
+   "by_kind": {
+    "high": 1.0,
+    "mid": 1.0,
+    "low": 1.0,
+    "noise": 1.0
+   },
+   "crowd": 12,
+   "fam": 0.3
+  },
+  {
+   "recall": 1.0,
+   "hit": 20,
+   "avg_rank": 1.05,
+   "by_kind": {
+    "high": 1.0,
+    "mid": 1.0,
+    "low": 1.0,
+    "noise": 1.0
+   },
+   "crowd": 12,
+   "fam": 0.5
+  },
+  {
+   "recall": 1.0,
+   "hit": 20,
+   "avg_rank": 1.1,
+   "by_kind": {
+    "high": 1.0,
+    "mid": 1.0,
+    "low": 1.0,
+    "noise": 1.0
+   },
+   "crowd": 12,
+   "fam": 0.8
+  },
+  {
+   "recall": 1.0,
+   "hit": 20,
+   "avg_rank": 1.1,
+   "by_kind": {
+    "high": 1.0,
+    "mid": 1.0,
+    "low": 1.0,
+    "noise": 1.0
+   },
+   "crowd": 11,
+   "fam": 1.0
+  }
+ ]
+}

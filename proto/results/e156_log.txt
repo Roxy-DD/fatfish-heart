@@ -1,0 +1,109 @@
+==============================================================================================
+E-156 LongMemEval 适配层修正 + 基线对照
+==============================================================================================
+
+拉取 60 题…
+  拿到 60 题
+  非 abstention: 55 题
+
+----------------------------------------------------------------------------------------------
+逐题：三路组合 vs 三个基线
+----------------------------------------------------------------------------------------------
+#   题型                    记忆    组合    纯语义     BM25   随机     
+----------------------------------------------------------------------------------------------
+
+Loading weights:   0%|          | 0/71 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 71/71 [00:00<00:00, 1283.73it/s]
+0   temporal-reasoning    24    ❌     ✅       ✅      ✅      
+1   temporal-reasoning    24    ✅     ✅       ✅      ✅      
+2   temporal-reasoning    24    ✅     ✅       ✅      ✅      
+3   single-session-user   12    ✅     ✅       ✅      ✅      
+4   temporal-reasoning    10    ❌     ❌       ❌      ❌      
+5   single-session-prefe  20    ❌     ❌       ❌      ❌      
+6   single-session-user   12    ✅     ✅       ✅      ✅      
+7   multi-session         24    ✅     ✅       ✅      ✅      
+8   multi-session         22    ❌     ❌       ❌      ❌      
+9   single-session-user   12    ✅     ✅       ✅      ✅      
+10  temporal-reasoning    10    ✅     ✅       ✅      ✅      
+11  temporal-reasoning    24    ✅     ✅       ✅      ❌      
+12  single-session-prefe  16    ❌     ❌       ❌      ❌      
+13  multi-session         20    ❌     ❌       ❌      ❌      
+14  knowledge-update      24    ✅     ✅       ✅      ✅      
+15  temporal-reasoning    24    ❌     ❌       ❌      ❌      
+16  single-session-assis  12    ✅     ✅       ✅      ✅      
+17  multi-session         24    ❌     ❌       ❌      ❌      
+18  multi-session         48    ❌     ❌       ✅      ❌      
+19  single-session-user   12    ✅     ✅       ✅      ✅      
+20  knowledge-update      24    ✅     ✅       ✅      ✅      
+21  knowledge-update      24    ✅     ❌       ✅      ❌      
+22  temporal-reasoning    22    ❌     ❌       ❌      ❌      
+23  single-session-assis  13    ✅     ✅       ✅      ✅      
+24  temporal-reasoning    24    ❌     ❌       ❌      ❌      
+25  multi-session         22    ❌     ❌       ❌      ❌      
+26  single-session-assis  8     ✅     ✅       ✅      ✅      
+27  temporal-reasoning    36    ✅     ✅       ✅      ✅      
+28  multi-session         24    ❌     ❌       ❌      ❌      
+29  multi-session         24    ❌     ✅       ✅      ❌      
+30  multi-session         48    ✅     ❌       ✅      ❌      
+31  multi-session         36    ✅     ✅       ✅      ✅      
+32  single-session-prefe  20    ❌     ❌       ❌      ❌      
+33  multi-session         46    ❌     ❌       ❌      ❌      
+34  single-session-assis  6     ✅     ✅       ✅      ✅      
+35  temporal-reasoning    24    ✅     ✅       ✅      ❌      
+36  knowledge-update      24    ✅     ✅       ✅      ✅      
+37  single-session-user   12    ✅     ✅       ✅      ✅      
+38  single-session-user   12    ✅     ✅       ✅      ✅      
+39  knowledge-update      24    ✅     ✅       ✅      ❌      
+40  single-session-user   12    ✅     ✅       ✅      ✅      
+41  knowledge-update      24    ✅     ✅       ✅      ✅      
+42  single-session-user   10    ✅     ✅       ✅      ✅      
+43  temporal-reasoning    12    ❌     ❌       ❌      ❌      
+44  temporal-reasoning    24    ✅     ✅       ✅      ✅      
+45  multi-session         46    ✅     ✅       ✅      ✅      
+46  temporal-reasoning    12    ❌     ❌       ❌      ❌      
+47  single-session-assis  14    ✅     ✅       ✅      ✅      
+48  multi-session         24    ❌     ❌       ❌      ❌      
+49  single-session-assis  20    ✅     ✅       ✅      ✅      
+50  multi-session         24    ✅     ✅       ✅      ✅      
+51  temporal-reasoning    22    ❌     ❌       ❌      ❌      
+52  single-session-assis  8     ✅     ✅       ✅      ✅      
+53  temporal-reasoning    22    ❌     ❌       ❌      ❌      
+54  multi-session         48    ❌     ❌       ❌      ❌      
+
+==============================================================================================
+汇总
+==============================================================================================
+
+  方法                  可及率         vs 随机
+  ------------------------------------------------------------
+  我们的三路组合             0.6000      +0.0727
+  纯语义（向量）             0.6000      +0.0727
+  BM25 关键词            0.6545      +0.1273
+  随机（下界）              0.5273      +0.0000
+
+  三路组合分题型：
+  题型                        可及/总        可及率
+  ------------------------------------------------------------
+  temporal-reasoning        7/16        0.4375
+  multi-session             5/15        0.3333
+  single-session-user       8/8         1.0000
+  single-session-assistant  7/7         1.0000
+  knowledge-update          6/6         1.0000
+  single-session-preferenc  0/3         0.0000
+
+==============================================================================================
+结论
+==============================================================================================
+
+  题数: 55
+  三路组合: 0.6000
+  纯语义:   0.6000
+  BM25:     0.6545
+  随机:     0.5273
+
+  组合 vs 最好单路: -0.0545
+  组合 vs 随机:     +0.0727
+
+  → ⚠ 组合低于最好单路，融合策略需要调
+
+写入 C:\Users\xuee\Desktop\肥鱼之心\proto\results\e156_lme_baseline.json

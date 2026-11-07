@@ -1,0 +1,21 @@
+{
+ "experiment": "E-57",
+ "conds": {
+  "HIT_1": {
+   "n_q": 20,
+   "avg_ctx": 32.0
+  },
+  "HIT_10": {
+   "n_q": 20,
+   "avg_ctx": 330.0
+  },
+  "MISS_0": {
+   "n_q": 20,
+   "avg_ctx": 330.0
+  },
+  "MISS_NEAR": {
+   "n_q": 20,
+   "avg_ctx": 330.0
+  }
+ }
+}

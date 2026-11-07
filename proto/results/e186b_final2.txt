@@ -1,0 +1,35 @@
+
+Loading weights:   0%|          | 0/71 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 71/71 [00:00<00:00, 1948.68it/s]
+==============================================================================================
+E-186b 最终正确评分
+==============================================================================================
+
+总 302 题，基线命中 114，可救回 54
+
+  精排命中: 0/54 = 0.0000
+  整体: 基线 0.3775 → 精排后 0.3775  (+0.0000)
+
+  未命中案例:
+
+    [Q00] When did Melanie paint a sunrise?
+      ev 尾: ...p the people you work with. By the way, take a look at this.
+      pick尾: ...
+
+    [Q01] Where has Melanie camped?
+      ev 尾: ...amily camping at the beach. We love it, it brings us closer!
+      pick尾: ...
+
+    [Q02] Would Caroline likely have Dr. Seuss books on her 
+      ev 尾: ...at. What's a favorite book you remember from your childhood?
+      pick尾: ...
+
+    [Q03] When did Melanie read the book "nothing is impossi
+      ev 尾: ...nds me to always pursue my dreams, just like you are doing!🌟
+      pick尾: ...
+
+    [Q04] When did Melanie go to the pottery workshop?
+      ev 尾: ...kshop. We all made our own pots, it was fun and therapeutic!
+      pick尾: ...
+
+写入 C:\Users\xuee\Desktop\肥鱼之心\proto\results\e186b_rerank_final2.json

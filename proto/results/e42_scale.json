@@ -1,0 +1,50 @@
+{
+ "experiment": "E-42",
+ "n": 100000,
+ "dim": 512,
+ "encoding_sec": 269.1,
+ "encoding_per_sec": 371.6,
+ "latency": {
+  "enc_single_ms": 45.518,
+  "enc_batch8_ms": 31.711,
+  "v_full_ms": 9.115,
+  "v_int8_ms": 8.415,
+  "fts5_ms": 0.044,
+  "numpy_scan_ms": 5.835,
+  "router_miss_ms": 53.977,
+  "router_hit_ms": 8.459
+ },
+ "hit_rate": [
+  {
+   "type": "repeat",
+   "desc": "完全重复的查询",
+   "hit_rate": 0.0,
+   "saved_ms": 0.0
+  },
+  {
+   "type": "partial",
+   "desc": "取文本前半段",
+   "hit_rate": 0.005,
+   "saved_ms": 0.23
+  },
+  {
+   "type": "paraphrase",
+   "desc": "换语序+加前缀",
+   "hit_rate": 0.0,
+   "saved_ms": 0.0
+  },
+  {
+   "type": "random",
+   "desc": "随机无关查询",
+   "hit_rate": 0.0,
+   "saved_ms": 0.0
+  }
+ ],
+ "redline": {
+  "identical": true,
+  "migration_rate": 1.0,
+  "n_preserved": 100000,
+  "store_mb": 43.2,
+  "full_mb": 195.3
+ }
+}

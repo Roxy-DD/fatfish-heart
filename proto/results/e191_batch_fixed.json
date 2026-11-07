@@ -1,0 +1,15 @@
+{
+ "experiment": "E-191-fixed",
+ "n": 100,
+ "hit": 99,
+ "rate": 0.99,
+ "per_item_rate": 0.9074,
+ "details": [
+  {
+   "cid": "S033",
+   "q": "What was the poetry reading that Melanie attended ",
+   "ev_core": "Nope, never been to something like that. What was ",
+   "pick_core": "It was a transgender poetry reading where transgen"
+  }
+ ]
+}

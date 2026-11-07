@@ -1,0 +1,84 @@
+{
+ "experiment": "E-179",
+ "by_cat": {
+  "2": {
+   "n": 317,
+   "full": 27,
+   "part": 99,
+   "none": 191,
+   "avg_coverage": 0.1911
+  },
+  "3": {
+   "n": 86,
+   "full": 5,
+   "part": 29,
+   "none": 52,
+   "avg_coverage": 0.1583
+  },
+  "1": {
+   "n": 266,
+   "full": 125,
+   "part": 106,
+   "none": 35,
+   "avg_coverage": 0.6726
+  },
+  "4": {
+   "n": 830,
+   "full": 636,
+   "part": 131,
+   "none": 63,
+   "avg_coverage": 0.8484
+  }
+ },
+ "single_avg": 0.6726,
+ "multi_avg": 0.1583,
+ "samples": [
+  {
+   "q": "Would Caroline still want to pursue counseling as a career if she hadn't received support growing up?",
+   "ans": "Likely no",
+   "ans_words": [
+    "likely"
+   ],
+   "ev_text": "Thanks, Melanie. It really mattered. My own journey and the support I got made a huge difference. Now I want to help people go through it too. I saw how counseling and support groups improved my life,"
+  },
+  {
+   "q": "Would Melanie be more interested in going to a national park or a theme park?",
+   "ans": "National park; she likes the outdoors",
+   "ans_words": [
+    "likes",
+    "national",
+    "outdoors",
+    "park"
+   ],
+   "ev_text": "We always look forward to our family camping trip. We roast marshmallows, tell stories around the campfire and just enjoy each other's company. It's the highlight of our summer! I'll always remember o"
+  },
+  {
+   "q": "What would Caroline's political leaning likely be?",
+   "ans": "Liberal",
+   "ans_words": [
+    "liberal"
+   ],
+   "ev_text": "Hey Mel! How're ya doin'? Recently, I had a not-so-great experience on a hike. I ran into a group of religious conservatives who said something that really upset me. It made me think how much work we "
+  },
+  {
+   "q": "Would Caroline want to move back to her home country soon?",
+   "ans": "No; she's in the process of adopting children.",
+   "ans_words": [
+    "adopting",
+    "children",
+    "process"
+   ],
+   "ev_text": "Woohoo Melanie! I passed the adoption agency interviews last Friday! I'm so excited and thankful. This is a big move towards my goal of having a family. Thanks so much, Melanie! It's beautiful! It rea"
+  },
+  {
+   "q": "What might John's financial status be?",
+   "ans": "Middle-class or wealthy",
+   "ans_words": [
+    "class",
+    "middle",
+    "wealthy"
+   ],
+   "ev_text": "It's definitely isn't, Maria. My kids have so much and others don't. We really need to do something about it."
+  }
+ ]
+}

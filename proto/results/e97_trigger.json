@@ -1,0 +1,12 @@
+{
+ "experiment": "E-97",
+ "n": 29,
+ "call": 3,
+ "not_call": 26,
+ "tp": 3,
+ "fp": 0,
+ "fn": 2,
+ "tn": 24,
+ "recall": 0.6,
+ "model_call_ratio": 0.1034
+}

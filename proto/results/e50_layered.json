@@ -1,0 +1,190 @@
+{
+ "experiment": "E-50",
+ "cue_frac": 0.15,
+ "n_mem": 5000,
+ "n_tracked": 400,
+ "results": {
+  "topk_3": {
+   "recall": 0.5725,
+   "ctx": 3.0,
+   "groups": {
+    "burst": 0.6,
+    "spread": 0.54,
+    "emotional": 0.67,
+    "baseline": 0.48
+   }
+  },
+  "topk_5": {
+   "recall": 0.6275,
+   "ctx": 5.0,
+   "groups": {
+    "burst": 0.66,
+    "spread": 0.6,
+    "emotional": 0.71,
+    "baseline": 0.54
+   }
+  },
+  "topk_10": {
+   "recall": 0.7275,
+   "ctx": 10.0,
+   "groups": {
+    "burst": 0.73,
+    "spread": 0.72,
+    "emotional": 0.78,
+    "baseline": 0.68
+   }
+  },
+  "topk_20": {
+   "recall": 0.8025,
+   "ctx": 20.0,
+   "groups": {
+    "burst": 0.78,
+    "spread": 0.8,
+    "emotional": 0.84,
+    "baseline": 0.79
+   }
+  },
+  "thresh_0.3": {
+   "recall": 0.9875,
+   "ctx": 1774.77,
+   "groups": {
+    "burst": 0.99,
+    "spread": 0.98,
+    "emotional": 1.0,
+    "baseline": 0.98
+   }
+  },
+  "thresh_0.4": {
+   "recall": 0.945,
+   "ctx": 203.26,
+   "groups": {
+    "burst": 0.96,
+    "spread": 0.9,
+    "emotional": 0.96,
+    "baseline": 0.96
+   }
+  },
+  "thresh_0.5": {
+   "recall": 0.7625,
+   "ctx": 14.67,
+   "groups": {
+    "burst": 0.77,
+    "spread": 0.74,
+    "emotional": 0.83,
+    "baseline": 0.71
+   }
+  },
+  "thresh_0.6": {
+   "recall": 0.4,
+   "ctx": 1.7,
+   "groups": {
+    "burst": 0.41,
+    "spread": 0.36,
+    "emotional": 0.5,
+    "baseline": 0.33
+   }
+  },
+  "thresh_0.7": {
+   "recall": 0.0575,
+   "ctx": 0.14,
+   "groups": {
+    "burst": 0.1,
+    "spread": 0.05,
+    "emotional": 0.05,
+    "baseline": 0.03
+   }
+  },
+  "layer_C1_T0.45": {
+   "recall": 0.88,
+   "ctx": 54.62,
+   "groups": {
+    "burst": 0.91,
+    "spread": 0.85,
+    "emotional": 0.91,
+    "baseline": 0.85
+   }
+  },
+  "layer_C1_T0.55": {
+   "recall": 0.58,
+   "ctx": 6.16,
+   "groups": {
+    "burst": 0.56,
+    "spread": 0.57,
+    "emotional": 0.68,
+    "baseline": 0.51
+   }
+  },
+  "layer_C1_T0.65": {
+   "recall": 0.2025,
+   "ctx": 1.57,
+   "groups": {
+    "burst": 0.21,
+    "spread": 0.19,
+    "emotional": 0.26,
+    "baseline": 0.15
+   }
+  },
+  "layer_C2_T0.45": {
+   "recall": 0.88,
+   "ctx": 55.6,
+   "groups": {
+    "burst": 0.91,
+    "spread": 0.85,
+    "emotional": 0.91,
+    "baseline": 0.85
+   }
+  },
+  "layer_C2_T0.55": {
+   "recall": 0.58,
+   "ctx": 7.16,
+   "groups": {
+    "burst": 0.56,
+    "spread": 0.57,
+    "emotional": 0.68,
+    "baseline": 0.51
+   }
+  },
+  "layer_C2_T0.65": {
+   "recall": 0.205,
+   "ctx": 2.57,
+   "groups": {
+    "burst": 0.21,
+    "spread": 0.2,
+    "emotional": 0.26,
+    "baseline": 0.15
+   }
+  },
+  "layer_C3_T0.45": {
+   "recall": 0.88,
+   "ctx": 56.59,
+   "groups": {
+    "burst": 0.91,
+    "spread": 0.85,
+    "emotional": 0.91,
+    "baseline": 0.85
+   }
+  },
+  "layer_C3_T0.55": {
+   "recall": 0.58,
+   "ctx": 8.16,
+   "groups": {
+    "burst": 0.56,
+    "spread": 0.57,
+    "emotional": 0.68,
+    "baseline": 0.51
+   }
+  },
+  "layer_C3_T0.65": {
+   "recall": 0.2075,
+   "ctx": 3.57,
+   "groups": {
+    "burst": 0.21,
+    "spread": 0.21,
+    "emotional": 0.26,
+    "baseline": 0.15
+   }
+  }
+ },
+ "zero_sum_broken": true,
+ "best_layered": "layer_C1_T0.45"
+}

@@ -1,0 +1,65 @@
+{
+ "experiment": "E-81",
+ "n": 24,
+ "tp": 10,
+ "fp": 3,
+ "tn": 9,
+ "fn": 2,
+ "accuracy": 0.7917,
+ "precision": 0.7692,
+ "recall": 0.8333,
+ "f1": 0.8,
+ "baseline_e80_identity": 0.7083,
+ "mismatches": [
+  {
+   "rid": "I02",
+   "model": true,
+   "rule": false,
+   "text": "小李是我的大学室友",
+   "model_reason": "\"小李\"是称呼性专名，并用\"我的大学室友\"这一关系槽锁定所指",
+   "rule_hits": [
+    "fallback_false"
+   ]
+  },
+  {
+   "rid": "I07",
+   "model": false,
+   "rule": true,
+   "text": "那次出差回来之后总觉得累",
+   "model_reason": "\"那次出差\"是带指示词的指代，无先行词；且整句是主观感受，无确定对象",
+   "rule_hits": [
+    "c1_name_title"
+   ]
+  },
+  {
+   "rid": "I12",
+   "model": false,
+   "rule": true,
+   "text": "我表姐家的孩子今年上三年级",
+   "model_reason": "关系链跨两层（表姐→孩子），孩子可能不止一个，无姓名也无排行/特征限定",
+   "rule_hits": [
+    "c2_relation"
+   ]
+  },
+  {
+   "rid": "I20",
+   "model": false,
+   "rule": true,
+   "text": "小区门口的修车师傅姓王",
+   "model_reason": "只有姓氏\"王\"+\"小区门口修车师傅\"这一位置性角色，姓不唯一、角色可换人",
+   "rule_hits": [
+    "c1_name_title"
+   ]
+  },
+  {
+   "rid": "I22",
+   "model": true,
+   "rule": false,
+   "text": "房东说下个月涨房租",
+   "model_reason": "\"房东\"是说话人的固定关系槽，通常唯一，可指认",
+   "rule_hits": [
+    "c4_unknown"
+   ]
+  }
+ ]
+}

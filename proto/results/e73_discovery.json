@@ -1,0 +1,141 @@
+{
+ "experiment": "E-73",
+ "model_verdicts": {
+  "ok": 3,
+  "missing_object": 5,
+  "vague_value": 2,
+  "bare_pronoun": 7,
+  "undefined_convention": 2,
+  "unanchored_time": 1,
+  "vague_summary": 1
+ },
+ "new_types": [
+  {
+   "name": "missing_object",
+   "criterion": "句中有谓词（否决/说/提醒/同意/有问题），但承受对象是空的或只是虚义名词（东西/事/问题/条件/药/货），即使补全指代也无法回答「针对什么」。",
+   "examples": [
+    "R02",
+    "R06",
+    "R12",
+    "R15",
+    "R16"
+   ],
+   "detect": "先剥掉裸代词与时间缺陷做二次判定：若句中存在谓词，但其后无专名、编号、数量或引号内容，只接「东西/事/问题/条件/药/货/情况」等虚义名词，或谓词直接结句（如「他说不行」「记得提醒我」），则命中。规则：谓词表 ∧ ¬(专名|编号|数字|引号串) ∧ (虚义名词 或 谓词后即句末)。"
+  },
+  {
+   "name": "vague_value",
+   "criterion": "句中存在数值槽位（价格/成本/金额/数量/批次），但通篇没有阿拉伯数字或中文数字，只给了模糊量级词或状态词（太高/有点/还行/谈下来了），无法得到任何具体数值。",
+   "examples": [
+    "R04",
+    "R08"
+   ],
+   "detect": "规则：命中数值槽名词（价格|成本|金额|报价|数量|尺寸|重量）∧ 全句不含任何数字（\\d 或 一二三四五六七八九十百千万）∧ 含模糊词（太高|太低|偏高|偏低|有点|大概|差不多|还行|谈下来了|搞定了）。三条件同时成立即命中。"
+  },
+  {
+   "name": "undefined_convention",
+   "criterion": "用「老规矩/市场价/按惯例/按流程」这类未在任何地方定义过的内部约定或外部标准，替代了具体做法或具体数值。",
+   "examples": [
+    "R10",
+    "R14"
+   ],
+   "detect": "词表命中即可：老规矩|老办法|按惯例|按流程|走流程|市场价|行价|正常价|行情价。命中后再做一次库内校验——该术语在记忆库其他条目中是否有定义条目；无定义则确认命中。"
+  },
+  {
+   "name": "vague_summary",
+   "criterion": "句子很长且堆叠了大量评价性、态度性表述，但抽不出任何一个可验证事实（谁、对什么、何时、结论是什么），信息量为零。",
+   "examples": [
+    "R20"
+   ],
+   "detect": "规则：句长 > 60 字 ∧ 不含专名（人名/机构名）∧ 不含数字 ∧ 不含绝对日期 ∧ 空泛词计数 ≥ 2（还行|再讨论|可能需要|对一下|整体|细节|方向|资源分配）。全部成立即命中。"
+  }
+ ],
+ "rule_covered": 1,
+ "rule_missed": 17,
+ "missed_items": [
+  {
+   "rid": "R02",
+   "verdict": "missing_object",
+   "text": "医生说要连续吃两周的药，不能断"
+  },
+  {
+   "rid": "R04",
+   "verdict": "vague_value",
+   "text": "这个方案我否决了，因为成本太高"
+  },
+  {
+   "rid": "R05",
+   "verdict": "bare_pronoun",
+   "text": "明天记得带那个东西"
+  },
+  {
+   "rid": "R06",
+   "verdict": "missing_object",
+   "text": "他说不行"
+  },
+  {
+   "rid": "R07",
+   "verdict": "bare_pronoun",
+   "text": "这个方案后来改了"
+  },
+  {
+   "rid": "R09",
+   "verdict": "bare_pronoun",
+   "text": "我已经跟他对接过了"
+  },
+  {
+   "rid": "R10",
+   "verdict": "undefined_convention",
+   "text": "还是按老规矩办"
+  },
+  {
+   "rid": "R11",
+   "verdict": "bare_pronoun",
+   "text": "那个文件在共享盘里"
+  },
+  {
+   "rid": "R12",
+   "verdict": "missing_object",
+   "text": "记得提醒我"
+  },
+  {
+   "rid": "R13",
+   "verdict": "unanchored_time",
+   "text": "大概下周三吧"
+  },
+  {
+   "rid": "R14",
+   "verdict": "undefined_convention",
+   "text": "价格是市场价"
+  },
+  {
+   "rid": "R15",
+   "verdict": "missing_object",
+   "text": "他同意了，但是有条件"
+  },
+  {
+   "rid": "R16",
+   "verdict": "missing_object",
+   "text": "这批货有点问题"
+  },
+  {
+   "rid": "R17",
+   "verdict": "bare_pronoun",
+   "text": "我问过他了，他说等通知"
+  },
+  {
+   "rid": "R18",
+   "verdict": "bare_pronoun",
+   "text": "那个东西我放起来了"
+  },
+  {
+   "rid": "R19",
+   "verdict": "bare_pronoun",
+   "text": "到那边之后再说"
+  },
+  {
+   "rid": "R20",
+   "verdict": "vague_summary",
+   "text": "今天开完会之后感觉整体方向还行，但是细节还需要再讨论一下，特别是关于接下来的排期和资源分配，可能需要再找几个人对一下"
+  }
+ ]
+}

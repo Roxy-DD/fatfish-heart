@@ -1,0 +1,32 @@
+{
+ "experiment": "E-134",
+ "passed": true,
+ "n_pass": 6,
+ "n_total": 6,
+ "cases": [
+  {
+   "case": "add_visible",
+   "ok": true
+  },
+  {
+   "case": "invalidate_excluded",
+   "ok": true
+  },
+  {
+   "case": "include_invalid_finds_old",
+   "ok": true
+  },
+  {
+   "case": "apply_verdict_excluded",
+   "ok": true
+  },
+  {
+   "case": "revise_visible",
+   "ok": true
+  },
+  {
+   "case": "restart_consistent",
+   "ok": true
+  }
+ ]
+}

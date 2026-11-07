@@ -1,0 +1,12 @@
+{
+ "experiment": "E-87",
+ "recall": 1.0,
+ "route_hit": 5,
+ "redline": {
+  "R1 迁移100%": true,
+  "R2 能力不降": true,
+  "R3 索引可重建": true,
+  "R4 不丢数据": true
+ },
+ "all_pass": true
+}

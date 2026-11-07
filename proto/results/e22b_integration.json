@@ -1,0 +1,117 @@
+{
+ "experiment": "E-22b",
+ "n_pass": 22,
+ "n_total": 22,
+ "results": [
+  {
+   "name": "remember 有日志",
+   "ok": true,
+   "detail": "5 条"
+  },
+  {
+   "name": "recall 有日志",
+   "ok": true,
+   "detail": "2 条"
+  },
+  {
+   "name": "sleep_prepare 找到候选对",
+   "ok": true,
+   "detail": "10 对"
+  },
+  {
+   "name": "sleep_apply 成功",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R2 红线：drop 仍存在",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R2 红线：drop 已失效",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R2 红线：drop 有 superseded_by",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "sleep 有日志",
+   "ok": true,
+   "detail": "1 条"
+  },
+  {
+   "name": "cmd_judge 成功",
+   "ok": true,
+   "detail": "relation=replace"
+  },
+  {
+   "name": "conflict 有日志",
+   "ok": true,
+   "detail": "1 条"
+  },
+  {
+   "name": "cmd_affect 成功",
+   "ok": true,
+   "detail": "affect=0.9"
+  },
+  {
+   "name": "affect 有日志",
+   "ok": true,
+   "detail": "1 条"
+  },
+  {
+   "name": "cmd_chain_apply 成功",
+   "ok": true,
+   "detail": "chain_count=1"
+  },
+  {
+   "name": "chain 有日志",
+   "ok": true,
+   "detail": "1 条"
+  },
+  {
+   "name": "audit 查询成功",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "统计包含多类事件",
+   "ok": true,
+   "detail": "6 类"
+  },
+  {
+   "name": "按 remember 过滤可用",
+   "ok": true,
+   "detail": "6 条"
+  },
+  {
+   "name": "按 recall 过滤可用",
+   "ok": true,
+   "detail": "2 条"
+  },
+  {
+   "name": "按 sleep 过滤可用",
+   "ok": true,
+   "detail": "1 条"
+  },
+  {
+   "name": "按 conflict 过滤可用",
+   "ok": true,
+   "detail": "1 条"
+  },
+  {
+   "name": "按 affect 过滤可用",
+   "ok": true,
+   "detail": "1 条"
+  },
+  {
+   "name": "按 chain 过滤可用",
+   "ok": true,
+   "detail": "1 条"
+  }
+ ]
+}

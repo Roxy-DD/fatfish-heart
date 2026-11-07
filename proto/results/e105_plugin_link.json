@@ -1,0 +1,13 @@
+{
+ "experiment": "E-105",
+ "n_queries": 8,
+ "hit_agree": 8,
+ "hit_agree_rate": 1.0,
+ "scoped_agree": 5,
+ "scoped_total": 5,
+ "slot_agree": true,
+ "stats_agree": true,
+ "all_equivalent": true,
+ "direct_count": 10,
+ "link_count": 10
+}

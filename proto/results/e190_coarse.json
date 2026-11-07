@@ -1,0 +1,9 @@
+{
+ "experiment": "E-190",
+ "n": 48,
+ "cos_mean": 0.6477,
+ "cos_median": 0.6479,
+ "gap_mean": 0.0778,
+ "kw_hit_mean": 2.56,
+ "kw_zero_ratio": 0.0417
+}

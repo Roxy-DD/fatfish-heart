@@ -1,0 +1,92 @@
+{
+ "experiment": "E-27",
+ "n_pass": 17,
+ "n_total": 17,
+ "results": [
+  {
+   "name": "invalidate 返回 False",
+   "ok": true,
+   "detail": "返回 False"
+  },
+  {
+   "name": "钩子仍有效",
+   "ok": true,
+   "detail": "invalid_at=None"
+  },
+  {
+   "name": "supersede 返回 False",
+   "ok": true,
+   "detail": "返回 False"
+  },
+  {
+   "name": "钩子仍有效",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "被跳过",
+   "ok": true,
+   "detail": "invalidated=[]"
+  },
+  {
+   "name": "记录 skipped_hooks",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "钩子仍有效",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "merge 被跳过",
+   "ok": true,
+   "detail": "merged=[]"
+  },
+  {
+   "name": "钩子仍有效且原文未变",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "无关 query 下钩子仍全部在场",
+   "ok": true,
+   "detail": "命中钩子 3/3"
+  },
+  {
+   "name": "钩子 flag=2 标识",
+   "ok": true,
+   "detail": "3 条"
+  },
+  {
+   "name": "list 返回钩子",
+   "ok": true,
+   "detail": "3 条"
+  },
+  {
+   "name": "check 识别钩子",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "check 识别非钩子",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "unlock 后可失效",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "unlock 后 invalidate 成功",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "普通记忆失效成功",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

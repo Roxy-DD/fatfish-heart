@@ -1,0 +1,184 @@
+{
+ "experiment": "E-49",
+ "k": 3,
+ "cue_frac": 0.15,
+ "n_mem": 5000,
+ "n_tracked": 400,
+ "results": {
+  "baseline": {
+   "overall": 0.57,
+   "groups": {
+    "burst": 0.6,
+    "spread": 0.54,
+    "emotional": 0.67,
+    "baseline": 0.47
+   }
+  },
+  "S1_SHORT_b0.2": {
+   "overall": 0.4925,
+   "groups": {
+    "burst": 0.82,
+    "spread": 0.1,
+    "emotional": 0.84,
+    "baseline": 0.21
+   },
+   "delta_overall": -0.0775,
+   "delta_spread": -0.44
+  },
+  "S1_SHORT_b0.5": {
+   "overall": 0.4675,
+   "groups": {
+    "burst": 0.9,
+    "spread": 0.0,
+    "emotional": 0.9,
+    "baseline": 0.07
+   },
+   "delta_overall": -0.1025,
+   "delta_spread": -0.54
+  },
+  "S1_SHORT_b1.0": {
+   "overall": 0.4525,
+   "groups": {
+    "burst": 0.9,
+    "spread": 0.0,
+    "emotional": 0.9,
+    "baseline": 0.01
+   },
+   "delta_overall": -0.1175,
+   "delta_spread": -0.54
+  },
+  "S2_LONG_b0.2": {
+   "overall": 0.4275,
+   "groups": {
+    "burst": 0.15,
+    "spread": 0.7,
+    "emotional": 0.17,
+    "baseline": 0.69
+   },
+   "delta_overall": -0.1425,
+   "delta_spread": 0.16
+  },
+  "S2_LONG_b0.5": {
+   "overall": 0.3025,
+   "groups": {
+    "burst": 0.0,
+    "spread": 0.62,
+    "emotional": 0.0,
+    "baseline": 0.59
+   },
+   "delta_overall": -0.2675,
+   "delta_spread": 0.08
+  },
+  "S2_LONG_b1.0": {
+   "overall": 0.2475,
+   "groups": {
+    "burst": 0.0,
+    "spread": 0.47,
+    "emotional": 0.0,
+    "baseline": 0.52
+   },
+   "delta_overall": -0.3225,
+   "delta_spread": -0.07
+  },
+  "S3_EMO_b0.2": {
+   "overall": 0.4075,
+   "groups": {
+    "burst": 0.17,
+    "spread": 0.7,
+    "emotional": 0.18,
+    "baseline": 0.58
+   },
+   "delta_overall": -0.1625,
+   "delta_spread": 0.16
+  },
+  "S3_EMO_b0.5": {
+   "overall": 0.1975,
+   "groups": {
+    "burst": 0.0,
+    "spread": 0.46,
+    "emotional": 0.0,
+    "baseline": 0.33
+   },
+   "delta_overall": -0.3725,
+   "delta_spread": -0.08
+  },
+  "S3_EMO_b1.0": {
+   "overall": 0.1575,
+   "groups": {
+    "burst": 0.0,
+    "spread": 0.38,
+    "emotional": 0.0,
+    "baseline": 0.25
+   },
+   "delta_overall": -0.4125,
+   "delta_spread": -0.16
+  },
+  "S2+SAT_b0.2": {
+   "overall": 0.4325,
+   "groups": {
+    "burst": 0.15,
+    "spread": 0.72,
+    "emotional": 0.17,
+    "baseline": 0.69
+   },
+   "delta_overall": -0.1375,
+   "delta_spread": 0.18
+  },
+  "S2+SAT_b0.5": {
+   "overall": 0.3075,
+   "groups": {
+    "burst": 0.0,
+    "spread": 0.64,
+    "emotional": 0.0,
+    "baseline": 0.59
+   },
+   "delta_overall": -0.2625,
+   "delta_spread": 0.1
+  },
+  "S2+SAT_b1.0": {
+   "overall": 0.2525,
+   "groups": {
+    "burst": 0.0,
+    "spread": 0.5,
+    "emotional": 0.0,
+    "baseline": 0.51
+   },
+   "delta_overall": -0.3175,
+   "delta_spread": -0.04
+  },
+  "S1+SAT_b0.2": {
+   "overall": 0.495,
+   "groups": {
+    "burst": 0.82,
+    "spread": 0.14,
+    "emotional": 0.84,
+    "baseline": 0.18
+   },
+   "delta_overall": -0.075,
+   "delta_spread": -0.4
+  },
+  "S1+SAT_b0.5": {
+   "overall": 0.4575,
+   "groups": {
+    "burst": 0.9,
+    "spread": 0.0,
+    "emotional": 0.9,
+    "baseline": 0.03
+   },
+   "delta_overall": -0.1125,
+   "delta_spread": -0.54
+  },
+  "S1+SAT_b1.0": {
+   "overall": 0.45,
+   "groups": {
+    "burst": 0.9,
+    "spread": 0.0,
+    "emotional": 0.9,
+    "baseline": 0.0
+   },
+   "delta_overall": -0.12,
+   "delta_spread": -0.54
+  }
+ },
+ "note": "E-48 失败原因：检索纯余弦，历史零参与；本实验先加强度通道"
+}

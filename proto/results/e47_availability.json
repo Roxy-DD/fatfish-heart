@@ -1,0 +1,70 @@
+{
+ "experiment": "E-47",
+ "n_memories": 8000,
+ "n_targets": 100,
+ "availability": 1.0,
+ "cue_weakening": [
+  {
+   "keep": 1.0,
+   "vec": 0.99,
+   "kw": 1.0
+  },
+  {
+   "keep": 0.75,
+   "vec": 0.99,
+   "kw": 1.0
+  },
+  {
+   "keep": 0.5,
+   "vec": 0.99,
+   "kw": 0.99
+  },
+  {
+   "keep": 0.3,
+   "vec": 0.93,
+   "kw": 0.91
+  },
+  {
+   "keep": 0.15,
+   "vec": 0.67,
+   "kw": 0.49
+  },
+  {
+   "keep": 0.05,
+   "vec": 0.4,
+   "kw": 0.57
+  }
+ ],
+ "recovery": {
+  "base": 0.67,
+  "multi_cue": 0.72,
+  "spread": 0.21,
+  "topk": [
+   {
+    "k": 5,
+    "recall": 0.67
+   },
+   {
+    "k": 10,
+    "recall": 0.73
+   },
+   {
+    "k": 20,
+    "recall": 0.77
+   },
+   {
+    "k": 50,
+    "recall": 0.82
+   },
+   {
+    "k": 100,
+    "recall": 0.85
+   },
+   {
+    "k": 200,
+    "recall": 0.91
+   }
+  ]
+ },
+ "verdict": "entrance_contraction"
+}

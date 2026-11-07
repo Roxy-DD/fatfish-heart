@@ -1,0 +1,140 @@
+
+Loading weights:   0%|          | 0/71 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 71/71 [00:00<00:00, 1409.52it/s]
+==============================================================================================
+E-164 拆解 6 条'余弦高却未召回'的案例
+==============================================================================================
+
+==============================================================================================
+问题: When did Melanie make a plate in pottery class?
+证据: D14:4  余弦排名 #3  余弦 0.6766
+
+  证据原文:
+    [1:33 pm on 25 August, 2023] Melanie: Yeah, I made it in pottery class yesterday. I love it! Pottery's so relaxing and creative. Have you tried it yet?
+
+  实际返回 top-10:
+    [D1:12] score=2.468  [1:56 pm on 8 May, 2023] Melanie: You'd be a great counselor! Your emp
+    [D14:3] score=2.258  [1:33 pm on 25 August, 2023] Caroline: Thanks, Melanie! That plate is 
+    [D12:2] score=2.255  [1:50 pm on 17 August, 2023] Melanie: Hey Caroline, sorry about the hi
+    [D5:4] score=2.249  [1:36 pm on 3 July, 2023] Melanie: Wow, Caroline! That's great! I just
+    [D12:3] score=2.168  [1:50 pm on 17 August, 2023] Caroline: Sure thing, Melanie! Can't wait
+    [D1:9] score=2.057  [1:56 pm on 8 May, 2023] Caroline: Gonna continue my edu and check out
+    [D5:5] score=1.986  [1:36 pm on 3 July, 2023] Caroline: Wow, Melanie! I'm getting creative
+    [D8:2] score=1.924  [1:51 pm on 15 July, 2023] Melanie: Hey Caroline, it's been super busy
+    [D6:10] score=1.905  [8:18 pm on 6 July, 2023] Melanie: I loved reading "Charlotte's Web" a
+    [D17:8] score=1.902  [10:31 am on 13 October, 2023] Melanie: Thanks for the tip, Caroline. 
+
+  查询拆解:
+    关键词: ['when', 'did', 'melanie', 'make', 'a', 'plate', 'in', 'pottery']
+    person=[] time=[] location=[]
+
+  证据条目的三路得分:
+    语义: 0.6766 × 2.0 = 1.353
+    关键词命中: 5/9
+
+  返回第 1 名 [D1:12] 得分来源:
+    关键词命中: 3/9  （证据条目只有 5）
+    长度: 168 vs 证据 151
+
+==============================================================================================
+问题: When did Melanie's family go on a roadtrip?
+证据: D18:1  余弦排名 #1  余弦 0.7102
+
+  证据原文:
+    [6:55 pm on 20 October, 2023] Melanie: Hey Caroline, that roadtrip this past weekend was insane! We were all freaked when my son got into an accident. We were so lucky he was okay.
+
+  实际返回 top-10:
+    [D2:15] score=2.809  [1:14 pm on 25 May, 2023] Melanie: You're doing something amazing! Cre
+    [D2:9] score=2.498  [1:14 pm on 25 May, 2023] Melanie: Wow, Caroline! That's awesome! Taki
+    [D4:3] score=2.296  [10:37 am on 27 June, 2023] Caroline: Thanks, Melanie! This necklace i
+    [D3:22] score=2.254  [7:55 pm on 9 June, 2023] Melanie: Absolutely, Caroline! I cherish tim
+    [D1:4] score=2.228  [1:56 pm on 8 May, 2023] Melanie: Wow, that's cool, Caroline! What hap
+    [D1:18] score=2.190  [1:56 pm on 8 May, 2023] Melanie: Yep, Caroline. Taking care of oursel
+    [D2:8] score=2.038  [1:14 pm on 25 May, 2023] Caroline: Researching adoption agencies — it
+    [D3:15] score=2.028  [7:55 pm on 9 June, 2023] Caroline: Wow, what an amazing family pic! H
+    [D1:2] score=2.000  [1:56 pm on 8 May, 2023] Melanie: Hey Caroline! Good to see you! I'm s
+    [D1:8] score=2.000  [1:56 pm on 8 May, 2023] Melanie: That's really cool. You've got guts.
+
+  查询拆解:
+    关键词: ['when', 'did', 'melanie', 's', 'family', 'go', 'on', 'a']
+    person=[] time=[] location=[]
+
+  证据条目的三路得分:
+    语义: 0.7102 × 2.0 = 1.420
+    关键词命中: 7/9
+
+  返回第 1 名 [D2:15] 得分来源:
+    关键词命中: 6/9  （证据条目只有 7）
+    长度: 150 vs 证据 275
+
+==============================================================================================
+问题: What did Mel and her kids make during the pottery workshop?
+证据: D8:2  余弦排名 #1  余弦 0.7402
+
+  证据原文:
+    [1:51 pm on 15 July, 2023] Melanie: Hey Caroline, it's been super busy here. So much since we talked! Last Fri I finally took my kids to a pottery workshop. We all made our own pot
+
+  实际返回 top-10:
+    [D1:2] score=2.793  [1:56 pm on 8 May, 2023] Melanie: Hey Caroline! Good to see you! I'm s
+    [D2:16] score=2.708  [1:14 pm on 25 May, 2023] Caroline: Thanks, Melanie! Your kind words r
+    [D6:9] score=2.422  [8:18 pm on 6 July, 2023] Caroline: I've got lots of kids' books- clas
+    [D8:4] score=2.374  [1:51 pm on 15 July, 2023] Melanie: The kids loved it! They were so ex
+    [D2:14] score=2.307  [1:14 pm on 25 May, 2023] Caroline: I'm thrilled to make a family for 
+    [D1:18] score=2.167  [1:56 pm on 8 May, 2023] Melanie: Yep, Caroline. Taking care of oursel
+    [D2:7] score=2.144  [1:14 pm on 25 May, 2023] Melanie: Thanks, Caroline. It's still a work
+    [D4:8] score=2.121  [10:37 am on 27 June, 2023] Melanie: It was an awesome time, Caroline!
+    [D8:5] score=1.989  [1:51 pm on 15 July, 2023] Caroline: Aww, that's so sweet! That cup is
+    [D9:1] score=1.986  [2:31 pm on 17 July, 2023] Melanie: Hey Caroline, hope all's good! I h
+
+  查询拆解:
+    关键词: ['what', 'did', 'mel', 'and', 'her', 'kids', 'make', 'during']
+    person=[] time=[] location=[]
+
+  证据条目的三路得分:
+    语义: 0.7402 × 2.0 = 1.480
+    关键词命中: 7/11
+
+  返回第 1 名 [D1:2] 得分来源:
+    关键词命中: 4/11  （证据条目只有 7）
+    长度: 132 vs 证据 210
+
+==============================================================================================
+问题: What kind of pot did Mel and her kids make with clay?
+证据: D8:4  余弦排名 #1  余弦 0.7156
+
+  证据原文:
+    [1:51 pm on 15 July, 2023] Melanie: The kids loved it! They were so excited to get their hands dirty and make something with clay. It was special to watch their creativity and imag
+
+  实际返回 top-10:
+    [D1:18] score=2.260  [1:56 pm on 8 May, 2023] Melanie: Yep, Caroline. Taking care of oursel
+    [D2:16] score=2.255  [1:14 pm on 25 May, 2023] Caroline: Thanks, Melanie! Your kind words r
+    [D1:2] score=2.241  [1:56 pm on 8 May, 2023] Melanie: Hey Caroline! Good to see you! I'm s
+    [D6:8] score=2.190  [8:18 pm on 6 July, 2023] Melanie: Sounds great! What kind of books yo
+    [D1:10] score=2.000  [1:56 pm on 8 May, 2023] Melanie: Wow, Caroline! What kinda jobs are y
+    [D15:3] score=1.906  [3:19 pm on 28 August, 2023] Caroline: Wow, your kids had so much fun 
+    [D18:6] score=1.886  [6:55 pm on 20 October, 2023] Caroline: The kids look so cute, Mel! I 
+    [D15:4] score=1.885  [3:19 pm on 28 August, 2023] Melanie: That sounds great, Caroline. Vol
+    [D6:9] score=1.820  [8:18 pm on 6 July, 2023] Caroline: I've got lots of kids' books- clas
+    [D2:9] score=1.813  [1:14 pm on 25 May, 2023] Melanie: Wow, Caroline! That's awesome! Taki
+
+  查询拆解:
+    关键词: ['what', 'kind', 'of', 'pot', 'did', 'mel', 'and', 'her']
+    person=[] time=[] location=[]
+
+  证据条目的三路得分:
+    语义: 0.7156 × 2.0 = 1.431
+    关键词命中: 6/12
+
+  返回第 1 名 [D1:18] 得分来源:
+    关键词命中: 4/12  （证据条目只有 6）
+    长度: 139 vs 证据 217
+
+==============================================================================================
+结论
+==============================================================================================
+
+如果证据条目的关键词命中数明显少于返回的第一名，
+说明问题在【关键词通道权重过高】或【语义权重不足】。
+如果两者相近但语义差很多，说明【语义权重 2.0 太低】。
+
+写入 C:\Users\xuee\Desktop\肥鱼之心\proto\results\e164_bug.json

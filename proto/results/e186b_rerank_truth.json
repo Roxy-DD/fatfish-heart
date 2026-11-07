@@ -1,0 +1,40 @@
+{
+ "experiment": "E-186b-truth",
+ "n": 54,
+ "hit": 49,
+ "rate": 0.9074,
+ "baseline": 0.3775,
+ "overall_gain": 0.1623,
+ "details": [
+  {
+   "cid": "Q00",
+   "q": "When did Melanie paint a sunrise?",
+   "ev_text": "p the people you work with. By the way, take a look at this.",
+   "pick_text": ", I painted that lake sunrise last year! It's special to me."
+  },
+  {
+   "cid": "Q15",
+   "q": "Would Caroline want to move back to her home count",
+   "ev_text": "kful. This is a big move towards my goal of having a family.",
+   "pick_text": " my roots and all the love and support I get from my family."
+  },
+  {
+   "cid": "Q22",
+   "q": "How did Melanie feel about her family supporting h",
+   "ev_text": "ks, Caroline. They're a real support. Appreciate them a lot.",
+   "pick_text": "esome - they helped out and showed lots of love and support."
+  },
+  {
+   "cid": "Q28",
+   "q": "What inspired Melanie's painting for the art show?",
+   "ev_text": "Q center. I wanted to capture everyone's unity and strength.",
+   "pick_text": " feelings and be creative. Each stroke carries a part of me."
+  },
+  {
+   "cid": "Q33",
+   "q": "What was the poetry reading that Melanie attended ",
+   "ev_text": "thing like that. What was it about? What made it so special?",
+   "pick_text": "owering to hear others share and celebrate their identities."
+  }
+ ]
+}

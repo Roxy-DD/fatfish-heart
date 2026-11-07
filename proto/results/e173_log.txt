@@ -1,0 +1,86 @@
+
+Loading weights:   0%|          | 0/71 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 71/71 [00:00<00:00, 1449.08it/s]
+==============================================================================================
+E-173 精确对比 store.search 与手写复现
+==============================================================================================
+
+库中 419 条记忆，取前 5 条查询对比
+
+
+==============================================================================================
+[0] When did Caroline go to the LGBTQ support group?
+  store.search top-3:
+    score=3.186  [1:56 pm on 8 May, 2023] Caroline: I went to a LGBTQ support gro
+    score=2.790  [1:56 pm on 8 May, 2023] Caroline: The support group has made me
+    score=2.326  [1:56 pm on 8 May, 2023] Caroline: Totally agree, Mel. Relaxing 
+  手写 top-3:
+    score=3.186  [1:56 pm on 8 May, 2023] Caroline: I went to a LGBTQ support gro
+    score=2.790  [1:56 pm on 8 May, 2023] Caroline: The support group has made me
+    score=2.399  [7:55 pm on 9 June, 2023] Caroline: Hey Melanie! How's it going?
+  完全一致: ❌
+    仅 store 有: 4
+    仅手写有:   4
+
+==============================================================================================
+[1] When did Melanie paint a sunrise?
+  store.search top-3:
+    score=3.105  [1:56 pm on 8 May, 2023] Caroline: Thanks, Melanie! That's reall
+    score=2.763  [1:56 pm on 8 May, 2023] Melanie: Yeah, I painted that lake sunr
+    score=2.090  [1:56 pm on 8 May, 2023] Melanie: Wow, love that painting! So co
+  手写 top-3:
+    score=3.105  [1:56 pm on 8 May, 2023] Caroline: Thanks, Melanie! That's reall
+    score=2.763  [1:56 pm on 8 May, 2023] Melanie: Yeah, I painted that lake sunr
+    score=2.567  [1:56 pm on 8 May, 2023] Melanie: That's really cool. You've got
+  完全一致: ❌
+    仅 store 有: 8
+    仅手写有:   8
+
+==============================================================================================
+[2] What fields would Caroline be likely to pursue in her educaton?
+  store.search top-3:
+    score=1.832  [3:31 pm on 23 August, 2023] Caroline: That's so funny! I used t
+    score=1.828  [10:37 am on 27 June, 2023] Melanie: Woah, Caroline, it sounds l
+    score=1.662  [1:14 pm on 25 May, 2023] Melanie: Thanks, Caroline. It's still 
+  手写 top-3:
+    score=2.617  [1:56 pm on 8 May, 2023] Caroline: Gonna continue my edu and che
+    score=2.558  [1:56 pm on 8 May, 2023] Caroline: I went to a LGBTQ support gro
+    score=2.513  [1:56 pm on 8 May, 2023] Melanie: Wow, Caroline! What kinda jobs
+  完全一致: ❌
+    仅 store 有: 5
+    仅手写有:   5
+
+==============================================================================================
+[3] What did Caroline research?
+  store.search top-3:
+    score=2.628  [1:56 pm on 8 May, 2023] Caroline: Gonna continue my edu and che
+    score=2.619  [1:56 pm on 8 May, 2023] Melanie: Wow, Caroline! What kinda jobs
+    score=2.358  [1:56 pm on 8 May, 2023] Caroline: Totally agree, Mel. Relaxing 
+  手写 top-3:
+    score=2.628  [1:56 pm on 8 May, 2023] Caroline: Gonna continue my edu and che
+    score=2.619  [1:56 pm on 8 May, 2023] Melanie: Wow, Caroline! What kinda jobs
+    score=2.568  [1:56 pm on 8 May, 2023] Caroline: I went to a LGBTQ support gro
+  完全一致: ❌
+    仅 store 有: 3
+    仅手写有:   3
+
+==============================================================================================
+[4] What is Caroline's identity?
+  store.search top-3:
+    score=1.908  [7:55 pm on 9 June, 2023] Caroline: Thanks, Mel! Your backing re
+    score=1.800  [3:31 pm on 23 August, 2023] Caroline: Thanks, Mel! I felt liber
+    score=1.400  [1:56 pm on 8 May, 2023] Caroline: I went to a LGBTQ support gro
+  手写 top-3:
+    score=2.602  [1:56 pm on 8 May, 2023] Caroline: I went to a LGBTQ support gro
+    score=2.571  [1:56 pm on 8 May, 2023] Melanie: Wow, Caroline! What kinda jobs
+    score=2.527  [1:56 pm on 8 May, 2023] Caroline: Gonna continue my edu and che
+  完全一致: ❌
+    仅 store 有: 5
+    仅手写有:   5
+
+==============================================================================================
+结论
+==============================================================================================
+
+  0/5 条查询的 top-10 完全一致
+  → ❌ 复现不一致，E-172 的结论需重新验证

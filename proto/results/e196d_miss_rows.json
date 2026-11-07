@@ -1,0 +1,82 @@
+[
+ {
+  "cid": "R000",
+  "cat": "2",
+  "q": "When did Melanie paint a sunrise?",
+  "ev": "You'd be a great counselor! Your empathy and under",
+  "pick": "Yeah, I painted that lake sunrise last year! It's ",
+  "reason": "Melanie says she painted that lake sunrise 'last year'."
+ },
+ {
+  "cid": "R001",
+  "cat": "1",
+  "q": "What is Caroline's identity?",
+  "ev": "The transgender stories were so inspiring! I was s",
+  "pick": "I'm so lucky to have such a great support system a",
+  "reason": "Both reference Caroline's transition/coming out, i.e. she is a trans woman."
+ },
+ {
+  "cid": "R003",
+  "cat": "1",
+  "q": "What activities does Melanie partake in?",
+  "ev": "Wow, Caroline! That's great! I just signed up for ",
+  "pick": "I'm a big fan of pottery - the creativity and skil",
+  "reason": "Pottery, running/reading/violin, and painting are her activities."
+ },
+ {
+  "cid": "R006",
+  "cat": "3",
+  "q": "Would Caroline pursue writing as a career option?",
+  "ev": "Thanks, Mell! I'm still looking into counseling an",
+  "pick": "Lately, I've been looking into counseling and ment",
+  "reason": "No—she is set on counseling/mental health, not writing."
+ },
+ {
+  "cid": "R007",
+  "cat": "1",
+  "q": "What activities has Melanie done with her family?",
+  "ev": "The kids loved it! They were so excited to get the",
+  "pick": "It was an awesome time, Caroline! We explored natu",
+  "reason": "Camping/hiking, pottery workshop, and museum trips with family."
+ },
+ {
+  "cid": "R008",
+  "cat": "1",
+  "q": "What has Melanie painted?",
+  "ev": "Wow, that sounds great - I agree, they're awesome.",
+  "pick": "",
+  "reason": "She painted a lake sunrise, a horse, and an abstract piece."
+ },
+ {
+  "cid": "R010",
+  "cat": "1",
+  "q": "What musical artists/bands has Melanie seen?",
+  "ev": "\"Summer Sounds\"- The playing an awesome pop song t",
+  "pick": "I'm a fan of both classical like Bach and Mozart, ",
+  "reason": "Names artists (Bach/Mozart/Ed Sheeran) and a show she attended."
+ },
+ {
+  "cid": "R016",
+  "cat": "4",
+  "q": "What does Melanie say running has been great for?",
+  "ev": "Thanks, Caroline! This has been great for my menta",
+  "pick": "I've been running farther to de-stress, which has ",
+  "reason": "Running has been great for her headspace/destressing."
+ },
+ {
+  "cid": "R021",
+  "cat": "5",
+  "q": "What motivated Melanie to pursue counseling?",
+  "ev": "Thanks, Melanie. It really mattered. My own journe",
+  "pick": "(空)",
+  "reason": "Trap—Melanie never pursued counseling (that was Caroline); no matching candidate."
+ },
+ {
+  "cid": "R022",
+  "cat": "5",
+  "q": "How did Caroline feel about her family after the accident?",
+  "ev": "Yeah, you're right, Caroline. Family's super impor",
+  "pick": "(空)",
+  "reason": "Trap—the accident was Melanie's son, not Caroline's family."
+ }
+]

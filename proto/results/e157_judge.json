@@ -1,0 +1,21 @@
+{
+ "experiment": "E-157",
+ "n": 37,
+ "judges": {
+  "S1 60%关键词": {
+   "random": 0.4865,
+   "combo": 0.5676,
+   "acceptable": false
+  },
+  "S2 完整短语": {
+   "random": 0.3514,
+   "combo": 0.3784,
+   "acceptable": false
+  },
+  "S3 短语+长度": {
+   "random": 0.1892,
+   "combo": 0.1892,
+   "acceptable": false
+  }
+ }
+}

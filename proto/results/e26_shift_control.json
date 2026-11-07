@@ -1,0 +1,62 @@
+{
+ "experiment": "E-26",
+ "note": "分离定位敏感与信息丢失",
+ "shift_variants": [
+  {
+   "variant": "original",
+   "macro": 0.925
+  },
+  {
+   "variant": "shift_crop(2,-2)",
+   "macro": 0.7675
+  },
+  {
+   "variant": "shift_pad(2,-2)",
+   "macro": 0.7675
+  },
+  {
+   "variant": "shift_crop(4,0)",
+   "macro": 0.4665
+  },
+  {
+   "variant": "shift_pad(4,0)",
+   "macro": 0.4665
+  },
+  {
+   "variant": "shift_pad(0,4)",
+   "macro": 0.4945
+  }
+ ],
+ "centered": [
+  {
+   "variant": "original",
+   "macro": 0.9345
+  },
+  {
+   "variant": "shift_crop(2,-2)",
+   "macro": 0.9345
+  },
+  {
+   "variant": "shift_pad(2,-2)",
+   "macro": 0.9345
+  },
+  {
+   "variant": "shift_crop(4,0)",
+   "macro": 0.9325
+  },
+  {
+   "variant": "shift_pad(4,0)",
+   "macro": 0.9325
+  },
+  {
+   "variant": "shift_pad(0,4)",
+   "macro": 0.933
+  }
+ ],
+ "baseline": 0.925,
+ "crop_loss": -0.1575,
+ "pad_loss": -0.1575,
+ "crop_artifact": 0.0,
+ "center_recovery": 0.1575,
+ "elapsed_sec": 69.2
+}

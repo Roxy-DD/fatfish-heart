@@ -1,0 +1,107 @@
+{
+ "experiment": "E-28",
+ "feature": "hog128+center_align",
+ "source": "docs/17 三条现实规律",
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "per_task": [
+  900,
+  300
+ ],
+ "A_class_retention": [
+  {
+   "mode": "none",
+   "A": 0.9667,
+   "B": 0.9284,
+   "C": 0.9022,
+   "macro": 0.9324,
+   "n_stars": 1122,
+   "n_pruned": 0,
+   "n_held": 0
+  },
+  {
+   "mode": "origin",
+   "A": 0.9633,
+   "B": 0.9217,
+   "C": 0.8878,
+   "macro": 0.9243,
+   "n_stars": 554,
+   "n_pruned": 568,
+   "n_held": 0
+  },
+  {
+   "mode": "classwise",
+   "A": 0.9633,
+   "B": 0.9217,
+   "C": 0.8878,
+   "macro": 0.9243,
+   "n_stars": 554,
+   "n_pruned": 568,
+   "n_held": 554
+  }
+ ],
+ "B_rotation_antiwindup": [
+  {
+   "mode": "plain",
+   "final_d": 1.0,
+   "n_up": 51.3,
+   "n_down": 26.3,
+   "bidirectional": "3/3",
+   "range": 0.5133
+  },
+  {
+   "mode": "antiwindup",
+   "final_d": 0.9499,
+   "n_up": 83.3,
+   "n_down": 26.3,
+   "bidirectional": "3/3",
+   "range": 0.4629
+  },
+  {
+   "mode": "rotation",
+   "final_d": 0.5,
+   "n_up": 83.7,
+   "n_down": 30.3,
+   "bidirectional": "3/3",
+   "range": 0.3533
+  }
+ ],
+ "C_adaptive_threshold": [
+  {
+   "rule": "fixed0.560",
+   "A": 0.9667,
+   "B": 0.9284,
+   "C": 0.9022,
+   "macro": 0.9324,
+   "final_thr": 0.56
+  },
+  {
+   "rule": "p20",
+   "A": 0.97,
+   "B": 0.9318,
+   "C": 0.9056,
+   "macro": 0.9358,
+   "final_thr": 0.8725
+  },
+  {
+   "rule": "p30",
+   "A": 0.9711,
+   "B": 0.9262,
+   "C": 0.9056,
+   "macro": 0.9343,
+   "final_thr": 0.8868
+  },
+  {
+   "rule": "p50",
+   "A": 0.9722,
+   "B": 0.9228,
+   "C": 0.9022,
+   "macro": 0.9324,
+   "final_thr": 0.9104
+  }
+ ],
+ "elapsed_sec": 6.1
+}

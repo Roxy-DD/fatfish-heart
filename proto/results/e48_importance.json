@@ -1,0 +1,68 @@
+{
+ "experiment": "E-48",
+ "n_mem": 3000,
+ "n_tracked": 400,
+ "groups": [
+  {
+   "pattern": "burst",
+   "n": 100,
+   "S1": 3.0,
+   "S2": 0.66,
+   "S3": 1.1,
+   "recall": 0.96
+  },
+  {
+   "pattern": "spread",
+   "n": 100,
+   "S1": 1.0,
+   "S2": 13.29,
+   "S3": 3.39,
+   "recall": 0.99
+  },
+  {
+   "pattern": "emotional",
+   "n": 100,
+   "S1": 2.99,
+   "S2": 0.64,
+   "S3": 1.1,
+   "recall": 0.98
+  },
+  {
+   "pattern": "baseline",
+   "n": 100,
+   "S1": 1.35,
+   "S2": 11.5,
+   "S3": 3.22,
+   "recall": 0.96
+  }
+ ],
+ "correlations": {
+  "S1_short": -0.033,
+  "S2_long": 0.0214,
+  "S3_emotional": -0.0071,
+  "S2_S3": 0.0079,
+  "S1_S2": -0.0242
+ },
+ "saturation": [
+  {
+   "n_rep": 0,
+   "recall": 1.0
+  },
+  {
+   "n_rep": 5,
+   "recall": 1.0
+  },
+  {
+   "n_rep": 10,
+   "recall": 1.0
+  },
+  {
+   "n_rep": 20,
+   "recall": 1.0
+  },
+  {
+   "n_rep": 40,
+   "recall": 1.0
+  }
+ ]
+}

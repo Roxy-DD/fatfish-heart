@@ -1,0 +1,70 @@
+{
+ "experiment": "E-58",
+ "report": {
+  "T_LATEST": {
+   "n": 20,
+   "right": 20,
+   "miss": 0,
+   "fabricated": 0,
+   "acc": 1.0
+  },
+  "T_PAST": {
+   "n": 20,
+   "right": 20,
+   "miss": 0,
+   "fabricated": 0,
+   "acc": 1.0
+  },
+  "T_CONFLICT": {
+   "n": 20,
+   "right": 20,
+   "miss": 0,
+   "fabricated": 0,
+   "acc": 1.0
+  },
+  "T_SEQ": {
+   "n": 20,
+   "right": 20,
+   "miss": 0,
+   "fabricated": 0,
+   "acc": 1.0
+  }
+ },
+ "history": [
+  [
+   "E-53 FULL（完整原文）",
+   0.9444,
+   "36题"
+  ],
+  [
+   "E-53 KEEP（子句抽取）",
+   0.6389,
+   "36题"
+  ],
+  [
+   "E-53 TRUNC（字符硬切）",
+   0.3333,
+   "36题"
+  ],
+  [
+   "E-55 A_1/B_SIM5/C_DIV5/D_SIM10",
+   1.0,
+   "4×24题"
+  ],
+  [
+   "E-56 N0/S10/D10/S30（近形名+多条）",
+   1.0,
+   "4×20题"
+  ],
+  [
+   "E-57 HIT_1/HIT_10/MISS_0/MISS_NEAR",
+   1.0,
+   "4×20题"
+  ],
+  [
+   "E-58 T_LATEST/T_PAST/T_CONFLICT/T_SEQ",
+   1.0,
+   "4×20题"
+  ]
+ ]
+}

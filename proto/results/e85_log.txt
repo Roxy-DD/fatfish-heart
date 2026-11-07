@@ -1,0 +1,91 @@
+================================================================================================
+E-85 identity 第五版（严格姓氏白名单）
+================================================================================================
+
+【E-83新20】
+------------------------------------------------------------------------------------------------
+rid   模型      规则      命中                      一致    记忆
+------------------------------------------------------------------------------------------------
+J00   True    False   positional              ✗     陈默是我们组的架构师
+J01   False   False   naked_id                ✓     订单号 20250308-1174 已经发货
+J02   True    True    stable_slot             ✓     我公公今年七十三
+J03   True    False   fallback_false          ✗     王雅琴医生给我开的药单
+J04   True    True    stable_slot             ✓     我家的车是白色的卡罗拉
+J05   False   False   deictic                 ✓     那个快递好像丢了
+J06   False   False   indefinite              ✓     别人都说这个不错
+J07   False   False   fallback_false          ✓     他让我明天去一趟
+J08   False   False   indefinite              ✓     有几个同事提过这事
+J09   False   False   indefinite              ✓     有人建议改一下流程
+J10   False   False   positional              ✓     楼下便利店的老板说可以赊账
+J11   False   False   positional              ✓     我们楼的水管工很靠谱
+J12   True    False   fallback_false          ✗     菜市场的张大姐给我多称了半斤
+J13   False   False   positional              ✓     那个送外卖的小哥态度很好
+J14   False   False   second_order            ✓     我舅妈家的表哥在银行上班
+J15   False   False   second_order            ✓     我同学的妈妈是老师
+J16   False   False   naked_id                ✓     保单号是 PA-9931
+J17   True    True    id+bound                ✓     我的保单号是 PA-9931
+J18   True    True    xiao:小周                 ✓     小周说他下周回来
+J19   True    True    name_title:周经理          ✓     周经理批了这个预算
+------------------------------------------------------------------------------------------------
+  [E-83新20] n=20 TP=5 FP=0 TN=12 FN=3  acc=0.8500 prec=1.0000 rec=0.6250 F1=0.7692
+
+  不一致：
+    [J00] 模型=True 规则=False ['positional']
+      陈默是我们组的架构师  |  模型理由: 陈默是全名，唯一指向某个人
+    [J03] 模型=True 规则=False ['fallback_false']
+      王雅琴医生给我开的药单  |  模型理由: 王雅琴为全名，且绑定'给我开药单'，唯一
+    [J12] 模型=True 规则=False ['fallback_false']
+      菜市场的张大姐给我多称了半斤  |  模型理由: '张大姐'为姓+称呼，按具名判据唯一
+
+【E-81旧24】
+------------------------------------------------------------------------------------------------
+rid   模型      规则      命中                      一致    记忆
+------------------------------------------------------------------------------------------------
+I00   True    True    name_title:张工           ✓     张工说这周五交
+I01   True    True    id+bound                ✓     我的身份证号是 31010119900101
+I02   True    True    xiao:小李                 ✓     小李是我的大学室友
+I03   True    True    stable_slot             ✓     我老婆叫陈静
+I04   False   False   naked_id                ✓     工牌编号 A-2261
+I05   True    True    name_title:国经理          ✓     李建国经理负责这个项目
+I06   False   False   fallback_false          ✓     他说不行
+I07   False   False   deictic                 ✓     那次出差回来之后总觉得累
+I08   False   False   deictic                 ✓     那个方案后来改了
+I09   False   False   indefinite              ✓     有人跟我说过这事
+I10   False   False   indefinite              ✓     大家都觉得这个方案不错
+I11   True    True    id+bound                ✓     我的工牌编号是 A-2261
+I12   False   False   second_order            ✓     我表姐家的孩子今年上三年级
+I13   True    True    stable_slot             ✓     我女儿今年六岁
+I14   False   False   positional              ✓     我们组的后端负责人不同意
+I15   False   False   positional              ✓     前台的小姑娘让我登记一下
+I16   False   False   deictic                 ✓     上周那个客户又打电话来了
+I17   True    True    stable_slot             ✓     我妈说家里一切都好
+I18   True    True    id+bound                ✓     我电脑的登录密码是 8848
+I19   True    True    stable_slot             ✓     城南路18号是我女儿幼儿园
+I20   False   False   positional              ✓     小区门口的修车师傅姓王
+I21   True    True    stable_slot             ✓     我老板姓张
+I22   True    False   fallback_false          ✗     房东说下个月涨房租
+I23   False   False   positional              ✓     快递员把包裹放门口了
+------------------------------------------------------------------------------------------------
+  [E-81旧24] n=24 TP=11 FP=0 TN=12 FN=1  acc=0.9583 prec=1.0000 rec=0.9167 F1=0.9565
+
+  不一致：
+    [I22] 模型=True 规则=False ['fallback_false']
+      房东说下个月涨房租  |  模型理由: "房东"是说话人的固定关系槽，通常唯一，可指认
+
+================================================================================================
+合并总评
+================================================================================================
+  n=44 TP=16 FP=0 TN=24 FN=4
+  准确率 0.9091  精确率 1.0000  召回 0.8000  F1 0.8889
+
+------------------------------------------------------------------------------------------------
+版本演进
+------------------------------------------------------------------------------------------------
+  E-80 原规则          0.7083
+  E-81 4判据           0.7917
+  E-82 加2规则         0.9167（但仅旧集）
+  E-83 全新集          0.8500  ← 过拟合证据
+  E-84 具名优先        全新0.9000 / 旧0.8333
+  E-85 严格姓氏        全新0.8500 / 旧0.9583 / 合并0.9091
+
+写入 C:\Users\xuee\Desktop\肥鱼之心\proto\results\e85_identity_v5.json

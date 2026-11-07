@@ -1,0 +1,9 @@
+{
+ "experiment": "E-215",
+ "n": 92,
+ "base_hit": 36,
+ "rewrite_hit": 50,
+ "base_rate": 0.3913,
+ "rewrite_rate": 0.5435,
+ "rescued": 15
+}

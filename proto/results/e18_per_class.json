@@ -1,0 +1,90 @@
+{
+ "experiment": "E-18",
+ "transform": "zscore-dim",
+ "threshold": 0.705,
+ "tuning_seed": 0,
+ "eval_seeds": [
+  1,
+  2,
+  3,
+  4
+ ],
+ "validation": {
+  "baseline_acc": 0.8844,
+  "tuned_acc": 0.9,
+  "gain": 0.0156,
+  "n_trials": 81,
+  "changed_classes": {
+   "0": 5,
+   "1": 1,
+   "5": 8,
+   "7": 5
+  },
+  "best_desc": "topk[7]=5"
+ },
+ "top_error_pairs": [
+  {
+   "from": "3",
+   "to": "5",
+   "n": 14
+  },
+  {
+   "from": "2",
+   "to": "5",
+   "n": 9
+  },
+  {
+   "from": "2",
+   "to": "3",
+   "n": 7
+  },
+  {
+   "from": "1",
+   "to": "7",
+   "n": 6
+  },
+  {
+   "from": "8",
+   "to": "5",
+   "n": 6
+  },
+  {
+   "from": "7",
+   "to": "4",
+   "n": 6
+  },
+  {
+   "from": "0",
+   "to": "6",
+   "n": 4
+  },
+  {
+   "from": "1",
+   "to": "4",
+   "n": 3
+  }
+ ],
+ "evaluation": [
+  {
+   "config": "baseline topk3",
+   "A": 0.8816666666666667,
+   "B": 0.9033333333333333,
+   "C": 0.8491666666666666,
+   "macro": 0.8780555555555556,
+   "macro_min": 0.8555555555555555,
+   "A_min": 0.82,
+   "n_seeds": 4
+  },
+  {
+   "config": "tuned per-class",
+   "A": 0.8883333333333334,
+   "B": 0.8933333333333334,
+   "C": 0.8491666666666666,
+   "macro": 0.8769444444444444,
+   "macro_min": 0.86,
+   "A_min": 0.8433333333333334,
+   "n_seeds": 4
+  }
+ ],
+ "elapsed_sec": 232.6
+}

@@ -1,0 +1,47 @@
+
+Loading weights:   0%|          | 0/71 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 71/71 [00:00<00:00, 1585.54it/s]
+==============================================================================================
+E-186b 终极评分（用文本，不依赖 ep_id 跨文件）
+==============================================================================================
+
+总 302 题，基线命中 114，可救回 54
+
+  精排命中: 0/54 = 0.0000
+  整体: 0.3775 → 0.3775  (+0.0000)
+
+  未命中案例（前 8）:
+
+    [Q00] When did Melanie paint a sunrise?
+      ev 尾:  ...le you work with. By the way, take a look at this.
+      pick尾: ...
+
+    [Q01] Where has Melanie camped?
+      ev 尾:  ...ing at the beach. We love it, it brings us closer!
+      pick尾: ...
+
+    [Q02] Would Caroline likely have Dr. Seuss books on her 
+      ev 尾:  ... a favorite book you remember from your childhood?
+      pick尾: ...
+
+    [Q03] When did Melanie read the book "nothing is impossi
+      ev 尾:  ...always pursue my dreams, just like you are doing!🌟
+      pick尾: ...
+
+    [Q04] When did Melanie go to the pottery workshop?
+      ev 尾:  ...all made our own pots, it was fun and therapeutic!
+      pick尾: ...
+
+    [Q05] When did Melanie go camping in June?
+      ev 尾:  ...ments together as a family - I'll never forget it!
+      pick尾: ...
+
+    [Q06] When did Melanie go camping in July?
+      ev 尾:  ...'ve you been up to? Anything fun over the weekend?
+      pick尾: ...
+
+    [Q07] When is Melanie's daughter's birthday?
+      ev 尾:  ... I'm so thankful for our special moments together.
+      pick尾: ...
+
+写入 C:\Users\xuee\Desktop\肥鱼之心\proto\results\e186b_rerank_ultimate.json

@@ -1,0 +1,67 @@
+{
+ "experiment": "E-113",
+ "n_cases": 4,
+ "n_both_returned": 4,
+ "cases": [
+  {
+   "type": "A_time",
+   "desc": "时间性矛盾：密码改了",
+   "query": "我电脑密码是多少",
+   "returned": [
+    "我电脑的登录密码是 8848",
+    "我把电脑登录密码改成了 9988，旧的不能用了"
+   ],
+   "has_old": true,
+   "has_new": true,
+   "both_returned": true,
+   "expected": "9988（新值），不应同时出现 8848"
+  },
+  {
+   "type": "B_fact",
+   "desc": "事实性矛盾：同一时刻两个说法",
+   "query": "家里门锁密码是多少",
+   "returned": [
+    "小李说门锁密码是 9512",
+    "老王说门锁密码是 3721",
+    "我电脑的登录密码是 8848",
+    "我把电脑登录密码改成了 9988，旧的不能用了"
+   ],
+   "has_old": true,
+   "has_new": true,
+   "both_returned": true,
+   "expected": "无法确定，应追问用户到底哪个对"
+  },
+  {
+   "type": "C_view",
+   "desc": "视角矛盾：截止日期延期",
+   "query": "项目什么时候截止",
+   "returned": [
+    "这个项目 15 号截止",
+    "客户同意把项目截止延到 20 号",
+    "老王说门锁密码是 3721",
+    "我把电脑登录密码改成了 9988，旧的不能用了",
+    "小李说门锁密码是 9512"
+   ],
+   "has_old": true,
+   "has_new": true,
+   "both_returned": true,
+   "expected": "20号（延期后），或说明原15号已延到20号"
+  },
+  {
+   "type": "D_merge",
+   "desc": "可合成：客户两个需求",
+   "query": "客户有什么要求",
+   "returned": [
+    "客户要求界面必须支持深色模式",
+    "客户还要求界面必须支持大字体",
+    "客户同意把项目截止延到 20 号",
+    "老王说门锁密码是 3721",
+    "小李说门锁密码是 9512"
+   ],
+   "has_old": true,
+   "has_new": true,
+   "both_returned": true,
+   "expected": "两条都要（深色模式 + 大字体），这是可合成的"
+  }
+ ]
+}

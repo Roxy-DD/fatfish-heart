@@ -1,0 +1,40 @@
+
+--- dim=128 n=20000 ---
+  json+npy     write=   0.46s  size=   9.78MB  load= 0.0875s  rand=     0.5us  scan=    0.29ms
+  sqlite-f32   write=   0.11s  size=  11.20MB  load= 0.0124s  rand=    10.7us  scan=    0.14ms fullread=0.029s
+  sqlite-sq8   write=   0.04s  size=   0.00MB  load= 0.0051s  rand=     8.1us  scan=    5.55ms fullread=0.0139s
+
+--- dim=128 n=100000 ---
+  json+npy     write=   2.64s  size=  48.95MB  load= 0.2990s  rand=     1.8us  scan=    1.55ms
+  sqlite-f32   write=   0.50s  size=  55.95MB  load= 0.0531s  rand=    12.1us  scan=    1.78ms fullread=0.1433s
+  sqlite-sq8   write=   0.23s  size=  13.92MB  load= 0.0153s  rand=    11.0us  scan=   26.96ms fullread=0.0707s
+
+--- dim=384 n=20000 ---
+  json+npy     write=   1.24s  size=  27.85MB  load= 0.1660s  rand=     0.4us  scan=    0.53ms
+  sqlite-f32   write=   0.25s  size=  39.16MB  load= 0.0380s  rand=    11.9us  scan=    0.51ms fullread=0.063s
+  sqlite-sq8   write=   0.08s  size=   7.84MB  load= 0.0094s  rand=    11.5us  scan=   17.42ms fullread=0.0229s
+
+--- dim=384 n=100000 ---
+  json+npy     write=   6.12s  size= 139.28MB  load= 0.7203s  rand=     2.3us  scan=    5.54ms
+  sqlite-f32   write=   1.35s  size= 195.80MB  load= 0.1784s  rand=    13.2us  scan=    5.92ms fullread=0.3561s
+  sqlite-sq8   write=   0.40s  size=  39.17MB  load= 0.0390s  rand=    11.9us  scan=   82.69ms fullread=0.1185s
+
+================================================================================================
+汇总
+================================================================================================
+维度    N       方案            写s       MB       冷启s      随机读us      扫描ms      
+------------------------------------------------------------------------------------------------
+128   20000   json+npy      0.46     9.78     0.0875   0.5        0.29      
+128   20000   sqlite-f32    0.11     11.20    0.0124   10.7       0.14      
+128   20000   sqlite-sq8    0.04     0.00     0.0051   8.1        5.55      
+128   100000  json+npy      2.64     48.95    0.2990   1.8        1.55      
+128   100000  sqlite-f32    0.50     55.95    0.0531   12.1       1.78      
+128   100000  sqlite-sq8    0.23     13.92    0.0153   11.0       26.96     
+384   20000   json+npy      1.24     27.85    0.1660   0.4        0.53      
+384   20000   sqlite-f32    0.25     39.16    0.0380   11.9       0.51      
+384   20000   sqlite-sq8    0.08     7.84     0.0094   11.5       17.42     
+384   100000  json+npy      6.12     139.28   0.7203   2.3        5.54      
+384   100000  sqlite-f32    1.35     195.80   0.1784   13.2       5.92      
+384   100000  sqlite-sq8    0.40     39.17    0.0390   11.9       82.69     
+
+写入 C:\Users\xuee\Desktop\肥鱼之心\proto\results\e34_storage.json

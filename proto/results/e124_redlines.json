@@ -1,0 +1,138 @@
+{
+ "experiment": "E-124",
+ "recall": 1.0,
+ "recall_baseline": 0.881,
+ "recall_delta": 0.119,
+ "by_kind": {
+  "Q1_单跳": 1.0,
+  "Q2_两跳": 1.0,
+  "Q3_话题": 1.0,
+  "Q4_标识": 1.0,
+  "Q5_改写": 1.0
+ },
+ "migration_inplace": {
+  "records": 40,
+  "row_mismatch": 0,
+  "vector_mismatch": 0,
+  "query_mismatch": 0,
+  "consistent": true
+ },
+ "migration_crossfile": {
+  "rows_equal": true,
+  "queries_equal": true,
+  "consistent": true
+ },
+ "r2_no_delete": {
+  "total": 40,
+  "valid": 40,
+  "invalid": 0,
+  "vectors": 40,
+  "no_deletion": true
+ },
+ "r3_rebuild": {
+  "rebuilt": 40,
+  "query_mismatch": 0,
+  "deterministic": true
+ },
+ "cache_freshness": {
+  "cache_before_write": 1,
+  "cache_after_write": 2,
+  "new_visible_immediately": true,
+  "cache_cleared": true,
+  "target_in_pack": true,
+  "passed": true
+ },
+ "redlines_passed": true,
+ "details": [
+  {
+   "kind": "Q1_单跳",
+   "q": "张伟的工号是多少",
+   "recall": 1.0,
+   "top1": "张伟的工号是A1024"
+  },
+  {
+   "kind": "Q1_单跳",
+   "q": "李娜的手机号",
+   "recall": 1.0,
+   "top1": "李娜的手机号是13900139002"
+  },
+  {
+   "kind": "Q1_单跳",
+   "q": "王强的工号",
+   "recall": 1.0,
+   "top1": "王强的工号是C3072"
+  },
+  {
+   "kind": "Q2_两跳",
+   "q": "星火项目的负责人是谁",
+   "recall": 1.0,
+   "top1": "星火项目的负责人是张伟"
+  },
+  {
+   "kind": "Q2_两跳",
+   "q": "曙光项目谁负责",
+   "recall": 1.0,
+   "top1": "曙光项目的负责人是李娜"
+  },
+  {
+   "kind": "Q2_两跳",
+   "q": "灯塔项目预算是多少",
+   "recall": 1.0,
+   "top1": "灯塔项目的预算是50万"
+  },
+  {
+   "kind": "Q3_话题",
+   "q": "接口文档谁负责",
+   "recall": 1.0,
+   "top1": "接口文档由张伟负责"
+  },
+  {
+   "kind": "Q3_话题",
+   "q": "性能测试由谁做",
+   "recall": 1.0,
+   "top1": "单元测试由李娜负责"
+  },
+  {
+   "kind": "Q3_话题",
+   "q": "验收报告归谁",
+   "recall": 1.0,
+   "top1": "验收报告由赵敏负责"
+  },
+  {
+   "kind": "Q4_标识",
+   "q": "代码合并有什么要求",
+   "recall": 1.0,
+   "top1": "团队规定代码必须过CI才能合并"
+  },
+  {
+   "kind": "Q4_标识",
+   "q": "接口响应时间要求",
+   "recall": 1.0,
+   "top1": "客户要求所有接口响应时间低于200ms"
+  },
+  {
+   "kind": "Q5_改写",
+   "q": "咱们服务器放在哪了",
+   "recall": 1.0,
+   "top1": "服务器部署在阿里云华东区"
+  },
+  {
+   "kind": "Q5_改写",
+   "q": "缓存用的啥",
+   "recall": 1.0,
+   "top1": "缓存层用的是Redis 7"
+  },
+  {
+   "kind": "Q5_改写",
+   "q": "前端技术栈",
+   "recall": 1.0,
+   "top1": "前端框架用React 18"
+  },
+  {
+   "kind": "Q5_改写",
+   "q": "数据库是什么",
+   "recall": 1.0,
+   "top1": "数据库用的是PostgreSQL 15"
+  }
+ ]
+}

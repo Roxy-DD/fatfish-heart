@@ -1,0 +1,79 @@
+{
+ "experiment": "E-141",
+ "n": 4,
+ "gain": 0,
+ "already": 4,
+ "miss": 0,
+ "avg_1hop_ms": 7.9,
+ "avg_chain_ms": 13.8,
+ "details": [
+  {
+   "query": "小时候的夏天",
+   "desc": "情景链：夏天傍晚 → 外婆扇扇子",
+   "单跳": {
+    "n": 5,
+    "has_b": true,
+    "b_rank": 4,
+    "ms": 10.7
+   },
+   "链式": {
+    "n": 5,
+    "has_b": true,
+    "b_rank": 4,
+    "ms": 14.7
+   },
+   "gain": false
+  },
+  {
+   "query": "进不去门",
+   "desc": "代价链：门锁 → 被锁门外",
+   "单跳": {
+    "n": 5,
+    "has_b": true,
+    "b_rank": 1,
+    "ms": 6.6
+   },
+   "链式": {
+    "n": 5,
+    "has_b": true,
+    "b_rank": 1,
+    "ms": 13.1
+   },
+   "gain": false
+  },
+  {
+   "query": "上次那个会议",
+   "desc": "事件链：启动会 → 会上的承诺",
+   "单跳": {
+    "n": 5,
+    "has_b": true,
+    "b_rank": 2,
+    "ms": 7.3
+   },
+   "链式": {
+    "n": 5,
+    "has_b": true,
+    "b_rank": 2,
+    "ms": 13.3
+   },
+   "gain": false
+  },
+  {
+   "query": "我爸住院那阵",
+   "desc": "情绪链：住院 → 当时的疲惫",
+   "单跳": {
+    "n": 5,
+    "has_b": true,
+    "b_rank": 3,
+    "ms": 6.9
+   },
+   "链式": {
+    "n": 5,
+    "has_b": true,
+    "b_rank": 3,
+    "ms": 14.1
+   },
+   "gain": false
+  }
+ ]
+}

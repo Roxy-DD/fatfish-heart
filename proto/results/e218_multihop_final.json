@@ -1,0 +1,10 @@
+{
+ "experiment": "E-218-final",
+ "n": 92,
+ "correct": 54,
+ "incorrect": 21,
+ "unknown": 17,
+ "strict": 0.587,
+ "lenient": 0.72,
+ "evidence_recall": 0.5435
+}

@@ -1,0 +1,334 @@
+{
+ "experiment": "E-186b",
+ "n": 54,
+ "hit": 0,
+ "rate": 0.0,
+ "overall_baseline": 0.3775,
+ "overall_with_rerank": 0.3775,
+ "details": [
+  {
+   "cid": "Q00",
+   "question": "When did Melanie paint a sunrise?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q01",
+   "question": "Where has Melanie camped?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q02",
+   "question": "Would Caroline likely have Dr. Seuss books on her ",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q03",
+   "question": "When did Melanie read the book \"nothing is impossi",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q04",
+   "question": "When did Melanie go to the pottery workshop?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q05",
+   "question": "When did Melanie go camping in June?",
+   "ok": false,
+   "n_picks": 2
+  },
+  {
+   "cid": "Q06",
+   "question": "When did Melanie go camping in July?",
+   "ok": false,
+   "n_picks": 2
+  },
+  {
+   "cid": "Q07",
+   "question": "When is Melanie's daughter's birthday?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q08",
+   "question": "What types of pottery have Melanie and her kids ma",
+   "ok": false,
+   "n_picks": 3
+  },
+  {
+   "cid": "Q09",
+   "question": "What has Melanie painted?",
+   "ok": false,
+   "n_picks": 3
+  },
+  {
+   "cid": "Q10",
+   "question": "When did Caroline apply to adoption agencies?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q11",
+   "question": "When did Melanie make a plate in pottery class?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q12",
+   "question": "What musical artists/bands has Melanie seen?",
+   "ok": false,
+   "n_picks": 2
+  },
+  {
+   "cid": "Q13",
+   "question": "What book did Melanie read from Caroline's suggest",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q14",
+   "question": "How many children does Melanie have?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q15",
+   "question": "Would Caroline want to move back to her home count",
+   "ok": false,
+   "n_picks": 2
+  },
+  {
+   "cid": "Q16",
+   "question": "What kind of books does Caroline have in her libra",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q17",
+   "question": "What did Mel and her kids paint in their latest pr",
+   "ok": false,
+   "n_picks": 2
+  },
+  {
+   "cid": "Q18",
+   "question": "Whose birthday did Melanie celebrate recently?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q19",
+   "question": "What did Caroline find in her neighborhood during ",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q20",
+   "question": "What painting did Melanie show to Caroline on Octo",
+   "ok": false,
+   "n_picks": 2
+  },
+  {
+   "cid": "Q21",
+   "question": "How did Melanie's children handle the accident?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q22",
+   "question": "How did Melanie feel about her family supporting h",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q23",
+   "question": "What did Caroline realize after her charity race?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q24",
+   "question": "What type of individuals does the adoption agency ",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q25",
+   "question": "What does Melanie's necklace symbolize?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q26",
+   "question": "What was grandpa's gift to Caroline?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q27",
+   "question": "What motivated Melanie to pursue counseling?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q28",
+   "question": "What inspired Melanie's painting for the art show?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q29",
+   "question": "What inspired Caroline's sculpture for the art sho",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q30",
+   "question": "Is Oscar Melanie's pet?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q31",
+   "question": "What did Melanie find in her neighborhood during h",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q32",
+   "question": "Which classical musicians does Caroline enjoy list",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q33",
+   "question": "What was the poetry reading that Melanie attended ",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q34",
+   "question": "How did Caroline feel after the accident?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q35",
+   "question": "Do Jon and Gina start businesses out of what they ",
+   "ok": false,
+   "n_picks": 2
+  },
+  {
+   "cid": "Q36",
+   "question": "When did Gina get accepted for the design internsh",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q37",
+   "question": "How did Gina promote her clothes store?",
+   "ok": false,
+   "n_picks": 3
+  },
+  {
+   "cid": "Q38",
+   "question": "When did Gina design a limited collection of hoodi",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q39",
+   "question": "When did Jon visit networking events for his store",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q40",
+   "question": "When did Gina start being recognized by fashion ed",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q41",
+   "question": "What is Gina's favorite style of dance?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q42",
+   "question": "What was Gina's favorite dancing memory?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q43",
+   "question": "What kind of dance piece did Gina's team perform t",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q44",
+   "question": "What did Gina receive from a dance contest?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q45",
+   "question": "How does Gina stay confident in her business?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q46",
+   "question": "What book is Jon currently reading?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q47",
+   "question": "How does Gina describe the studio that Jon has ope",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q48",
+   "question": "What does Gina say to Jon about the grand opening?",
+   "ok": false,
+   "n_picks": 2
+  },
+  {
+   "cid": "Q49",
+   "question": "What did Gina make a limited edition line of?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q50",
+   "question": "What made Jon choose the furniture and decor for h",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q51",
+   "question": "What did Gina receive from a dance contest?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q52",
+   "question": "Where is Gina's HR internship?",
+   "ok": false,
+   "n_picks": 1
+  },
+  {
+   "cid": "Q53",
+   "question": "What book is Gina currently reading?",
+   "ok": false,
+   "n_picks": 1
+  }
+ ]
+}

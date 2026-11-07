@@ -1,0 +1,25 @@
+{
+ "experiment": "E-56",
+ "conds": {
+  "N0": {
+   "n_q": 20,
+   "avg_docs": 1.0,
+   "avg_ctx": 31.5
+  },
+  "S10": {
+   "n_q": 20,
+   "avg_docs": 10.0,
+   "avg_ctx": 325.0
+  },
+  "D10": {
+   "n_q": 20,
+   "avg_docs": 10.0,
+   "avg_ctx": 325.0
+  },
+  "S30": {
+   "n_q": 20,
+   "avg_docs": 20.0,
+   "avg_ctx": 660.0
+  }
+ }
+}

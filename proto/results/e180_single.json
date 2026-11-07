@@ -1,0 +1,65 @@
+{
+ "experiment": "E-180",
+ "n_hit": 60,
+ "n_fail": 51,
+ "buckets": {
+  "余弦200+（语义远）": 12,
+  "余弦51-200": 20,
+  "余弦11-50": 13,
+  "evidence 不在库": 1,
+  "余弦4-10（被挤掉）": 4,
+  "余弦前3（排序问题）": 1
+ },
+ "cases": [
+  {
+   "sid": "conv-26",
+   "q": "What are Melanie's pets' names?",
+   "ev": [
+    "D13:4",
+    "D7:18"
+   ],
+   "rank": 6
+  },
+  {
+   "sid": "conv-26",
+   "q": "What subject have Caroline and Melanie both painted?",
+   "ev": [
+    "D14:5",
+    "D8:6"
+   ],
+   "rank": 2
+  },
+  {
+   "sid": "conv-26",
+   "q": "What transgender-specific events has Caroline attended?",
+   "ev": [
+    "D17:19",
+    "D15:13"
+   ],
+   "rank": 6
+  },
+  {
+   "sid": "conv-41",
+   "q": "What are Maria's dogs' names?",
+   "ev": [
+    "D30:1",
+    "D31:4"
+   ],
+   "rank": 6
+  },
+  {
+   "sid": "conv-42",
+   "q": "What things has Nate reccomended to Joanna?",
+   "ev": [
+    "D2:14",
+    "D9:12",
+    "D9:14",
+    "D10:11",
+    "D19:17",
+    "D27:23",
+    "D10:19"
+   ],
+   "rank": 8
+  }
+ ]
+}

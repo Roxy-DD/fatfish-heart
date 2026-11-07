@@ -1,0 +1,42 @@
+{
+ "experiment": "E-164",
+ "n": 6,
+ "cases": [
+  {
+   "q": "When did Melanie make a plate in pottery class?",
+   "mark": "D14:4",
+   "rank": 3,
+   "sim": 0.6765629053115845
+  },
+  {
+   "q": "When did Melanie's family go on a roadtrip?",
+   "mark": "D18:1",
+   "rank": 1,
+   "sim": 0.7102116346359253
+  },
+  {
+   "q": "What did Mel and her kids make during the pottery workshop?",
+   "mark": "D8:2",
+   "rank": 1,
+   "sim": 0.740216851234436
+  },
+  {
+   "q": "What kind of pot did Mel and her kids make with clay?",
+   "mark": "D8:4",
+   "rank": 1,
+   "sim": 0.7156035900115967
+  },
+  {
+   "q": "What kind of painting did Caroline share with Melanie on October 13, 2023?",
+   "mark": "D17:14",
+   "rank": 2,
+   "sim": 0.7576056122779846
+  },
+  {
+   "q": "What does Caroline's drawing symbolize for her?",
+   "mark": "D17:23",
+   "rank": 3,
+   "sim": 0.6605924963951111
+  }
+ ]
+}

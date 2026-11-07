@@ -1,0 +1,143 @@
+{
+ "experiment": "E-115",
+ "n": 13,
+ "classify_only_acc": 0.9231,
+ "full_judge_acc": 1.0,
+ "by_type": {
+  "replace": {
+   "hit": 4,
+   "total": 4
+  },
+  "merge": {
+   "hit": 3,
+   "total": 3
+  },
+  "conflict": {
+   "hit": 2,
+   "total": 2
+  },
+  "none": {
+   "hit": 4,
+   "total": 4
+  }
+ },
+ "details": [
+  {
+   "old": "我电脑的登录密码是 8848",
+   "new": "我把电脑密码改成了 9988",
+   "expect": "replace",
+   "got": "replace",
+   "similarity": 0.7712,
+   "reason": "相似度 0.771 ≥ 0.5；含替换词「改成」，旧值作废 → 判为取代，旧值将标失效",
+   "ok": true
+  },
+  {
+   "old": "家里的门锁密码是 3721",
+   "new": "门锁密码换成了 9512",
+   "expect": "replace",
+   "got": "replace",
+   "similarity": 0.7303,
+   "reason": "相似度 0.730 ≥ 0.5；含替换词「换成」，旧值作废 → 判为取代，旧值将标失效",
+   "ok": true
+  },
+  {
+   "old": "这个项目 15 号截止",
+   "new": "客户同意把截止延到 20 号",
+   "expect": "replace",
+   "got": "replace",
+   "similarity": 0.6949,
+   "reason": "相似度 0.695 ≥ 0.5；含延期词「延到」，旧值被新值取代 → 判为取代，旧值将标失效",
+   "ok": true
+  },
+  {
+   "old": "我的车是白色卡罗拉",
+   "new": "我换车了现在是黑色大众",
+   "expect": "replace",
+   "got": "replace",
+   "similarity": 0.6427,
+   "reason": "相似度 0.643 ≥ 0.5；含替换词「换车」，旧值作废 → 判为取代，旧值将标失效",
+   "ok": true
+  },
+  {
+   "old": "客户要求界面必须支持深色模式",
+   "new": "客户还要求界面必须支持大字体",
+   "expect": "merge",
+   "got": "merge",
+   "similarity": 0.7569,
+   "reason": "相似度 0.757 ≥ 0.5；含合成词「还要求」，两条都成立 → 判为可合成",
+   "ok": true
+  },
+  {
+   "old": "我每天早上要吃药",
+   "new": "另外我晚上也要吃一次",
+   "expect": "merge",
+   "got": "merge",
+   "similarity": 0.6841,
+   "reason": "相似度 0.684 ≥ 0.5；含合成词「另外」，两条都成立 → 判为可合成",
+   "ok": true
+  },
+  {
+   "old": "家里要买牛奶",
+   "new": "此外还要买鸡蛋",
+   "expect": "merge",
+   "got": "merge",
+   "similarity": 0.566,
+   "reason": "相似度 0.566 ≥ 0.5；含合成词「还要」，两条都成立 → 判为可合成",
+   "ok": true
+  },
+  {
+   "old": "老王说门锁密码是 3721",
+   "new": "小李说门锁密码是 9512",
+   "expect": "conflict",
+   "got": "conflict",
+   "similarity": 0.7701,
+   "reason": "相似度 0.770 ≥ 0.5；无明确关系词 → 关系不明，保守判为冲突（不擅自作废旧值）",
+   "ok": true
+  },
+  {
+   "old": "这个项目 15 号截止",
+   "new": "我记得好像是18号截止",
+   "expect": "conflict",
+   "got": "conflict",
+   "similarity": 0.6732,
+   "reason": "相似度 0.673 ≥ 0.5；含不确定词「好像是」，可能是冲突信息 → 判为冲突，两条都保留并标注",
+   "ok": true
+  },
+  {
+   "old": "我电脑的登录密码是 8848",
+   "new": "这个bug反复出现我快崩溃了",
+   "expect": "none",
+   "got": "none",
+   "similarity": 0.4932,
+   "reason": "最高相似度 0.493 < 0.5，视为新话题",
+   "ok": true
+  },
+  {
+   "old": "家里的门锁密码是 3721",
+   "new": "小时候被狗追着咬过",
+   "expect": "none",
+   "got": "none",
+   "similarity": 0.3515,
+   "reason": "最高相似度 0.352 < 0.5，视为新话题",
+   "ok": true
+  },
+  {
+   "old": "这个项目 15 号截止",
+   "new": "我妈打电话说家里都好",
+   "expect": "none",
+   "got": "none",
+   "similarity": 0.4534,
+   "reason": "最高相似度 0.453 < 0.5，视为新话题",
+   "ok": true
+  },
+  {
+   "old": "我的车是白色卡罗拉",
+   "new": "上周二午饭吃番茄炒蛋",
+   "expect": "none",
+   "got": "none",
+   "similarity": 0.4347,
+   "reason": "最高相似度 0.435 < 0.5，视为新话题",
+   "ok": true
+  }
+ ]
+}

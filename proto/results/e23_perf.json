@@ -1,0 +1,35 @@
+{
+ "experiment": "E-23",
+ "results": [
+  {
+   "scale": 100,
+   "n_memories": 100,
+   "write_ms_per": 87.48,
+   "write_total_s": 8.75,
+   "search_ms_per": 13.46,
+   "audit_ms_per": 0.5,
+   "sleep_prepare_ms": 2.3,
+   "sleep_pairs": 20
+  },
+  {
+   "scale": 500,
+   "n_memories": 500,
+   "write_ms_per": 11.88,
+   "write_total_s": 5.94,
+   "search_ms_per": 17.19,
+   "audit_ms_per": 0.5,
+   "sleep_prepare_ms": 3.4,
+   "sleep_pairs": 20
+  },
+  {
+   "scale": 2000,
+   "n_memories": 2000,
+   "write_ms_per": 12.08,
+   "write_total_s": 24.16,
+   "search_ms_per": 26.55,
+   "audit_ms_per": 0.53,
+   "sleep_prepare_ms": 7.3,
+   "sleep_pairs": 20
+  }
+ ]
+}

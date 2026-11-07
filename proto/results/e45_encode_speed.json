@@ -1,0 +1,61 @@
+{
+ "experiment": "E-45",
+ "baseline_pt_ms": 7.117,
+ "results": {
+  "pytorch": {
+   "single_ms": 7.117,
+   "p10": 6.634,
+   "p90": 8.169
+  },
+  "onnx_t4": {
+   "single_ms": 4.062,
+   "p10": 3.5,
+   "p90": 4.512,
+   "cos_to_ref": 1.0
+  },
+  "onnx_t8": {
+   "single_ms": 4.464,
+   "p10": 3.927,
+   "p90": 4.915,
+   "cos_to_ref": 1.0
+  },
+  "onnx_t14": {
+   "single_ms": 4.325,
+   "p10": 3.85,
+   "p90": 4.828,
+   "cos_to_ref": 1.0
+  },
+  "onnx_b8": {
+   "batch_ms": 25.232,
+   "per_item_ms": 3.154
+  },
+  "onnx_b16": {
+   "batch_ms": 49.964,
+   "per_item_ms": 3.123
+  },
+  "onnx_b32": {
+   "batch_ms": 152.237,
+   "per_item_ms": 4.757
+  },
+  "pt_dynamic_int8": {
+   "single_ms": 8.45,
+   "p10": 7.988,
+   "p90": 9.174,
+   "cos_to_ref": 0.95167
+  },
+  "pt_maxlen64": {
+   "single_ms": 8.359,
+   "cos_to_ref": 1.0
+  },
+  "pt_maxlen32": {
+   "single_ms": 8.128,
+   "cos_to_ref": 0.9988
+  },
+  "dim256": {
+   "top5_overlap": 0.6867
+  },
+  "dim128": {
+   "top5_overlap": 0.5267
+  }
+ }
+}

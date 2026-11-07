@@ -1,0 +1,115 @@
+
+Loading weights:   0%|          | 0/71 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 71/71 [00:00<00:00, 1605.39it/s]
+==============================================================================================
+E-161 单跳失败诊断（共 32 条）
+==============================================================================================
+
+==============================================================================================
+问题: What did Caroline research?
+答案: Adoption agencies
+证据轮次: ['D2:8']
+
+  ★ 证据 D2:8 原文:
+    [1:14 pm on 25 May, 2023] Caroline: Researching adoption agencies — it's been a dream to have a family and give a loving home to kids who need it.
+
+  实际召回 top-3:
+    [D1:10] [1:56 pm on 8 May, 2023] Melanie: Wow, Caroline! What kinda jobs are you thinkin' of? Anything that stands out?
+    [D1:17] [1:56 pm on 8 May, 2023] Caroline: Totally agree, Mel. Relaxing and expressing ourselves is key. Well, I'm off to go do 
+    [D5:5] [1:36 pm on 3 July, 2023] Caroline: Wow, Melanie! I'm getting creative too, just learning the piano. What made you try p
+
+==============================================================================================
+问题: What is Caroline's identity?
+答案: Transgender woman
+证据轮次: ['D1:5']
+
+  ★ 证据 D1:5 原文:
+    [1:56 pm on 8 May, 2023] Caroline: The transgender stories were so inspiring! I was so happy and thankful for all the support.
+
+  实际召回 top-3:
+    [D3:3] [7:55 pm on 9 June, 2023] Caroline: Thanks, Mel! Your backing really means a lot. I felt super powerful giving my talk. 
+    [D6:8] [8:18 pm on 6 July, 2023] Melanie: Sounds great! What kind of books you got in your library?
+    [D13:13] [3:31 pm on 23 August, 2023] Caroline: Thanks, Mel! I felt liberated and empowered doing it. Painting helps me explore m
+
+==============================================================================================
+问题: What is Caroline's relationship status?
+答案: Single
+证据轮次: ['D3:13', 'D2:14']
+
+  ★ 证据 D3:13 原文:
+    [7:55 pm on 9 June, 2023] Caroline: Yeah, I'm really lucky to have them. They've been there through everything, I've known these friends for 4 years, since I moved from my home country. Their love and help have been so important especially after that tough bre
+
+  ★ 证据 D2:14 原文:
+    [1:14 pm on 25 May, 2023] Caroline: I'm thrilled to make a family for kids who need one. It'll be tough as a single parent, but I'm up for the challenge!
+
+  实际召回 top-3:
+    [D1:11] [1:56 pm on 8 May, 2023] Caroline: I'm keen on counseling or working in mental health - I'd love to support those with s
+    [D3:10] [7:55 pm on 9 June, 2023] Melanie: Yes, Caroline! We can do it. Your courage is inspiring. I want to be couragous for my
+    [D16:14] [12:09 am on 13 September, 2023] Melanie: Wow, Caro, that painting is amazing! You've made so much progress. I'm super p
+
+==============================================================================================
+问题: What career path has Caroline decided to persue?
+答案: counseling or mental health for Transgender people
+证据轮次: ['D4:13', 'D1:11']
+
+  ★ 证据 D4:13 原文:
+    [10:37 am on 27 June, 2023] Caroline: I'm still figuring out the details, but I'm thinking of working with trans people, helping them accept themselves and supporting their mental health. Last Friday, I went to an LGBTQ+ counseling workshop and it was really e
+
+  ★ 证据 D1:11 原文:
+    [1:56 pm on 8 May, 2023] Caroline: I'm keen on counseling or working in mental health - I'd love to support those with similar issues.
+
+  实际召回 top-3:
+    [D15:23] [3:19 pm on 28 August, 2023] Caroline: Yeah totally! "Brave" by Sara Bareilles has a lot of significance for me. It's ab
+    [D1:9] [1:56 pm on 8 May, 2023] Caroline: Gonna continue my edu and check out career options, which is pretty exciting!
+    [D2:4] [1:14 pm on 25 May, 2023] Caroline: I totally agree, Melanie. Taking care of ourselves is so important - even if it's no
+
+==============================================================================================
+问题: What activities does Melanie partake in?
+答案: pottery, camping, painting, swimming
+证据轮次: ['D5:4', 'D9:1', 'D1:12', 'D1:18']
+
+  ★ 证据 D5:4 原文:
+    [1:36 pm on 3 July, 2023] Melanie: Wow, Caroline! That's great! I just signed up for a pottery class yesterday. It's like therapy for me, letting me express myself and get creative. Have you found any activities that make you feel the same way?
+
+  ★ 证据 D9:1 原文:
+    [2:31 pm on 17 July, 2023] Melanie: Hey Caroline, hope all's good! I had a quiet weekend after we went camping with my fam two weekends ago. It was great to unplug and hang with the kids. What've you been up to? Anything fun over the weekend?
+
+  ★ 证据 D1:12 原文:
+    [1:56 pm on 8 May, 2023] Melanie: You'd be a great counselor! Your empathy and understanding will really help the people you work with. By the way, take a look at this.
+
+  ★ 证据 D1:18 原文:
+    [1:56 pm on 8 May, 2023] Melanie: Yep, Caroline. Taking care of ourselves is vital. I'm off to go swimming with the kids. Talk to you soon!
+
+  实际召回 top-3:
+    [D15:10] [3:19 pm on 28 August, 2023] Melanie: That's great news, Caroline! Love seeing your dedication to helping others. Any sp
+    [D13:2] [3:31 pm on 23 August, 2023] Melanie: Caroline, congrats! So proud of you for taking this step. How does it feel? Also, 
+    [D1:3] [1:56 pm on 8 May, 2023] Caroline: I went to a LGBTQ support group yesterday and it was so powerful.
+
+==============================================================================================
+问题: Where has Melanie camped?
+答案: beach, mountains, forest
+证据轮次: ['D6:16', 'D4:6', 'D8:32']
+
+  ★ 证据 D6:16 原文:
+    [8:18 pm on 6 July, 2023] Melanie: Glad you have support, Caroline! Unconditional love is so important. Here's a pic of my family camping at the beach. We love it, it brings us closer!
+
+  ★ 证据 D4:6 原文:
+    [10:37 am on 27 June, 2023] Melanie: That sounds great, Caroline! It's awesome having stuff around that make us think of good connections and times. Actually, I just took my fam camping in the mountains last week - it was a really nice time together!
+
+  ★ 证据 D8:32 原文:
+    [1:51 pm on 15 July, 2023] Melanie: Yeah, Caroline, my family's been great - their love and support really helped me through tough times. It's awesome! We even went on another camping trip in the forest.
+
+  实际召回 top-3:
+    [D8:28] [1:51 pm on 15 July, 2023] Melanie: I'm getting there, Caroline. Creativity and family keep me at peace.
+    [D14:13] [1:33 pm on 25 August, 2023] Caroline: Finding a community where I'm accepted, loved and supported has really meant a lo
+    [D15:23] [3:19 pm on 28 August, 2023] Caroline: Yeah totally! "Brave" by Sara Bareilles has a lot of significance for me. It's ab
+
+==============================================================================================
+单跳失败 23 条（共 32）
+==============================================================================================
+
+观察上面案例，判断属于哪种情况：
+  H1 语义差异大（问答用词完全不同）
+  H2 答案分散多轮
+  H3 轮次太长关键词被稀释
+  H4 被含关键词多的无关轮次挤掉

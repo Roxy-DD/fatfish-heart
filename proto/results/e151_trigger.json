@@ -1,0 +1,14 @@
+{
+ "experiment": "E-151",
+ "n": 43,
+ "n_pos": 20,
+ "rule_mae": 0.2356,
+ "best": {
+  "name": "T4 narr>=2",
+  "coverage": 0.65,
+  "false": 1,
+  "ratio": 32.55813953488372,
+  "cover": 13,
+  "cost": 65.11627906976744
+ }
+}

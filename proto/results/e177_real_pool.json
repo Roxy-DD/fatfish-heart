@@ -1,0 +1,13 @@
+{
+ "experiment": "E-177",
+ "n_conv": 3,
+ "results": {
+  "default": 0.5919,
+  "sem100": 0.5475,
+  "sem20": 0.5818,
+  "like60": 0.5879,
+  "like10": 0.5798,
+  "likehuge": 0.604
+ },
+ "best": "likehuge"
+}

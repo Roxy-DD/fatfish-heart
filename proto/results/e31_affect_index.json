@@ -1,0 +1,156 @@
+{
+ "experiment": "E-31",
+ "hypothesis": "情绪=记忆的索引/UUID",
+ "affect_dims": 7,
+ "affect_names": [
+  "墨水密度",
+  "边缘强度",
+  "纵向偏移",
+  "横向偏移",
+  "长宽比",
+  "上下对称",
+  "左右对称"
+ ],
+ "n_train": 4000,
+ "n_stars": 1676,
+ "full_scan_acc": 0.9323,
+ "configs": [
+  {
+   "affect_dim": 2,
+   "cand_ratio": 0.05,
+   "acc": 0.85,
+   "scan_per_query": 83.0,
+   "scan_reduction": 0.95,
+   "acc_delta_vs_full": -0.0823
+  },
+  {
+   "affect_dim": 2,
+   "cand_ratio": 0.1,
+   "acc": 0.8872,
+   "scan_per_query": 167.0,
+   "scan_reduction": 0.9,
+   "acc_delta_vs_full": -0.045
+  },
+  {
+   "affect_dim": 2,
+   "cand_ratio": 0.2,
+   "acc": 0.9123,
+   "scan_per_query": 335.0,
+   "scan_reduction": 0.8,
+   "acc_delta_vs_full": -0.02
+  },
+  {
+   "affect_dim": 2,
+   "cand_ratio": 0.5,
+   "acc": 0.9297,
+   "scan_per_query": 838.0,
+   "scan_reduction": 0.5,
+   "acc_delta_vs_full": -0.0025
+  },
+  {
+   "affect_dim": 3,
+   "cand_ratio": 0.05,
+   "acc": 0.8433,
+   "scan_per_query": 83.0,
+   "scan_reduction": 0.95,
+   "acc_delta_vs_full": -0.089
+  },
+  {
+   "affect_dim": 3,
+   "cand_ratio": 0.1,
+   "acc": 0.89,
+   "scan_per_query": 167.0,
+   "scan_reduction": 0.9,
+   "acc_delta_vs_full": -0.0423
+  },
+  {
+   "affect_dim": 3,
+   "cand_ratio": 0.2,
+   "acc": 0.912,
+   "scan_per_query": 335.0,
+   "scan_reduction": 0.8,
+   "acc_delta_vs_full": -0.0202
+  },
+  {
+   "affect_dim": 3,
+   "cand_ratio": 0.5,
+   "acc": 0.9285,
+   "scan_per_query": 838.0,
+   "scan_reduction": 0.5,
+   "acc_delta_vs_full": -0.0038
+  },
+  {
+   "affect_dim": 5,
+   "cand_ratio": 0.05,
+   "acc": 0.8525,
+   "scan_per_query": 83.0,
+   "scan_reduction": 0.95,
+   "acc_delta_vs_full": -0.0797
+  },
+  {
+   "affect_dim": 5,
+   "cand_ratio": 0.1,
+   "acc": 0.8908,
+   "scan_per_query": 167.0,
+   "scan_reduction": 0.9,
+   "acc_delta_vs_full": -0.0415
+  },
+  {
+   "affect_dim": 5,
+   "cand_ratio": 0.2,
+   "acc": 0.9135,
+   "scan_per_query": 335.0,
+   "scan_reduction": 0.8,
+   "acc_delta_vs_full": -0.0188
+  },
+  {
+   "affect_dim": 5,
+   "cand_ratio": 0.5,
+   "acc": 0.9253,
+   "scan_per_query": 838.0,
+   "scan_reduction": 0.5,
+   "acc_delta_vs_full": -0.007
+  },
+  {
+   "affect_dim": 7,
+   "cand_ratio": 0.05,
+   "acc": 0.8642,
+   "scan_per_query": 83.0,
+   "scan_reduction": 0.95,
+   "acc_delta_vs_full": -0.068
+  },
+  {
+   "affect_dim": 7,
+   "cand_ratio": 0.1,
+   "acc": 0.8968,
+   "scan_per_query": 167.0,
+   "scan_reduction": 0.9,
+   "acc_delta_vs_full": -0.0355
+  },
+  {
+   "affect_dim": 7,
+   "cand_ratio": 0.2,
+   "acc": 0.9125,
+   "scan_per_query": 335.0,
+   "scan_reduction": 0.8,
+   "acc_delta_vs_full": -0.0198
+  },
+  {
+   "affect_dim": 7,
+   "cand_ratio": 0.5,
+   "acc": 0.9273,
+   "scan_per_query": 838.0,
+   "scan_reduction": 0.5,
+   "acc_delta_vs_full": -0.005
+  }
+ ],
+ "best": {
+  "affect_dim": 2,
+  "cand_ratio": 0.5,
+  "acc": 0.9297,
+  "scan_per_query": 838.0,
+  "scan_reduction": 0.5,
+  "acc_delta_vs_full": -0.0025
+ },
+ "elapsed_sec": 39.0
+}

@@ -1,0 +1,534 @@
+{
+ "experiment": "E-156",
+ "n": 55,
+ "k": 10,
+ "methods": {
+  "combo": 0.6,
+  "semantic": 0.6,
+  "bm25": 0.6545,
+  "random": 0.5273
+ },
+ "by_type": {
+  "temporal-reasoning": {
+   "hit": 7,
+   "total": 16
+  },
+  "single-session-user": {
+   "hit": 8,
+   "total": 8
+  },
+  "single-session-preference": {
+   "hit": 0,
+   "total": 3
+  },
+  "multi-session": {
+   "hit": 5,
+   "total": 15
+  },
+  "knowledge-update": {
+   "hit": 6,
+   "total": 6
+  },
+  "single-session-assistant": {
+   "hit": 7,
+   "total": 7
+  }
+ },
+ "details": [
+  {
+   "i": 0,
+   "qtype": "temporal-reasoning",
+   "n_mem": 24,
+   "combo": false,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 1,
+   "qtype": "temporal-reasoning",
+   "n_mem": 24,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 2,
+   "qtype": "temporal-reasoning",
+   "n_mem": 24,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 3,
+   "qtype": "single-session-user",
+   "n_mem": 12,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 4,
+   "qtype": "temporal-reasoning",
+   "n_mem": 10,
+   "combo": false,
+   "semantic": false,
+   "bm25": false,
+   "random": false
+  },
+  {
+   "i": 5,
+   "qtype": "single-session-preference",
+   "n_mem": 20,
+   "combo": false,
+   "semantic": false,
+   "bm25": false,
+   "random": false
+  },
+  {
+   "i": 6,
+   "qtype": "single-session-user",
+   "n_mem": 12,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 7,
+   "qtype": "multi-session",
+   "n_mem": 24,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 8,
+   "qtype": "multi-session",
+   "n_mem": 22,
+   "combo": false,
+   "semantic": false,
+   "bm25": false,
+   "random": false
+  },
+  {
+   "i": 9,
+   "qtype": "single-session-user",
+   "n_mem": 12,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 10,
+   "qtype": "temporal-reasoning",
+   "n_mem": 10,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 11,
+   "qtype": "temporal-reasoning",
+   "n_mem": 24,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": false
+  },
+  {
+   "i": 12,
+   "qtype": "single-session-preference",
+   "n_mem": 16,
+   "combo": false,
+   "semantic": false,
+   "bm25": false,
+   "random": false
+  },
+  {
+   "i": 13,
+   "qtype": "multi-session",
+   "n_mem": 20,
+   "combo": false,
+   "semantic": false,
+   "bm25": false,
+   "random": false
+  },
+  {
+   "i": 14,
+   "qtype": "knowledge-update",
+   "n_mem": 24,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 15,
+   "qtype": "temporal-reasoning",
+   "n_mem": 24,
+   "combo": false,
+   "semantic": false,
+   "bm25": false,
+   "random": false
+  },
+  {
+   "i": 16,
+   "qtype": "single-session-assistant",
+   "n_mem": 12,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 17,
+   "qtype": "multi-session",
+   "n_mem": 24,
+   "combo": false,
+   "semantic": false,
+   "bm25": false,
+   "random": false
+  },
+  {
+   "i": 18,
+   "qtype": "multi-session",
+   "n_mem": 48,
+   "combo": false,
+   "semantic": false,
+   "bm25": true,
+   "random": false
+  },
+  {
+   "i": 19,
+   "qtype": "single-session-user",
+   "n_mem": 12,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 20,
+   "qtype": "knowledge-update",
+   "n_mem": 24,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 21,
+   "qtype": "knowledge-update",
+   "n_mem": 24,
+   "combo": true,
+   "semantic": false,
+   "bm25": true,
+   "random": false
+  },
+  {
+   "i": 22,
+   "qtype": "temporal-reasoning",
+   "n_mem": 22,
+   "combo": false,
+   "semantic": false,
+   "bm25": false,
+   "random": false
+  },
+  {
+   "i": 23,
+   "qtype": "single-session-assistant",
+   "n_mem": 13,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 24,
+   "qtype": "temporal-reasoning",
+   "n_mem": 24,
+   "combo": false,
+   "semantic": false,
+   "bm25": false,
+   "random": false
+  },
+  {
+   "i": 25,
+   "qtype": "multi-session",
+   "n_mem": 22,
+   "combo": false,
+   "semantic": false,
+   "bm25": false,
+   "random": false
+  },
+  {
+   "i": 26,
+   "qtype": "single-session-assistant",
+   "n_mem": 8,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 27,
+   "qtype": "temporal-reasoning",
+   "n_mem": 36,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 28,
+   "qtype": "multi-session",
+   "n_mem": 24,
+   "combo": false,
+   "semantic": false,
+   "bm25": false,
+   "random": false
+  },
+  {
+   "i": 29,
+   "qtype": "multi-session",
+   "n_mem": 24,
+   "combo": false,
+   "semantic": true,
+   "bm25": true,
+   "random": false
+  },
+  {
+   "i": 30,
+   "qtype": "multi-session",
+   "n_mem": 48,
+   "combo": true,
+   "semantic": false,
+   "bm25": true,
+   "random": false
+  },
+  {
+   "i": 31,
+   "qtype": "multi-session",
+   "n_mem": 36,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 32,
+   "qtype": "single-session-preference",
+   "n_mem": 20,
+   "combo": false,
+   "semantic": false,
+   "bm25": false,
+   "random": false
+  },
+  {
+   "i": 33,
+   "qtype": "multi-session",
+   "n_mem": 46,
+   "combo": false,
+   "semantic": false,
+   "bm25": false,
+   "random": false
+  },
+  {
+   "i": 34,
+   "qtype": "single-session-assistant",
+   "n_mem": 6,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 35,
+   "qtype": "temporal-reasoning",
+   "n_mem": 24,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": false
+  },
+  {
+   "i": 36,
+   "qtype": "knowledge-update",
+   "n_mem": 24,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 37,
+   "qtype": "single-session-user",
+   "n_mem": 12,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 38,
+   "qtype": "single-session-user",
+   "n_mem": 12,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 39,
+   "qtype": "knowledge-update",
+   "n_mem": 24,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": false
+  },
+  {
+   "i": 40,
+   "qtype": "single-session-user",
+   "n_mem": 12,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 41,
+   "qtype": "knowledge-update",
+   "n_mem": 24,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 42,
+   "qtype": "single-session-user",
+   "n_mem": 10,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 43,
+   "qtype": "temporal-reasoning",
+   "n_mem": 12,
+   "combo": false,
+   "semantic": false,
+   "bm25": false,
+   "random": false
+  },
+  {
+   "i": 44,
+   "qtype": "temporal-reasoning",
+   "n_mem": 24,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 45,
+   "qtype": "multi-session",
+   "n_mem": 46,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 46,
+   "qtype": "temporal-reasoning",
+   "n_mem": 12,
+   "combo": false,
+   "semantic": false,
+   "bm25": false,
+   "random": false
+  },
+  {
+   "i": 47,
+   "qtype": "single-session-assistant",
+   "n_mem": 14,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 48,
+   "qtype": "multi-session",
+   "n_mem": 24,
+   "combo": false,
+   "semantic": false,
+   "bm25": false,
+   "random": false
+  },
+  {
+   "i": 49,
+   "qtype": "single-session-assistant",
+   "n_mem": 20,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 50,
+   "qtype": "multi-session",
+   "n_mem": 24,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 51,
+   "qtype": "temporal-reasoning",
+   "n_mem": 22,
+   "combo": false,
+   "semantic": false,
+   "bm25": false,
+   "random": false
+  },
+  {
+   "i": 52,
+   "qtype": "single-session-assistant",
+   "n_mem": 8,
+   "combo": true,
+   "semantic": true,
+   "bm25": true,
+   "random": true
+  },
+  {
+   "i": 53,
+   "qtype": "temporal-reasoning",
+   "n_mem": 22,
+   "combo": false,
+   "semantic": false,
+   "bm25": false,
+   "random": false
+  },
+  {
+   "i": 54,
+   "qtype": "multi-session",
+   "n_mem": 48,
+   "combo": false,
+   "semantic": false,
+   "bm25": false,
+   "random": false
+  }
+ ]
+}

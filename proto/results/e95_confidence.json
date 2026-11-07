@@ -1,0 +1,12 @@
+{
+ "experiment": "E-95",
+ "n": 44,
+ "dist": {
+  "high": 34,
+  "low": 3,
+  "none": 7
+ },
+ "low_total": 3,
+ "low_wrong": 0,
+ "model_call_ratio": 0.0682
+}

@@ -1,0 +1,61 @@
+==========================================================================================
+E-145 多通道熟练度：基础正确性与红线
+==========================================================================================
+
+① 计数正确性
+
+Loading weights:   0%|          | 0/71 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 71/71 [00:00<00:00, 1661.05it/s]
+  初始：{'recall_by_query': 0, 'recall_by_fixed': 0, 'recall_by_chain': 0, 'recall_by_merge': 0, 'recall_by_prompt': 0}
+  查询通道 +5 后：{'recall_by_query': 5, 'recall_by_fixed': 0, 'recall_by_chain': 0, 'recall_by_merge': 0, 'recall_by_prompt': 0}
+  → 初始全 0: ✅  计数正确: ✅
+
+② 通道独立性（对应'会说 ≠ 会写'）
+  {'recall_by_query': 5, 'recall_by_fixed': 3, 'recall_by_chain': 2, 'recall_by_merge': 0, 'recall_by_prompt': 0}
+  → 各通道互不影响: ✅
+
+  诊断：总访问 10  主导通道 recall_by_query  熟练度 0.7876
+
+③ 记账开销
+  单次 bump 平均: 0.515 ms（200 次）
+  → ✅ 可接受（<5ms）
+  批量 bump_many 平均: 0.022 ms/条（50 条）
+
+④ R2 不遗忘（计数只增不减）
+  加 0: 205→205  加负数: →205
+  → 只会增不会减: ✅
+  记录总数 51 → 51: ✅ 记账不产生记忆
+
+⑤ R1 迁移（跨连接一致）
+  重开前：{'recall_by_query': 206, 'recall_by_fixed': 3, 'recall_by_chain': 2, 'recall_by_merge': 0, 'recall_by_prompt': 0}
+  重开后：{'recall_by_query': 206, 'recall_by_fixed': 3, 'recall_by_chain': 2, 'recall_by_merge': 0, 'recall_by_prompt': 0}
+  → ✅ 一致
+  异库复制后：{'recall_by_query': 206, 'recall_by_fixed': 3, 'recall_by_chain': 2, 'recall_by_merge': 0, 'recall_by_prompt': 0}
+  → ✅ 一致
+
+⑥ R3 索引可重建（清空 meta 后结构仍稳定）
+  清空后：{'recall_by_query': 0, 'recall_by_fixed': 0, 'recall_by_chain': 0, 'recall_by_merge': 0, 'recall_by_prompt': 0}
+  → 结构稳定（全 0 且通道齐全）: ✅
+  清空通道后检索仍可用: ✅
+
+⑦ 全库统计
+  被追踪记忆: 0
+  各通道总访问: {'recall_by_query': 0, 'recall_by_fixed': 0, 'recall_by_chain': 0, 'recall_by_merge': 0, 'recall_by_prompt': 0}
+
+==========================================================================================
+汇总
+==========================================================================================
+  ✅ count_correct
+  ✅ channel_independent
+  ✅ diagnostics
+  ✅ perf
+  ✅ r2_only_increase
+  ✅ r2_no_new_records
+  ✅ r1_migration
+  ✅ r1_copy
+  ✅ r3_stable
+
+  通过 9/9
+  → ✅ 多通道熟练度基础层可用
+
+写入 C:\Users\xuee\Desktop\肥鱼之心\proto\results\e145_channel.json

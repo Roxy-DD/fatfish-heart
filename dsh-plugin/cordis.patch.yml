@@ -1,0 +1,18 @@
+- insert:
+    - id: cosmos-mem
+      name: '@local/dsh-cosmos-mem'
+      config:
+        pythonPath: 'D:\anaconda3\python.exe'
+        kernelDir: 'C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem'
+        dbPath: 'C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem\dsh_mem.db'
+        autoInject: true
+        autoRemember: true
+        autoInjectTopK: 5
+        autoInjectMaxChars: 1500
+        reviewWindow: 8
+        reviewProvider: 'workbuddy'
+        reviewModel: 'deepseek-v4.1-flash'
+        reviewMaxTokens: 800
+        minImportance: 0.5
+        minCost: 0.7
+        debugLog: true

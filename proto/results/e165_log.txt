@@ -1,0 +1,65 @@
+============================================================================================
+E-165 LoCoMo 全量数据下载与结构检查
+============================================================================================
+
+下载 https://raw.githubusercontent.com/snap-research/locomo/main/data/locomo10.json
+  已保存 2,805,274 bytes
+
+解析…
+  顶层类型: list
+  对话数: 10
+
+  [0] conv-26  QA=199  sessions=19  turns=419
+      speakers: Caroline / Melanie
+      evidence 形式: ['list']
+
+  [1] conv-30  QA=105  sessions=19  turns=369
+      speakers: Jon / Gina
+      evidence 形式: ['list']
+
+  [2] conv-41  QA=193  sessions=32  turns=663
+      speakers: John / Maria
+      evidence 形式: ['list']
+
+  [3] conv-42  QA=260  sessions=29  turns=629
+      speakers: Joanna / Nate
+      evidence 形式: ['list']
+
+  [4] conv-43  QA=242  sessions=29  turns=680
+      speakers: Tim / John
+      evidence 形式: ['list']
+
+  [5] conv-44  QA=158  sessions=28  turns=675
+      speakers: Audrey / Andrew
+      evidence 形式: ['list']
+
+  [6] conv-47  QA=190  sessions=31  turns=689
+      speakers: James / John
+      evidence 形式: ['list']
+
+  [7] conv-48  QA=239  sessions=30  turns=681
+      speakers: Deborah / Jolene
+      evidence 形式: ['list']
+
+  [8] conv-49  QA=196  sessions=25  turns=509
+      speakers: Evan / Sam
+      evidence 形式: ['list']
+
+  [9] conv-50  QA=204  sessions=30  turns=568
+      speakers: Calvin / Dave
+      evidence 形式: ['list']
+
+============================================================================================
+汇总
+============================================================================================
+
+  对话数: 10
+  QA 总数: 1986
+  session 总数: 272
+  轮次总数: 5882
+  平均每对话: 199 QA, 27 sessions, 588 turns
+
+  evidence 形式（全部对话）: ['list']
+
+写入 C:\Users\xuee\Desktop\肥鱼之心\proto\results\e165_locomo_full.json
+数据路径: C:\Users\xuee\Desktop\肥鱼之心\proto\work\e165\locomo10.json

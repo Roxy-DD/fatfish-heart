@@ -1,0 +1,22 @@
+{
+ "experiment": "E-170",
+ "n_conv": 3,
+ "results": {
+  "S0_off": {
+   "hit": 347,
+   "total": 495,
+   "rate": 0.701
+  },
+  "S1_fixed": {
+   "hit": 333,
+   "total": 495,
+   "rate": 0.6727
+  },
+  "S2_idf": {
+   "hit": 348,
+   "total": 495,
+   "rate": 0.703
+  }
+ },
+ "best": "S2_idf"
+}

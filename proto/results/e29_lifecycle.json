@@ -1,0 +1,102 @@
+{
+ "experiment": "E-29",
+ "n_pass": 19,
+ "n_total": 19,
+ "results": [
+  {
+   "name": "首次睡眠走兜底窗口",
+   "ok": true,
+   "detail": "window=recent"
+  },
+  {
+   "name": "首次 cursor=0",
+   "ok": true,
+   "detail": "cursor=0.0"
+  },
+  {
+   "name": "睡眠后游标推进",
+   "ok": true,
+   "detail": "cursor=1794060296.8"
+  },
+  {
+   "name": "第二次睡眠走增量窗口",
+   "ok": true,
+   "detail": "window=fresh"
+  },
+  {
+   "name": "增量只含 2 条新记忆",
+   "ok": true,
+   "detail": "2 条"
+  },
+  {
+   "name": "增量不含旧记忆",
+   "ok": true,
+   "detail": "只扫新增"
+  },
+  {
+   "name": "睡眠包包含 l3_candidates",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L3 候选有内容",
+   "ok": true,
+   "detail": "2 条"
+  },
+  {
+   "name": "L3 候选含 age_h（年龄）",
+   "ok": true,
+   "detail": "age_h=0.0"
+  },
+  {
+   "name": "从 A 追溯成功",
+   "ok": true,
+   "detail": "chain_len=3"
+  },
+  {
+   "name": "链条长度 = 3",
+   "ok": true,
+   "detail": "3"
+  },
+  {
+   "name": "root 是 A",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "tip 是最新",
+   "ok": true,
+   "detail": "tip=713505ac"
+  },
+  {
+   "name": "链条顺序（老→新）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "最新一条 is_current=True",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "旧的 is_current=False",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "从中间 B 追溯也完整",
+   "ok": true,
+   "detail": "3"
+  },
+  {
+   "name": "从末端 C 追溯也完整",
+   "ok": true,
+   "detail": "3"
+  },
+  {
+   "name": "不存在的 id 报错",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

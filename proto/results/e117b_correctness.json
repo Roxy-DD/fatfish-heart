@@ -1,0 +1,78 @@
+{
+ "experiment": "E-117b",
+ "n_replace": 7,
+ "got_new_value": 6,
+ "returned_stale": 0,
+ "returned_both": 1,
+ "returned_none": 0,
+ "control_recall": 11,
+ "control_total": 11,
+ "total_records": 30,
+ "invalid_count": 7,
+ "old_value_findable": true,
+ "details": [
+  {
+   "q": "电脑密码是多少",
+   "expect_new": "9988",
+   "expect_not": "8848",
+   "kind": "new",
+   "top1": "我把电脑密码改成了9988",
+   "has_new": true,
+   "has_old": false
+  },
+  {
+   "q": "门锁密码",
+   "expect_new": "9512",
+   "expect_not": "3721",
+   "kind": "new",
+   "top1": "门锁密码换成了9512",
+   "has_new": true,
+   "has_old": false
+  },
+  {
+   "q": "项目什么时候截止",
+   "expect_new": "20",
+   "expect_not": "15",
+   "kind": "both",
+   "top1": "这个项目 15 号截止",
+   "has_new": true,
+   "has_old": true
+  },
+  {
+   "q": "我的车是什么",
+   "expect_new": "黑色大众",
+   "expect_not": "白色卡罗拉",
+   "kind": "new",
+   "top1": "我换车了现在是黑色大众",
+   "has_new": true,
+   "has_old": false
+  },
+  {
+   "q": "我家住哪",
+   "expect_new": "城西新村",
+   "expect_not": "城东花园",
+   "kind": "new",
+   "top1": "我搬家到城西新村5号",
+   "has_new": true,
+   "has_old": false
+  },
+  {
+   "q": "接口参数多少",
+   "expect_new": "1.2",
+   "expect_not": "0.85",
+   "kind": "new",
+   "top1": "接口参数改成了1.2",
+   "has_new": true,
+   "has_old": false
+  },
+  {
+   "q": "明天几点开会",
+   "expect_new": "十点",
+   "expect_not": "三点",
+   "kind": "new",
+   "top1": "会议改到明天上午十点",
+   "has_new": true,
+   "has_old": false
+  }
+ ]
+}

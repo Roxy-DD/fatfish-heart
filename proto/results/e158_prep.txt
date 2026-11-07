@@ -1,0 +1,22 @@
+==============================================================================================
+E-158 LongMemEval 正式协议（阶段一：检索 + 建任务包）
+==============================================================================================
+
+拉取数据…
+  非 abstention: 37 题
+
+Loading weights:   0%|          | 0/71 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 71/71 [00:00<00:00, 1991.73it/s]
+
+  已生成 37 个答题任务
+  → C:\Users\xuee\Desktop\肥鱼之心\proto\work\e158\tasks.json
+
+  题型分布:
+    temporal-reasoning          11
+    multi-session               11
+    single-session-user         4
+    knowledge-update            4
+    single-session-assistant    4
+    single-session-preference   3
+
+  每题上下文 10 条记忆，平均 10 字符

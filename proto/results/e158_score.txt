@@ -1,0 +1,77 @@
+================================================================================================
+E-158 LongMemEval 正式协议评分
+================================================================================================
+
+cid   题型                      对?    模型答案                            标准答案
+------------------------------------------------------------------------------------------------
+Q00   temporal-reasoning      ❌     I don't know                    a chocolate cake
+Q01   temporal-reasoning      ✅     'The Hate U Give'               'The Hate U Give'
+Q02   temporal-reasoning      ✅     the solo trip to Thailand       The solo trip to Thailand
+Q03   single-session-user     ✅     "The Seven Husbands of Evelyn   The Seven Husbands of Evelyn H
+Q04   temporal-reasoning      ❌     I don't know                    26 days. 27 days (including th
+Q05   single-session-prefere  ❌     hotels with great views (ocean  The user would prefer suggesti
+Q06   single-session-user     ✅     Luna                            Luna
+Q07   multi-session           ✅     two (tennis and swimming)       two
+Q08   multi-session           ✅     three (Alex's, Mike's and Sara  three
+Q09   single-session-user     ✅     IKEA                            IKEA
+Q10   temporal-reasoning      ❌     I don't know                    3
+Q11   temporal-reasoning      ✅     a bluegrass band that features  a bluegrass band that features
+Q12   single-session-prefere  ❌     pair ingredients that compleme  The user would prefer response
+Q13   multi-session           ✅     11                              11
+Q14   knowledge-update        ✅     30                              30
+Q15   temporal-reasoning      ❌     I don't know                    24 days. 25 days (including th
+Q16   single-session-assista  ✅     Grilled Snapper with Mango Sal  Grilled Snapper with Mango Sal
+Q17   multi-session           ❌     I don't know                    3,000 miles
+Q18   multi-session           ❌     five (Max, Charlotte, Ava, Lil  5
+Q19   single-session-user     ✅     20                              20
+Q20   knowledge-update        ✅     under my bed                    under my bed
+Q21   knowledge-update        ✅     the suburbs                     the suburbs
+Q22   temporal-reasoning      ❌     I don't know                    6 days. 7 days (including the 
+Q23   single-session-assista  ✅     approximately 20%               The average improvement in fra
+Q24   temporal-reasoning      ✅     7 days (January 10 to January   7 days. 8 days (including the 
+Q25   multi-session           ✅     40% (two of five pairs)         40%
+Q26   single-session-assista  ✅     Mod Podge or another sealant    Mod Podge or another sealant
+Q27   temporal-reasoning      ❌     I don't know                    5.5 weeks
+Q28   multi-session           ❌     I don't know                    $120
+Q29   multi-session           ✅     8 (5 tomato plants and 3 cucum  8
+Q30   multi-session           ❌     three times (chocolate cake, s  4
+Q31   multi-session           ✅     one (The Art Cube on 2/15)      2
+Q32   single-session-prefere  ❌     use your Suica card for the tr  The user would prefer response
+Q33   multi-session           ❌     $40 (bike lights)               $185
+Q34   single-session-assista  ✅     Patagonia                       Patagonia
+Q35   temporal-reasoning      ✅     June 3rd                        June 3rd
+Q36   knowledge-update        ✅     in my bedroom, above my bed     in my bedroom
+------------------------------------------------------------------------------------------------
+
+  总体准确率: 23/37 = 0.6216
+
+  题型                          对/总         准确率
+  --------------------------------------------------------------
+  temporal-reasoning          5/11        0.4545
+  multi-session               6/11        0.5455
+  single-session-user         4/4         1.0000
+  knowledge-update            4/4         1.0000
+  single-session-assistant    4/4         1.0000
+  single-session-preference   0/3         0.0000
+
+  模型声称找到答案: 29/37 = 0.7838
+  （未找到时的答案应为 'I don't know'）
+
+  未找到答案的题: 8 条，其中判对 0 条
+  → 若为 0，说明随机/缺失上下文时确实答不出（指标可信）
+
+================================================================================================
+与历史实验对比
+================================================================================================
+
+  E-155（关键词匹配，宽松判定）: 0.4643  ❌ 随机基线 0.49，指标失真
+  E-156（关键词匹配 + 基线）:    0.6000  ❌ 随机基线 0.5273
+  E-157（三档收紧）:             0.3800  ❌ 随机基线仍 0.19
+  E-158（LLM 作答，正式协议）:   0.6216  ← 本轮
+
+  为什么这轮可信：
+    · 判定基于语义等价（不是字符串出现）
+    · 上下文缺失时模型答不知道 → 随机基线自然接近 0
+    · 与 LongMemEval 论文的协议一致
+
+写入 C:\Users\xuee\Desktop\肥鱼之心\proto\results\e158_lme_qa.json

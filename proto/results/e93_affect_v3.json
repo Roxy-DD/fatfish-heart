@@ -1,0 +1,8 @@
+{
+ "experiment": "E-93",
+ "affect_word_mean_emotion": 0.703125,
+ "affect_word_mean_neutral": 0.0,
+ "gold_mean_emotion": 0.81875,
+ "gold_mean_neutral": 0.22777777777777775,
+ "migration_ok": true
+}

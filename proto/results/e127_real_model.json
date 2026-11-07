@@ -1,0 +1,183 @@
+{
+ "experiment": "E-127",
+ "n": 14,
+ "model": "deepseek-v4.1-flash（真实调用，非回放）",
+ "relation_accuracy": 1.0,
+ "target_accuracy": 1.0,
+ "disk_correct": 7,
+ "disk_total": 7,
+ "by_type": {
+  "replace": {
+   "hit": 7,
+   "total": 7
+  },
+  "merge": {
+   "hit": 2,
+   "total": 2
+  },
+  "conflict": {
+   "hit": 2,
+   "total": 2
+  },
+  "none": {
+   "hit": 3,
+   "total": 3
+  }
+ },
+ "details": [
+  {
+   "cid": "S00",
+   "new": "我把电脑密码改成了9988",
+   "gold": "replace",
+   "pred": "replace",
+   "rel_ok": true,
+   "gold_target": "我电脑的登录密码是 8848",
+   "pred_target": "我电脑的登录密码是 8848",
+   "tgt_ok": true,
+   "reason": "同一槽位（我电脑的登录密码），新值9988顶掉旧值8848；cos最高的门锁密码是别的槽位。"
+  },
+  {
+   "cid": "S01",
+   "new": "门锁密码换成了9512",
+   "gold": "replace",
+   "pred": "replace",
+   "rel_ok": true,
+   "gold_target": "家里的门锁密码是 3721",
+   "pred_target": "家里的门锁密码是 3721",
+   "tgt_ok": true,
+   "reason": "说的都是自家门锁密码这一槽位，换成9512使3721作废；cos略低的老王说那条是转述来源，不是本位事实。"
+  },
+  {
+   "cid": "S02",
+   "new": "客户同意把截止延到20号",
+   "gold": "replace",
+   "pred": "replace",
+   "rel_ok": true,
+   "gold_target": "这个项目 15 号截止",
+   "pred_target": "这个项目 15 号截止",
+   "tgt_ok": true,
+   "reason": "截止日期同一槽位，延到20号使15号作废；cos更高的验收标准属于性能槽位。"
+  },
+  {
+   "cid": "S03",
+   "new": "我换车了现在是黑色大众",
+   "gold": "replace",
+   "pred": "replace",
+   "rel_ok": true,
+   "gold_target": "我的车是白色卡罗拉",
+   "pred_target": "我的车是白色卡罗拉",
+   "tgt_ok": true,
+   "reason": "都是“我的车”的颜色车型槽位，换车后白色卡罗拉不再成立。"
+  },
+  {
+   "cid": "S04",
+   "new": "我搬家到城西新村5号",
+   "gold": "replace",
+   "pred": "replace",
+   "rel_ok": true,
+   "gold_target": "我住在城东花园3栋",
+   "pred_target": "我住在城东花园3栋",
+   "tgt_ok": true,
+   "reason": "都是我的住址槽位，搬家到城西新村5号取代原住址；女儿学校那条只是cos相近的不同槽位。"
+  },
+  {
+   "cid": "S05",
+   "new": "接口参数改成了1.2",
+   "gold": "replace",
+   "pred": "replace",
+   "rel_ok": true,
+   "gold_target": "接口参数定的是0.85",
+   "pred_target": "接口参数定的是0.85",
+   "tgt_ok": true,
+   "reason": "同一接口参数槽位，改成1.2使0.85作废。"
+  },
+  {
+   "cid": "S06",
+   "new": "会议改到明天上午十点",
+   "gold": "replace",
+   "pred": "replace",
+   "rel_ok": true,
+   "gold_target": "明天下午三点开会",
+   "pred_target": "明天下午三点开会",
+   "tgt_ok": true,
+   "reason": "同一会议时间槽位，改到上午十点使“下午三点”作废。"
+  },
+  {
+   "cid": "S07",
+   "new": "客户还要求界面必须支持大字体",
+   "gold": "merge",
+   "pred": "merge",
+   "rel_ok": true,
+   "gold_target": "客户要求界面必须支持深色模式",
+   "pred_target": "客户要求界面必须支持深色模式",
+   "tgt_ok": true,
+   "reason": "“还要求大字体”是对客户界面要求的追加，深色模式与大字体两条同时成立。"
+  },
+  {
+   "cid": "S08",
+   "new": "另外我晚上也要吃一次药",
+   "gold": "merge",
+   "pred": "merge",
+   "rel_ok": true,
+   "gold_target": "我要连续吃两周的药",
+   "pred_target": "我要连续吃两周的药",
+   "tgt_ok": true,
+   "reason": "“另外…也要”是服药安排的补充，晚上加一次与连续吃两周并行成立。"
+  },
+  {
+   "cid": "S09",
+   "new": "小李说门锁密码是9512",
+   "gold": "conflict",
+   "pred": "conflict",
+   "rel_ok": true,
+   "gold_target": "老王说门锁密码是 3721",
+   "pred_target": "老王说门锁密码是 3721",
+   "tgt_ok": true,
+   "reason": "同槽位是“某人说门锁密码是X”，换成小李来源、值是9512，两说互相矛盾但都可能对，需澄清。"
+  },
+  {
+   "cid": "S10",
+   "new": "我记得好像是18号截止",
+   "gold": "conflict",
+   "pred": "conflict",
+   "rel_ok": true,
+   "gold_target": "这个项目 15 号截止",
+   "pred_target": "这个项目 15 号截止",
+   "tgt_ok": true,
+   "reason": "同一项目截止日期槽位，新句是“记得好像是18号”的不确定说法，与15号相左但未定论，需澄清。"
+  },
+  {
+   "cid": "S11",
+   "new": "这个bug反复出现我快崩溃了",
+   "gold": "none",
+   "pred": "none",
+   "rel_ok": true,
+   "gold_target": null,
+   "pred_target": null,
+   "tgt_ok": true,
+   "reason": "新记忆是“bug反复出现我快崩溃了”的情绪抱怨，候选里没有同一个bug/同一槽位的旧记忆。"
+  },
+  {
+   "cid": "S12",
+   "new": "上周二午饭吃的是番茄炒蛋",
+   "gold": "none",
+   "pred": "none",
+   "rel_ok": true,
+   "gold_target": null,
+   "pred_target": null,
+   "tgt_ok": true,
+   "reason": "新记忆是“上周二午饭吃番茄炒蛋”，饮食记录是全新事由，候选里没有同槽位条目。"
+  },
+  {
+   "cid": "S13",
+   "new": "我妈打电话说家里都好",
+   "gold": "none",
+   "pred": "none",
+   "rel_ok": true,
+   "gold_target": null,
+   "pred_target": null,
+   "tgt_ok": true,
+   "reason": "新记忆是“我妈打电话说家里都好”，写的是家人近况；候选里的“家里”指门锁密码，槽位不同，非同一目标。"
+  }
+ ]
+}

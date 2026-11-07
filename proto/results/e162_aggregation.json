@@ -1,0 +1,85 @@
+{
+ "experiment": "E-162",
+ "single": {
+  "hit": 82,
+  "n": 159,
+  "rate": 0.5157
+ },
+ "multi": {
+  "hit": 15,
+  "n": 38,
+  "rate": 0.3947
+ },
+ "all_evidence": {
+  "hit": 83,
+  "n": 197,
+  "rate": 0.4213
+ },
+ "by_category": {
+  "2": {
+   "single_n": 37,
+   "single_hit": 27,
+   "multi_n": 0,
+   "multi_hit": 0,
+   "all_n": 37,
+   "all_hit": 27
+  },
+  "3": {
+   "single_n": 3,
+   "single_hit": 1,
+   "multi_n": 8,
+   "multi_hit": 4,
+   "all_n": 11,
+   "all_hit": 1
+  },
+  "1": {
+   "single_n": 4,
+   "single_hit": 0,
+   "multi_n": 28,
+   "multi_hit": 9,
+   "all_n": 32,
+   "all_hit": 1
+  },
+  "4": {
+   "single_n": 69,
+   "single_hit": 31,
+   "multi_n": 1,
+   "multi_hit": 1,
+   "all_n": 70,
+   "all_hit": 31
+  },
+  "5": {
+   "single_n": 46,
+   "single_hit": 23,
+   "multi_n": 1,
+   "multi_hit": 1,
+   "all_n": 47,
+   "all_hit": 23
+  }
+ },
+ "ev_count_dist": {
+  "2": {
+   "1": 37
+  },
+  "3": {
+   "2": 7,
+   "1": 3,
+   "3": 1
+  },
+  "1": {
+   "1": 4,
+   "2": 20,
+   "4": 3,
+   "3": 4,
+   "6": 1
+  },
+  "4": {
+   "1": 69,
+   "2": 1
+  },
+  "5": {
+   "1": 46,
+   "2": 1
+  }
+ }
+}

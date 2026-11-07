@@ -1,0 +1,82 @@
+{
+ "experiment": "E-46",
+ "rows": [
+  {
+   "threads": 1,
+   "single_ms": 12.697,
+   "single_p10": 12.019,
+   "single_p90": 13.667,
+   "b8_per_ms": 9.697,
+   "b32_per_ms": 15.549,
+   "throughput": 103.1
+  },
+  {
+   "threads": 2,
+   "single_ms": 8.449,
+   "single_p10": 7.909,
+   "single_p90": 9.076,
+   "b8_per_ms": 5.655,
+   "b32_per_ms": 9.239,
+   "throughput": 176.8
+  },
+  {
+   "threads": 4,
+   "single_ms": 6.882,
+   "single_p10": 6.448,
+   "single_p90": 7.567,
+   "b8_per_ms": 4.275,
+   "b32_per_ms": 6.366,
+   "throughput": 233.9
+  },
+  {
+   "threads": 6,
+   "single_ms": 6.762,
+   "single_p10": 6.361,
+   "single_p90": 7.463,
+   "b8_per_ms": 3.798,
+   "b32_per_ms": 5.539,
+   "throughput": 263.3
+  },
+  {
+   "threads": 8,
+   "single_ms": 7.064,
+   "single_p10": 6.647,
+   "single_p90": 7.517,
+   "b8_per_ms": 4.03,
+   "b32_per_ms": 5.242,
+   "throughput": 248.2
+  },
+  {
+   "threads": 12,
+   "single_ms": 7.835,
+   "single_p10": 7.384,
+   "single_p90": 9.004,
+   "b8_per_ms": 4.046,
+   "b32_per_ms": 4.229,
+   "throughput": 247.2
+  },
+  {
+   "threads": 14,
+   "single_ms": 7.102,
+   "single_p10": 6.874,
+   "single_p90": 7.436,
+   "b8_per_ms": 3.997,
+   "b32_per_ms": 3.976,
+   "throughput": 250.2
+  },
+  {
+   "threads": 20,
+   "single_ms": 7.066,
+   "single_p10": 6.788,
+   "single_p90": 7.485,
+   "b8_per_ms": 2.938,
+   "b32_per_ms": 3.69,
+   "throughput": 340.3
+  }
+ ],
+ "best_single_threads": 6,
+ "best_single_ms": 6.762,
+ "best_throughput_threads": 20,
+ "best_throughput": 340.3,
+ "speedup_vs_14": 1.05
+}

@@ -1,0 +1,25 @@
+{
+ "experiment": "E-55",
+ "conds": {
+  "A_1": {
+   "n_q": 24,
+   "n_docs": 1,
+   "avg_ctx": 29.0
+  },
+  "B_SIM5": {
+   "n_q": 24,
+   "n_docs": 5,
+   "avg_ctx": 149.0
+  },
+  "C_DIV5": {
+   "n_q": 24,
+   "n_docs": 5,
+   "avg_ctx": 149.5
+  },
+  "D_SIM10": {
+   "n_q": 24,
+   "n_docs": 6,
+   "avg_ctx": 179.0
+  }
+ }
+}

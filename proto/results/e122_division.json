@@ -1,0 +1,150 @@
+{
+ "experiment": "E-122",
+ "n": 14,
+ "g1_rule": 0.8571,
+ "g2_threshold": 0.9286,
+ "g3_model": 1.0,
+ "target_accuracy": 1.0,
+ "details": [
+  {
+   "cid": "S00",
+   "gold": "replace",
+   "pred": "replace",
+   "rel_ok": true,
+   "gold_target": "这个项目 15 号截止",
+   "pred_target": "这个项目 15 号截止",
+   "tgt_ok": true,
+   "reason": "新句谈截止日期延到20号，与'15号截止'同一槽位，延期使15号作废；'验收标准5ms'是性能指标，余弦虽略高但槽位不同"
+  },
+  {
+   "cid": "S01",
+   "gold": "replace",
+   "pred": "replace",
+   "rel_ok": true,
+   "gold_target": "家里的门锁密码是 3721",
+   "pred_target": "家里的门锁密码是 3721",
+   "tgt_ok": true,
+   "reason": "新句直接陈述家里门锁密码换成9512，目标正是同槽位的那条事实，更换使旧密码作废；'老王说'那条是转述来源，电脑密码是另一把锁"
+  },
+  {
+   "cid": "S02",
+   "gold": "replace",
+   "pred": "replace",
+   "rel_ok": true,
+   "gold_target": "接口参数定的是0.85",
+   "pred_target": "接口参数定的是0.85",
+   "tgt_ok": true,
+   "reason": "新句'接口参数改成1.2'与'定的是0.85'是同一个参数槽，改值使0.85作废"
+  },
+  {
+   "cid": "S03",
+   "gold": "replace",
+   "pred": "replace",
+   "rel_ok": true,
+   "gold_target": "明天下午三点开会",
+   "pred_target": "明天下午三点开会",
+   "tgt_ok": true,
+   "reason": "新句把同一场会的时间改到上午十点，与'明天下午三点开会'是同一时间槽，旧时间作废"
+  },
+  {
+   "cid": "S04",
+   "gold": "replace",
+   "pred": "replace",
+   "rel_ok": true,
+   "gold_target": "我的车是白色卡罗拉",
+   "pred_target": "我的车是白色卡罗拉",
+   "tgt_ok": true,
+   "reason": "新句'换车了现在是黑色大众'直接替换车型，'白色卡罗拉'是被换掉的旧车"
+  },
+  {
+   "cid": "S05",
+   "gold": "replace",
+   "pred": "replace",
+   "rel_ok": true,
+   "gold_target": "我住在城东花园3栋",
+   "pred_target": "我住在城东花园3栋",
+   "tgt_ok": true,
+   "reason": "新句搬家到城西新村5号，替换原住址'城东花园3栋'；另两条是女儿学校和生日，槽位不同"
+  },
+  {
+   "cid": "S06",
+   "gold": "merge",
+   "pred": "merge",
+   "rel_ok": true,
+   "gold_target": "客户要求界面必须支持深色模式",
+   "pred_target": "客户要求界面必须支持深色模式",
+   "tgt_ok": true,
+   "reason": "'还要求'表示追加要求，深色模式仍然成立，新句只是补充大字体这一条"
+  },
+  {
+   "cid": "S07",
+   "gold": "merge",
+   "pred": "merge",
+   "rel_ok": true,
+   "gold_target": "我要连续吃两周的药",
+   "pred_target": "我要连续吃两周的药",
+   "tgt_ok": true,
+   "reason": "'另外…也要'是在原有疗程上补加服药时段，两条并存成立"
+  },
+  {
+   "cid": "S08",
+   "gold": "conflict",
+   "pred": "conflict",
+   "rel_ok": true,
+   "gold_target": "老王说门锁密码是 3721",
+   "pred_target": "老王说门锁密码是 3721",
+   "tgt_ok": true,
+   "reason": "新句与目标同为人转述的门锁密码，但来源不同（小李9512 vs 老王3721），说法不一需澄清，不能直接判定旧值作废"
+  },
+  {
+   "cid": "S09",
+   "gold": "conflict",
+   "pred": "conflict",
+   "rel_ok": true,
+   "gold_target": "这个项目 15 号截止",
+   "pred_target": "这个项目 15 号截止",
+   "tgt_ok": true,
+   "reason": "新句是'我记得好像'的不确定回忆，与已记的15号同槽位但数值相反，属记不清需澄清，不宜直接替换"
+  },
+  {
+   "cid": "S10",
+   "gold": "none",
+   "pred": "none",
+   "rel_ok": true,
+   "gold_target": "我电脑的登录密码是 8848",
+   "pred_target": null,
+   "tgt_ok": true,
+   "reason": "新句是bug反复出现的情绪表达，候选中没有谈这个bug的旧记忆，谈的是全新的事"
+  },
+  {
+   "cid": "S11",
+   "gold": "none",
+   "pred": "none",
+   "rel_ok": true,
+   "gold_target": "我的车是白色卡罗拉",
+   "pred_target": null,
+   "tgt_ok": true,
+   "reason": "新句是上周二午饭内容，候选里没有任何同槽位的旧记忆（吃药、开会、生日都不同），属全新事件"
+  },
+  {
+   "cid": "S12",
+   "gold": "none",
+   "pred": "none",
+   "rel_ok": true,
+   "gold_target": "这个项目 15 号截止",
+   "pred_target": null,
+   "tgt_ok": true,
+   "reason": "新句是母亲打电话报平安，候选里没有同槽位的旧记忆，属全新事件"
+  },
+  {
+   "cid": "S13",
+   "gold": "none",
+   "pred": "none",
+   "rel_ok": true,
+   "gold_target": "我生日是3月8号",
+   "pred_target": null,
+   "tgt_ok": true,
+   "reason": "新句是孩子第一次叫妈妈的独立情感事件，候选均不涉及该槽位"
+  }
+ ]
+}

@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "cosmos-mem Memory",
+    "description": "Plastic episodic memory: a sidebar memory manager (browse, search, edit, invalidate), per-turn model-driven reflection, and automatic context injection. Memory lives in a standalone SQLite file that survives model, provider, and process switches losslessly."
+  }
+}

@@ -1,0 +1,27 @@
+==============================================================================================
+E-199b requests 分块断点续传下载 model.onnx
+==============================================================================================
+    尝试 1: ChunkedEncodingError ('Connection broken: IncompleteRead(6590743 bytes read, 5641
+    尝试 2: ChunkedEncodingError ('Connection broken: IncompleteRead(12876184 bytes read, 551
+    尝试 3: ChunkedEncodingError ('Connection broken: IncompleteRead(1656072 bytes read, 5501
+    尝试 4: ChunkedEncodingError ('Connection broken: IncompleteRead(21415225 bytes read, 529
+    尝试 5: ChunkedEncodingError ('Connection broken: IncompleteRead(4133844 bytes read, 5256
+    尝试 6: ProxyError HTTPSConnectionPool(host='huggingface.co', port=443): Max re
+    尝试 7: ChunkedEncodingError ('Connection broken: IncompleteRead(19409627 bytes read, 507
+    尝试 8: ChunkedEncodingError ('Connection broken: IncompleteRead(87014 bytes read, 507725
+    尝试 9: ChunkedEncodingError ('Connection broken: IncompleteRead(0 bytes read, 507812534 
+    尝试 10: ChunkedEncodingError ('Connection broken: IncompleteRead(16384 bytes read, 507796
+    尝试 11: ProxyError HTTPSConnectionPool(host='huggingface.co', port=443): Max re
+    尝试 12: ChunkedEncodingError ('Connection broken: IncompleteRead(4858266 bytes read, 5029
+    尝试 13: ChunkedEncodingError ('Connection broken: IncompleteRead(1952761 bytes read, 5016
+    尝试 14: ProxyError HTTPSConnectionPool(host='huggingface.co', port=443): Max re
+    尝试 15: ChunkedEncodingError ('Connection broken: IncompleteRead(5005686 bytes read, 4975
+    尝试 16: ChunkedEncodingError ('Connection broken: IncompleteRead(0 bytes read, 498375350 
+    尝试 17: ChunkedEncodingError ('Connection broken: IncompleteRead(19346 bytes read, 498356
+    尝试 18: ChunkedEncodingError ('Connection broken: IncompleteRead(1446384 bytes read, 4969
+    尝试 19: ChunkedEncodingError ('Connection broken: IncompleteRead(37060 bytes read, 497289
+    尝试 20: ChunkedEncodingError ('Connection broken: IncompleteRead(99996 bytes read, 497226
+
+  最终: 73,400,320 bytes, 耗时 330s
+  期望: 570,714,895 bytes
+  ❌ 不完整，还差 497,314,575 bytes

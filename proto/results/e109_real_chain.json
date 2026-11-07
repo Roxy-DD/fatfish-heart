@@ -1,0 +1,20 @@
+{
+ "experiment": "E-109",
+ "total": 1,
+ "kinds": {
+  "prewarm-ok": 1
+ },
+ "prewarm_ok": 1,
+ "prewarm_skip": 0,
+ "review_ok": 0,
+ "model_wrote": 0,
+ "assemble": 0,
+ "errors": 0,
+ "checks": {
+  "插件有活动": true,
+  "阶段1 预判生效": true,
+  "阶段2 模型复盘生效": false,
+  "阶段2 实际写入记忆": false,
+  "注入层生效": false
+ }
+}

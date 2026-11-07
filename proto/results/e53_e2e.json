@@ -1,0 +1,685 @@
+{
+ "experiment": "E-53",
+ "report": {
+  "FULL": {
+   "n": 36,
+   "right": 34,
+   "wrong": 0,
+   "abstain": 2,
+   "accuracy": 0.9444,
+   "abstain_rate": 0.0556
+  },
+  "TRUNC": {
+   "n": 36,
+   "right": 12,
+   "wrong": 3,
+   "abstain": 21,
+   "accuracy": 0.3333,
+   "abstain_rate": 0.5833
+  },
+  "KEEP": {
+   "n": 36,
+   "right": 23,
+   "wrong": 2,
+   "abstain": 11,
+   "accuracy": 0.6389,
+   "abstain_rate": 0.3056
+  }
+ },
+ "detail": {
+  "FULL": [
+   {
+    "qid": "FULL-000",
+    "gold": "乜辞白",
+    "got": "乜辞白",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-001",
+    "gold": "丙组",
+    "got": "丙组",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-002",
+    "gold": "胥沐宸",
+    "got": "胥沐宸",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-003",
+    "gold": "岑望舒",
+    "got": "岑望舒",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-004",
+    "gold": "乜斯年",
+    "got": "乜斯年",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-005",
+    "gold": "庚组",
+    "got": "庚组",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-006",
+    "gold": "胥砚清",
+    "got": "胥砚清",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-007",
+    "gold": "阚屿舟",
+    "got": "阚屿舟",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-008",
+    "gold": "逄之桓",
+    "got": "逄之桓",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-009",
+    "gold": "壬组",
+    "got": "壬组",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-010",
+    "gold": "禚砚清",
+    "got": "禚砚清",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-011",
+    "gold": "缑沐宸",
+    "got": "缑沐宸",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-012",
+    "gold": "钭沐宸",
+    "got": "钭沐宸",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-013",
+    "gold": "壬组",
+    "got": "壬组",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-014",
+    "gold": "胥望舒",
+    "got": "胥望舒",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-015",
+    "gold": "岑澹宁",
+    "got": "岑澹宁",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-016",
+    "gold": "胥斯年",
+    "got": "胥斯年",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-017",
+    "gold": "戊组",
+    "got": "戊组",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-018",
+    "gold": "禚令仪",
+    "got": "禚令仪",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-019",
+    "gold": "乜叙礼",
+    "got": "乜叙礼",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-020",
+    "gold": "阚之桓",
+    "got": "阚之桓",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-021",
+    "gold": "戊组",
+    "got": "戊组",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-022",
+    "gold": "逄沐宸",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "FULL-023",
+    "gold": "宓澹宁",
+    "got": "宓澹宁",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-024",
+    "gold": "钭叙礼",
+    "got": "钭叙礼",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-025",
+    "gold": "乙组",
+    "got": "乙组",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-026",
+    "gold": "岑令仪",
+    "got": "岑令仪",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-027",
+    "gold": "宓令仪",
+    "got": "宓令仪",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-028",
+    "gold": "胥令仪",
+    "got": "胥令仪",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-029",
+    "gold": "庚组",
+    "got": "庚组",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-030",
+    "gold": "乜砚清",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "FULL-031",
+    "gold": "宓砚清",
+    "got": "宓砚清",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-032",
+    "gold": "禚叙礼",
+    "got": "禚叙礼",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-033",
+    "gold": "丙组",
+    "got": "丙组",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-034",
+    "gold": "胥叙礼",
+    "got": "胥叙礼",
+    "verdict": "right"
+   },
+   {
+    "qid": "FULL-035",
+    "gold": "乜望舒",
+    "got": "乜望舒",
+    "verdict": "right"
+   }
+  ],
+  "TRUNC": [
+   {
+    "qid": "TRUNC-000",
+    "gold": "乜辞白",
+    "got": "乜辞白",
+    "verdict": "right"
+   },
+   {
+    "qid": "TRUNC-001",
+    "gold": "岑望舒",
+    "got": "岑望舒",
+    "verdict": "right"
+   },
+   {
+    "qid": "TRUNC-002",
+    "gold": "胥砚清",
+    "got": "胥砚清",
+    "verdict": "right"
+   },
+   {
+    "qid": "TRUNC-003",
+    "gold": "壬组",
+    "got": "壬组",
+    "verdict": "right"
+   },
+   {
+    "qid": "TRUNC-004",
+    "gold": "钭沐宸",
+    "got": "钭沐宸",
+    "verdict": "right"
+   },
+   {
+    "qid": "TRUNC-005",
+    "gold": "岑澹宁",
+    "got": "岑澹宁",
+    "verdict": "right"
+   },
+   {
+    "qid": "TRUNC-006",
+    "gold": "禚令仪",
+    "got": "禚令仪",
+    "verdict": "right"
+   },
+   {
+    "qid": "TRUNC-007",
+    "gold": "戊组",
+    "got": "戊组",
+    "verdict": "right"
+   },
+   {
+    "qid": "TRUNC-008",
+    "gold": "钭叙礼",
+    "got": "钭叙礼",
+    "verdict": "right"
+   },
+   {
+    "qid": "TRUNC-009",
+    "gold": "宓令仪",
+    "got": "宓令仪",
+    "verdict": "right"
+   },
+   {
+    "qid": "TRUNC-010",
+    "gold": "乜砚清",
+    "got": "乜砚清",
+    "verdict": "right"
+   },
+   {
+    "qid": "TRUNC-011",
+    "gold": "丙组",
+    "got": "丙组",
+    "verdict": "right"
+   },
+   {
+    "qid": "TRUNC-012",
+    "gold": "丙组",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "TRUNC-013",
+    "gold": "乜斯年",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "TRUNC-014",
+    "gold": "阚屿舟",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "TRUNC-015",
+    "gold": "禚砚清",
+    "got": "胥砚清",
+    "verdict": "wrong"
+   },
+   {
+    "qid": "TRUNC-016",
+    "gold": "壬组",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "TRUNC-017",
+    "gold": "胥斯年",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "TRUNC-018",
+    "gold": "乜叙礼",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "TRUNC-019",
+    "gold": "逄沐宸",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "TRUNC-020",
+    "gold": "乙组",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "TRUNC-021",
+    "gold": "胥令仪",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "TRUNC-022",
+    "gold": "宓砚清",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "TRUNC-023",
+    "gold": "胥叙礼",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "TRUNC-024",
+    "gold": "胥沐宸",
+    "got": "禚令仪",
+    "verdict": "wrong"
+   },
+   {
+    "qid": "TRUNC-025",
+    "gold": "庚组",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "TRUNC-026",
+    "gold": "逄之桓",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "TRUNC-027",
+    "gold": "缑沐宸",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "TRUNC-028",
+    "gold": "胥望舒",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "TRUNC-029",
+    "gold": "戊组",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "TRUNC-030",
+    "gold": "阚之桓",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "TRUNC-031",
+    "gold": "宓澹宁",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "TRUNC-032",
+    "gold": "岑令仪",
+    "got": "乜砚清",
+    "verdict": "wrong"
+   },
+   {
+    "qid": "TRUNC-033",
+    "gold": "庚组",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "TRUNC-034",
+    "gold": "禚叙礼",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "TRUNC-035",
+    "gold": "乜望舒",
+    "got": "无法确定",
+    "verdict": "abstain"
+   }
+  ],
+  "KEEP": [
+   {
+    "qid": "KEEP-000",
+    "gold": "乜辞白",
+    "got": "乜辞白",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-001",
+    "gold": "岑望舒",
+    "got": "岑望舒",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-002",
+    "gold": "胥砚清",
+    "got": "胥砚清",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-003",
+    "gold": "壬组",
+    "got": "壬组",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-004",
+    "gold": "钭沐宸",
+    "got": "钭沐宸",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-005",
+    "gold": "岑澹宁",
+    "got": "岑澹宁",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-006",
+    "gold": "禚令仪",
+    "got": "禚令仪",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-007",
+    "gold": "戊组",
+    "got": "戊组",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-008",
+    "gold": "钭叙礼",
+    "got": "钭叙礼",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-009",
+    "gold": "宓令仪",
+    "got": "宓令仪",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-010",
+    "gold": "乜砚清",
+    "got": "乜砚清",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-011",
+    "gold": "丙组",
+    "got": "丙组",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-012",
+    "gold": "丙组",
+    "got": "丙组",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-013",
+    "gold": "乜斯年",
+    "got": "乜斯年",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-014",
+    "gold": "阚屿舟",
+    "got": "阚屿舟",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-015",
+    "gold": "禚砚清",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "KEEP-016",
+    "gold": "壬组",
+    "got": "壬组",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-017",
+    "gold": "胥斯年",
+    "got": "胥斯年",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-018",
+    "gold": "乜叙礼",
+    "got": "乜叙礼",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-019",
+    "gold": "逄沐宸",
+    "got": "逄沐宸",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-020",
+    "gold": "乙组",
+    "got": "乙组",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-021",
+    "gold": "胥令仪",
+    "got": "胥令仪",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-022",
+    "gold": "宓砚清",
+    "got": "宓砚清",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-023",
+    "gold": "胥叙礼",
+    "got": "胥叙礼",
+    "verdict": "right"
+   },
+   {
+    "qid": "KEEP-024",
+    "gold": "胥沐宸",
+    "got": "禚令仪",
+    "verdict": "wrong"
+   },
+   {
+    "qid": "KEEP-025",
+    "gold": "庚组",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "KEEP-026",
+    "gold": "逄之桓",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "KEEP-027",
+    "gold": "缑沐宸",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "KEEP-028",
+    "gold": "胥望舒",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "KEEP-029",
+    "gold": "戊组",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "KEEP-030",
+    "gold": "阚之桓",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "KEEP-031",
+    "gold": "宓澹宁",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "KEEP-032",
+    "gold": "岑令仪",
+    "got": "乜砚清",
+    "verdict": "wrong"
+   },
+   {
+    "qid": "KEEP-033",
+    "gold": "庚组",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "KEEP-034",
+    "gold": "禚叙礼",
+    "got": "无法确定",
+    "verdict": "abstain"
+   },
+   {
+    "qid": "KEEP-035",
+    "gold": "乜望舒",
+    "got": "无法确定",
+    "verdict": "abstain"
+   }
+  ]
+ }
+}

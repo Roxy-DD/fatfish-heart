@@ -1,0 +1,15 @@
+{
+ "experiment": "E-154",
+ "sources": {
+  "HF datasets-server API (longmemeval_s)": {
+   "ok": false,
+   "error": "HTTP Error 404: Not Found"
+  },
+  "HF MemoryAsModality/LongMemEval": {
+   "ok": true,
+   "error": null,
+   "sample_saved": true
+  }
+ },
+ "available": true
+}

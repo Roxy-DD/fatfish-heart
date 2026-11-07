@@ -1,0 +1,10 @@
+{
+ "experiment": "E-196c",
+ "total": 244,
+ "raw_hit": 193,
+ "raw_rate": 0.791,
+ "trap_correct": 0,
+ "trap_honest": 2,
+ "corrected_hit": 193,
+ "corrected_rate": 0.791
+}

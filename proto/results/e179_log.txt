@@ -1,0 +1,57 @@
+==============================================================================================
+E-179 边界判断：多跳题是检索题还是推理题
+==============================================================================================
+
+类别        题数      答案词全在证据         部分在       完全不在      平均覆盖
+----------------------------------------------------------------------------------------------
+单跳        266     125 (47%)       106 (40%) 35 (13%)  0.673
+时间        317     27 (9%)         99 (31%)  191 (60%) 0.191
+多跳        86      5 (6%)          29 (34%)  52 (60%)  0.158
+常识        830     636 (77%)       131 (16%) 63 (8%)   0.848
+
+==============================================================================================
+多跳题里「答案词完全不在证据中」的样本
+==============================================================================================
+
+  Q: Would Caroline still want to pursue counseling as a career if she hadn't
+  A: Likely no
+  答案实词: ['likely']
+  证据原文: Thanks, Melanie. It really mattered. My own journey and the support I got made a huge difference. Now I want to help people go through it too. I saw h
+
+  Q: Would Melanie be more interested in going to a national park or a theme 
+  A: National park; she likes the outdoors
+  答案实词: ['likes', 'national', 'outdoors', 'park']
+  证据原文: We always look forward to our family camping trip. We roast marshmallows, tell stories around the campfire and just enjoy each other's company. It's t
+
+  Q: What would Caroline's political leaning likely be?
+  A: Liberal
+  答案实词: ['liberal']
+  证据原文: Hey Mel! How're ya doin'? Recently, I had a not-so-great experience on a hike. I ran into a group of religious conservatives who said something that r
+
+  Q: Would Caroline want to move back to her home country soon?
+  A: No; she's in the process of adopting children.
+  答案实词: ['adopting', 'children', 'process']
+  证据原文: Woohoo Melanie! I passed the adoption agency interviews last Friday! I'm so excited and thankful. This is a big move towards my goal of having a famil
+
+  Q: What might John's financial status be?
+  A: Middle-class or wealthy
+  答案实词: ['class', 'middle', 'wealthy']
+  证据原文: It's definitely isn't, Maria. My kids have so much and others don't. We really need to do something about it.
+
+==============================================================================================
+结论
+==============================================================================================
+
+  单跳题（cat 1）：答案词在证据里的平均覆盖率 0.673
+  多跳题（cat 3）：答案词在证据里的平均覆盖率 0.158
+  差距: +0.514
+
+  → ✅ 多跳题的答案确实更多是「推理得出」而非「原文可读」
+  → 这类题对检索系统的上限天生偏低
+  → **不应把多跳的失败全算作检索缺陷**
+
+  正确做法：
+    · 检索负责「找到素材」（对应召回指标）
+    · 推理负责「从素材得出结论」（需要 LLM 作答环节）
+
+写入 C:\Users\xuee\Desktop\肥鱼之心\proto\results\e179_reasoning.json

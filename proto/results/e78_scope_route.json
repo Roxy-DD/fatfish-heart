@@ -1,0 +1,57 @@
+{
+ "experiment": "E-78",
+ "n": 13,
+ "agree": 13,
+ "agree_rate": 1.0,
+ "scope_matrix": {
+  "12月3日下午两点，我和张工在7楼会议室对齐了接口协议": {
+   "existence": true,
+   "identity": true,
+   "time_exact": true,
+   "time_range": false,
+   "value": false,
+   "location": true
+  },
+  "城南路18号是我女儿幼儿园的地址": {
+   "existence": false,
+   "identity": true,
+   "time_exact": false,
+   "time_range": false,
+   "value": true,
+   "location": true
+  },
+  "小时候被邻居家的狗追着咬过，小腿上留了疤": {
+   "existence": true,
+   "identity": false,
+   "time_exact": false,
+   "time_range": true,
+   "value": false,
+   "location": false
+  },
+  "我电脑的登录密码是 8848": {
+   "existence": false,
+   "identity": false,
+   "time_exact": false,
+   "time_range": false,
+   "value": true,
+   "location": false
+  },
+  "爷爷去世了，那阵子我一直在医院和家之间来回跑": {
+   "existence": true,
+   "identity": false,
+   "time_exact": false,
+   "time_range": false,
+   "value": false,
+   "location": true
+  },
+  "钱包丢了，里面有身份证和所有的卡": {
+   "existence": true,
+   "identity": false,
+   "time_exact": false,
+   "time_range": false,
+   "value": false,
+   "location": false
+  }
+ },
+ "mismatches": []
+}

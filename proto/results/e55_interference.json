@@ -1,0 +1,39 @@
+{
+ "experiment": "E-55",
+ "report": {
+  "A_1": {
+   "n": 24,
+   "right": 24,
+   "wrong": 0,
+   "abstain": 0,
+   "acc": 1.0,
+   "abstain_rate": 0.0
+  },
+  "B_SIM5": {
+   "n": 24,
+   "right": 24,
+   "wrong": 0,
+   "abstain": 0,
+   "acc": 1.0,
+   "abstain_rate": 0.0
+  },
+  "C_DIV5": {
+   "n": 24,
+   "right": 24,
+   "wrong": 0,
+   "abstain": 0,
+   "acc": 1.0,
+   "abstain_rate": 0.0
+  },
+  "D_SIM10": {
+   "n": 24,
+   "right": 24,
+   "wrong": 0,
+   "abstain": 0,
+   "acc": 1.0,
+   "abstain_rate": 0.0
+  },
+  "verdict": "干扰不是主因：相似度影响很小",
+  "diff_sim_div": 0.0
+ }
+}

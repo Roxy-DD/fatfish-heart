@@ -1,0 +1,85 @@
+{
+ "experiment": "E-32",
+ "baseline": 0.9323,
+ "n_stars": 1676,
+ "methods": {
+  "M0_baseline": {
+   "acc": 0.9323,
+   "note": "类内top3均值"
+  },
+  "M1_bknn": {
+   "acc": 0.9292,
+   "std": 0.0022,
+   "note": "BKNN 相对分数"
+  },
+  "M2_perclass_b2": {
+   "acc": 0.9306,
+   "std": 0.0034,
+   "note": "每类固定 2 邻居"
+  },
+  "M2_perclass_b3": {
+   "acc": 0.9292,
+   "std": 0.0022,
+   "note": "每类固定 3 邻居"
+  },
+  "M2_perclass_b5": {
+   "acc": 0.9243,
+   "std": 0.0019,
+   "note": "每类固定 5 邻居"
+  },
+  "M3_softmax_T0.02": {
+   "acc": 0.3782,
+   "std": 0.0034,
+   "note": "温度 T=0.02"
+  },
+  "M3_softmax_T0.05": {
+   "acc": 0.5465,
+   "std": 0.0029,
+   "note": "温度 T=0.05"
+  },
+  "M3_softmax_T0.1": {
+   "acc": 0.698,
+   "std": 0.0036,
+   "note": "温度 T=0.1"
+  },
+  "M4_weighted_g5.0": {
+   "acc": 0.927,
+   "std": 0.0021,
+   "note": "gamma=5.0"
+  },
+  "M4_weighted_g8.0": {
+   "acc": 0.9277,
+   "std": 0.0026,
+   "note": "gamma=8.0"
+  },
+  "M7_medoid": {
+   "acc": 0.7385,
+   "n_stars": 10,
+   "note": "每类只留类中心最近的原型"
+  },
+  "M5_sq8": {
+   "acc": 0.9327,
+   "bytes": 214528,
+   "bytes_raw": 858112,
+   "note": "float32→uint8"
+  },
+  "M6_pq8": {
+   "acc": 0.9175,
+   "bytes": 13408,
+   "note": "PQ m=8, 64码字/段"
+  },
+  "M6_pq16": {
+   "acc": 0.9163,
+   "bytes": 26816,
+   "note": "PQ m=16, 64码字/段"
+  }
+ },
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "n_train": 4000,
+ "source": "docs/28 工程方法检索",
+ "elapsed_sec": 25.3
+}

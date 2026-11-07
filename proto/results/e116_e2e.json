@@ -1,0 +1,53 @@
+{
+ "experiment": "E-116",
+ "n": 4,
+ "relation_accurate": 4,
+ "resolved": 4,
+ "baseline_e113_resolved": 0,
+ "cases": [
+  {
+   "type": "A_time",
+   "relation": "replace",
+   "expected_relation": "replace",
+   "similarity": 0.7758,
+   "rel_ok": true,
+   "active_ok": true,
+   "has_old": false,
+   "has_new": true,
+   "resolved": true
+  },
+  {
+   "type": "C_view",
+   "relation": "replace",
+   "expected_relation": "replace",
+   "similarity": 0.7704,
+   "rel_ok": true,
+   "active_ok": true,
+   "has_old": false,
+   "has_new": true,
+   "resolved": true
+  },
+  {
+   "type": "D_merge",
+   "relation": "merge",
+   "expected_relation": "merge",
+   "similarity": 0.7569,
+   "rel_ok": true,
+   "active_ok": true,
+   "has_old": true,
+   "has_new": true,
+   "resolved": true
+  },
+  {
+   "type": "B_fact",
+   "relation": "conflict",
+   "expected_relation": "conflict",
+   "similarity": 0.7701,
+   "rel_ok": true,
+   "active_ok": true,
+   "has_old": true,
+   "has_new": true,
+   "resolved": true
+  }
+ ]
+}

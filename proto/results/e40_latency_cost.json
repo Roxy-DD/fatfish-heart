@@ -1,0 +1,77 @@
+{
+ "experiment": "E-40",
+ "model": "bge-small-zh-v1.5",
+ "encoding": [
+  {
+   "n": 200,
+   "sec": 0.439,
+   "per_sec": 455.5,
+   "per_ms": 2.195
+  },
+  {
+   "n": 1000,
+   "sec": 2.132,
+   "per_sec": 469.1,
+   "per_ms": 2.132
+  },
+  {
+   "n": 4000,
+   "sec": 8.581,
+   "per_sec": 466.1,
+   "per_ms": 2.145
+  }
+ ],
+ "query_encode_ms": 6.407,
+ "query_encode_batch10_ms": 14.275,
+ "retrieval": [
+  {
+   "n": 1000,
+   "v_ms": 0.743,
+   "k_ms": 0.044,
+   "g2_ms": 0.05,
+   "q_enc_ms": 6.41,
+   "router_ms": 7.24,
+   "build_sec": 2.1
+  },
+  {
+   "n": 20000,
+   "v_ms": 1.372,
+   "k_ms": 1.415,
+   "g2_ms": 0.05,
+   "q_enc_ms": 6.41,
+   "router_ms": 9.24,
+   "build_sec": 46.0
+  },
+  {
+   "n": 100000,
+   "v_ms": 8.576,
+   "k_ms": 6.206,
+   "g2_ms": 0.05,
+   "q_enc_ms": 6.41,
+   "router_ms": 21.24,
+   "build_sec": 244.1
+  }
+ ],
+ "disk": [
+  {
+   "n": 1000,
+   "bge_mb": 1.95,
+   "tfidf_mb": 0.15,
+   "build_sec": 3.1
+  },
+  {
+   "n": 20000,
+   "bge_mb": 39.06,
+   "tfidf_mb": 3.05,
+   "build_sec": 49.9
+  },
+  {
+   "n": 100000,
+   "bge_mb": 195.31,
+   "tfidf_mb": 15.26,
+   "build_sec": 252.5
+  }
+ ],
+ "pure_k_ms": 1.211,
+ "avg_throughput_per_sec": 467.6
+}

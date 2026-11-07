@@ -1,0 +1,457 @@
+{
+ "experiment": "E-186b-final",
+ "n_recoverable": 54,
+ "rerank_hit": 0,
+ "rate": 0.0,
+ "baseline_hit": 114,
+ "total": 302,
+ "overall_gain": 0.0,
+ "details": [
+  {
+   "cid": "Q00",
+   "q": "When did Melanie paint a sunrise?",
+   "ev": [
+    "D1:12"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q01",
+   "q": "Where has Melanie camped?",
+   "ev": [
+    "D6:16",
+    "D4:6",
+    "D8:32"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q02",
+   "q": "Would Caroline likely have Dr. Seuss books on her ",
+   "ev": [
+    "D6:9"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q03",
+   "q": "When did Melanie read the book \"nothing is impossi",
+   "ev": [
+    "D7:8"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q04",
+   "q": "When did Melanie go to the pottery workshop?",
+   "ev": [
+    "D8:2"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q05",
+   "q": "When did Melanie go camping in June?",
+   "ev": [
+    "D4:8"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q06",
+   "q": "When did Melanie go camping in July?",
+   "ev": [
+    "D9:1"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q07",
+   "q": "When is Melanie's daughter's birthday?",
+   "ev": [
+    "D11:1"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q08",
+   "q": "What types of pottery have Melanie and her kids ma",
+   "ev": [
+    "D12:14",
+    "D8:4",
+    "D5:6"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q09",
+   "q": "What has Melanie painted?",
+   "ev": [
+    "D13:8",
+    "D8:6",
+    "D1:12"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q10",
+   "q": "When did Caroline apply to adoption agencies?",
+   "ev": [
+    "D13:1"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q11",
+   "q": "When did Melanie make a plate in pottery class?",
+   "ev": [
+    "D14:4"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q12",
+   "q": "What musical artists/bands has Melanie seen?",
+   "ev": [
+    "D15:16",
+    "D11:3"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q13",
+   "q": "What book did Melanie read from Caroline's suggest",
+   "ev": [
+    "D7:11",
+    "D17:10"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q14",
+   "q": "How many children does Melanie have?",
+   "ev": [
+    "D18:1",
+    "D18:7"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q15",
+   "q": "Would Caroline want to move back to her home count",
+   "ev": [
+    "D19:1",
+    "D19:3"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q16",
+   "q": "What kind of books does Caroline have in her libra",
+   "ev": [
+    "D6:9"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q17",
+   "q": "What did Mel and her kids paint in their latest pr",
+   "ev": [
+    "D8:6"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q18",
+   "q": "Whose birthday did Melanie celebrate recently?",
+   "ev": [
+    "D11:1"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q19",
+   "q": "What did Caroline find in her neighborhood during ",
+   "ev": [
+    "D14:23"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q20",
+   "q": "What painting did Melanie show to Caroline on Octo",
+   "ev": [
+    "D17:12"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q21",
+   "q": "How did Melanie's children handle the accident?",
+   "ev": [
+    "D18:7"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q22",
+   "q": "How did Melanie feel about her family supporting h",
+   "ev": [
+    "D18:13"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q23",
+   "q": "What did Caroline realize after her charity race?",
+   "ev": [
+    "D2:3"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q24",
+   "q": "What type of individuals does the adoption agency ",
+   "ev": [
+    "D2:12"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q25",
+   "q": "What does Melanie's necklace symbolize?",
+   "ev": [
+    "D4:3"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q26",
+   "q": "What was grandpa's gift to Caroline?",
+   "ev": [
+    "D4:3"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q27",
+   "q": "What motivated Melanie to pursue counseling?",
+   "ev": [
+    "D4:15"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q28",
+   "q": "What inspired Melanie's painting for the art show?",
+   "ev": [
+    "D9:16"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q29",
+   "q": "What inspired Caroline's sculpture for the art sho",
+   "ev": [
+    "D9:16"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q30",
+   "q": "Is Oscar Melanie's pet?",
+   "ev": [
+    "D13:3"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q31",
+   "q": "What did Melanie find in her neighborhood during h",
+   "ev": [
+    "D14:23"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q32",
+   "q": "Which classical musicians does Caroline enjoy list",
+   "ev": [
+    "D15:28"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q33",
+   "q": "What was the poetry reading that Melanie attended ",
+   "ev": [
+    "D17:18"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q34",
+   "q": "How did Caroline feel after the accident?",
+   "ev": [
+    "D18:5"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q35",
+   "q": "Do Jon and Gina start businesses out of what they ",
+   "ev": [
+    "D1:4",
+    "D6:8"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q36",
+   "q": "When did Gina get accepted for the design internsh",
+   "ev": [
+    "D12:1"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q37",
+   "q": "How did Gina promote her clothes store?",
+   "ev": [
+    "D5:5",
+    "D16:3",
+    "D8:4",
+    "D13:4"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q38",
+   "q": "When did Gina design a limited collection of hoodi",
+   "ev": [
+    "D16:3"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q39",
+   "q": "When did Jon visit networking events for his store",
+   "ev": [
+    "D16:6"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q40",
+   "q": "When did Gina start being recognized by fashion ed",
+   "ev": [
+    "D17:1"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q41",
+   "q": "What is Gina's favorite style of dance?",
+   "ev": [
+    "D1:9"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q42",
+   "q": "What was Gina's favorite dancing memory?",
+   "ev": [
+    "D1:17"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q43",
+   "q": "What kind of dance piece did Gina's team perform t",
+   "ev": [
+    "D1:19"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q44",
+   "q": "What did Gina receive from a dance contest?",
+   "ev": [
+    "D9:10"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q45",
+   "q": "How does Gina stay confident in her business?",
+   "ev": [
+    "D10:8"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q46",
+   "q": "What book is Jon currently reading?",
+   "ev": [
+    "D12:6"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q47",
+   "q": "How does Gina describe the studio that Jon has ope",
+   "ev": [
+    "D15:6"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q48",
+   "q": "What does Gina say to Jon about the grand opening?",
+   "ev": [
+    "D15:12"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q49",
+   "q": "What did Gina make a limited edition line of?",
+   "ev": [
+    "D16:3"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q50",
+   "q": "What made Jon choose the furniture and decor for h",
+   "ev": [
+    "D3:6"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q51",
+   "q": "What did Gina receive from a dance contest?",
+   "ev": [
+    "D9:10"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q52",
+   "q": "Where is Gina's HR internship?",
+   "ev": [
+    "D12:3"
+   ],
+   "pick_marks": []
+  },
+  {
+   "cid": "Q53",
+   "q": "What book is Gina currently reading?",
+   "ev": [
+    "D12:6"
+   ],
+   "pick_marks": []
+  }
+ ]
+}

@@ -1,0 +1,10 @@
+{
+ "experiment": "E-181",
+ "n": 495,
+ "k": 10,
+ "baseline": 0.5919,
+ "rrf": 0.5253,
+ "delta": -0.0667,
+ "rrf_only_rescued": 22,
+ "n_variants_max": 6
+}

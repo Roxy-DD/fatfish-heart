@@ -1,0 +1,11 @@
+{
+ "experiment": "E-98",
+ "n": 29,
+ "tp": 5,
+ "fp": 1,
+ "fn": 0,
+ "tn": 23,
+ "recall": 1.0,
+ "precision": 0.8333,
+ "model_call_ratio": 0.2069
+}

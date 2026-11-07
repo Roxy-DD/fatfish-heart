@@ -1,0 +1,31 @@
+==============================================================================================
+E-197b 重试下载缺失文件
+==============================================================================================
+  下载 model.safetensors ...
+    尝试 1 失败: URLError <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occur
+    尝试 2 失败: URLError <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occur
+    尝试 3 失败: URLError <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occur
+    尝试 4 失败: URLError <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occur
+    尝试 5 失败: URLError <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occur
+  model.safetensors: 0 bytes
+  下载 sentencepiece.bpe.model ...
+    尝试 1 失败: URLError <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occur
+    尝试 2 失败: URLError <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occur
+    尝试 3 失败: URLError <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occur
+    尝试 4 失败: URLError <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occur
+    尝试 5 失败: URLError <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occur
+  sentencepiece.bpe.model: 0 bytes
+  下载 special_tokens_map.json ...
+    尝试 1 失败: URLError <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occur
+    尝试 2 失败: URLError <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occur
+    尝试 3 失败: URLError <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occur
+    尝试 4 失败: URLError <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occur
+    尝试 5 失败: URLError <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occur
+  special_tokens_map.json: 0 bytes
+
+  耗时 150s
+
+  最终文件清单:
+    model.safetensors: 缺失!
+    sentencepiece.bpe.model: 缺失!
+    special_tokens_map.json: 缺失!

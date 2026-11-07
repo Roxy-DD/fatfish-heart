@@ -1,0 +1,76 @@
+{
+ "experiment": "E-169",
+ "speaker_freq": [
+  {
+   "sample_id": "conv-26",
+   "speakers": "Caroline/Melanie",
+   "n_turn": 419,
+   "rate": 1.0
+  },
+  {
+   "sample_id": "conv-30",
+   "speakers": "Jon/Gina",
+   "n_turn": 369,
+   "rate": 1.0
+  },
+  {
+   "sample_id": "conv-41",
+   "speakers": "John/Maria",
+   "n_turn": 663,
+   "rate": 1.0
+  },
+  {
+   "sample_id": "conv-42",
+   "speakers": "Joanna/Nate",
+   "n_turn": 629,
+   "rate": 1.0
+  },
+  {
+   "sample_id": "conv-43",
+   "speakers": "Tim/John",
+   "n_turn": 680,
+   "rate": 1.0
+  },
+  {
+   "sample_id": "conv-44",
+   "speakers": "Audrey/Andrew",
+   "n_turn": 675,
+   "rate": 1.0
+  },
+  {
+   "sample_id": "conv-47",
+   "speakers": "James/John",
+   "n_turn": 689,
+   "rate": 1.0
+  },
+  {
+   "sample_id": "conv-48",
+   "speakers": "Deborah/Jolene",
+   "n_turn": 681,
+   "rate": 1.0
+  },
+  {
+   "sample_id": "conv-49",
+   "speakers": "Evan/Sam",
+   "n_turn": 509,
+   "rate": 1.0
+  },
+  {
+   "sample_id": "conv-50",
+   "speakers": "Calvin/Dave",
+   "n_turn": 568,
+   "rate": 1.0
+  }
+ ],
+ "struct_on": {
+  "hit": 272,
+  "total": 495,
+  "rate": 0.5495
+ },
+ "struct_off": {
+  "hit": 293,
+  "total": 495,
+  "rate": 0.5919
+ },
+ "delta": -0.0424
+}

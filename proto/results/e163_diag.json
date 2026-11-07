@@ -1,0 +1,1437 @@
+{
+ "experiment": "E-163",
+ "n_single": 158,
+ "n_hit": 82,
+ "n_fail": 76,
+ "rank_buckets": {
+  "31-100": 32,
+  "100+（语义差太远）": 26,
+  "11-30": 4,
+  "1-3（应命中却没命中）": 6,
+  "4-10（被挤掉）": 8
+ },
+ "details": [
+  {
+   "q": "When did Caroline go to the LGBTQ support group?",
+   "cat": "2",
+   "mark": "D1:3",
+   "rank": 1,
+   "sim": 0.7489,
+   "hit": true,
+   "ev_len": 100
+  },
+  {
+   "q": "When did Melanie paint a sunrise?",
+   "cat": "2",
+   "mark": "D1:12",
+   "rank": 97,
+   "sim": 0.5805,
+   "hit": false,
+   "ev_len": 168
+  },
+  {
+   "q": "What did Caroline research?",
+   "cat": "1",
+   "mark": "D2:8",
+   "rank": 376,
+   "sim": 0.5211,
+   "hit": false,
+   "ev_len": 146
+  },
+  {
+   "q": "What is Caroline's identity?",
+   "cat": "1",
+   "mark": "D1:5",
+   "rank": 91,
+   "sim": 0.5955,
+   "hit": false,
+   "ev_len": 126
+  },
+  {
+   "q": "When did Melanie run a charity race?",
+   "cat": "2",
+   "mark": "D2:1",
+   "rank": 2,
+   "sim": 0.6908,
+   "hit": true,
+   "ev_len": 246
+  },
+  {
+   "q": "When is Melanie planning on going camping?",
+   "cat": "2",
+   "mark": "D2:7",
+   "rank": 2,
+   "sim": 0.7428,
+   "hit": true,
+   "ev_len": 226
+  },
+  {
+   "q": "When did Caroline give a speech at a school?",
+   "cat": "2",
+   "mark": "D3:1",
+   "rank": 1,
+   "sim": 0.6866,
+   "hit": true,
+   "ev_len": 360
+  },
+  {
+   "q": "When did Caroline meet up with her friends, family, and mentors?",
+   "cat": "2",
+   "mark": "D3:11",
+   "rank": 3,
+   "sim": 0.7042,
+   "hit": true,
+   "ev_len": 192
+  },
+  {
+   "q": "How long has Caroline had her current group of friends for?",
+   "cat": "2",
+   "mark": "D3:13",
+   "rank": 1,
+   "sim": 0.72,
+   "hit": true,
+   "ev_len": 308
+  },
+  {
+   "q": "How long ago was Caroline's 18th birthday?",
+   "cat": "2",
+   "mark": "D4:5",
+   "rank": 2,
+   "sim": 0.6762,
+   "hit": true,
+   "ev_len": 260
+  },
+  {
+   "q": "When did Melanie sign up for a pottery class?",
+   "cat": "2",
+   "mark": "D5:4",
+   "rank": 1,
+   "sim": 0.7139,
+   "hit": true,
+   "ev_len": 244
+  },
+  {
+   "q": "When is Caroline going to the transgender conference?",
+   "cat": "2",
+   "mark": "D5:13",
+   "rank": 1,
+   "sim": 0.7838,
+   "hit": true,
+   "ev_len": 202
+  },
+  {
+   "q": "When did Melanie go to the museum?",
+   "cat": "2",
+   "mark": "D6:4",
+   "rank": 1,
+   "sim": 0.6874,
+   "hit": true,
+   "ev_len": 208
+  },
+  {
+   "q": "When did Caroline have a picnic?",
+   "cat": "2",
+   "mark": "D6:11",
+   "rank": 2,
+   "sim": 0.662,
+   "hit": true,
+   "ev_len": 272
+  },
+  {
+   "q": "Would Caroline likely have Dr. Seuss books on her bookshelf?",
+   "cat": "3",
+   "mark": "D6:9",
+   "rank": 1,
+   "sim": 0.7526,
+   "hit": true,
+   "ev_len": 197
+  },
+  {
+   "q": "When did Caroline go to the LGBTQ conference?",
+   "cat": "2",
+   "mark": "D7:1",
+   "rank": 16,
+   "sim": 0.6865,
+   "hit": true,
+   "ev_len": 471
+  },
+  {
+   "q": "When did Melanie read the book \"nothing is impossible\"?",
+   "cat": "2",
+   "mark": "D7:8",
+   "rank": 11,
+   "sim": 0.6381,
+   "hit": true,
+   "ev_len": 263
+  },
+  {
+   "q": "When did Caroline go to the adoption meeting?",
+   "cat": "2",
+   "mark": "D8:9",
+   "rank": 93,
+   "sim": 0.6655,
+   "hit": false,
+   "ev_len": 300
+  },
+  {
+   "q": "When did Melanie go to the pottery workshop?",
+   "cat": "2",
+   "mark": "D8:2",
+   "rank": 1,
+   "sim": 0.7112,
+   "hit": true,
+   "ev_len": 210
+  },
+  {
+   "q": "When did Melanie go camping in June?",
+   "cat": "2",
+   "mark": "D4:8",
+   "rank": 31,
+   "sim": 0.6494,
+   "hit": false,
+   "ev_len": 307
+  },
+  {
+   "q": "When did Caroline go to a pride parade during the summer?",
+   "cat": "2",
+   "mark": "D5:1",
+   "rank": 2,
+   "sim": 0.6896,
+   "hit": true,
+   "ev_len": 253
+  },
+  {
+   "q": "When did Melanie go camping in July?",
+   "cat": "2",
+   "mark": "D9:1",
+   "rank": 3,
+   "sim": 0.7046,
+   "hit": true,
+   "ev_len": 242
+  },
+  {
+   "q": "When did Caroline join a mentorship program?",
+   "cat": "2",
+   "mark": "D9:2",
+   "rank": 1,
+   "sim": 0.7491,
+   "hit": true,
+   "ev_len": 174
+  },
+  {
+   "q": "When did Caroline join a new activist group?",
+   "cat": "2",
+   "mark": "D10:3",
+   "rank": 1,
+   "sim": 0.679,
+   "hit": true,
+   "ev_len": 351
+  },
+  {
+   "q": "When is Melanie's daughter's birthday?",
+   "cat": "2",
+   "mark": "D11:1",
+   "rank": 1,
+   "sim": 0.7167,
+   "hit": true,
+   "ev_len": 273
+  },
+  {
+   "q": "When did Caroline attend a pride parade in August?",
+   "cat": "2",
+   "mark": "D11:4",
+   "rank": 8,
+   "sim": 0.6373,
+   "hit": true,
+   "ev_len": 304
+  },
+  {
+   "q": "When did Caroline and Melanie go to a pride fesetival together?",
+   "cat": "2",
+   "mark": "D12:15",
+   "rank": 25,
+   "sim": 0.6287,
+   "hit": false,
+   "ev_len": 174
+  },
+  {
+   "q": "What would Caroline's political leaning likely be?",
+   "cat": "3",
+   "mark": "D12:1",
+   "rank": 95,
+   "sim": 0.5757,
+   "hit": false,
+   "ev_len": 368
+  },
+  {
+   "q": "When did Caroline apply to adoption agencies?",
+   "cat": "2",
+   "mark": "D13:1",
+   "rank": 2,
+   "sim": 0.6879,
+   "hit": true,
+   "ev_len": 344
+  },
+  {
+   "q": "When did Caroline draw a self-portrait?",
+   "cat": "2",
+   "mark": "D13:11",
+   "rank": 1,
+   "sim": 0.6983,
+   "hit": true,
+   "ev_len": 147
+  },
+  {
+   "q": "When did Caroline encounter people on a hike and have a negative experience?",
+   "cat": "2",
+   "mark": "D14:1",
+   "rank": 38,
+   "sim": 0.6457,
+   "hit": false,
+   "ev_len": 222
+  },
+  {
+   "q": "When did Melanie make a plate in pottery class?",
+   "cat": "2",
+   "mark": "D14:4",
+   "rank": 3,
+   "sim": 0.6766,
+   "hit": false,
+   "ev_len": 151
+  },
+  {
+   "q": "When did Melanie go to the park?",
+   "cat": "2",
+   "mark": "D15:2",
+   "rank": 2,
+   "sim": 0.7137,
+   "hit": true,
+   "ev_len": 233
+  },
+  {
+   "q": "When is Caroline's youth center putting on a talent show?",
+   "cat": "2",
+   "mark": "D15:11",
+   "rank": 1,
+   "sim": 0.7255,
+   "hit": true,
+   "ev_len": 201
+  },
+  {
+   "q": "Would Melanie likely enjoy the song \"The Four Seasons\" by Vivaldi?",
+   "cat": "3",
+   "mark": "D15:28",
+   "rank": 4,
+   "sim": 0.7227,
+   "hit": false,
+   "ev_len": 140
+  },
+  {
+   "q": "When did Caroline go biking with friends?",
+   "cat": "2",
+   "mark": "D16:1",
+   "rank": 28,
+   "sim": 0.6483,
+   "hit": false,
+   "ev_len": 237
+  },
+  {
+   "q": "How long has Melanie been practicing art?",
+   "cat": "2",
+   "mark": "D16:8",
+   "rank": 30,
+   "sim": 0.6679,
+   "hit": false,
+   "ev_len": 192
+  },
+  {
+   "q": "When did Melanie's friend adopt a child?",
+   "cat": "2",
+   "mark": "D17:3",
+   "rank": 9,
+   "sim": 0.6131,
+   "hit": false,
+   "ev_len": 265
+  },
+  {
+   "q": "When did Melanie get hurt?",
+   "cat": "2",
+   "mark": "D17:8",
+   "rank": 28,
+   "sim": 0.6061,
+   "hit": true,
+   "ev_len": 277
+  },
+  {
+   "q": "When did Melanie's family go on a roadtrip?",
+   "cat": "2",
+   "mark": "D18:1",
+   "rank": 1,
+   "sim": 0.7102,
+   "hit": false,
+   "ev_len": 275
+  },
+  {
+   "q": "When did Melanie go on a hike after the roadtrip?",
+   "cat": "1",
+   "mark": "D18:17",
+   "rank": 8,
+   "sim": 0.6591,
+   "hit": false,
+   "ev_len": 157
+  },
+  {
+   "q": "When did Caroline pass the adoption interview?",
+   "cat": "2",
+   "mark": "D19:1",
+   "rank": 1,
+   "sim": 0.7502,
+   "hit": true,
+   "ev_len": 192
+  },
+  {
+   "q": "When did Melanie buy the figurines?",
+   "cat": "2",
+   "mark": "D19:2",
+   "rank": 8,
+   "sim": 0.5797,
+   "hit": true,
+   "ev_len": 210
+  },
+  {
+   "q": "What did the charity race raise awareness for?",
+   "cat": "4",
+   "mark": "D2:2",
+   "rank": 1,
+   "sim": 0.7841,
+   "hit": true,
+   "ev_len": 192
+  },
+  {
+   "q": "What did Melanie realize after the charity race?",
+   "cat": "4",
+   "mark": "D2:3",
+   "rank": 25,
+   "sim": 0.64,
+   "hit": true,
+   "ev_len": 246
+  },
+  {
+   "q": "How does Melanie prioritize self-care?",
+   "cat": "4",
+   "mark": "D2:5",
+   "rank": 217,
+   "sim": 0.5344,
+   "hit": false,
+   "ev_len": 193
+  },
+  {
+   "q": "What are Caroline's plans for the summer?",
+   "cat": "4",
+   "mark": "D2:8",
+   "rank": 317,
+   "sim": 0.5606,
+   "hit": false,
+   "ev_len": 146
+  },
+  {
+   "q": "What type of individuals does the adoption agency Caroline is considering support?",
+   "cat": "4",
+   "mark": "D2:12",
+   "rank": 10,
+   "sim": 0.6683,
+   "hit": true,
+   "ev_len": 143
+  },
+  {
+   "q": "Why did Caroline choose the adoption agency?",
+   "cat": "4",
+   "mark": "D2:12",
+   "rank": 4,
+   "sim": 0.7085,
+   "hit": true,
+   "ev_len": 143
+  },
+  {
+   "q": "What is Caroline excited about in the adoption process?",
+   "cat": "4",
+   "mark": "D2:14",
+   "rank": 337,
+   "sim": 0.5719,
+   "hit": false,
+   "ev_len": 153
+  },
+  {
+   "q": "What does Melanie think about Caroline's decision to adopt?",
+   "cat": "4",
+   "mark": "D2:15",
+   "rank": 278,
+   "sim": 0.6009,
+   "hit": false,
+   "ev_len": 150
+  },
+  {
+   "q": "How long have Mel and her husband been married?",
+   "cat": "4",
+   "mark": "D3:16",
+   "rank": 123,
+   "sim": 0.622,
+   "hit": false,
+   "ev_len": 128
+  },
+  {
+   "q": "What does Caroline's necklace symbolize?",
+   "cat": "4",
+   "mark": "D4:3",
+   "rank": 2,
+   "sim": 0.6597,
+   "hit": true,
+   "ev_len": 308
+  },
+  {
+   "q": "What country is Caroline's grandma from?",
+   "cat": "4",
+   "mark": "D4:3",
+   "rank": 1,
+   "sim": 0.6397,
+   "hit": true,
+   "ev_len": 308
+  },
+  {
+   "q": "What was grandma's gift to Caroline?",
+   "cat": "4",
+   "mark": "D4:3",
+   "rank": 1,
+   "sim": 0.6572,
+   "hit": true,
+   "ev_len": 308
+  },
+  {
+   "q": "What is Melanie's hand-painted bowl a reminder of?",
+   "cat": "4",
+   "mark": "D4:5",
+   "rank": 3,
+   "sim": 0.6608,
+   "hit": true,
+   "ev_len": 260
+  },
+  {
+   "q": "What did Melanie and her family do while camping?",
+   "cat": "4",
+   "mark": "D4:8",
+   "rank": 7,
+   "sim": 0.6877,
+   "hit": true,
+   "ev_len": 307
+  },
+  {
+   "q": "What kind of counseling and mental health services is Caroline interested in pursuing?",
+   "cat": "4",
+   "mark": "D4:13",
+   "rank": 6,
+   "sim": 0.677,
+   "hit": true,
+   "ev_len": 456
+  },
+  {
+   "q": "What workshop did Caroline attend recently?",
+   "cat": "4",
+   "mark": "D4:13",
+   "rank": 2,
+   "sim": 0.6673,
+   "hit": true,
+   "ev_len": 456
+  },
+  {
+   "q": "What was discussed in the LGBTQ+ counseling workshop?",
+   "cat": "4",
+   "mark": "D4:13",
+   "rank": 4,
+   "sim": 0.6625,
+   "hit": true,
+   "ev_len": 456
+  },
+  {
+   "q": "What motivated Caroline to pursue counseling?",
+   "cat": "4",
+   "mark": "D4:15",
+   "rank": 95,
+   "sim": 0.5546,
+   "hit": false,
+   "ev_len": 386
+  },
+  {
+   "q": "What kind of place does Caroline want to create for people?",
+   "cat": "4",
+   "mark": "D4:15",
+   "rank": 4,
+   "sim": 0.6451,
+   "hit": true,
+   "ev_len": 386
+  },
+  {
+   "q": "Did Melanie make the black and white bowl in the photo?",
+   "cat": "4",
+   "mark": "D5:8",
+   "rank": 89,
+   "sim": 0.5965,
+   "hit": false,
+   "ev_len": 135
+  },
+  {
+   "q": "What kind of books does Caroline have in her library?",
+   "cat": "4",
+   "mark": "D6:9",
+   "rank": 2,
+   "sim": 0.7192,
+   "hit": true,
+   "ev_len": 197
+  },
+  {
+   "q": "What was Melanie's favorite book from her childhood?",
+   "cat": "4",
+   "mark": "D6:10",
+   "rank": 10,
+   "sim": 0.6152,
+   "hit": true,
+   "ev_len": 153
+  },
+  {
+   "q": "What book did Caroline recommend to Melanie?",
+   "cat": "4",
+   "mark": "D7:11",
+   "rank": 42,
+   "sim": 0.6232,
+   "hit": false,
+   "ev_len": 248
+  },
+  {
+   "q": "What did Caroline take away from the book \"Becoming Nicole\"?",
+   "cat": "4",
+   "mark": "D7:13",
+   "rank": 255,
+   "sim": 0.556,
+   "hit": false,
+   "ev_len": 195
+  },
+  {
+   "q": "What are the new shoes that Melanie got used for?",
+   "cat": "4",
+   "mark": "D7:19",
+   "rank": 200,
+   "sim": 0.5782,
+   "hit": false,
+   "ev_len": 84
+  },
+  {
+   "q": "What is Melanie's reason for getting into running?",
+   "cat": "4",
+   "mark": "D7:21",
+   "rank": 1,
+   "sim": 0.7612,
+   "hit": true,
+   "ev_len": 68
+  },
+  {
+   "q": "What does Melanie say running has been great for?",
+   "cat": "4",
+   "mark": "D7:24",
+   "rank": 71,
+   "sim": 0.6637,
+   "hit": false,
+   "ev_len": 117
+  },
+  {
+   "q": "What did Mel and her kids make during the pottery workshop?",
+   "cat": "4",
+   "mark": "D8:2",
+   "rank": 1,
+   "sim": 0.7402,
+   "hit": false,
+   "ev_len": 210
+  },
+  {
+   "q": "What kind of pot did Mel and her kids make with clay?",
+   "cat": "4",
+   "mark": "D8:4",
+   "rank": 1,
+   "sim": 0.7156,
+   "hit": false,
+   "ev_len": 217
+  },
+  {
+   "q": "What creative project do Mel and her kids do together besides pottery?",
+   "cat": "4",
+   "mark": "D8:5",
+   "rank": 1,
+   "sim": 0.7565,
+   "hit": true,
+   "ev_len": 213
+  },
+  {
+   "q": "What did Mel and her kids paint in their latest project in July 2023?",
+   "cat": "4",
+   "mark": "D8:6",
+   "rank": 1,
+   "sim": 0.7535,
+   "hit": true,
+   "ev_len": 144
+  },
+  {
+   "q": "What did Caroline see at the council meeting for adoption?",
+   "cat": "4",
+   "mark": "D8:9",
+   "rank": 2,
+   "sim": 0.6983,
+   "hit": true,
+   "ev_len": 300
+  },
+  {
+   "q": "What do sunflowers represent according to Caroline?",
+   "cat": "4",
+   "mark": "D8:11",
+   "rank": 250,
+   "sim": 0.5715,
+   "hit": false,
+   "ev_len": 252
+  },
+  {
+   "q": "Why are flowers important to Melanie?",
+   "cat": "4",
+   "mark": "D8:12",
+   "rank": 118,
+   "sim": 0.5733,
+   "hit": false,
+   "ev_len": 216
+  },
+  {
+   "q": "What inspired Caroline's painting for the art show?",
+   "cat": "4",
+   "mark": "D9:16",
+   "rank": 55,
+   "sim": 0.6527,
+   "hit": false,
+   "ev_len": 151
+  },
+  {
+   "q": "How often does Melanie go to the beach with her kids?",
+   "cat": "4",
+   "mark": "D10:10",
+   "rank": 1,
+   "sim": 0.7959,
+   "hit": true,
+   "ev_len": 216
+  },
+  {
+   "q": "What did Melanie and her family see during their camping trip last year?",
+   "cat": "4",
+   "mark": "D10:14",
+   "rank": 10,
+   "sim": 0.7025,
+   "hit": false,
+   "ev_len": 297
+  },
+  {
+   "q": "How did Melanie feel while watching the meteor shower?",
+   "cat": "4",
+   "mark": "D10:18",
+   "rank": 204,
+   "sim": 0.6156,
+   "hit": false,
+   "ev_len": 176
+  },
+  {
+   "q": "Whose birthday did Melanie celebrate recently?",
+   "cat": "4",
+   "mark": "D11:1",
+   "rank": 2,
+   "sim": 0.7214,
+   "hit": true,
+   "ev_len": 273
+  },
+  {
+   "q": "Who performed at the concert at Melanie's daughter's birthday?",
+   "cat": "4",
+   "mark": "D11:3",
+   "rank": 132,
+   "sim": 0.6254,
+   "hit": false,
+   "ev_len": 182
+  },
+  {
+   "q": "Why did Melanie choose to use colors and patterns in her pottery project?",
+   "cat": "4",
+   "mark": "D12:6",
+   "rank": 73,
+   "sim": 0.605,
+   "hit": false,
+   "ev_len": 235
+  },
+  {
+   "q": "What pet does Caroline have?",
+   "cat": "4",
+   "mark": "D13:3",
+   "rank": 4,
+   "sim": 0.6566,
+   "hit": true,
+   "ev_len": 198
+  },
+  {
+   "q": "What pets does Melanie have?",
+   "cat": "4",
+   "mark": "D13:4",
+   "rank": 6,
+   "sim": 0.6019,
+   "hit": false,
+   "ev_len": 235
+  },
+  {
+   "q": "Where did Oliver hide his bone once?",
+   "cat": "4",
+   "mark": "D13:6",
+   "rank": 1,
+   "sim": 0.74,
+   "hit": true,
+   "ev_len": 162
+  },
+  {
+   "q": "What activity did Caroline used to do with her dad?",
+   "cat": "4",
+   "mark": "D13:7",
+   "rank": 73,
+   "sim": 0.6037,
+   "hit": false,
+   "ev_len": 215
+  },
+  {
+   "q": "What did Caroline make for a local church?",
+   "cat": "4",
+   "mark": "D14:17",
+   "rank": 161,
+   "sim": 0.5409,
+   "hit": false,
+   "ev_len": 202
+  },
+  {
+   "q": "What did Caroline find in her neighborhood during her walk?",
+   "cat": "4",
+   "mark": "D14:23",
+   "rank": 1,
+   "sim": 0.7053,
+   "hit": true,
+   "ev_len": 281
+  },
+  {
+   "q": "Which song motivates Caroline to be courageous?",
+   "cat": "4",
+   "mark": "D15:23",
+   "rank": 104,
+   "sim": 0.5791,
+   "hit": false,
+   "ev_len": 260
+  },
+  {
+   "q": "Which  classical musicians does Melanie enjoy listening to?",
+   "cat": "4",
+   "mark": "D15:28",
+   "rank": 1,
+   "sim": 0.7579,
+   "hit": true,
+   "ev_len": 140
+  },
+  {
+   "q": "Who is Melanie a fan of in terms of modern music?",
+   "cat": "4",
+   "mark": "D15:28",
+   "rank": 1,
+   "sim": 0.7897,
+   "hit": true,
+   "ev_len": 140
+  },
+  {
+   "q": "How long has Melanie been creating art?",
+   "cat": "4",
+   "mark": "D16:7",
+   "rank": 1,
+   "sim": 0.7695,
+   "hit": true,
+   "ev_len": 205
+  },
+  {
+   "q": "What precautionary sign did Melanie see at the café?",
+   "cat": "4",
+   "mark": "D16:16",
+   "rank": 59,
+   "sim": 0.6456,
+   "hit": false,
+   "ev_len": 275
+  },
+  {
+   "q": "What advice does Caroline give for getting started with adoption?",
+   "cat": "4",
+   "mark": "D17:7",
+   "rank": 19,
+   "sim": 0.6596,
+   "hit": false,
+   "ev_len": 328
+  },
+  {
+   "q": "What setback did Melanie face in October 2023?",
+   "cat": "4",
+   "mark": "D17:8",
+   "rank": 73,
+   "sim": 0.6712,
+   "hit": false,
+   "ev_len": 277
+  },
+  {
+   "q": "What does Melanie do to keep herself busy during her pottery break?",
+   "cat": "4",
+   "mark": "D17:10",
+   "rank": 130,
+   "sim": 0.6094,
+   "hit": false,
+   "ev_len": 167
+  },
+  {
+   "q": "What painting did Melanie show to Caroline on October 13, 2023?",
+   "cat": "4",
+   "mark": "D17:12",
+   "rank": 31,
+   "sim": 0.7194,
+   "hit": false,
+   "ev_len": 180
+  },
+  {
+   "q": "What kind of painting did Caroline share with Melanie on October 13, 2023?",
+   "cat": "4",
+   "mark": "D17:14",
+   "rank": 2,
+   "sim": 0.7576,
+   "hit": false,
+   "ev_len": 188
+  },
+  {
+   "q": "What was the poetry reading that Caroline attended about?",
+   "cat": "4",
+   "mark": "D17:18",
+   "rank": 32,
+   "sim": 0.6322,
+   "hit": false,
+   "ev_len": 124
+  },
+  {
+   "q": "What did the posters at the poetry reading say?",
+   "cat": "4",
+   "mark": "D17:19",
+   "rank": 1,
+   "sim": 0.735,
+   "hit": true,
+   "ev_len": 288
+  },
+  {
+   "q": "What does Caroline's drawing symbolize for her?",
+   "cat": "4",
+   "mark": "D17:23",
+   "rank": 3,
+   "sim": 0.6606,
+   "hit": false,
+   "ev_len": 186
+  },
+  {
+   "q": "How do Melanie and Caroline describe their journey through life together?",
+   "cat": "4",
+   "mark": "D17:25",
+   "rank": 226,
+   "sim": 0.6082,
+   "hit": false,
+   "ev_len": 146
+  },
+  {
+   "q": "What happened to Melanie's son on their road trip?",
+   "cat": "4",
+   "mark": "D18:1",
+   "rank": 1,
+   "sim": 0.6779,
+   "hit": true,
+   "ev_len": 275
+  },
+  {
+   "q": "How did Melanie feel about her family after the accident?",
+   "cat": "4",
+   "mark": "D18:5",
+   "rank": 45,
+   "sim": 0.6457,
+   "hit": false,
+   "ev_len": 287
+  },
+  {
+   "q": "How did Melanie's children handle the accident?",
+   "cat": "4",
+   "mark": "D18:7",
+   "rank": 4,
+   "sim": 0.6768,
+   "hit": false,
+   "ev_len": 146
+  },
+  {
+   "q": "How did Melanie feel after the accident?",
+   "cat": "4",
+   "mark": "D18:5",
+   "rank": 1,
+   "sim": 0.6907,
+   "hit": true,
+   "ev_len": 287
+  },
+  {
+   "q": "What was Melanie's reaction to her children enjoying the Grand Canyon?",
+   "cat": "4",
+   "mark": "D18:5",
+   "rank": 64,
+   "sim": 0.6423,
+   "hit": false,
+   "ev_len": 287
+  },
+  {
+   "q": "What do Melanie's family give her?",
+   "cat": "4",
+   "mark": "D18:9",
+   "rank": 101,
+   "sim": 0.5894,
+   "hit": false,
+   "ev_len": 138
+  },
+  {
+   "q": "How did Melanie feel about her family supporting her?",
+   "cat": "4",
+   "mark": "D18:13",
+   "rank": 119,
+   "sim": 0.6186,
+   "hit": false,
+   "ev_len": 103
+  },
+  {
+   "q": "What did Melanie do after the road trip to relax?",
+   "cat": "4",
+   "mark": "D18:17",
+   "rank": 1,
+   "sim": 0.7295,
+   "hit": true,
+   "ev_len": 157
+  },
+  {
+   "q": "What did Caroline realize after her charity race?",
+   "cat": "5",
+   "mark": "D2:3",
+   "rank": 22,
+   "sim": 0.635,
+   "hit": true,
+   "ev_len": 246
+  },
+  {
+   "q": "What are Melanie's plans for the summer with respect to adoption?",
+   "cat": "5",
+   "mark": "D2:8",
+   "rank": 172,
+   "sim": 0.6044,
+   "hit": false,
+   "ev_len": 146
+  },
+  {
+   "q": "What type of individuals does the adoption agency Melanie is considering support?",
+   "cat": "5",
+   "mark": "D2:12",
+   "rank": 10,
+   "sim": 0.6683,
+   "hit": true,
+   "ev_len": 143
+  },
+  {
+   "q": "Why did Melanie choose the adoption agency?",
+   "cat": "5",
+   "mark": "D2:12",
+   "rank": 4,
+   "sim": 0.7085,
+   "hit": true,
+   "ev_len": 143
+  },
+  {
+   "q": "What is Melanie excited about in her adoption process?",
+   "cat": "5",
+   "mark": "D2:14",
+   "rank": 262,
+   "sim": 0.5884,
+   "hit": false,
+   "ev_len": 153
+  },
+  {
+   "q": "What does Melanie's necklace symbolize?",
+   "cat": "5",
+   "mark": "D4:3",
+   "rank": 2,
+   "sim": 0.6597,
+   "hit": true,
+   "ev_len": 308
+  },
+  {
+   "q": "What country is Melanie's grandma from?",
+   "cat": "5",
+   "mark": "D4:3",
+   "rank": 1,
+   "sim": 0.6397,
+   "hit": true,
+   "ev_len": 308
+  },
+  {
+   "q": "What was grandma's gift to Melanie?",
+   "cat": "5",
+   "mark": "D4:3",
+   "rank": 1,
+   "sim": 0.6572,
+   "hit": true,
+   "ev_len": 308
+  },
+  {
+   "q": "What was grandpa's gift to Caroline?",
+   "cat": "5",
+   "mark": "D4:3",
+   "rank": 1,
+   "sim": 0.6555,
+   "hit": true,
+   "ev_len": 308
+  },
+  {
+   "q": "What is Caroline's hand-painted bowl a reminder of?",
+   "cat": "5",
+   "mark": "D4:5",
+   "rank": 3,
+   "sim": 0.6608,
+   "hit": true,
+   "ev_len": 260
+  },
+  {
+   "q": "What did Caroline and her family do while camping?",
+   "cat": "5",
+   "mark": "D4:8",
+   "rank": 7,
+   "sim": 0.6877,
+   "hit": true,
+   "ev_len": 307
+  },
+  {
+   "q": "What kind of counseling and mental health services is Melanie interested in pursuing?",
+   "cat": "5",
+   "mark": "D4:13",
+   "rank": 6,
+   "sim": 0.677,
+   "hit": true,
+   "ev_len": 456
+  },
+  {
+   "q": "What kind of counseling workshop did Melanie attend recently?",
+   "cat": "5",
+   "mark": "D4:13",
+   "rank": 1,
+   "sim": 0.6573,
+   "hit": true,
+   "ev_len": 456
+  },
+  {
+   "q": "What motivated Melanie to pursue counseling?",
+   "cat": "5",
+   "mark": "D4:15",
+   "rank": 95,
+   "sim": 0.5546,
+   "hit": false,
+   "ev_len": 386
+  },
+  {
+   "q": "What kind of place does Melanie want to create for people?",
+   "cat": "5",
+   "mark": "D4:15",
+   "rank": 4,
+   "sim": 0.6451,
+   "hit": true,
+   "ev_len": 386
+  },
+  {
+   "q": "Did Caroline make the black and white bowl in the photo?",
+   "cat": "5",
+   "mark": "D5:8",
+   "rank": 89,
+   "sim": 0.5965,
+   "hit": false,
+   "ev_len": 135
+  },
+  {
+   "q": "What are the new shoes that Caroline got used for?",
+   "cat": "5",
+   "mark": "D7:19",
+   "rank": 200,
+   "sim": 0.5782,
+   "hit": false,
+   "ev_len": 84
+  },
+  {
+   "q": "What is Caroline's reason for getting into running?",
+   "cat": "5",
+   "mark": "D7:21",
+   "rank": 1,
+   "sim": 0.7612,
+   "hit": true,
+   "ev_len": 68
+  },
+  {
+   "q": "What does Caroline say running has been great for?",
+   "cat": "5",
+   "mark": "D7:24",
+   "rank": 71,
+   "sim": 0.6637,
+   "hit": false,
+   "ev_len": 117
+  },
+  {
+   "q": "What did Melanie see at the council meeting for adoption?",
+   "cat": "5",
+   "mark": "D8:9",
+   "rank": 2,
+   "sim": 0.6983,
+   "hit": true,
+   "ev_len": 300
+  },
+  {
+   "q": "What inspired Melanie's painting for the art show?",
+   "cat": "5",
+   "mark": "D9:16",
+   "rank": 55,
+   "sim": 0.6527,
+   "hit": false,
+   "ev_len": 151
+  },
+  {
+   "q": "What inspired Caroline's sculpture for the art show?",
+   "cat": "5",
+   "mark": "D9:16",
+   "rank": 47,
+   "sim": 0.6227,
+   "hit": false,
+   "ev_len": 151
+  },
+  {
+   "q": "How often does Caroline go to the beach with her kids?",
+   "cat": "5",
+   "mark": "D10:10",
+   "rank": 1,
+   "sim": 0.7959,
+   "hit": true,
+   "ev_len": 216
+  },
+  {
+   "q": "What did Caroline and her family see during their camping trip last year?",
+   "cat": "5",
+   "mark": "D10:14",
+   "rank": 10,
+   "sim": 0.7025,
+   "hit": false,
+   "ev_len": 297
+  },
+  {
+   "q": "How did Caroline feel while watching the meteor shower?",
+   "cat": "5",
+   "mark": "D10:18",
+   "rank": 204,
+   "sim": 0.6156,
+   "hit": false,
+   "ev_len": 176
+  },
+  {
+   "q": "Why did Caroline choose to use colors and patterns in her pottery project?",
+   "cat": "5",
+   "mark": "D12:6",
+   "rank": 73,
+   "sim": 0.605,
+   "hit": false,
+   "ev_len": 235
+  },
+  {
+   "q": "Is Oscar Melanie's pet?",
+   "cat": "5",
+   "mark": "D13:3",
+   "rank": 4,
+   "sim": 0.6062,
+   "hit": true,
+   "ev_len": 198
+  },
+  {
+   "q": "Where did Oscar hide his bone once?",
+   "cat": "5",
+   "mark": "D13:6",
+   "rank": 1,
+   "sim": 0.74,
+   "hit": true,
+   "ev_len": 162
+  },
+  {
+   "q": "What activity did Melanie used to do with her dad?",
+   "cat": "5",
+   "mark": "D13:7",
+   "rank": 73,
+   "sim": 0.6037,
+   "hit": false,
+   "ev_len": 215
+  },
+  {
+   "q": "What did Melanie make for a local church?",
+   "cat": "5",
+   "mark": "D14:17",
+   "rank": 161,
+   "sim": 0.5409,
+   "hit": false,
+   "ev_len": 202
+  },
+  {
+   "q": "What did Melanie find in her neighborhood during her walk?",
+   "cat": "5",
+   "mark": "D14:23",
+   "rank": 1,
+   "sim": 0.7053,
+   "hit": true,
+   "ev_len": 281
+  },
+  {
+   "q": "Which song motivates Melanie to be courageous?",
+   "cat": "5",
+   "mark": "D15:23",
+   "rank": 104,
+   "sim": 0.5791,
+   "hit": false,
+   "ev_len": 260
+  },
+  {
+   "q": "What type of instrument does Caroline play?",
+   "cat": "5",
+   "mark": "D15:26",
+   "rank": 53,
+   "sim": 0.5953,
+   "hit": false,
+   "ev_len": 147
+  },
+  {
+   "q": "Which classical musicians does Caroline enjoy listening to?",
+   "cat": "5",
+   "mark": "D15:28",
+   "rank": 1,
+   "sim": 0.7579,
+   "hit": true,
+   "ev_len": 140
+  },
+  {
+   "q": "Who is Caroline a fan of in terms of modern music?",
+   "cat": "5",
+   "mark": "D15:28",
+   "rank": 1,
+   "sim": 0.7897,
+   "hit": true,
+   "ev_len": 140
+  },
+  {
+   "q": "What precautionary sign did Caroline see at the café?",
+   "cat": "5",
+   "mark": "D16:16",
+   "rank": 59,
+   "sim": 0.6456,
+   "hit": false,
+   "ev_len": 275
+  },
+  {
+   "q": "What setback did Caroline face recently?",
+   "cat": "5",
+   "mark": "D17:8",
+   "rank": 47,
+   "sim": 0.6242,
+   "hit": false,
+   "ev_len": 277
+  },
+  {
+   "q": "What does Caroline do to keep herself busy during her pottery break?",
+   "cat": "5",
+   "mark": "D17:10",
+   "rank": 130,
+   "sim": 0.6094,
+   "hit": false,
+   "ev_len": 167
+  },
+  {
+   "q": "What was the poetry reading that Melanie attended about?",
+   "cat": "5",
+   "mark": "D17:18",
+   "rank": 32,
+   "sim": 0.6322,
+   "hit": false,
+   "ev_len": 124
+  },
+  {
+   "q": "What happened to Caroline's son on their road trip?",
+   "cat": "5",
+   "mark": "D18:1",
+   "rank": 1,
+   "sim": 0.6779,
+   "hit": true,
+   "ev_len": 275
+  },
+  {
+   "q": "How did Caroline feel about her family after the accident?",
+   "cat": "5",
+   "mark": "D18:5",
+   "rank": 45,
+   "sim": 0.6457,
+   "hit": false,
+   "ev_len": 287
+  },
+  {
+   "q": "How did Caroline's children handle the accident?",
+   "cat": "5",
+   "mark": "D18:7",
+   "rank": 4,
+   "sim": 0.6768,
+   "hit": false,
+   "ev_len": 146
+  },
+  {
+   "q": "How did Caroline feel after the accident?",
+   "cat": "5",
+   "mark": "D18:5",
+   "rank": 1,
+   "sim": 0.6907,
+   "hit": true,
+   "ev_len": 287
+  },
+  {
+   "q": "What was Caroline's reaction to her children enjoying the Grand Canyon?",
+   "cat": "5",
+   "mark": "D18:5",
+   "rank": 64,
+   "sim": 0.6423,
+   "hit": false,
+   "ev_len": 287
+  },
+  {
+   "q": "What did Caroline do after the road trip to relax?",
+   "cat": "5",
+   "mark": "D18:17",
+   "rank": 1,
+   "sim": 0.7295,
+   "hit": true,
+   "ev_len": 157
+  },
+  {
+   "q": "What does Caroline love most about camping with her family?",
+   "cat": "5",
+   "mark": "D18:21",
+   "rank": 105,
+   "sim": 0.6034,
+   "hit": false,
+   "ev_len": 231
+  }
+ ]
+}

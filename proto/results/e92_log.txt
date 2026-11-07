@@ -1,0 +1,175 @@
+============================================================================================
+E-92 实测 vad-macbert（中文 VAD 回归）
+============================================================================================
+
+加载模型 Pectics/vad-macbert ...
+  （首次会从 hf-mirror.com 下载，macbert-base ~400MB）
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Traceback (most recent call last):
+  File "D:\anaconda3\Lib\site-packages\transformers\configuration_utils.py", line 971, in _get_config_dict
+    resolved_config_file = cached_file(
+        pretrained_model_name_or_path,
+    ...<8 lines>...
+        subfolder=subfolder,
+    )
+  File "D:\anaconda3\Lib\site-packages\transformers\utils\hub.py", line 370, in cached_file
+    file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)
+  File "D:\anaconda3\Lib\site-packages\transformers\utils\hub.py", line 634, in cached_files
+    raise e
+  File "D:\anaconda3\Lib\site-packages\transformers\utils\hub.py", line 537, in cached_files
+    hf_hub_download(
+    ~~~~~~~~~~~~~~~^
+        path_or_repo_id,
+        ^^^^^^^^^^^^^^^^
+    ...<10 lines>...
+        tqdm_class=tqdm_class,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\anaconda3\Lib\site-packages\huggingface_hub\utils\_validators.py", line 89, in _inner_fn
+    return fn(*args, **kwargs)
+  File "D:\anaconda3\Lib\site-packages\huggingface_hub\utils\_http.py", line 276, in _inner
+    return fn(*args, **kwargs)
+  File "D:\anaconda3\Lib\site-packages\huggingface_hub\file_download.py", line 1047, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+        # Destination
+    ...<15 lines>...
+        dry_run=dry_run,
+    )
+  File "D:\anaconda3\Lib\site-packages\huggingface_hub\file_download.py", line 1285, in _hf_hub_download_to_cache_dir
+    _download_to_tmp_and_move(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        incomplete_path=Path(blob_path + ".incomplete"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<8 lines>...
+        tqdm_class=tqdm_class,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\anaconda3\Lib\site-packages\huggingface_hub\file_download.py", line 2032, in _download_to_tmp_and_move
+    http_get(
+    ~~~~~~~~^
+        url_to_download,
+        ^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        tqdm_class=tqdm_class,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\anaconda3\Lib\site-packages\huggingface_hub\utils\_validators.py", line 89, in _inner_fn
+    return fn(*args, **kwargs)
+  File "D:\anaconda3\Lib\site-packages\huggingface_hub\file_download.py", line 459, in http_get
+    for chunk in response.iter_bytes(chunk_size=constants.DOWNLOAD_CHUNK_SIZE):
+                 ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anaconda3\Lib\site-packages\httpx2\_models.py", line 894, in iter_bytes
+    for decoded in decoder.decode(raw_bytes):
+                   ~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "D:\anaconda3\Lib\site-packages\httpx2\_decoders.py", line 191, in decode
+    decompressed = self._decompress(data, output_buffer_limit=output_buffer_limit)
+TypeError: Decompressor.decompress() got an unexpected keyword argument 'output_buffer_limit'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\anaconda3\Lib\site-packages\transformers\models\auto\tokenization_auto.py", line 801, in from_pretrained
+    config = AutoConfig.from_pretrained(
+        pretrained_model_name_or_path, trust_remote_code=trust_remote_code, **kwargs
+    )
+  File "D:\anaconda3\Lib\site-packages\transformers\models\auto\configuration_auto.py", line 397, in from_pretrained
+    config_dict, unused_kwargs = PreTrainedConfig.get_config_dict(pretrained_model_name_or_path, **kwargs)
+                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anaconda3\Lib\site-packages\transformers\configuration_utils.py", line 919, in get_config_dict
+    config_dict, kwargs = cls._get_config_dict(pretrained_model_name_or_path, **kwargs)
+                          ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anaconda3\Lib\site-packages\transformers\configuration_utils.py", line 991, in _get_config_dict
+    raise OSError(
+    ...<4 lines>...
+    )
+OSError: Can't load the configuration of 'Pectics/vad-macbert'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure 'Pectics/vad-macbert' is the correct path to a directory containing a config.json file
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\anaconda3\Lib\site-packages\transformers\configuration_utils.py", line 971, in _get_config_dict
+    resolved_config_file = cached_file(
+        pretrained_model_name_or_path,
+    ...<8 lines>...
+        subfolder=subfolder,
+    )
+  File "D:\anaconda3\Lib\site-packages\transformers\utils\hub.py", line 370, in cached_file
+    file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)
+  File "D:\anaconda3\Lib\site-packages\transformers\utils\hub.py", line 634, in cached_files
+    raise e
+  File "D:\anaconda3\Lib\site-packages\transformers\utils\hub.py", line 537, in cached_files
+    hf_hub_download(
+    ~~~~~~~~~~~~~~~^
+        path_or_repo_id,
+        ^^^^^^^^^^^^^^^^
+    ...<10 lines>...
+        tqdm_class=tqdm_class,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\anaconda3\Lib\site-packages\huggingface_hub\utils\_validators.py", line 89, in _inner_fn
+    return fn(*args, **kwargs)
+  File "D:\anaconda3\Lib\site-packages\huggingface_hub\utils\_http.py", line 276, in _inner
+    return fn(*args, **kwargs)
+  File "D:\anaconda3\Lib\site-packages\huggingface_hub\file_download.py", line 1047, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+        # Destination
+    ...<15 lines>...
+        dry_run=dry_run,
+    )
+  File "D:\anaconda3\Lib\site-packages\huggingface_hub\file_download.py", line 1285, in _hf_hub_download_to_cache_dir
+    _download_to_tmp_and_move(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        incomplete_path=Path(blob_path + ".incomplete"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<8 lines>...
+        tqdm_class=tqdm_class,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\anaconda3\Lib\site-packages\huggingface_hub\file_download.py", line 2032, in _download_to_tmp_and_move
+    http_get(
+    ~~~~~~~~^
+        url_to_download,
+        ^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        tqdm_class=tqdm_class,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\anaconda3\Lib\site-packages\huggingface_hub\utils\_validators.py", line 89, in _inner_fn
+    return fn(*args, **kwargs)
+  File "D:\anaconda3\Lib\site-packages\huggingface_hub\file_download.py", line 459, in http_get
+    for chunk in response.iter_bytes(chunk_size=constants.DOWNLOAD_CHUNK_SIZE):
+                 ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anaconda3\Lib\site-packages\httpx2\_models.py", line 894, in iter_bytes
+    for decoded in decoder.decode(raw_bytes):
+                   ~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "D:\anaconda3\Lib\site-packages\httpx2\_decoders.py", line 191, in decode
+    decompressed = self._decompress(data, output_buffer_limit=output_buffer_limit)
+TypeError: Decompressor.decompress() got an unexpected keyword argument 'output_buffer_limit'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\xuee\Desktop\肥鱼之心\proto\run_e92_vad_macbert.py", line 178, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\xuee\Desktop\肥鱼之心\proto\run_e92_vad_macbert.py", line 96, in main
+    tok = AutoTokenizer.from_pretrained(model_id)
+  File "D:\anaconda3\Lib\site-packages\transformers\models\auto\tokenization_auto.py", line 805, in from_pretrained
+    config = PreTrainedConfig.from_pretrained(pretrained_model_name_or_path, **kwargs)
+  File "D:\anaconda3\Lib\site-packages\transformers\configuration_utils.py", line 869, in from_pretrained
+    config_dict, kwargs = cls.get_config_dict(pretrained_model_name_or_path, **kwargs)
+                          ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anaconda3\Lib\site-packages\transformers\configuration_utils.py", line 919, in get_config_dict
+    config_dict, kwargs = cls._get_config_dict(pretrained_model_name_or_path, **kwargs)
+                          ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anaconda3\Lib\site-packages\transformers\configuration_utils.py", line 991, in _get_config_dict
+    raise OSError(
+    ...<4 lines>...
+    )
+OSError: Can't load the configuration of 'Pectics/vad-macbert'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure 'Pectics/vad-macbert' is the correct path to a directory containing a config.json file

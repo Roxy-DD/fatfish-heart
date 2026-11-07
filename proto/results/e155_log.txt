@@ -1,0 +1,68 @@
+==============================================================================================
+E-155 LongMemEval 端到端适配评测
+==============================================================================================
+
+拉取数据…
+  拿到 30 题
+  题型分布: {'temporal-reasoning': 11, 'single-session-user': 4, 'single-session-preference': 2, 'knowledge-update': 4, 'multi-session': 6, 'single-session-assistant': 3}
+
+----------------------------------------------------------------------------------------------
+逐题处理
+----------------------------------------------------------------------------------------------
+#   题型                      记忆数       召回?     问题
+----------------------------------------------------------------------------------------------
+
+Loading weights:   0%|          | 0/71 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 71/71 [00:00<00:00, 1391.18it/s]
+0   temporal-reasoning      12        ✅       I mentioned cooking something for 
+1   temporal-reasoning      12        ✅       Which book did I finish reading fi
+2   temporal-reasoning      12        ✅       Which trip did I take first, the o
+3   single-session-user     6         ✅       What book am I currently reading?
+4   temporal-reasoning      5         ❌       How many days ago did I attend a n
+5   single-session-prefere  10        ❌       Can you suggest a hotel for my upc
+6   knowledge-update        12        跳过      How often do I play table tennis w
+7   single-session-user     6         ✅       What is the name of my cat?
+8   multi-session           12        ❌       How many sports have I played comp
+9   multi-session           11        ❌       How many dinner parties have I att
+10  single-session-user     6         ✅       Where did I buy my new bookshelf f
+11  temporal-reasoning      12        跳过      How long have I been working befor
+12  temporal-reasoning      5         ✅       How many months ago did I attend t
+13  temporal-reasoning      12        ✅       What is the artist that I started 
+14  single-session-prefere  8         ❌       I've been feeling like my chocolat
+15  multi-session           10        ❌       How old was I when Alex was born?
+16  knowledge-update        12        ✅       How many videos of Corey Schafer's
+17  temporal-reasoning      12        ❌       How many days passed between the d
+18  single-session-assista  6         ❌       I was looking back at our previous
+19  multi-session           12        ❌       What is the total distance I cover
+20  multi-session           24        ❌       How many babies were born to frien
+21  single-session-user     6         ✅       How many playlists do I have on Sp
+22  knowledge-update        12        ✅       Where do I initially keep my old s
+23  knowledge-update        12        ✅       Where did Rachel move to after her
+24  temporal-reasoning      11        ❌       How many days passed between the d
+25  single-session-assista  5         ❌       Can you remind me what was the ave
+26  temporal-reasoning      12        ❌       How many days before the team meet
+27  multi-session           11        ❌       What percentage of packed shoes di
+28  single-session-assista  4         ❌       I'm going back to our previous con
+29  temporal-reasoning      18        ✅       How long did I take to finish 'The
+
+==============================================================================================
+汇总
+==============================================================================================
+
+  答案可及率（检索 @10）: 13/28 = 0.4643
+
+  题型                        可及/总        可及率
+  ------------------------------------------------------------
+  temporal-reasoning        6/10        0.6000
+  multi-session             0/6         0.0000
+  single-session-user       4/4         1.0000
+  knowledge-update          3/3         1.0000
+  single-session-assistant  0/3         0.0000
+  single-session-preferenc  0/2         0.0000
+
+  ★ knowledge-update（对应我们的矛盾处理）: 3/3 = 1.0000
+
+  说明：这是**答案可及率**，不是答题准确率。
+  它衡量'检索到的记忆里有没有答案'，是答题的必要条件。
+
+写入 C:\Users\xuee\Desktop\肥鱼之心\proto\results\e155_longmemeval.json

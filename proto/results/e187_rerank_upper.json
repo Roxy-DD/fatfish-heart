@@ -1,0 +1,15 @@
+{
+ "experiment": "E-187",
+ "n_recoverable": 30,
+ "rank_buckets": {
+  "16-20": 12,
+  "26-30": 7,
+  "11-15": 7,
+  "21-25": 4
+ },
+ "median_rank": 19.0,
+ "baseline": 114,
+ "total": 302,
+ "perfect_upper": 0.4768,
+ "realistic_upper": 0.4007
+}

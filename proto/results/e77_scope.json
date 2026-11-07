@@ -1,0 +1,114 @@
+{
+ "experiment": "E-77",
+ "n": 10,
+ "dim_total": 60,
+ "dim_agree": 50,
+ "dim_agree_rate": 0.8333,
+ "diff_items": [
+  {
+   "rid": "S00",
+   "text": "爷爷去世了，那阵子我一直在医院和家之间来回跑",
+   "diffs": [
+    {
+     "dim": "identity",
+     "mine": false,
+     "theirs": true
+    },
+    {
+     "dim": "time_range",
+     "mine": true,
+     "theirs": false
+    }
+   ],
+   "model_note": "能确认爷爷去世这件事、也知道去世的是爷爷，但“那阵子”只是相对指代，本身没有可定位的时间段，也没有具体地点和数字"
+  },
+  {
+   "rid": "S01",
+   "text": "小时候被邻居家的狗追着咬过，小腿上留了疤",
+   "diffs": [
+    {
+     "dim": "time_range",
+     "mine": false,
+     "theirs": true
+    }
+   ],
+   "model_note": "记得被狗咬过、能指出是邻居家的狗，“小时候”是可用的模糊时段，但说不出哪一年、在哪被咬，也没有数值"
+  },
+  {
+   "rid": "S02",
+   "text": "孩子第一次叫妈妈的时候，我眼泪一下就出来了",
+   "diffs": [
+    {
+     "dim": "time_range",
+     "mine": false,
+     "theirs": true
+    }
+   ],
+   "model_note": "记得孩子第一次叫妈妈这件事、知道说话的是自己的孩子，“第一次叫妈妈”只能模糊定位到学说话前后，没有年月、地点和数值"
+  },
+  {
+   "rid": "S03",
+   "text": "钱包丢了，里面有身份证和所有的卡",
+   "diffs": [
+    {
+     "dim": "identity",
+     "mine": false,
+     "theirs": true
+    }
+   ],
+   "model_note": "只记得丢钱包这件事和丢了哪些东西（身份证、卡），时间、地点和金额一概没有"
+  },
+  {
+   "rid": "S04",
+   "text": "那次项目上线前一晚，大家通宵改最后一批 bug",
+   "diffs": [
+    {
+     "dim": "identity",
+     "mine": true,
+     "theirs": false
+    }
+   ],
+   "model_note": "记得通宵改最后一批 bug 这件事，但“大家”和“那次项目”都没有具体指向，“上线前一晚”是相对锚点而非可定位时段"
+  },
+  {
+   "rid": "S06",
+   "text": "12月3日下午两点，我和张工在7楼会议室对齐了接口协议",
+   "diffs": [
+    {
+     "dim": "existence",
+     "mine": false,
+     "theirs": true
+    },
+    {
+     "dim": "time_range",
+     "mine": false,
+     "theirs": true
+    },
+    {
+     "dim": "value",
+     "mine": true,
+     "theirs": false
+    }
+   ],
+   "model_note": "月日时分、张工、7楼会议室都齐全，日期可精确到天（缺年份），数字只是时间与楼层，没有金额或计数类数值"
+  },
+  {
+   "rid": "S07",
+   "text": "城南路18号是我女儿幼儿园的地址",
+   "diffs": [
+    {
+     "dim": "identity",
+     "mine": false,
+     "theirs": true
+    }
+   ],
+   "model_note": "地址能逐字复述（含门牌号 18 号）、也知道是女儿的幼儿园，但这是静态事实，没有任何时间信息"
+  }
+ ],
+ "dim_conflict_count": {
+  "identity": 4,
+  "time_range": 4,
+  "existence": 1,
+  "value": 1
+ }
+}

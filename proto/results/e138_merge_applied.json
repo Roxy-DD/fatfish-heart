@@ -1,0 +1,209 @@
+{
+ "experiment": "E-138",
+ "before_total": 144,
+ "after_total": 144,
+ "before_valid": 137,
+ "after_valid": 120,
+ "n_groups": 11,
+ "n_merged_ok": 11,
+ "n_records_merged": 17,
+ "r2_no_delete": true,
+ "audit_records": 11,
+ "info_loss": [
+  {
+   "cid": "F00",
+   "n_texts": 2,
+   "missing_segments": [],
+   "missing_count": 0
+  },
+  {
+   "cid": "F01",
+   "n_texts": 5,
+   "missing_segments": [],
+   "missing_count": 0
+  },
+  {
+   "cid": "F02",
+   "n_texts": 3,
+   "missing_segments": [],
+   "missing_count": 0
+  },
+  {
+   "cid": "F03",
+   "n_texts": 3,
+   "missing_segments": [],
+   "missing_count": 0
+  },
+  {
+   "cid": "F04",
+   "n_texts": 2,
+   "missing_segments": [],
+   "missing_count": 0
+  },
+  {
+   "cid": "F05",
+   "n_texts": 2,
+   "missing_segments": [],
+   "missing_count": 0
+  },
+  {
+   "cid": "F06",
+   "n_texts": 3,
+   "missing_segments": [],
+   "missing_count": 0
+  },
+  {
+   "cid": "F07",
+   "n_texts": 2,
+   "missing_segments": [],
+   "missing_count": 0
+  },
+  {
+   "cid": "F08",
+   "n_texts": 2,
+   "missing_segments": [],
+   "missing_count": 0
+  },
+  {
+   "cid": "F09",
+   "n_texts": 2,
+   "missing_segments": [],
+   "missing_count": 0
+  },
+  {
+   "cid": "F10",
+   "n_texts": 2,
+   "missing_segments": [],
+   "missing_count": 0
+  }
+ ],
+ "details": [
+  {
+   "cid": "F00",
+   "n_before": 2,
+   "kept": "58a673496050447d",
+   "merged": [
+    "baae03c1fa174352"
+   ],
+   "ok": true,
+   "skipped": null,
+   "merged_text": "用户要求遇到问题时先自己尝试解决，方法论可以在助手之前的笔记中查到；实在解决不了再统一询问用户，并且判断与决策以实验数据为准。"
+  },
+  {
+   "cid": "F01",
+   "n_before": 5,
+   "kept": "8ef0b581e9824080",
+   "merged": [
+    "4a8933422f234245",
+    "d8acb28ba9534059",
+    "045ca82c8ed34f8e",
+    "5ffc737a74fb4c6a"
+   ],
+   "ok": true,
+   "skipped": null,
+   "merged_text": "用户要求每次新会话开始时，先查看上一次对话留存的记忆，推测用户接下来可能说什么、可能需要记忆什么，然后再结合本次对话，对本轮对话后的结论进行分析，决定哪些内容需要记忆并写入记忆。"
+  },
+  {
+   "cid": "F02",
+   "n_before": 3,
+   "kept": "f60952a948334cf8",
+   "merged": [
+    "28ae00dc4afa46b4",
+    "73c26f3b1f874836"
+   ],
+   "ok": true,
+   "skipped": null,
+   "merged_text": "用户明确要求记忆系统采用模型自主分析的循环回顾式自动记忆机制（类似“三思”：先回看并识别用户的所有输入，再由模型自行分析判断哪些内容需要记录和记忆），而不接受关键词、信号命中或语句匹配式的规则判断。"
+  },
+  {
+   "cid": "F03",
+   "n_before": 3,
+   "kept": "c7d07a2c57f2435e",
+   "merged": [
+    "46543f9508744701",
+    "cc761e77ecfd4e0d"
+   ],
+   "ok": true,
+   "skipped": null,
+   "merged_text": "用户计划把这个项目写进简历，需要突出项目的突破性、当前进展与实际效果，强调团队已实现而业内尚未实现的部分，并要求以实验数据为依据。"
+  },
+  {
+   "cid": "F04",
+   "n_before": 2,
+   "kept": "ec197ccffb354601",
+   "merged": [
+    "8feed5aa2c2e4863"
+   ],
+   "ok": true,
+   "skipped": null,
+   "merged_text": "用户要求所有结论以实验数据为准，不接受任何没有数据支撑的说法或表述。"
+  },
+  {
+   "cid": "F05",
+   "n_before": 2,
+   "kept": "a1939339b87e4d37",
+   "merged": [
+    "8dcaea6143184e0e"
+   ],
+   "ok": true,
+   "skipped": null,
+   "merged_text": "用户的目标是让记忆系统不只在当前对话可用，而是在任意新对话、其他用户使用时也能正常工作，并且需要配置项、管理界面与设置查看界面，同时关注当前有哪些可配置选项。"
+  },
+  {
+   "cid": "F06",
+   "n_before": 3,
+   "kept": "abe888766a224bbd",
+   "merged": [
+    "832ccfb12fde419f",
+    "902c07a8b6bc44f7"
+   ],
+   "ok": true,
+   "skipped": null,
+   "merged_text": "用户已授权在开发过程中调用技能与专家等能力，来设计面向用户的管理界面等功能。"
+  },
+  {
+   "cid": "F07",
+   "n_before": 2,
+   "kept": "78812c5c91ad4001",
+   "merged": [
+    "c7c0a7d67bf34336"
+   ],
+   "ok": true,
+   "skipped": null,
+   "merged_text": "用户决定不再把精力放在找工作或应聘上，而是转向展示自己的能力。"
+  },
+  {
+   "cid": "F08",
+   "n_before": 2,
+   "kept": "1e8904a7a6184a0a",
+   "merged": [
+    "a523703af57a4e85"
+   ],
+   "ok": true,
+   "skipped": null,
+   "merged_text": "用户确立的目标路径是：先找到行业内当前需要解决、尚未解决的工程化问题，再通过观察自然规律寻找新范式下的解决办法，最后帮公司或企业解决，或进行开源。"
+  },
+  {
+   "cid": "F09",
+   "n_before": 2,
+   "kept": "4e54ec88ac154a3c",
+   "merged": [
+    "3a373e0fcdad4972"
+   ],
+   "ok": true,
+   "skipped": null,
+   "merged_text": "用户的设计原则：在系统中，需要判断、需要做选择决策的地方（包括阈值和规则）应交给模型自己分析判断；而不需要模型判断、不需要选择决策的地方，应全部由系统直接接管完成，模型不参与。"
+  },
+  {
+   "cid": "F10",
+   "n_before": 2,
+   "kept": "0ddfa17073bd4abe",
+   "merged": [
+    "11999deb50774f96"
+   ],
+   "ok": true,
+   "skipped": null,
+   "merged_text": "用户给我设定了“思想钢印”：一切以数据为准，结果导向，依据真实测试数据做判断，用实验方法论来判断和验证，而不是凭主观意见，也不是反复询问他的意见。"
+  }
+ ]
+}

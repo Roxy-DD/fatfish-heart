@@ -1,0 +1,25 @@
+==============================================================================================
+E-199 下载 int8 量化 cross-encoder
+==============================================================================================
+  下载 model.onnx ...       尝试 1: IncompleteRead IncompleteRead(2892251 bytes read, 567834843 more 
+      尝试 2: IncompleteRead IncompleteRead(13005499 bytes read, 557721595 more
+      尝试 3: IncompleteRead IncompleteRead(10666975 bytes read, 560060119 more
+      尝试 4: IncompleteRead IncompleteRead(1315095 bytes read, 569411999 more 
+      尝试 5: IncompleteRead IncompleteRead(135447 bytes read, 570591647 more e
+      尝试 6: IncompleteRead IncompleteRead(293048 bytes read, 570434046 more e
+失败!
+  下载 config.json ... 848 bytes
+  下载 tokenizer.json ...       尝试 1: URLError <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING]
+      尝试 2: IncompleteRead IncompleteRead(135443 bytes read, 16947457 more ex
+17,082,900 bytes
+  下载 tokenizer_config.json ... 1,203 bytes
+  下载 special_tokens_map.json ... 964 bytes
+
+  总计 17,085,915 bytes，耗时 282s
+
+  最终文件:
+    model.onnx: 缺失!
+    config.json: 848 bytes
+    tokenizer.json: 17,082,900 bytes
+    tokenizer_config.json: 1,203 bytes
+    special_tokens_map.json: 964 bytes

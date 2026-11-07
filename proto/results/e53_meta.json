@@ -1,0 +1,81 @@
+{
+ "experiment": "E-53",
+ "version": 3,
+ "design": "答案位置随机×压缩方式",
+ "n_items": 36,
+ "n_distract": 4,
+ "rows": [
+  {
+   "mode": "FULL",
+   "pos": "head",
+   "n": 36,
+   "avg_ctx": 159.0,
+   "avg_full": 159.0,
+   "ratio": 1.0
+  },
+  {
+   "mode": "FULL",
+   "pos": "mid",
+   "n": 36,
+   "avg_ctx": 159.0,
+   "avg_full": 159.0,
+   "ratio": 1.0
+  },
+  {
+   "mode": "FULL",
+   "pos": "tail",
+   "n": 36,
+   "avg_ctx": 159.0,
+   "avg_full": 159.0,
+   "ratio": 1.0
+  },
+  {
+   "mode": "TRUNC",
+   "pos": "head",
+   "n": 12,
+   "avg_ctx": 84.8,
+   "avg_full": 158.5,
+   "ratio": 0.535
+  },
+  {
+   "mode": "TRUNC",
+   "pos": "mid",
+   "n": 12,
+   "avg_ctx": 85.1,
+   "avg_full": 158.9,
+   "ratio": 0.535
+  },
+  {
+   "mode": "TRUNC",
+   "pos": "tail",
+   "n": 12,
+   "avg_ctx": 84.5,
+   "avg_full": 158.4,
+   "ratio": 0.533
+  },
+  {
+   "mode": "KEEP",
+   "pos": "head",
+   "n": 12,
+   "avg_ctx": 105.1,
+   "avg_full": 158.5,
+   "ratio": 0.663
+  },
+  {
+   "mode": "KEEP",
+   "pos": "mid",
+   "n": 12,
+   "avg_ctx": 105.4,
+   "avg_full": 158.9,
+   "ratio": 0.663
+  },
+  {
+   "mode": "KEEP",
+   "pos": "tail",
+   "n": 12,
+   "avg_ctx": 99.2,
+   "avg_full": 158.4,
+   "ratio": 0.627
+  }
+ ]
+}

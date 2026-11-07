@@ -1,0 +1,39 @@
+{
+ "experiment": "E-167",
+ "findings": [
+  {
+   "item": "split_query_terms",
+   "ok": true
+  },
+  {
+   "item": "extract_elements",
+   "ok": false
+  },
+  {
+   "item": "detect_triggers",
+   "ok": false
+  },
+  {
+   "item": "estimate_cost",
+   "ok": false
+  },
+  {
+   "item": "estimate_affect_v3",
+   "ok": false
+  },
+  {
+   "item": "infer_scope",
+   "ok": true
+  },
+  {
+   "item": "full_check",
+   "ok": false
+  },
+  {
+   "item": "detect_question_dims",
+   "ok": true
+  }
+ ],
+ "n_ok": 3,
+ "n_total": 8
+}

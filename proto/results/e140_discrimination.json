@@ -1,0 +1,187 @@
+{
+ "experiment": "E-140",
+ "n": 16,
+ "accuracy": 1.0,
+ "by_type": {
+  "duplicate": {
+   "hit": 6,
+   "total": 6
+  },
+  "merge": {
+   "hit": 6,
+   "total": 6
+  },
+  "replace": {
+   "hit": 2,
+   "total": 2
+  },
+  "none": {
+   "hit": 2,
+   "total": 2
+  }
+ },
+ "dup_as_merge": 0,
+ "merge_as_dup": 0,
+ "details": [
+  {
+   "cid": "E00",
+   "expect": "duplicate",
+   "pred": "duplicate",
+   "kind": "同义替换",
+   "new": "用户要求全部结论以实验数据为准，不接受缺乏数据支撑的表述",
+   "rel_ok": true,
+   "reason": "只是「全部」替换成「所有」、「缺乏」替换成「没有」，语义完全一致，无新信息。",
+   "new_info": null
+  },
+  {
+   "cid": "E01",
+   "expect": "duplicate",
+   "pred": "duplicate",
+   "kind": "同义替换",
+   "new": "我电脑的登录密码为 8848",
+   "rel_ok": true,
+   "reason": "「密码为 8848」与「密码是 8848」仅系词换写法，数值与对象完全相同。",
+   "new_info": null
+  },
+  {
+   "cid": "E02",
+   "expect": "duplicate",
+   "pred": "duplicate",
+   "kind": "同义替换",
+   "new": "该项目 15 号截止",
+   "rel_ok": true,
+   "reason": "「该项目」即「这个项目」，日期同为 15 号，纯指代替换。",
+   "new_info": null
+  },
+  {
+   "cid": "E03",
+   "expect": "duplicate",
+   "pred": "duplicate",
+   "kind": "数字写法",
+   "new": "我住在城东花园三栋",
+   "rel_ok": true,
+   "reason": "「三栋」与「3栋」是同一栋号的中文/阿拉伯数字写法差异。",
+   "new_info": null
+  },
+  {
+   "cid": "E04",
+   "expect": "duplicate",
+   "pred": "duplicate",
+   "kind": "同义替换",
+   "new": "客户要求界面一定要支持深色模式",
+   "rel_ok": true,
+   "reason": "「一定要」与「必须」是同义强调词，要求内容未变。",
+   "new_info": null
+  },
+  {
+   "cid": "E05",
+   "expect": "duplicate",
+   "pred": "duplicate",
+   "kind": "数字写法",
+   "new": "明天下午3点开会",
+   "rel_ok": true,
+   "reason": "「3点」与「三点」只是数字写法不同，时间、地点、事件相同。",
+   "new_info": null
+  },
+  {
+   "cid": "E06",
+   "expect": "merge",
+   "pred": "merge",
+   "kind": "新增要求",
+   "new": "客户要求界面必须支持深色模式，并且要大字体",
+   "rel_ok": true,
+   "reason": "在深色模式要求之外，新增了「大字体」这一额外界面要求。",
+   "new_info": "新增「界面要大字体」要求"
+  },
+  {
+   "cid": "E07",
+   "expect": "merge",
+   "pred": "merge",
+   "kind": "新增信息",
+   "new": "我电脑的登录密码是 8848，管理员密码是 1234",
+   "rel_ok": true,
+   "reason": "保留登录密码 8848，同时新增了另一个密码项「管理员密码 1234」。",
+   "new_info": "新增「管理员密码是 1234」"
+  },
+  {
+   "cid": "E08",
+   "expect": "merge",
+   "pred": "merge",
+   "kind": "新增条件",
+   "new": "这个项目 15 号截止，但客户说可以宽限三天",
+   "rel_ok": true,
+   "reason": "截止日期仍是 15 号，但补充了客户可宽限三天的条件，未作废旧值。",
+   "new_info": "新增「客户说可以宽限三天」的条件"
+  },
+  {
+   "cid": "E09",
+   "expect": "merge",
+   "pred": "merge",
+   "kind": "新增房间号",
+   "new": "我住在城东花园3栋，502 室",
+   "rel_ok": true,
+   "reason": "地址从「3栋」细化到具体房间「502 室」，补充了更精确的位置。",
+   "new_info": "新增「502 室」房间号"
+  },
+  {
+   "cid": "E10",
+   "expect": "merge",
+   "pred": "merge",
+   "kind": "新增指标",
+   "new": "客户要求所有接口响应时间低于200ms，并且要支持并发1000",
+   "rel_ok": true,
+   "reason": "响应时间指标保留，新增并发能力指标 1000。",
+   "new_info": "新增「支持并发1000」指标"
+  },
+  {
+   "cid": "E11",
+   "expect": "merge",
+   "pred": "merge",
+   "kind": "新增用法",
+   "new": "我要连续吃两周的药，每天早上饭后一次",
+   "rel_ok": true,
+   "reason": "两周疗程保留，新增了服药频次与时间「每天早上饭后一次」。",
+   "new_info": "新增用法「每天早上饭后一次」"
+  },
+  {
+   "cid": "E12",
+   "expect": "replace",
+   "pred": "replace",
+   "kind": "换值",
+   "new": "我把电脑登录密码改成了 9988",
+   "rel_ok": true,
+   "reason": "密码已由 8848 改为 9988，旧值 8848 作废。",
+   "new_info": null
+  },
+  {
+   "cid": "E13",
+   "expect": "replace",
+   "pred": "replace",
+   "kind": "延期",
+   "new": "客户同意把截止延到 20 号",
+   "rel_ok": true,
+   "reason": "截止日从 15 号延到 20 号，旧截止日期作废。",
+   "new_info": null
+  },
+  {
+   "cid": "E14",
+   "expect": "none",
+   "pred": "none",
+   "kind": "无关",
+   "new": "今天中午吃了牛肉面",
+   "rel_ok": true,
+   "reason": "吃牛肉面是全新的一次饮食事件，现有记忆中没有可对应的目标。",
+   "new_info": null
+  },
+  {
+   "cid": "E15",
+   "expect": "none",
+   "pred": "none",
+   "kind": "无关",
+   "new": "上周六看了场电影",
+   "rel_ok": true,
+   "reason": "看电影是全新的休闲事件，与现有任何记忆条目都无共同对象。",
+   "new_info": null
+  }
+ ]
+}

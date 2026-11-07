@@ -1,0 +1,97 @@
+{
+ "experiment": "E-142",
+ "n": 5,
+ "premise_ok": 5,
+ "gain": 0,
+ "already": 4,
+ "miss": 1,
+ "avg_1hop_ms": 8.6,
+ "avg_chain_ms": 15.8,
+ "details": [
+  {
+   "query": "海边那次旅行",
+   "desc": "海边 → 栈桥吃鱿鱼",
+   "单跳": {
+    "a_rank": 1,
+    "b_rank": 2,
+    "n": 5,
+    "ms": 10.0
+   },
+   "链式": {
+    "a_rank": 1,
+    "b_rank": 2,
+    "n": 5,
+    "ms": 16.2
+   },
+   "gain": false
+  },
+  {
+   "query": "我爸那个病",
+   "desc": "住院 → 当时的疲惫",
+   "单跳": {
+    "a_rank": 1,
+    "b_rank": 2,
+    "n": 5,
+    "ms": 7.5
+   },
+   "链式": {
+    "a_rank": 1,
+    "b_rank": 2,
+    "n": 5,
+    "ms": 15.9
+   },
+   "gain": false
+  },
+  {
+   "query": "那个启动会",
+   "desc": "启动会 → 会上的承诺落空",
+   "单跳": {
+    "a_rank": 1,
+    "b_rank": 0,
+    "n": 5,
+    "ms": 8.1
+   },
+   "链式": {
+    "a_rank": 1,
+    "b_rank": 0,
+    "n": 5,
+    "ms": 17.3
+   },
+   "gain": false
+  },
+  {
+   "query": "我养的那只猫",
+   "desc": "猫 → 猫的日常行为",
+   "单跳": {
+    "a_rank": 1,
+    "b_rank": 3,
+    "n": 5,
+    "ms": 9.2
+   },
+   "链式": {
+    "a_rank": 1,
+    "b_rank": 3,
+    "n": 5,
+    "ms": 15.0
+   },
+   "gain": false
+  },
+  {
+   "query": "大学宿舍",
+   "desc": "宿舍 → 室友打呼噜",
+   "单跳": {
+    "a_rank": 1,
+    "b_rank": 5,
+    "n": 5,
+    "ms": 8.3
+   },
+   "链式": {
+    "a_rank": 1,
+    "b_rank": 5,
+    "n": 5,
+    "ms": 14.4
+   },
+   "gain": false
+  }
+ ]
+}

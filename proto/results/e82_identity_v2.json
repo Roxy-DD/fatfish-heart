@@ -1,0 +1,38 @@
+{
+ "experiment": "E-82",
+ "n": 24,
+ "tp": 11,
+ "fp": 1,
+ "tn": 11,
+ "fn": 1,
+ "accuracy": 0.9167,
+ "precision": 0.9167,
+ "recall": 0.9167,
+ "f1": 0.9167,
+ "baseline": {
+  "e80": 0.7083,
+  "e81": 0.7917
+ },
+ "mismatches": [
+  {
+   "rid": "I07",
+   "model": false,
+   "rule": true,
+   "text": "那次出差回来之后总觉得累",
+   "model_reason": "\"那次出差\"是带指示词的指代，无先行词；且整句是主观感受，无确定对象",
+   "hits": [
+    "name_title"
+   ]
+  },
+  {
+   "rid": "I22",
+   "model": true,
+   "rule": false,
+   "text": "房东说下个月涨房租",
+   "model_reason": "\"房东\"是说话人的固定关系槽，通常唯一，可指认",
+   "hits": [
+    "fallback_false"
+   ]
+  }
+ ]
+}

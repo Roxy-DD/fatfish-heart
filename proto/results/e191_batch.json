@@ -1,0 +1,57 @@
+{
+ "experiment": "E-191",
+ "n": 100,
+ "hit": 52,
+ "rate": 0.52,
+ "per_item_rate": 0.9074,
+ "details": [
+  {
+   "cid": "S003",
+   "q": "When did Melanie read the book \"nothing is impossi",
+   "ev_text": "e to always pursue my dreams, just like you are doing!🌟",
+   "pick_text": "na make a huge difference! This book I read last year r"
+  },
+  {
+   "cid": "S004",
+   "q": "When did Melanie go to the pottery workshop?",
+   "ev_text": ". We all made our own pots, it was fun and therapeutic!",
+   "pick_text": "y workshop. We all made our own pots, it was fun and th"
+  },
+  {
+   "cid": "S005",
+   "q": "When did Melanie go camping in June?",
+   "ev_text": "se moments together as a family - I'll never forget it!",
+   "pick_text": " on a hike. The view from the top was amazing! The 2 yo"
+  },
+  {
+   "cid": "S006",
+   "q": "When did Melanie go camping in July?",
+   "ev_text": " What've you been up to? Anything fun over the weekend?",
+   "pick_text": "as great to unplug and hang with the kids. What've you "
+  },
+  {
+   "cid": "S007",
+   "q": "When is Melanie's daughter's birthday?",
+   "ev_text": ", and I'm so thankful for our special moments together.",
+   "pick_text": "ic, joy and the warm summer breeze. Seeing my kids' smi"
+  },
+  {
+   "cid": "S008",
+   "q": "What types of pottery have Melanie and her kids ma",
+   "ev_text": "endship too, Caroline. You've always been there for me.",
+   "pick_text": " to watch their creativity and imagination come to life"
+  },
+  {
+   "cid": "S010",
+   "q": "When did Caroline apply to adoption agencies?",
+   "ev_text": "ption advice/assistance group I attended. It was great!",
+   "pick_text": "om - I applied to adoption agencies! It's a big decisio"
+  },
+  {
+   "cid": "S015",
+   "q": "Would Caroline want to move back to her home count",
+   "ev_text": " This is a big move towards my goal of having a family.",
+   "pick_text": "nd the ones we choose. I hope to build my own family an"
+  }
+ ]
+}

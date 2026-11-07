@@ -1,0 +1,17 @@
+{
+ "experiment": "E-58",
+ "conds": {
+  "T_LATEST": {
+   "n_q": 20
+  },
+  "T_PAST": {
+   "n_q": 20
+  },
+  "T_CONFLICT": {
+   "n_q": 20
+  },
+  "T_SEQ": {
+   "n_q": 20
+  }
+ }
+}

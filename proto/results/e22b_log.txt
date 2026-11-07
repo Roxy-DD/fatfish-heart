@@ -1,0 +1,55 @@
+==========================================================================
+E-22b 强化集成测试（覆盖全部审计埋点）
+==========================================================================
+
+【准备】写入多条相似记忆
+
+Loading weights:   0%|          | 0/71 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 71/71 [00:00<00:00, 1064.33it/s]
+  写入 5 条记忆
+
+【1】remember 埋点（写入）
+  ✅ remember 有日志  5 条
+
+【2】recall 埋点（检索）
+  ✅ recall 有日志  2 条
+
+【3】sleep 埋点（睡眠整理）
+  ✅ sleep_prepare 找到候选对  10 对
+    最相似对 cos=0.918
+      A: 测试服务器密码是 5678
+      B: 测试服务器密码改成 5678 了
+  ✅ sleep_apply 成功
+  ✅ R2 红线：drop 仍存在
+  ✅ R2 红线：drop 已失效
+  ✅ R2 红线：drop 有 superseded_by
+  ✅ sleep 有日志  1 条
+
+【4】conflict 埋点（矛盾判定）
+  ✅ cmd_judge 成功  relation=replace
+  ✅ conflict 有日志  1 条
+
+【5】affect 埋点（情绪判断）
+  ✅ cmd_affect 成功  affect=0.9
+  ✅ affect 有日志  1 条
+
+【6】chain 埋点（链式展开）
+  ✅ cmd_chain_apply 成功  chain_count=1
+  ✅ chain 有日志  1 条
+
+【7】audit 查询与统计
+  ✅ audit 查询成功
+    by_kind: {'affect': 1, 'chain': 1, 'conflict': 1, 'recall': 2, 'remember': 6, 'sleep': 1}
+  ✅ 统计包含多类事件  6 类
+  ✅ 按 remember 过滤可用  6 条
+  ✅ 按 recall 过滤可用  2 条
+  ✅ 按 sleep 过滤可用  1 条
+  ✅ 按 conflict 过滤可用  1 条
+  ✅ 按 affect 过滤可用  1 条
+  ✅ 按 chain 过滤可用  1 条
+
+==========================================================================
+结果：22/22 通过
+==========================================================================
+
+写入 results/e22b_integration.json

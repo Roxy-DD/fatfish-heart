@@ -1,0 +1,309 @@
+{
+ "experiment": "E-218",
+ "n": 92,
+ "hit": 42,
+ "rate": 0.4565,
+ "evidence_recall": 0.5435,
+ "details": [
+  {
+   "cid": "M000",
+   "q": "What fields would Caroline be likely to pursu",
+   "gold": "Psychology, counseling certification",
+   "pred": "Counseling and mental health"
+  },
+  {
+   "cid": "M004",
+   "q": "Would Melanie be more interested in going to ",
+   "gold": "National park; she likes the outdoors",
+   "pred": "A national park"
+  },
+  {
+   "cid": "M008",
+   "q": "What personality traits might Melanie say Car",
+   "gold": "Thoughtful, authentic, driven",
+   "pred": "Empathetic, understanding, courageous"
+  },
+  {
+   "cid": "M011",
+   "q": "What might John's financial status be?",
+   "gold": "Middle-class or wealthy",
+   "pred": "Struggling (money problems)"
+  },
+  {
+   "cid": "M013",
+   "q": "What might John's degree be in?",
+   "gold": "Political science, Public administration, Public a",
+   "pred": "A policy/politics-related field"
+  },
+  {
+   "cid": "M017",
+   "q": "What attributes describe John?",
+   "gold": "Selfless, family-oriented, passionate, rational",
+   "pred": "Persevering, determined, positive"
+  },
+  {
+   "cid": "M018",
+   "q": "What job might Maria pursue in the future?",
+   "gold": "Shelter coordinator, Counselor",
+   "pred": "Social work / community service"
+  },
+  {
+   "cid": "M020",
+   "q": "What pets wouldn't cause any discomfort to Jo",
+   "gold": "Hairless cats or pigs,since they don't have fur, w",
+   "pred": "Fish"
+  },
+  {
+   "cid": "M021",
+   "q": "What underlying condition might Joanna have b",
+   "gold": "asthma",
+   "pred": "Multiple allergies"
+  },
+  {
+   "cid": "M023",
+   "q": "What Console does Nate own?",
+   "gold": "A Nintendo Switch; since the game \"Xenoblade 2\" is",
+   "pred": "I don't know"
+  },
+  {
+   "cid": "M024",
+   "q": "What alternative career might Nate consider a",
+   "gold": "an animalkeeper at a localzoo and workingwith turt",
+   "pred": "YouTube gaming content creator"
+  },
+  {
+   "cid": "M025",
+   "q": "How many hikes has Joanna been on?",
+   "gold": "Four",
+   "pred": "I don't know"
+  },
+  {
+   "cid": "M028",
+   "q": "What kind of job is Joanna beginning to prefo",
+   "gold": "filmmaker.",
+   "pred": "Screenwriter"
+  },
+  {
+   "cid": "M029",
+   "q": "What state did Nate visit?",
+   "gold": "Florida",
+   "pred": "I don't know"
+  },
+  {
+   "cid": "M031",
+   "q": "Based on Tim's collections, what is a shop th",
+   "gold": "House of MinaLima",
+   "pred": "A bookstore"
+  },
+  {
+   "cid": "M032",
+   "q": "Which outdoor gear company likely signed up J",
+   "gold": "Under Armour",
+   "pred": "I don't know"
+  },
+  {
+   "cid": "M034",
+   "q": "What is a prominent charity organization that",
+   "gold": "Good Sports, because they work with Nike, Gatorade",
+   "pred": "I don't know"
+  },
+  {
+   "cid": "M035",
+   "q": "Which popular time management technique does ",
+   "gold": "Pomodoro technique",
+   "pred": "Breaking tasks into smaller parts (chunking)"
+  },
+  {
+   "cid": "M036",
+   "q": "Which popular music composer's tunes does Tim",
+   "gold": "John Williams",
+   "pred": "I don't know"
+  },
+  {
+   "cid": "M038",
+   "q": "What could John do after his basketball caree",
+   "gold": "become a basketball coach since he likes giving ba",
+   "pred": "Build his brand/endorsements and do charity work"
+  },
+  {
+   "cid": "M039",
+   "q": "What kind of yoga for building core strength ",
+   "gold": "Hatha Yoga",
+   "pred": "Plank (core-strengthening holds)"
+  },
+  {
+   "cid": "M040",
+   "q": "What other exercises can help John with his b",
+   "gold": "Sprinting, long-distance running, and boxing.",
+   "pred": "Yoga"
+  },
+  {
+   "cid": "M041",
+   "q": "What is a Star Wars book that Tim might enjoy",
+   "gold": "Star Wars: Jedi Apprentice by Judy Blundell and Da",
+   "pred": "I don't know"
+  },
+  {
+   "cid": "M042",
+   "q": "What would be a good hobby related to his tra",
+   "gold": "Writing a travel blog.",
+   "pred": "Learning foreign languages"
+  },
+  {
+   "cid": "M044",
+   "q": "What is an indoor activity that Andrew would ",
+   "gold": "cook dog treats",
+   "pred": "Indoor doggy daycare"
+  },
+  {
+   "cid": "M046",
+   "q": "What can Andrew potentially do to improve his",
+   "gold": "Change to a hybrid or remote job so he can move aw",
+   "pred": "Get a smaller dog and live near a park/nature"
+  },
+  {
+   "cid": "M047",
+   "q": "Which US state do Audrey and Andrew potential",
+   "gold": "Minnesota",
+   "pred": "I don't know"
+  },
+  {
+   "cid": "M048",
+   "q": "Which national park could Audrey and Andrew b",
+   "gold": "Voyageurs National Park",
+   "pred": "I don't know"
+  },
+  {
+   "cid": "M049",
+   "q": "What is something that Andrew could do to mak",
+   "gold": "Install a bird feeder outside where he can see the",
+   "pred": "Birdwatch in nearby city parks"
+  },
+  {
+   "cid": "M050",
+   "q": "What is a career that Andrew could potentiall",
+   "gold": "Park ranger or a similar position working for the ",
+   "pred": "Wildlife/conservation or animal care"
+  },
+  {
+   "cid": "M051",
+   "q": "What are John's suspected health problems?",
+   "gold": "Obesity",
+   "pred": "I don't know"
+  },
+  {
+   "cid": "M052",
+   "q": "Does James live in Connecticut?",
+   "gold": "Likely yes",
+   "pred": "I don't know"
+  },
+  {
+   "cid": "M056",
+   "q": "What is the board game where you have to find",
+   "gold": "Mafia",
+   "pred": "Among Us"
+  },
+  {
+   "cid": "M057",
+   "q": "Was James feeling lonely before meeting Saman",
+   "gold": "Most likely yes, because he mentioned that the onl",
+   "pred": "I don't know"
+  },
+  {
+   "cid": "M058",
+   "q": "Are John and James fans of the same football ",
+   "gold": "No, James is a Liverpool fan and John is a Manches",
+   "pred": "I don't know"
+  },
+  {
+   "cid": "M062",
+   "q": "Who is Jill?",
+   "gold": "Most likely John's partner.",
+   "pred": "I don't know"
+  },
+  {
+   "cid": "M063",
+   "q": "Why didn't John want to go to Starbucks?",
+   "gold": "Possibly because he likes to drink beer on his day",
+   "pred": "He preferred to have a beer"
+  },
+  {
+   "cid": "M066",
+   "q": "In what country did Jolene buy snake Seraphim",
+   "gold": "In France",
+   "pred": "I don't know"
+  },
+  {
+   "cid": "M067",
+   "q": "Why did Jolene sometimes put off doing yoga?",
+   "gold": "She's more interested in playing video games",
+   "pred": "She was busy with engineering school and her partn"
+  },
+  {
+   "cid": "M069",
+   "q": "How old is Jolene?",
+   "gold": "likely no more than 30; since she's in school",
+   "pred": "I don't know"
+  },
+  {
+   "cid": "M071",
+   "q": "Which US state did Jolene visit during her in",
+   "gold": "Alaska",
+   "pred": "I don't know"
+  },
+  {
+   "cid": "M076",
+   "q": "Considering their conversations and personal ",
+   "gold": "Evan and Sam would likely advise embracing small, ",
+   "pred": "Take small steps and make small positive changes"
+  },
+  {
+   "cid": "M077",
+   "q": "In light of the health and dietary changes di",
+   "gold": "a cookbook with healthy recipes or a subscription ",
+   "pred": "Healthy snacks (or a fitness tracker)"
+  },
+  {
+   "cid": "M079",
+   "q": "How might Evan and Sam's experiences with hea",
+   "gold": "Their experiences likely lead them to view challen",
+   "pred": "They take small steps, stay positive, and believe "
+  },
+  {
+   "cid": "M080",
+   "q": "What role does nature and the outdoors play i",
+   "gold": "Nature and outdoor activities seem to be significa",
+   "pred": "Nature brings peace, calm, and clarity"
+  },
+  {
+   "cid": "M081",
+   "q": "How often does Sam get health checkups?",
+   "gold": "every three months",
+   "pred": "Infrequently"
+  },
+  {
+   "cid": "M082",
+   "q": "How do Evan and Sam use creative outlets to c",
+   "gold": "Evan and Sam use creative activities, like paintin",
+   "pred": "Painting and writing/drawing to relieve stress"
+  },
+  {
+   "cid": "M083",
+   "q": "What challenges does Sam face in his quest fo",
+   "gold": "Sam faces challenges like maintaining motivation a",
+   "pred": "Cravings for sugary food and family pressure; he t"
+  },
+  {
+   "cid": "M087",
+   "q": "Which country do Calvin and Dave want to meet",
+   "gold": "United States",
+   "pred": "USA (Boston)"
+  },
+  {
+   "cid": "M088",
+   "q": "Does Dave's shop employ a lot of people?",
+   "gold": "Yes",
+   "pred": "No"
+  }
+ ]
+}

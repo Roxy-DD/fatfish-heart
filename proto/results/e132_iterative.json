@@ -1,0 +1,697 @@
+{
+ "experiment": "E-132",
+ "ladder": [
+  10,
+  20,
+  40,
+  80,
+  160
+ ],
+ "results": {
+  "1010": {
+   "hit": 10,
+   "total": 10,
+   "hit_rate": 1.0,
+   "avg_rounds": 1.0,
+   "avg_cands": 10.0,
+   "fixed_cost": 100,
+   "saving_pct": 90.0,
+   "details": [
+    {
+     "new": "我换车了现在是黑色大众",
+     "target": "我的车是白色卡罗拉",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 4,
+       "top_cos": 0.6749,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 4,
+     "n_rounds": 1,
+     "total_cands": 10
+    },
+    {
+     "new": "我搬家到城西新村5号",
+     "target": "我住在城东花园3栋",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 1,
+       "top_cos": 0.6047,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 1,
+     "n_rounds": 1,
+     "total_cands": 10
+    },
+    {
+     "new": "门锁密码换成了9512",
+     "target": "家里的门锁密码是 3721",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 1,
+       "top_cos": 0.7303,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 1,
+     "n_rounds": 1,
+     "total_cands": 10
+    },
+    {
+     "new": "接口参数改成了1.2",
+     "target": "接口参数定的是0.85",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 1,
+       "top_cos": 0.7888,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 1,
+     "n_rounds": 1,
+     "total_cands": 10
+    },
+    {
+     "new": "客户同意把截止延到20号",
+     "target": "这个项目 15 号截止",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 1,
+       "top_cos": 0.6949,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 1,
+     "n_rounds": 1,
+     "total_cands": 10
+    },
+    {
+     "new": "会议改到明天上午十点",
+     "target": "明天下午三点开会",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 7,
+       "top_cos": 0.7948,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 7,
+     "n_rounds": 1,
+     "total_cands": 10
+    },
+    {
+     "new": "我把电脑密码改成了9988",
+     "target": "我电脑的登录密码是 8848",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 1,
+       "top_cos": 0.7712,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 1,
+     "n_rounds": 1,
+     "total_cands": 10
+    },
+    {
+     "new": "客户还要求界面必须支持大字体",
+     "target": "客户要求界面必须支持深色模式",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 1,
+       "top_cos": 0.7569,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 1,
+     "n_rounds": 1,
+     "total_cands": 10
+    },
+    {
+     "new": "另外我晚上也要吃一次药",
+     "target": "我要连续吃两周的药",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 1,
+       "top_cos": 0.7534,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 1,
+     "n_rounds": 1,
+     "total_cands": 10
+    },
+    {
+     "new": "小李说门锁密码是9512",
+     "target": "老王说门锁密码是 3721",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 1,
+       "top_cos": 0.7701,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 1,
+     "n_rounds": 1,
+     "total_cands": 10
+    }
+   ]
+  },
+  "5010": {
+   "hit": 10,
+   "total": 10,
+   "hit_rate": 1.0,
+   "avg_rounds": 1.5,
+   "avg_cands": 30.0,
+   "fixed_cost": 100,
+   "saving_pct": 70.0,
+   "details": [
+    {
+     "new": "我换车了现在是黑色大众",
+     "target": "我的车是白色卡罗拉",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": false,
+       "rank": 0,
+       "top_cos": 0.7587,
+       "would_expand": true
+      },
+      {
+       "k": 20,
+       "n_cands": 20,
+       "found": false,
+       "rank": 0,
+       "top_cos": 0.7587,
+       "would_expand": true
+      },
+      {
+       "k": 40,
+       "n_cands": 40,
+       "found": false,
+       "rank": 0,
+       "top_cos": 0.7587,
+       "would_expand": true
+      },
+      {
+       "k": 80,
+       "n_cands": 80,
+       "found": true,
+       "rank": 48,
+       "top_cos": 0.7587,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 48,
+     "n_rounds": 4,
+     "total_cands": 150
+    },
+    {
+     "new": "我搬家到城西新村5号",
+     "target": "我住在城东花园3栋",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 10,
+       "top_cos": 0.6582,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 10,
+     "n_rounds": 1,
+     "total_cands": 10
+    },
+    {
+     "new": "门锁密码换成了9512",
+     "target": "家里的门锁密码是 3721",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 1,
+       "top_cos": 0.7303,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 1,
+     "n_rounds": 1,
+     "total_cands": 10
+    },
+    {
+     "new": "接口参数改成了1.2",
+     "target": "接口参数定的是0.85",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 1,
+       "top_cos": 0.7888,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 1,
+     "n_rounds": 1,
+     "total_cands": 10
+    },
+    {
+     "new": "客户同意把截止延到20号",
+     "target": "这个项目 15 号截止",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 1,
+       "top_cos": 0.6949,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 1,
+     "n_rounds": 1,
+     "total_cands": 10
+    },
+    {
+     "new": "会议改到明天上午十点",
+     "target": "明天下午三点开会",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": false,
+       "rank": 0,
+       "top_cos": 0.8167,
+       "would_expand": true
+      },
+      {
+       "k": 20,
+       "n_cands": 20,
+       "found": false,
+       "rank": 0,
+       "top_cos": 0.8167,
+       "would_expand": true
+      },
+      {
+       "k": 40,
+       "n_cands": 40,
+       "found": true,
+       "rank": 38,
+       "top_cos": 0.8167,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 38,
+     "n_rounds": 3,
+     "total_cands": 70
+    },
+    {
+     "new": "我把电脑密码改成了9988",
+     "target": "我电脑的登录密码是 8848",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 1,
+       "top_cos": 0.7712,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 1,
+     "n_rounds": 1,
+     "total_cands": 10
+    },
+    {
+     "new": "客户还要求界面必须支持大字体",
+     "target": "客户要求界面必须支持深色模式",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 1,
+       "top_cos": 0.7569,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 1,
+     "n_rounds": 1,
+     "total_cands": 10
+    },
+    {
+     "new": "另外我晚上也要吃一次药",
+     "target": "我要连续吃两周的药",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 1,
+       "top_cos": 0.7534,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 1,
+     "n_rounds": 1,
+     "total_cands": 10
+    },
+    {
+     "new": "小李说门锁密码是9512",
+     "target": "老王说门锁密码是 3721",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 1,
+       "top_cos": 0.7701,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 1,
+     "n_rounds": 1,
+     "total_cands": 10
+    }
+   ]
+  },
+  "10010": {
+   "hit": 10,
+   "total": 10,
+   "hit_rate": 1.0,
+   "avg_rounds": 1.9,
+   "avg_cands": 60.0,
+   "fixed_cost": 100,
+   "saving_pct": 40.0,
+   "details": [
+    {
+     "new": "我换车了现在是黑色大众",
+     "target": "我的车是白色卡罗拉",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": false,
+       "rank": 0,
+       "top_cos": 0.7587,
+       "would_expand": true
+      },
+      {
+       "k": 20,
+       "n_cands": 20,
+       "found": false,
+       "rank": 0,
+       "top_cos": 0.7587,
+       "would_expand": true
+      },
+      {
+       "k": 40,
+       "n_cands": 40,
+       "found": false,
+       "rank": 0,
+       "top_cos": 0.7587,
+       "would_expand": true
+      },
+      {
+       "k": 80,
+       "n_cands": 80,
+       "found": false,
+       "rank": 0,
+       "top_cos": 0.7587,
+       "would_expand": true
+      },
+      {
+       "k": 160,
+       "n_cands": 160,
+       "found": true,
+       "rank": 81,
+       "top_cos": 0.7587,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 81,
+     "n_rounds": 5,
+     "total_cands": 310
+    },
+    {
+     "new": "我搬家到城西新村5号",
+     "target": "我住在城东花园3栋",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": false,
+       "rank": 0,
+       "top_cos": 0.6582,
+       "would_expand": true
+      },
+      {
+       "k": 20,
+       "n_cands": 20,
+       "found": false,
+       "rank": 0,
+       "top_cos": 0.6582,
+       "would_expand": true
+      },
+      {
+       "k": 40,
+       "n_cands": 40,
+       "found": true,
+       "rank": 25,
+       "top_cos": 0.6582,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 25,
+     "n_rounds": 3,
+     "total_cands": 70
+    },
+    {
+     "new": "门锁密码换成了9512",
+     "target": "家里的门锁密码是 3721",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 2,
+       "top_cos": 0.7323,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 2,
+     "n_rounds": 1,
+     "total_cands": 10
+    },
+    {
+     "new": "接口参数改成了1.2",
+     "target": "接口参数定的是0.85",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 1,
+       "top_cos": 0.7888,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 1,
+     "n_rounds": 1,
+     "total_cands": 10
+    },
+    {
+     "new": "客户同意把截止延到20号",
+     "target": "这个项目 15 号截止",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 1,
+       "top_cos": 0.6949,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 1,
+     "n_rounds": 1,
+     "total_cands": 10
+    },
+    {
+     "new": "会议改到明天上午十点",
+     "target": "明天下午三点开会",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": false,
+       "rank": 0,
+       "top_cos": 0.8167,
+       "would_expand": true
+      },
+      {
+       "k": 20,
+       "n_cands": 20,
+       "found": false,
+       "rank": 0,
+       "top_cos": 0.8167,
+       "would_expand": true
+      },
+      {
+       "k": 40,
+       "n_cands": 40,
+       "found": false,
+       "rank": 0,
+       "top_cos": 0.8167,
+       "would_expand": true
+      },
+      {
+       "k": 80,
+       "n_cands": 80,
+       "found": true,
+       "rank": 45,
+       "top_cos": 0.8167,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 45,
+     "n_rounds": 4,
+     "total_cands": 150
+    },
+    {
+     "new": "我把电脑密码改成了9988",
+     "target": "我电脑的登录密码是 8848",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 1,
+       "top_cos": 0.7712,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 1,
+     "n_rounds": 1,
+     "total_cands": 10
+    },
+    {
+     "new": "客户还要求界面必须支持大字体",
+     "target": "客户要求界面必须支持深色模式",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 1,
+       "top_cos": 0.7569,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 1,
+     "n_rounds": 1,
+     "total_cands": 10
+    },
+    {
+     "new": "另外我晚上也要吃一次药",
+     "target": "我要连续吃两周的药",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 1,
+       "top_cos": 0.7534,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 1,
+     "n_rounds": 1,
+     "total_cands": 10
+    },
+    {
+     "new": "小李说门锁密码是9512",
+     "target": "老王说门锁密码是 3721",
+     "rounds": [
+      {
+       "k": 10,
+       "n_cands": 10,
+       "found": true,
+       "rank": 1,
+       "top_cos": 0.7701,
+       "would_expand": false
+      }
+     ],
+     "hit": true,
+     "hit_rank": 1,
+     "n_rounds": 1,
+     "total_cands": 10
+    }
+   ]
+  }
+ }
+}

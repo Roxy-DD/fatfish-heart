@@ -1,0 +1,12 @@
+{
+ "experiment": "E-96-model",
+ "n": 8,
+ "tp": 4,
+ "fp": 0,
+ "tn": 4,
+ "fn": 0,
+ "accuracy": 1.0,
+ "precision": 1.0,
+ "recall": 1.0,
+ "f1": 1.0
+}

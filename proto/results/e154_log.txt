@@ -1,0 +1,37 @@
+==============================================================================================
+E-154 LongMemEval 数据集获取可行性
+==============================================================================================
+
+[HF datasets-server API (longmemeval_s)]
+  URL: https://datasets-server.huggingface.co/rows?dataset=xiaowu0162%2Flongmemeval&config=defa
+  ❌ HTTPError: HTTP Error 404: Not Found
+
+[HF MemoryAsModality/LongMemEval]
+  URL: https://datasets-server.huggingface.co/rows?dataset=MemoryAsModality%2FLongMemEval&confi
+  HTTP 200  99889 bytes
+  ✅ 可解析，rows=3
+  字段: ['question_id', 'question', 'answer', 'question_type', 'is_abstention', 'documents', 'id']
+  样本已保存 → C:\Users\xuee\Desktop\肥鱼之心\proto\work\e154\sample.json
+
+  样本字段分析:
+    question_id             str       9a707b82
+    question                str       I mentioned cooking something for my friend a coup
+    answer                  str       a chocolate cake
+    question_type           str       temporal-reasoning
+    is_abstention           bool      False
+    documents               list      len=2
+    id                      int       0
+
+==============================================================================================
+结论
+==============================================================================================
+  ✅ 至少一个数据源可达，可以做适配
+  → 适配层需要做的事：
+    1. 把 haystack_sessions 逐条喂给我们的复盘机制（抽事实写入）
+    2. 用 question 检索，取 top-N
+    3. 与 answer 比对（或与 answer_session_ids 比检索召回）
+
+  关键优势：answer_session_ids 让我们能**不依赖 LLM 作答**
+  就先做检索召回评测 —— 这是纯客观的。
+
+写入 C:\Users\xuee\Desktop\肥鱼之心\proto\results\e154_dataset_probe.json

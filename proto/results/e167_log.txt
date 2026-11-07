@@ -1,0 +1,76 @@
+==============================================================================================
+E-167 系统排查：中文假设在英文语料上的失效点
+==============================================================================================
+
+① split_query_terms（已修，验证）
+  中文: ['我电', '电脑', '脑的', '的登', '登录', '录密']
+  英文: ['computer', 'login', 'password']
+  → ✅ 英文停用词已过滤
+
+② extract_elements（人名/时间/地点抽取）
+  [中文] 张伟明天下午三点在城东花园开会
+    person=[] time=['下午', '明天'] location=[]
+  [英文] Melanie went camping at the beach last Sunda
+    person=[] time=[] location=[]
+  [英文] Caroline moved from Boston in 2020
+    person=[] time=[] location=[]
+  → ❌ 英文全空
+
+③ detect_triggers（触发场景）
+  中文 '看到夕阳就想起小时候' → ['夕阳']
+  英文 'Seeing the sunset...' → []
+  → ❌ 英文为空（词表纯中文）
+
+④ estimate_cost（代价信号）
+  中文 → 0.9
+  英文 → 0.0
+  → ❌ 差异大（中 0.9 vs 英 0.0）
+
+⑤ estimate_affect_v3（情绪）
+  中文 → affect=0.95
+  英文 → affect=0.0
+  → ❌ 英文情绪识别为 0
+
+⑥ infer_scope（能力范围推断）
+  中文 → {'existence': False, 'identity': True, 'time_exact': False, 'time_range': False, 'value': True, 'location': False}
+  英文 → {'existence': False, 'identity': False, 'time_exact': False, 'time_range': False, 'value': True, 'location': False}
+  → ✅ 英文也能推断
+
+⑦ full_check（缺陷检测）
+  中文 → ['missing_object']
+  英文 → []
+  → ❌ 英文无检出
+
+⑧ detect_question_dims（问题维度识别）
+  中文 '我的密码是多少' → ['value']
+  英文 'What is my password?' → ['existence']
+  → ✅ 英文也能识别维度
+
+==============================================================================================
+汇总
+==============================================================================================
+
+  检查项                         状态
+  --------------------------------------------------
+  split_query_terms           ✅ 中英都工作
+  extract_elements            ❌ 英文失效
+  detect_triggers             ❌ 英文失效
+  estimate_cost               ❌ 英文失效
+  estimate_affect_v3          ❌ 英文失效
+  infer_scope                 ✅ 中英都工作
+  full_check                  ❌ 英文失效
+  detect_question_dims        ✅ 中英都工作
+
+  通过 3/8
+
+  失效项（5 个）：
+    · extract_elements
+    · detect_triggers
+    · estimate_cost
+    · estimate_affect_v3
+    · full_check
+
+  → 这些在英文语料（LoCoMo/LongMemEval）上不工作，
+    如果要做多语言支持，都需要补英文规则/词表。
+
+写入 C:\Users\xuee\Desktop\肥鱼之心\proto\results\e167_i18n_audit.json

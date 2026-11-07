@@ -1,0 +1,34 @@
+{
+ "experiment": "E-153",
+ "passed": true,
+ "n_pass": 6,
+ "n_total": 6,
+ "rule_mae": 0.3563,
+ "model_mae": 0.0063,
+ "cases": [
+  {
+   "case": "accuracy",
+   "ok": true
+  },
+  {
+   "case": "resonance",
+   "ok": true
+  },
+  {
+   "case": "r1_migration",
+   "ok": true
+  },
+  {
+   "case": "r1_copy",
+   "ok": true
+  },
+  {
+   "case": "r2_no_change",
+   "ok": true
+  },
+  {
+   "case": "r3_rebuild",
+   "ok": true
+  }
+ ]
+}

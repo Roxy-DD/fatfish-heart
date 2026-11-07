@@ -1,0 +1,104 @@
+{
+ "experiment": "E-196",
+ "n": 244,
+ "hit": 193,
+ "rate": 0.791,
+ "empty_picks": 13,
+ "by_cat": {
+  "2": [
+   25,
+   33
+  ],
+  "1": [
+   39,
+   53
+  ],
+  "3": [
+   4,
+   10
+  ],
+  "4": [
+   101,
+   108
+  ],
+  "5": [
+   24,
+   40
+  ]
+ },
+ "baseline": 0.5802,
+ "after": 0.6776,
+ "gain": 0.0974,
+ "details": [
+  {
+   "cid": "R000",
+   "cat": "2",
+   "q": "When did Melanie paint a sunrise?",
+   "ev_core": "You'd be a great counselor! Your empathy and ",
+   "pick_core": "Yeah, I painted that lake sunrise last year! "
+  },
+  {
+   "cid": "R001",
+   "cat": "1",
+   "q": "What is Caroline's identity?",
+   "ev_core": "The transgender stories were so inspiring! I ",
+   "pick_core": "I'm so lucky to have such a great support sys"
+  },
+  {
+   "cid": "R003",
+   "cat": "1",
+   "q": "What activities does Melanie partake in?",
+   "ev_core": "Wow, Caroline! That's great! I just signed up",
+   "pick_core": "I'm a big fan of pottery - the creativity and"
+  },
+  {
+   "cid": "R006",
+   "cat": "3",
+   "q": "Would Caroline pursue writing as a career opt",
+   "ev_core": "Thanks, Mell! I'm still looking into counseli",
+   "pick_core": "Lately, I've been looking into counseling and"
+  },
+  {
+   "cid": "R007",
+   "cat": "1",
+   "q": "What activities has Melanie done with her fam",
+   "ev_core": "The kids loved it! They were so excited to ge",
+   "pick_core": "It was an awesome time, Caroline! We explored"
+  },
+  {
+   "cid": "R008",
+   "cat": "1",
+   "q": "What has Melanie painted?",
+   "ev_core": "Wow, that sounds great - I agree, they're awe",
+   "pick_core": "(空 picks)"
+  },
+  {
+   "cid": "R010",
+   "cat": "1",
+   "q": "What musical artists/bands has Melanie seen?",
+   "ev_core": "\"Summer Sounds\"- The playing an awesome pop s",
+   "pick_core": "I'm a fan of both classical like Bach and Moz"
+  },
+  {
+   "cid": "R016",
+   "cat": "4",
+   "q": "What does Melanie say running has been great ",
+   "ev_core": "Thanks, Caroline! This has been great for my ",
+   "pick_core": "I've been running farther to de-stress, which"
+  },
+  {
+   "cid": "R021",
+   "cat": "5",
+   "q": "What motivated Melanie to pursue counseling?",
+   "ev_core": "Thanks, Melanie. It really mattered. My own j",
+   "pick_core": "(空 picks)"
+  },
+  {
+   "cid": "R022",
+   "cat": "5",
+   "q": "How did Caroline feel about her family after ",
+   "ev_core": "Yeah, you're right, Caroline. Family's super ",
+   "pick_core": "(空 picks)"
+  }
+ ]
+}

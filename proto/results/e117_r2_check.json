@@ -1,0 +1,82 @@
+{
+ "experiment": "E-117",
+ "recall_control": 1.0,
+ "recall_experiment": 0.65,
+ "recall_delta": -0.35,
+ "queries_lost": 7,
+ "total_records": 30,
+ "invalid_count": 7,
+ "old_value_still_findable": true,
+ "conflict_verdicts": [
+  {
+   "text": "我把电脑密码改成了9988",
+   "expect": "replace",
+   "got": "replace",
+   "sim": 0.771,
+   "ok": true
+  },
+  {
+   "text": "门锁密码换成了9512",
+   "expect": "replace",
+   "got": "replace",
+   "sim": 0.73,
+   "ok": true
+  },
+  {
+   "text": "客户同意把截止延到20号",
+   "expect": "replace",
+   "got": "replace",
+   "sim": 0.703,
+   "ok": true
+  },
+  {
+   "text": "我换车了现在是黑色大众",
+   "expect": "replace",
+   "got": "replace",
+   "sim": 0.643,
+   "ok": true
+  },
+  {
+   "text": "我搬家到城西新村5号",
+   "expect": "replace",
+   "got": "replace",
+   "sim": 0.605,
+   "ok": true
+  },
+  {
+   "text": "接口参数改成了1.2",
+   "expect": "replace",
+   "got": "replace",
+   "sim": 0.789,
+   "ok": true
+  },
+  {
+   "text": "会议改到明天上午十点",
+   "expect": "replace",
+   "got": "replace",
+   "sim": 0.735,
+   "ok": true
+  },
+  {
+   "text": "客户还要求界面支持大字体",
+   "expect": "merge",
+   "got": "merge",
+   "sim": 0.513,
+   "ok": true
+  },
+  {
+   "text": "评审会又追加了一条要求",
+   "expect": "merge",
+   "got": "conflict",
+   "sim": 0.639,
+   "ok": false
+  },
+  {
+   "text": "小李说门锁密码是7710",
+   "expect": "conflict",
+   "got": "conflict",
+   "sim": 0.764,
+   "ok": true
+  }
+ ]
+}

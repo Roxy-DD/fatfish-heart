@@ -1,0 +1,207 @@
+{
+ "experiment": "E-8",
+ "threshold": 0.705,
+ "data": {
+  "train": [
+   20000,
+   1280
+  ],
+  "test": [
+   8000,
+   1280
+  ],
+  "per_task": [
+   900,
+   300
+  ]
+ },
+ "variants": [
+  {
+   "variant": "max",
+   "kwargs": {},
+   "A_after_A": 0.9767,
+   "A_final": 0.8533,
+   "B_final": 0.8933,
+   "C_final": 0.8267,
+   "macro": 0.8578,
+   "n_stars": 1325,
+   "created": 465,
+   "reinforced": 1375,
+   "mitosis": 860,
+   "delta_A_vs_max": 0.0
+  },
+  {
+   "variant": "topk1",
+   "kwargs": {
+    "mode": "topk",
+    "topk": 1
+   },
+   "A_after_A": 0.9767,
+   "A_final": 0.8533,
+   "B_final": 0.8933,
+   "C_final": 0.8267,
+   "macro": 0.8578,
+   "n_stars": 1325,
+   "created": 465,
+   "reinforced": 1375,
+   "mitosis": 860,
+   "delta_A_vs_max": 0.0
+  },
+  {
+   "variant": "topk3",
+   "kwargs": {
+    "mode": "topk",
+    "topk": 3
+   },
+   "A_after_A": 0.9833,
+   "A_final": 0.88,
+   "B_final": 0.9133,
+   "C_final": 0.8333,
+   "macro": 0.8756,
+   "n_stars": 1325,
+   "created": 465,
+   "reinforced": 1375,
+   "mitosis": 860,
+   "delta_A_vs_max": 0.0267
+  },
+  {
+   "variant": "topk5",
+   "kwargs": {
+    "mode": "topk",
+    "topk": 5
+   },
+   "A_after_A": 0.9833,
+   "A_final": 0.8867,
+   "B_final": 0.9067,
+   "C_final": 0.8367,
+   "macro": 0.8767,
+   "n_stars": 1325,
+   "created": 465,
+   "reinforced": 1375,
+   "mitosis": 860,
+   "delta_A_vs_max": 0.0333
+  },
+  {
+   "variant": "den0.5",
+   "kwargs": {
+    "mode": "density",
+    "alpha": 0.5
+   },
+   "A_after_A": 0.9533,
+   "A_final": 0.28,
+   "B_final": 0.0033,
+   "C_final": 0.6533,
+   "macro": 0.3122,
+   "n_stars": 1325,
+   "created": 465,
+   "reinforced": 1375,
+   "mitosis": 860,
+   "delta_A_vs_max": -0.5733
+  },
+  {
+   "variant": "den1.0",
+   "kwargs": {
+    "mode": "density",
+    "alpha": 1.0
+   },
+   "A_after_A": 0.0,
+   "A_final": 0.0,
+   "B_final": 0.0,
+   "C_final": 0.0,
+   "macro": 0.0,
+   "n_stars": 1325,
+   "created": 465,
+   "reinforced": 1375,
+   "mitosis": 860,
+   "delta_A_vs_max": -0.8533
+  },
+  {
+   "variant": "den2.0",
+   "kwargs": {
+    "mode": "density",
+    "alpha": 2.0
+   },
+   "A_after_A": 0.0,
+   "A_final": 0.0,
+   "B_final": 0.0,
+   "C_final": 0.0,
+   "macro": 0.0,
+   "n_stars": 1325,
+   "created": 465,
+   "reinforced": 1375,
+   "mitosis": 860,
+   "delta_A_vs_max": -0.8533
+  },
+  {
+   "variant": "centroid",
+   "kwargs": {
+    "mode": "centroid"
+   },
+   "A_after_A": 0.9733,
+   "A_final": 0.7533,
+   "B_final": 0.7833,
+   "C_final": 0.6833,
+   "macro": 0.74,
+   "n_stars": 1325,
+   "created": 465,
+   "reinforced": 1375,
+   "mitosis": 860,
+   "delta_A_vs_max": -0.1
+  },
+  {
+   "variant": "zscore",
+   "kwargs": {
+    "mode": "zscore"
+   },
+   "A_after_A": 0.0833,
+   "A_final": 0.0233,
+   "B_final": 0.01,
+   "C_final": 0.0367,
+   "macro": 0.0233,
+   "n_stars": 1325,
+   "created": 465,
+   "reinforced": 1375,
+   "mitosis": 860,
+   "delta_A_vs_max": -0.83
+  }
+ ],
+ "best_by_A": {
+  "variant": "topk5",
+  "kwargs": {
+   "mode": "topk",
+   "topk": 5
+  },
+  "A_after_A": 0.9833,
+  "A_final": 0.8867,
+  "B_final": 0.9067,
+  "C_final": 0.8367,
+  "macro": 0.8767,
+  "n_stars": 1325,
+  "created": 465,
+  "reinforced": 1375,
+  "mitosis": 860,
+  "delta_A_vs_max": 0.0333
+ },
+ "best_by_macro": {
+  "variant": "topk5",
+  "kwargs": {
+   "mode": "topk",
+   "topk": 5
+  },
+  "A_after_A": 0.9833,
+  "A_final": 0.8867,
+  "B_final": 0.9067,
+  "C_final": 0.8367,
+  "macro": 0.8767,
+  "n_stars": 1325,
+  "created": 465,
+  "reinforced": 1375,
+  "mitosis": 860,
+  "delta_A_vs_max": 0.0333
+ },
+ "verdict": {
+  "A_above_90": false,
+  "best_A": 0.8867,
+  "baseline_A": 0.8533333333333334
+ }
+}

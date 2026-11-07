@@ -1,0 +1,30 @@
+{
+ "experiment": "E-63",
+ "recall_base": 1.0,
+ "fixed_slot_presence": 1.0,
+ "trigger_recall": 1.0,
+ "expand_bad_jumps": 0,
+ "migration": {
+  "rows_identical": true,
+  "vectors_identical": true,
+  "search_identical": true
+ },
+ "rebuild": {
+  "vectors_after_delete": 0,
+  "rebuilt": 12,
+  "consistent": true
+ },
+ "no_delete": {
+  "count_before": 12,
+  "count_after": 13,
+  "old_exists": true,
+  "old_reachable": true
+ },
+ "redline": {
+  "R1 迁移 100%": true,
+  "R2 能力不降": true,
+  "R3 索引可重建": true,
+  "R4 数据不丢": true
+ },
+ "all_pass": true
+}

@@ -1,0 +1,33 @@
+====================================================================================
+E-133 迭代扩散内核链路验证
+====================================================================================
+
+[1] 写基础记忆
+  OK 我的车是白色卡罗拉
+  OK 我住在城东花园3栋
+  OK 家里的门锁密码是 3721
+
+[2] 写矛盾记忆（judge=true）
+  ok=True  need_judge=True
+  expand_round=1  can_expand=True
+  第一轮候选 3 条:
+    cos=0.6427  我的车是白色卡罗拉
+    cos=0.3332  家里的门锁密码是 3721
+    cos=0.3142  我住在城东花园3栋
+
+[3] 测试 expand（10 → 20）
+  ok=True  prev_k=10  next_k=20
+  新增候选 0 条  next_ladder=40
+
+[4] 测试 expand（20 → 40）
+  ok=True  新增 0 条  can_expand=False
+
+[5] 回送模型判定（replace）
+  ok=True  relation=replace
+  target=我的车是白色卡罗拉
+  actions={'relation': 'replace', 'invalidated': '3f93ab574e9b47d1', 'superseded_by': '6501d31bf8bd42cf'}
+
+[6] 检索'我的车是什么'
+  我换车了现在是黑色大众
+  我住在城东花园3栋
+  家里的门锁密码是 3721

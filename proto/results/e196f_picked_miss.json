@@ -1,0 +1,290 @@
+[
+ {
+  "cid": "R000",
+  "cat": "2",
+  "q": "When did Melanie paint a sunrise?",
+  "answer": "",
+  "ev": "You'd be a great counselor! Your empathy and understanding w",
+  "pick": "Yeah, I painted that lake sunrise last year! It's special to",
+  "reason": "Melanie says she painted that lake sunrise 'last year'."
+ },
+ {
+  "cid": "R001",
+  "cat": "1",
+  "q": "What is Caroline's identity?",
+  "answer": "",
+  "ev": "The transgender stories were so inspiring! I was so happy an",
+  "pick": "I'm so lucky to have such a great support system around me. ",
+  "reason": "Both reference Caroline's transition/coming out, i.e. she is a trans w"
+ },
+ {
+  "cid": "R003",
+  "cat": "1",
+  "q": "What activities does Melanie partake in?",
+  "answer": "",
+  "ev": "Wow, Caroline! That's great! I just signed up for a pottery ",
+  "pick": "I'm a big fan of pottery - the creativity and skill is aweso",
+  "reason": "Pottery, running/reading/violin, and painting are her activities."
+ },
+ {
+  "cid": "R006",
+  "cat": "3",
+  "q": "Would Caroline pursue writing as a career option?",
+  "answer": "",
+  "ev": "Thanks, Mell! I'm still looking into counseling and mental h",
+  "pick": "Lately, I've been looking into counseling and mental health ",
+  "reason": "No—she is set on counseling/mental health, not writing."
+ },
+ {
+  "cid": "R007",
+  "cat": "1",
+  "q": "What activities has Melanie done with her family?",
+  "answer": "",
+  "ev": "The kids loved it! They were so excited to get their hands d",
+  "pick": "It was an awesome time, Caroline! We explored nature, roaste",
+  "reason": "Camping/hiking, pottery workshop, and museum trips with family."
+ },
+ {
+  "cid": "R010",
+  "cat": "1",
+  "q": "What musical artists/bands has Melanie seen?",
+  "answer": "",
+  "ev": "\"Summer Sounds\"- The playing an awesome pop song that got ev",
+  "pick": "I'm a fan of both classical like Bach and Mozart, as well as",
+  "reason": "Names artists (Bach/Mozart/Ed Sheeran) and a show she attended."
+ },
+ {
+  "cid": "R016",
+  "cat": "4",
+  "q": "What does Melanie say running has been great for?",
+  "answer": "",
+  "ev": "Thanks, Caroline! This has been great for my mental health. ",
+  "pick": "I've been running farther to de-stress, which has been great",
+  "reason": "Running has been great for her headspace/destressing."
+ },
+ {
+  "cid": "R026",
+  "cat": "1",
+  "q": "Which cities has Jon visited?",
+  "answer": "",
+  "ev": "Hey Gina! Thanks for asking. I'm on the hunt for the ideal s",
+  "pick": "Wow, nice spot! Where is it? Got any other features you want",
+  "reason": "Only candidate naming cities—Paris (Jon's studio) and Rome (Gina's vis"
+ },
+ {
+  "cid": "R028",
+  "cat": "1",
+  "q": "How long did it take for Jon to open his studio?",
+  "answer": "",
+  "ev": "Hey Gina! Good to see you too. Lost my job as a banker yeste",
+  "pick": "The official opening night is tomorrow. I'm working hard to ",
+  "reason": "No explicit duration; spans 'still searching' (Feb) to 'opening tomorr"
+ },
+ {
+  "cid": "R030",
+  "cat": "4",
+  "q": "What did Jon say about Gina's progress with her store?",
+  "answer": "",
+  "ev": "Wow, Gina! You found the perfect spot for your store. Way to",
+  "pick": "Hey Gina! Whoa, your store looks great! All your hard work r",
+  "reason": "Jon praised Gina's store growing and her hard work paying off."
+ },
+ {
+  "cid": "R060",
+  "cat": "1",
+  "q": "What is something Nate gave to Joanna that brings her a lot of joy?",
+  "answer": "",
+  "ev": "Yep, Joanna. It's great! Looky here, I got this new pup for ",
+  "pick": "That's great, Nate! Appreciate the small joys like that cute",
+  "reason": "The cute stuffed animal Nate gave her brings her joy."
+ },
+ {
+  "cid": "R063",
+  "cat": "1",
+  "q": "What pets does Nate have?",
+  "answer": "",
+  "ev": "Sounds fun! I probably also have loads of books I haven't re",
+  "pick": "I was bored today, so I just took my turtles out for a walk.",
+  "reason": "Nate 养的是乌龟（turtles）和一只叫 Max 的狗。"
+ },
+ {
+  "cid": "R066",
+  "cat": "4",
+  "q": "What is Nate's favorite video game?",
+  "answer": "",
+  "ev": "That makes sense! It's all about practice isn't it? So what'",
+  "pick": "The game was called Counter-Strike: Global Offensive, and me",
+  "reason": "唯一具名的游戏是 Counter-Strike: Global Offensive（团队射击）。"
+ },
+ {
+  "cid": "R089",
+  "cat": "1",
+  "q": "What books has Tim read?",
+  "answer": "",
+  "ev": "It's been going well! Last week I talked to my friend who is",
+  "pick": "Just the GoT series. Have you tried reading any of them?",
+  "reason": "Tim 读过 GoT 系列、最爱哈利波特，正在读《风之名》。"
+ },
+ {
+  "cid": "R099",
+  "cat": "3",
+  "q": "What would be a good hobby related to his travel dreams for Tim to pick up?",
+  "answer": "",
+  "ev": "Hey John! How've you been? Something awesome happened - I'm ",
+  "pick": "I'm proud of researching visa requirements for countries I w",
+  "reason": "Tim 的旅行梦想相关：研究签证、公路旅行与远足探索。"
+ },
+ {
+  "cid": "R110",
+  "cat": "4",
+  "q": "What is John's favorite book series?",
+  "answer": "",
+  "ev": "Harry Potter is my favorite book. It's so immersive!",
+  "pick": "I'm a huge fan of Lord of the Rings! The adventure, the worl",
+  "reason": "John 最爱的系列是指环王/霍比特人（托尔金）。"
+ },
+ {
+  "cid": "R123",
+  "cat": "2",
+  "q": "Did Andrew have a pet dog during March 2023?",
+  "answer": "",
+  "ev": "That's great to hear! I'm considering getting a dog too, but",
+  "pick": "No, no pets right now. But I do love animals.",
+  "reason": "Andrew says 'no pets right now' on 27 Mar 2023."
+ },
+ {
+  "cid": "R126",
+  "cat": "1",
+  "q": "Did Audrey and Andrew grow up with a pet dog?",
+  "answer": "",
+  "ev": "It'd be so great to have a furry buddy to cuddle and hang wi",
+  "pick": "Thanks! That one is Max, my childhood dog. He had lots of en",
+  "reason": "Audrey's childhood dog Max; Andrew's family dog."
+ },
+ {
+  "cid": "R133",
+  "cat": "3",
+  "q": "What is something that Andrew could do to make birdwatching hobby to fit in his city schedule?",
+  "answer": "",
+  "ev": "Aww, they look so cute! That spot looks ideal for them to pl",
+  "pick": "Yeah! Like I said I do enjoy watching birds in the nature. I",
+  "reason": "Reading about ecosystems / birdwatching advice are city-friendly ways."
+ },
+ {
+  "cid": "R134",
+  "cat": "3",
+  "q": "What is a career that Andrew could potentially pursue with his love for animals and nature?",
+  "answer": "",
+  "ev": "That pic is so cute! It would be fun to hang out with a dog,",
+  "pick": "Hey Audrey! How are you? My GF and I just had a great experi",
+  "reason": "Volunteering with animals at a shelter (animal/nature path)."
+ },
+ {
+  "cid": "R136",
+  "cat": "4",
+  "q": "What kind of flowers does Audrey have a tattoo of?",
+  "answer": "",
+  "ev": "I know right? They mean the world to me. So much that I got ",
+  "pick": "Those flowers look great! What kind are they?",
+  "reason": "Andrew asks what kind the flowers are + Audrey's flower/nature tattoo."
+ },
+ {
+  "cid": "R146",
+  "cat": "2",
+  "q": "When did John resume playing drums in his adulthood?",
+  "answer": "",
+  "ev": "I've been playing for a month now, it's been tough but fun. ",
+  "pick": "Thanks, James! I play drums too! Here's a pic of my set.",
+  "reason": "Plays drums now; played drums when younger."
+ },
+ {
+  "cid": "R160",
+  "cat": "5",
+  "q": "What new hobby did John become interested in on 9 July, 2022?",
+  "answer": "",
+  "ev": "Yeah, staying balanced can be tough. I'm trying to take brea",
+  "pick": "I've been getting into a new hobby recently. I bought a meta",
+  "reason": "John's new hobby is metal detecting."
+ },
+ {
+  "cid": "R171",
+  "cat": "2",
+  "q": "Which pet did Jolene adopt first - Susie or Seraphim?",
+  "answer": "",
+  "ev": "I bought it a year ago in Paris.",
+  "pick": "I was playing video games and my pet just slinked out of her",
+  "reason": "Seraphim is the 'second snake', so Susie came first."
+ },
+ {
+  "cid": "R172",
+  "cat": "2",
+  "q": "Which pet did Jolene adopt more recently - Susie or Seraphim?",
+  "answer": "",
+  "ev": "I bought it a year ago in Paris.",
+  "pick": "I was playing video games and my pet just slinked out of her",
+  "reason": "Seraphim is second (adopted more recently)."
+ },
+ {
+  "cid": "R183",
+  "cat": "4",
+  "q": "When did Jolene buy her pet snake?",
+  "answer": "",
+  "ev": "I bought it a year ago in Paris.",
+  "pick": "I adopted her two years ago when I was feeling lonely and wa",
+  "reason": "两年前领养了 Susie / 已经养了两年，直接给出养蛇时间"
+ },
+ {
+  "cid": "R196",
+  "cat": "5",
+  "q": "When did Jolene release her pet snake?",
+  "answer": "",
+  "ev": "I bought it a year ago in Paris.",
+  "pick": "I adopted her two years ago when I was feeling lonely and wa",
+  "reason": "蛇的获得时间是两年前领养（release 疑为获得义）"
+ },
+ {
+  "cid": "R199",
+  "cat": "5",
+  "q": "What was one of Deborah's favorite games to play with her mom on the PlayStation game system?",
+  "answer": "",
+  "ev": "One of my favorites was \"Monster Hunter: World\". The immersi",
+  "pick": "We prefer to play detective games together.",
+  "reason": "Deborah 爱玩的是侦探类游戏（detective games）"
+ },
+ {
+  "cid": "R202",
+  "cat": "3",
+  "q": "Considering their conversations and personal growth, what advice might Evan and Sam give to someone facing a major life transition or challenge?",
+  "answer": "",
+  "ev": "Yeah, you're right. It takes time, but I'm up for keep tryin",
+  "pick": "Yeah, I understand it can be challenging. But remember, it's",
+  "reason": "相信自己、一天一天来；做出积极改变永远不晚；进步需要时间"
+ },
+ {
+  "cid": "R207",
+  "cat": "3",
+  "q": "What challenges does Sam face in his quest for a healthier lifestyle, and how does he address them?",
+  "answer": "",
+  "ev": "Hey Sam, sorry about that. Don't worry, progress takes time.",
+  "pick": "Hey Evan, I need to talk to you. My friends were mocking my ",
+  "reason": "挑战是被嘲笑体重；用\"进步优于完美\"、去健身房来应对"
+ },
+ {
+  "cid": "R215",
+  "cat": "4",
+  "q": "What kind of recipe did Evan request from Sam on 19 August, 2023?",
+  "answer": "",
+  "ev": "That'd be great, Sam! I'm looking to add more vegetables to ",
+  "pick": "Sure, I'm loving this recipe I found. It's a flavorful and h",
+  "reason": "Evan 要的是烤鸡肉蔬菜炒菜/自制酱汁食谱"
+ },
+ {
+  "cid": "R223",
+  "cat": "1",
+  "q": "What mishaps has Calvin run into?",
+  "answer": "",
+  "ev": "Hey Dave! Long time no chat! Lots has gone down since we las",
+  "pick": "Hey Calvin, how's the car doing after the crash? You were st",
+  "reason": "车祸后修车/机械师在帮他修车的波折"
+ }
+]

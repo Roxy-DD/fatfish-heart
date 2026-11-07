@@ -1,0 +1,45 @@
+{
+ "experiment": "E-145",
+ "passed": true,
+ "n_pass": 9,
+ "n_total": 9,
+ "cases": [
+  {
+   "case": "count_correct",
+   "ok": true
+  },
+  {
+   "case": "channel_independent",
+   "ok": true
+  },
+  {
+   "case": "diagnostics",
+   "ok": true
+  },
+  {
+   "case": "perf",
+   "ok": true,
+   "ms": 0.515
+  },
+  {
+   "case": "r2_only_increase",
+   "ok": true
+  },
+  {
+   "case": "r2_no_new_records",
+   "ok": true
+  },
+  {
+   "case": "r1_migration",
+   "ok": true
+  },
+  {
+   "case": "r1_copy",
+   "ok": true
+  },
+  {
+   "case": "r3_stable",
+   "ok": true
+  }
+ ]
+}

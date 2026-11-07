@@ -1,0 +1,30 @@
+
+Loading weights:   0%|          | 0/71 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 71/71 [00:00<00:00, 1610.02it/s]
+==============================================================================================
+E-186b 最终：LLM 精排救回率（修正版）
+==============================================================================================
+
+  前 2 对话，总 302 题，基线命中 114
+  可救回题（基线漏 + evidence 在 pool）: 54
+  LLM 精排命中: 0/54 = 0.0000
+
+  整体:
+    基线: 114/302 = 0.3775
+    精排后: (114+0)/302 = 0.3775
+
+  精排提升: +0.0000
+
+  未命中案例（前 5）:
+    [Q00] When did Melanie paint a sunrise?
+      evidence=['D1:12']  精排选了=[]
+    [Q01] Where has Melanie camped?
+      evidence=['D6:16', 'D4:6', 'D8:32']  精排选了=[]
+    [Q02] Would Caroline likely have Dr. Seuss books on her 
+      evidence=['D6:9']  精排选了=[]
+    [Q03] When did Melanie read the book "nothing is impossi
+      evidence=['D7:8']  精排选了=[]
+    [Q04] When did Melanie go to the pottery workshop?
+      evidence=['D8:2']  精排选了=[]
+
+写入 C:\Users\xuee\Desktop\肥鱼之心\proto\results\e186b_rerank_final.json

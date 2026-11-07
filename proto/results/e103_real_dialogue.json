@@ -1,0 +1,9 @@
+{
+ "experiment": "E-103",
+ "total_queries": 33,
+ "hits": 31,
+ "misses": 0,
+ "wrongs": 0,
+ "hit_rate": 0.9394,
+ "memory_count": 30
+}

@@ -1,0 +1,17 @@
+{
+ "experiment": "E-68",
+ "independence": {
+  "cost_affw": -0.357,
+  "cost_scene": -0.497,
+  "affw_scene": -0.173
+ },
+ "recall": 1.0,
+ "trigger": 1.0,
+ "redline": {
+  "R1 迁移100%": true,
+  "R2 能力不降": true,
+  "R3 索引可重建": true,
+  "R4 数据不丢": true
+ },
+ "all_pass": true
+}

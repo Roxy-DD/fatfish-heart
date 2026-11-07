@@ -1,0 +1,28 @@
+{
+ "experiment": "E-221-final",
+ "n": 210,
+ "correct": 155,
+ "strict": 0.7381,
+ "by_cat": {
+  "1": {
+   "n": 40,
+   "correct": 25
+  },
+  "2": {
+   "n": 40,
+   "correct": 34
+  },
+  "3": {
+   "n": 40,
+   "correct": 25
+  },
+  "4": {
+   "n": 50,
+   "correct": 33
+  },
+  "5": {
+   "n": 40,
+   "correct": 38
+  }
+ }
+}

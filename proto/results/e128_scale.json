@@ -1,0 +1,346 @@
+{
+ "experiment": "E-128",
+ "scales": [
+  110,
+  310,
+  1010
+ ],
+ "results": [
+  {
+   "scale": 110,
+   "n_distractors": 100,
+   "write_distractors_s": 7.7,
+   "avg_pack_ms": 7.8,
+   "target_in_pack": 10,
+   "total_cases": 10,
+   "hit_rate": 1.0,
+   "avg_rank": 1.4,
+   "rows": [
+    {
+     "target": "我的车是白色卡罗拉",
+     "new": "我换车了现在是黑色大众",
+     "expect": "replace",
+     "in_pack": true,
+     "rank": 3,
+     "top_cos": 0.6915,
+     "target_cos": 0.6427,
+     "pack_ms": 8.28
+    },
+    {
+     "target": "我住在城东花园3栋",
+     "new": "我搬家到城西新村5号",
+     "expect": "replace",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.6047,
+     "target_cos": 0.6047,
+     "pack_ms": 7.26
+    },
+    {
+     "target": "家里的门锁密码是 3721",
+     "new": "门锁密码换成了9512",
+     "expect": "replace",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.7303,
+     "target_cos": 0.7303,
+     "pack_ms": 6.9
+    },
+    {
+     "target": "接口参数定的是0.85",
+     "new": "接口参数改成了1.2",
+     "expect": "replace",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.7888,
+     "target_cos": 0.7888,
+     "pack_ms": 7.4
+    },
+    {
+     "target": "这个项目 15 号截止",
+     "new": "客户同意把截止延到20号",
+     "expect": "replace",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.6949,
+     "target_cos": 0.6949,
+     "pack_ms": 7.55
+    },
+    {
+     "target": "明天下午三点开会",
+     "new": "会议改到明天上午十点",
+     "expect": "replace",
+     "in_pack": true,
+     "rank": 3,
+     "top_cos": 0.7624,
+     "target_cos": 0.7351,
+     "pack_ms": 8.54
+    },
+    {
+     "target": "我电脑的登录密码是 8848",
+     "new": "我把电脑密码改成了9988",
+     "expect": "replace",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.7712,
+     "target_cos": 0.7712,
+     "pack_ms": 8.7
+    },
+    {
+     "target": "客户要求界面必须支持深色模式",
+     "new": "客户还要求界面必须支持大字体",
+     "expect": "merge",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.7569,
+     "target_cos": 0.7569,
+     "pack_ms": 7.79
+    },
+    {
+     "target": "我要连续吃两周的药",
+     "new": "另外我晚上也要吃一次药",
+     "expect": "merge",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.7534,
+     "target_cos": 0.7534,
+     "pack_ms": 7.07
+    },
+    {
+     "target": "老王说门锁密码是 3721",
+     "new": "小李说门锁密码是9512",
+     "expect": "conflict",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.7701,
+     "target_cos": 0.7701,
+     "pack_ms": 8.46
+    }
+   ]
+  },
+  {
+   "scale": 310,
+   "n_distractors": 300,
+   "write_distractors_s": 2.4,
+   "avg_pack_ms": 8.2,
+   "target_in_pack": 10,
+   "total_cases": 10,
+   "hit_rate": 1.0,
+   "avg_rank": 2.0,
+   "rows": [
+    {
+     "target": "我的车是白色卡罗拉",
+     "new": "我换车了现在是黑色大众",
+     "expect": "replace",
+     "in_pack": true,
+     "rank": 5,
+     "top_cos": 0.6915,
+     "target_cos": 0.6427,
+     "pack_ms": 9.13
+    },
+    {
+     "target": "我住在城东花园3栋",
+     "new": "我搬家到城西新村5号",
+     "expect": "replace",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.6047,
+     "target_cos": 0.6047,
+     "pack_ms": 8.71
+    },
+    {
+     "target": "家里的门锁密码是 3721",
+     "new": "门锁密码换成了9512",
+     "expect": "replace",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.7303,
+     "target_cos": 0.7303,
+     "pack_ms": 7.99
+    },
+    {
+     "target": "接口参数定的是0.85",
+     "new": "接口参数改成了1.2",
+     "expect": "replace",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.7888,
+     "target_cos": 0.7888,
+     "pack_ms": 7.99
+    },
+    {
+     "target": "这个项目 15 号截止",
+     "new": "客户同意把截止延到20号",
+     "expect": "replace",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.6949,
+     "target_cos": 0.6949,
+     "pack_ms": 10.07
+    },
+    {
+     "target": "明天下午三点开会",
+     "new": "会议改到明天上午十点",
+     "expect": "replace",
+     "in_pack": true,
+     "rank": 7,
+     "top_cos": 0.7927,
+     "target_cos": 0.7351,
+     "pack_ms": 7.13
+    },
+    {
+     "target": "我电脑的登录密码是 8848",
+     "new": "我把电脑密码改成了9988",
+     "expect": "replace",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.7712,
+     "target_cos": 0.7712,
+     "pack_ms": 7.43
+    },
+    {
+     "target": "客户要求界面必须支持深色模式",
+     "new": "客户还要求界面必须支持大字体",
+     "expect": "merge",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.7569,
+     "target_cos": 0.7569,
+     "pack_ms": 7.39
+    },
+    {
+     "target": "我要连续吃两周的药",
+     "new": "另外我晚上也要吃一次药",
+     "expect": "merge",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.7534,
+     "target_cos": 0.7534,
+     "pack_ms": 8.43
+    },
+    {
+     "target": "老王说门锁密码是 3721",
+     "new": "小李说门锁密码是9512",
+     "expect": "conflict",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.7701,
+     "target_cos": 0.7701,
+     "pack_ms": 7.73
+    }
+   ]
+  },
+  {
+   "scale": 1010,
+   "n_distractors": 1000,
+   "write_distractors_s": 8.0,
+   "avg_pack_ms": 9.67,
+   "target_in_pack": 10,
+   "total_cases": 10,
+   "hit_rate": 1.0,
+   "avg_rank": 3.9,
+   "rows": [
+    {
+     "target": "我的车是白色卡罗拉",
+     "new": "我换车了现在是黑色大众",
+     "expect": "replace",
+     "in_pack": true,
+     "rank": 12,
+     "top_cos": 0.714,
+     "target_cos": 0.6427,
+     "pack_ms": 19.93
+    },
+    {
+     "target": "我住在城东花园3栋",
+     "new": "我搬家到城西新村5号",
+     "expect": "replace",
+     "in_pack": true,
+     "rank": 2,
+     "top_cos": 0.637,
+     "target_cos": 0.6047,
+     "pack_ms": 9.29
+    },
+    {
+     "target": "家里的门锁密码是 3721",
+     "new": "门锁密码换成了9512",
+     "expect": "replace",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.7303,
+     "target_cos": 0.7303,
+     "pack_ms": 8.67
+    },
+    {
+     "target": "接口参数定的是0.85",
+     "new": "接口参数改成了1.2",
+     "expect": "replace",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.7888,
+     "target_cos": 0.7888,
+     "pack_ms": 8.84
+    },
+    {
+     "target": "这个项目 15 号截止",
+     "new": "客户同意把截止延到20号",
+     "expect": "replace",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.6949,
+     "target_cos": 0.6949,
+     "pack_ms": 8.19
+    },
+    {
+     "target": "明天下午三点开会",
+     "new": "会议改到明天上午十点",
+     "expect": "replace",
+     "in_pack": true,
+     "rank": 18,
+     "top_cos": 0.8145,
+     "target_cos": 0.7351,
+     "pack_ms": 8.42
+    },
+    {
+     "target": "我电脑的登录密码是 8848",
+     "new": "我把电脑密码改成了9988",
+     "expect": "replace",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.7712,
+     "target_cos": 0.7712,
+     "pack_ms": 8.77
+    },
+    {
+     "target": "客户要求界面必须支持深色模式",
+     "new": "客户还要求界面必须支持大字体",
+     "expect": "merge",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.7569,
+     "target_cos": 0.7569,
+     "pack_ms": 8.67
+    },
+    {
+     "target": "我要连续吃两周的药",
+     "new": "另外我晚上也要吃一次药",
+     "expect": "merge",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.7534,
+     "target_cos": 0.7534,
+     "pack_ms": 8.21
+    },
+    {
+     "target": "老王说门锁密码是 3721",
+     "new": "小李说门锁密码是9512",
+     "expect": "conflict",
+     "in_pack": true,
+     "rank": 1,
+     "top_cos": 0.7701,
+     "target_cos": 0.7701,
+     "pack_ms": 7.66
+    }
+   ]
+  }
+ ]
+}

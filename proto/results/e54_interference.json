@@ -1,0 +1,39 @@
+{
+ "experiment": "E-54",
+ "report": {
+  "A_1": {
+   "n": 24,
+   "right": 24,
+   "wrong": 0,
+   "abstain": 0,
+   "acc": 1.0,
+   "abstain_rate": 0.0
+  },
+  "B_SIM5": {
+   "n": 24,
+   "right": 20,
+   "wrong": 0,
+   "abstain": 4,
+   "acc": 0.8333,
+   "abstain_rate": 0.1667
+  },
+  "C_DIV5": {
+   "n": 24,
+   "right": 24,
+   "wrong": 0,
+   "abstain": 0,
+   "acc": 1.0,
+   "abstain_rate": 0.0
+  },
+  "D_SIM10": {
+   "n": 24,
+   "right": 23,
+   "wrong": 0,
+   "abstain": 1,
+   "acc": 0.9583,
+   "abstain_rate": 0.0417
+  },
+  "verdict": "干扰是主因：同模板干扰显著更差，多样性重要",
+  "diff_sim_div": 0.1667
+ }
+}

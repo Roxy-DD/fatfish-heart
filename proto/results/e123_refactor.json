@@ -1,0 +1,107 @@
+{
+ "experiment": "E-123",
+ "n": 12,
+ "relation_accuracy": 1.0,
+ "target_accuracy": 1.0,
+ "invalidate_accuracy": 1.0,
+ "degraded_false_invalidate": 0,
+ "pending_packs": 12,
+ "details": [
+  {
+   "new": "客户同意把截止延到20号",
+   "gold": "replace",
+   "got": "replace",
+   "target": "这个项目 15 号截止",
+   "rel_ok": true,
+   "tgt_ok": true
+  },
+  {
+   "new": "门锁密码换成了9512",
+   "gold": "replace",
+   "got": "replace",
+   "target": "家里的门锁密码是 3721",
+   "rel_ok": true,
+   "tgt_ok": true
+  },
+  {
+   "new": "接口参数改成了1.2",
+   "gold": "replace",
+   "got": "replace",
+   "target": "接口参数定的是0.85",
+   "rel_ok": true,
+   "tgt_ok": true
+  },
+  {
+   "new": "明天上午十点开会",
+   "gold": "replace",
+   "got": "replace",
+   "target": "明天下午三点开会",
+   "rel_ok": true,
+   "tgt_ok": true
+  },
+  {
+   "new": "我换车了现在是黑色大众",
+   "gold": "replace",
+   "got": "replace",
+   "target": "我的车是白色卡罗拉",
+   "rel_ok": true,
+   "tgt_ok": true
+  },
+  {
+   "new": "我搬家到城西新村5号",
+   "gold": "replace",
+   "got": "replace",
+   "target": "我住在城东花园3栋",
+   "rel_ok": true,
+   "tgt_ok": true
+  },
+  {
+   "new": "客户还要求界面必须支持大字体",
+   "gold": "merge",
+   "got": "merge",
+   "target": "客户要求界面必须支持深色模式",
+   "rel_ok": true,
+   "tgt_ok": true
+  },
+  {
+   "new": "另外我晚上也要吃一次药",
+   "gold": "merge",
+   "got": "merge",
+   "target": "我要连续吃两周的药",
+   "rel_ok": true,
+   "tgt_ok": true
+  },
+  {
+   "new": "小李说门锁密码是9512",
+   "gold": "conflict",
+   "got": "conflict",
+   "target": "老王说门锁密码是 3721",
+   "rel_ok": true,
+   "tgt_ok": true
+  },
+  {
+   "new": "我记得好像是18号截止",
+   "gold": "conflict",
+   "got": "conflict",
+   "target": "这个项目 15 号截止",
+   "rel_ok": true,
+   "tgt_ok": true
+  },
+  {
+   "new": "这个bug反复出现我快崩溃了",
+   "gold": "none",
+   "got": "none",
+   "target": "（无）",
+   "rel_ok": true,
+   "tgt_ok": true
+  },
+  {
+   "new": "上周二午饭吃的是番茄炒蛋",
+   "gold": "none",
+   "got": "none",
+   "target": "（无）",
+   "rel_ok": true,
+   "tgt_ok": true
+  }
+ ]
+}

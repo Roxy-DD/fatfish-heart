@@ -1,0 +1,177 @@
+{
+ "experiment": "E-28",
+ "n_pass": 34,
+ "n_total": 34,
+ "results": [
+  {
+   "name": "L0 层级正确",
+   "ok": true,
+   "detail": "得到 L0"
+  },
+  {
+   "name": "L1 层级正确",
+   "ok": true,
+   "detail": "得到 L1"
+  },
+  {
+   "name": "L2 层级正确",
+   "ok": true,
+   "detail": "得到 L2"
+  },
+  {
+   "name": "L3 层级正确",
+   "ok": true,
+   "detail": "得到 None"
+  },
+  {
+   "name": "L4 层级正确",
+   "ok": true,
+   "detail": "得到 None"
+  },
+  {
+   "name": "L3 可失效（等同未保护）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L3 可合并",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L3 可修订",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L3 不强制在场",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L0 invalidate 被拒",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L1 invalidate 被拒",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L2 invalidate 被拒",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L3 invalidate 成功",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L4 invalidate 成功",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L0 revise 被拒",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L0 原文未变",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L1 revise 允许",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L2 revise 允许",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L3 revise 允许",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L0 supersede 被拒",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L1 supersede 被拒",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L2 supersede 被拒",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "全部被跳过",
+   "ok": true,
+   "detail": "skipped=3"
+  },
+  {
+   "name": "L0 仍有效",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L1 仍有效",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L2 仍有效",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "merge 被跳过",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L0 在场",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L1 在场",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L2 不在场（按需检索）",
+   "ok": true,
+   "detail": "L2 不该强制出现"
+  },
+  {
+   "name": "flag=2 只标 L0/L1",
+   "ok": true,
+   "detail": "flag2=2 条"
+  },
+  {
+   "name": "L0 unlock 被拒",
+   "ok": true,
+   "detail": "L0 不可解锁（红线不可动）"
+  },
+  {
+   "name": "L1 unlock 允许",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "统计正确",
+   "ok": true,
+   "detail": "{\"total\": 2, \"by_level\": {\"L0\": 1, \"L2\": 1}, \"by_kind\": {\"policy\": 2}}"
+  }
+ ]
+}

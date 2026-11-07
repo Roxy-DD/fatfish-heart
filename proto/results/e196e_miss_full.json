@@ -1,0 +1,359 @@
+[
+ {
+  "cid": "R000",
+  "cat": "2",
+  "q": "When did Melanie paint a sunrise?",
+  "empty": false,
+  "reason": "Melanie says she painted that lake sunrise 'last year'."
+ },
+ {
+  "cid": "R001",
+  "cat": "1",
+  "q": "What is Caroline's identity?",
+  "empty": false,
+  "reason": "Both reference Caroline's transition/coming out, i.e. she is a trans woman."
+ },
+ {
+  "cid": "R003",
+  "cat": "1",
+  "q": "What activities does Melanie partake in?",
+  "empty": false,
+  "reason": "Pottery, running/reading/violin, and painting are her activities."
+ },
+ {
+  "cid": "R006",
+  "cat": "3",
+  "q": "Would Caroline pursue writing as a career option?",
+  "empty": false,
+  "reason": "No—she is set on counseling/mental health, not writing."
+ },
+ {
+  "cid": "R007",
+  "cat": "1",
+  "q": "What activities has Melanie done with her family?",
+  "empty": false,
+  "reason": "Camping/hiking, pottery workshop, and museum trips with family."
+ },
+ {
+  "cid": "R008",
+  "cat": "1",
+  "q": "What has Melanie painted?",
+  "empty": true,
+  "reason": "She painted a lake sunrise, a horse, and an abstract piece."
+ },
+ {
+  "cid": "R010",
+  "cat": "1",
+  "q": "What musical artists/bands has Melanie seen?",
+  "empty": false,
+  "reason": "Names artists (Bach/Mozart/Ed Sheeran) and a show she attended."
+ },
+ {
+  "cid": "R016",
+  "cat": "4",
+  "q": "What does Melanie say running has been great for?",
+  "empty": false,
+  "reason": "Running has been great for her headspace/destressing."
+ },
+ {
+  "cid": "R021",
+  "cat": "5",
+  "q": "What motivated Melanie to pursue counseling?",
+  "empty": true,
+  "reason": "Trap—Melanie never pursued counseling (that was Caroline); no matching candidate."
+ },
+ {
+  "cid": "R022",
+  "cat": "5",
+  "q": "How did Caroline feel about her family after the accident?",
+  "empty": true,
+  "reason": "Trap—the accident was Melanie's son, not Caroline's family."
+ },
+ {
+  "cid": "R026",
+  "cat": "1",
+  "q": "Which cities has Jon visited?",
+  "empty": false,
+  "reason": "Only candidate naming cities—Paris (Jon's studio) and Rome (Gina's visit)."
+ },
+ {
+  "cid": "R028",
+  "cat": "1",
+  "q": "How long did it take for Jon to open his studio?",
+  "empty": false,
+  "reason": "No explicit duration; spans 'still searching' (Feb) to 'opening tomorrow' (Jun)."
+ },
+ {
+  "cid": "R030",
+  "cat": "4",
+  "q": "What did Jon say about Gina's progress with her store?",
+  "empty": false,
+  "reason": "Jon praised Gina's store growing and her hard work paying off."
+ },
+ {
+  "cid": "R032",
+  "cat": "5",
+  "q": "What is Jon's favorite style of painting?",
+  "empty": true,
+  "reason": "Trap—Jon is a dancer, not a painter; no candidate on painting style."
+ },
+ {
+  "cid": "R049",
+  "cat": "5",
+  "q": "What activity did Maria's colleague, Rob, invite her to?",
+  "empty": true,
+  "reason": "Trap—Rob is John's colleague, not Maria's."
+ },
+ {
+  "cid": "R050",
+  "cat": "5",
+  "q": "What was one of the biggest challenges Maria faced in her journey to becoming assistant manager?",
+  "empty": true,
+  "reason": "Trap—it was John (not Maria) who became assistant manager."
+ },
+ {
+  "cid": "R051",
+  "cat": "5",
+  "q": "What recognition did John receive at the homeless shelter in August 2023?",
+  "empty": true,
+  "reason": "Trap—the medal went to Maria, not John."
+ },
+ {
+  "cid": "R056",
+  "cat": "2",
+  "q": "What physical transformation did Nate undergo in April 2022?",
+  "empty": true,
+  "reason": "He dyed his hair."
+ },
+ {
+  "cid": "R060",
+  "cat": "1",
+  "q": "What is something Nate gave to Joanna that brings her a lot of joy?",
+  "empty": false,
+  "reason": "The cute stuffed animal Nate gave her brings her joy."
+ },
+ {
+  "cid": "R063",
+  "cat": "1",
+  "q": "What pets does Nate have?",
+  "empty": false,
+  "reason": "Nate 养的是乌龟（turtles）和一只叫 Max 的狗。"
+ },
+ {
+  "cid": "R066",
+  "cat": "4",
+  "q": "What is Nate's favorite video game?",
+  "empty": false,
+  "reason": "唯一具名的游戏是 Counter-Strike: Global Offensive（团队射击）。"
+ },
+ {
+  "cid": "R089",
+  "cat": "1",
+  "q": "What books has Tim read?",
+  "empty": false,
+  "reason": "Tim 读过 GoT 系列、最爱哈利波特，正在读《风之名》。"
+ },
+ {
+  "cid": "R090",
+  "cat": "1",
+  "q": "What sports does John like besides basketball?",
+  "empty": true,
+  "reason": "除篮球外 John 喜欢冲浪（surfing）。"
+ },
+ {
+  "cid": "R099",
+  "cat": "3",
+  "q": "What would be a good hobby related to his travel dreams for Tim to pick up?",
+  "empty": false,
+  "reason": "Tim 的旅行梦想相关：研究签证、公路旅行与远足探索。"
+ },
+ {
+  "cid": "R110",
+  "cat": "4",
+  "q": "What is John's favorite book series?",
+  "empty": false,
+  "reason": "John 最爱的系列是指环王/霍比特人（托尔金）。"
+ },
+ {
+  "cid": "R123",
+  "cat": "2",
+  "q": "Did Andrew have a pet dog during March 2023?",
+  "empty": false,
+  "reason": "Andrew says 'no pets right now' on 27 Mar 2023."
+ },
+ {
+  "cid": "R126",
+  "cat": "1",
+  "q": "Did Audrey and Andrew grow up with a pet dog?",
+  "empty": false,
+  "reason": "Audrey's childhood dog Max; Andrew's family dog."
+ },
+ {
+  "cid": "R133",
+  "cat": "3",
+  "q": "What is something that Andrew could do to make birdwatching hobby to fit in his city schedule?",
+  "empty": false,
+  "reason": "Reading about ecosystems / birdwatching advice are city-friendly ways."
+ },
+ {
+  "cid": "R134",
+  "cat": "3",
+  "q": "What is a career that Andrew could potentially pursue with his love for animals and nature?",
+  "empty": false,
+  "reason": "Volunteering with animals at a shelter (animal/nature path)."
+ },
+ {
+  "cid": "R136",
+  "cat": "4",
+  "q": "What kind of flowers does Audrey have a tattoo of?",
+  "empty": false,
+  "reason": "Andrew asks what kind the flowers are + Audrey's flower/nature tattoo."
+ },
+ {
+  "cid": "R146",
+  "cat": "2",
+  "q": "When did John resume playing drums in his adulthood?",
+  "empty": false,
+  "reason": "Plays drums now; played drums when younger."
+ },
+ {
+  "cid": "R160",
+  "cat": "5",
+  "q": "What new hobby did John become interested in on 9 July, 2022?",
+  "empty": false,
+  "reason": "John's new hobby is metal detecting."
+ },
+ {
+  "cid": "R171",
+  "cat": "2",
+  "q": "Which pet did Jolene adopt first - Susie or Seraphim?",
+  "empty": false,
+  "reason": "Seraphim is the 'second snake', so Susie came first."
+ },
+ {
+  "cid": "R172",
+  "cat": "2",
+  "q": "Which pet did Jolene adopt more recently - Susie or Seraphim?",
+  "empty": false,
+  "reason": "Seraphim is second (adopted more recently)."
+ },
+ {
+  "cid": "R183",
+  "cat": "4",
+  "q": "When did Jolene buy her pet snake?",
+  "empty": false,
+  "reason": "两年前领养了 Susie / 已经养了两年，直接给出养蛇时间"
+ },
+ {
+  "cid": "R195",
+  "cat": "5",
+  "q": "Where did Deborah get her dogs?",
+  "empty": true,
+  "reason": "对话中 Deborah 只有猫（Max/Luna），无养狗信息"
+ },
+ {
+  "cid": "R196",
+  "cat": "5",
+  "q": "When did Jolene release her pet snake?",
+  "empty": false,
+  "reason": "蛇的获得时间是两年前领养（release 疑为获得义）"
+ },
+ {
+  "cid": "R199",
+  "cat": "5",
+  "q": "What was one of Deborah's favorite games to play with her mom on the PlayStation game system?",
+  "empty": false,
+  "reason": "Deborah 爱玩的是侦探类游戏（detective games）"
+ },
+ {
+  "cid": "R202",
+  "cat": "3",
+  "q": "Considering their conversations and personal growth, what advice might Evan and Sam give to someone facing a major life transition or challenge?",
+  "empty": false,
+  "reason": "相信自己、一天一天来；做出积极改变永远不晚；进步需要时间"
+ },
+ {
+  "cid": "R203",
+  "cat": "2",
+  "q": "What significant event happened in Sam's life towards the end of summer 2023?",
+  "empty": true,
+  "reason": "夏末重大变化是开始节食/更健康的生活方式"
+ },
+ {
+  "cid": "R206",
+  "cat": "2",
+  "q": "Which places in Canada was Evan visiting in July 2023?",
+  "empty": true,
+  "reason": "去了加拿大的 Jasper，途经 Icefields Parkway 冰川湖泊"
+ },
+ {
+  "cid": "R207",
+  "cat": "3",
+  "q": "What challenges does Sam face in his quest for a healthier lifestyle, and how does he address them?",
+  "empty": false,
+  "reason": "挑战是被嘲笑体重；用\"进步优于完美\"、去健身房来应对"
+ },
+ {
+  "cid": "R215",
+  "cat": "4",
+  "q": "What kind of recipe did Evan request from Sam on 19 August, 2023?",
+  "empty": false,
+  "reason": "Evan 要的是烤鸡肉蔬菜炒菜/自制酱汁食谱"
+ },
+ {
+  "cid": "R220",
+  "cat": "5",
+  "q": "What did Sam mention he had been searching for fruitlessly for half an hour?",
+  "empty": true,
+  "reason": "找钥匙半小时的是 Evan，Sam 无此内容（张冠李戴）"
+ },
+ {
+  "cid": "R222",
+  "cat": "5",
+  "q": "What was Sam limiting himself to on his new diet?",
+  "empty": true,
+  "reason": "每天两块姜饼是 Evan 的限制，Sam 无具体\"限量\"内容"
+ },
+ {
+  "cid": "R223",
+  "cat": "1",
+  "q": "What mishaps has Calvin run into?",
+  "empty": false,
+  "reason": "车祸后修车/机械师在帮他修车的波折"
+ },
+ {
+  "cid": "R226",
+  "cat": "1",
+  "q": "What is Dave's favorite activity?",
+  "empty": true,
+  "reason": "Dave 最爱的活动是修车"
+ },
+ {
+  "cid": "R240",
+  "cat": "5",
+  "q": "What is Calvin's new business venture as of 1 May, 2023?",
+  "empty": true,
+  "reason": "开汽车店是 Dave 的事业，Calvin 无\"business venture\"内容"
+ },
+ {
+  "cid": "R241",
+  "cat": "5",
+  "q": "What was the necklace Dave received meant to remind him of?",
+  "empty": true,
+  "reason": "项链是 Calvin 收到的，Dave 无项链内容（张冠李戴）"
+ },
+ {
+  "cid": "R242",
+  "cat": "5",
+  "q": "What type of car did Calvin work on during the workshop?",
+  "empty": true,
+  "reason": "workshop 修肌肉车的是 Dave，Calvin 无 workshop 内容"
+ },
+ {
+  "cid": "R243",
+  "cat": "5",
+  "q": "What did Dave discuss with the cool artist he met at the gala?",
+  "empty": true,
+  "reason": "与艺术家聊天的是 Calvin，Dave 无此内容（张冠李戴）"
+ }
+]

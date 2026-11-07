@@ -1,0 +1,7 @@
+{
+ "experiment": "E-139b",
+ "n_valid": 120,
+ "duplicate_cases": 8,
+ "gold_in_pack": 8,
+ "other_pairs": 12
+}

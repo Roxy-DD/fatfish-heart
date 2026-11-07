@@ -1,0 +1,17 @@
+============================================================================================
+E-123 重构后端到端验证（系统提取 + 模型判断）
+============================================================================================
+
+新记忆                       gold       实判         对?    目标对?    旧值已失效?
+--------------------------------------------------------------------------------------------
+
+Loading weights:   0%|          | 0/71 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 71/71 [00:00<00:00, 1509.94it/s]
+Traceback (most recent call last):
+  File "C:\Users\xuee\Desktop\肥鱼之心\proto\run_e123_refactor.py", line 208, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\xuee\Desktop\肥鱼之心\proto\run_e123_refactor.py", line 115, in main
+    judge_fn = make_gold_judge({new: gold_map[new]})
+                                     ^^^^^^^^
+NameError: name 'gold_map' is not defined. Did you mean: 'gold_rel'?

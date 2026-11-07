@@ -1,0 +1,26 @@
+{
+ "experiment": "E-192",
+ "baseline": 0.33,
+ "rerank_gains": {
+  "15": {
+   "recoverable": 84,
+   "saved_99pct": 83.2,
+   "after": 0.3719
+  },
+  "20": {
+   "recoverable": 170,
+   "saved_99pct": 168.3,
+   "after": 0.4149
+  },
+  "30": {
+   "recoverable": 361,
+   "saved_99pct": 357.4,
+   "after": 0.5103
+  },
+  "50": {
+   "recoverable": 537,
+   "saved_99pct": 531.6,
+   "after": 0.5982
+  }
+ }
+}

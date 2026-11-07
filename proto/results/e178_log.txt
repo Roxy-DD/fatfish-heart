@@ -1,0 +1,68 @@
+==============================================================================================
+E-178 多跳题失败诊断
+==============================================================================================
+
+Loading weights:   0%|          | 0/71 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 71/71 [00:00<00:00, 1109.85it/s]
+
+多跳题总数: 92
+
+结果                  条数        占比
+--------------------------------------------------
+全部证据都找到             16        17.4%
+找到部分证据              20        21.7%
+一条都没找到              56        60.9%
+
+  evidence 条数分布:
+    1 条: 45 题
+    2 条: 25 题
+    3 条: 9 题
+    4 条: 10 题
+    10 条: 1 题
+    11 条: 1 题
+    17 条: 1 题
+
+  evidence 跨 session 数分布:
+    跨 1 个 session: 61 题
+    跨 2 个 session: 14 题
+    跨 3 个 session: 7 题
+    跨 4 个 session: 7 题
+    跨 6 个 session: 1 题
+    跨 7 个 session: 1 题
+    跨 8 个 session: 1 题
+
+==============================================================================================
+失败案例样本
+==============================================================================================
+
+  [conv-26] What fields would Caroline be likely to pursue in her educaton?
+    evidence: ['D1:9', 'D1:11']  → 找到 ['D1:9']
+    【D1:9】[1:56 pm on 8 May, 2023] Caroline: Gonna continue my edu and check out career options, which is pret
+    【D1:11】[1:56 pm on 8 May, 2023] Caroline: I'm keen on counseling or working in mental health - I'd love to 
+
+  [conv-26] Would Caroline still want to pursue counseling as a career if she 
+    evidence: ['D4:15', 'D3:5']  → 找到 ['D4:15']
+    【D4:15】[10:37 am on 27 June, 2023] Caroline: Thanks, Melanie. It really mattered. My own journey and the su
+    【D3:5】[7:55 pm on 9 June, 2023] Caroline: Thanks Mel! Your kind words mean a lot. Sharing our experiences 
+
+  [conv-26] Would Caroline pursue writing as a career option?
+    evidence: ['D7:5', 'D7:9']  → 找到 []
+    【D7:5】[4:33 pm on 12 July, 2023] Caroline: Thanks, Mell! I'm still looking into counseling and mental heal
+    【D7:9】[4:33 pm on 12 July, 2023] Caroline: Thanks so much, Mel! Seeing this pic just made me appreciate my
+
+  [conv-26] Would Melanie be more interested in going to a national park or a 
+    evidence: ['D10:12', 'D10:14']  → 找到 []
+    【D10:12】[8:56 pm on 20 July, 2023] Melanie: We always look forward to our family camping trip. We roast mars
+    【D10:14】[8:56 pm on 20 July, 2023] Melanie: I'll always remember our camping trip last year when we saw the 
+
+==============================================================================================
+结论
+==============================================================================================
+
+  全找到: 16  部分: 20  全失败: 56
+
+  → 多数是「一条都没找到」（56/92）
+  → 问题在**语义匹配**：问题与证据的语义距离太远
+  → 解法：需要改写查询或换更强的 embedding
+
+写入 C:\Users\xuee\Desktop\肥鱼之心\proto\results\e178_multihop.json

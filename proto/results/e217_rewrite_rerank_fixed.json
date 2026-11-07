@@ -1,0 +1,7 @@
+{
+ "experiment": "E-217",
+ "n": 92,
+ "base": 0.3913,
+ "rewrite": 0.5435,
+ "rewrite_rerank": 0.5109
+}

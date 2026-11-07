@@ -1,0 +1,27 @@
+{
+ "experiment": "E-188",
+ "total": 302,
+ "base_hit": 93,
+ "pool_stats": {
+  "10": {
+   "recoverable": 0
+  },
+  "15": {
+   "recoverable": 7
+  },
+  "20": {
+   "recoverable": 12
+  },
+  "25": {
+   "recoverable": 19
+  },
+  "30": {
+   "recoverable": 24
+  },
+  "50": {
+   "recoverable": 73
+  }
+ },
+ "n15": 7,
+ "n30": 24
+}

@@ -1,0 +1,58 @@
+{
+ "experiment": "E-33",
+ "note": "修正 softmax + 大规模延迟",
+ "softmax_fixed": true,
+ "latency": [
+  {
+   "n_star": 5000,
+   "full_ms": 16.12,
+   "full_acc": 0.0833,
+   "full_scan": 5000.0,
+   "ivf_ms": 3.05,
+   "ivf_acc": 0.0667,
+   "ivf_scan": 888.7,
+   "speedup": 5.28
+  },
+  {
+   "n_star": 20000,
+   "full_ms": 65.03,
+   "full_acc": 0.1167,
+   "full_scan": 20000.0,
+   "ivf_ms": 5.22,
+   "ivf_acc": 0.1167,
+   "ivf_scan": 1449.1,
+   "speedup": 12.46
+  },
+  {
+   "n_star": 100000,
+   "full_ms": 310.34,
+   "full_acc": 0.0833,
+   "full_scan": 100000.0,
+   "ivf_ms": 26.06,
+   "ivf_acc": 0.0833,
+   "ivf_scan": 7271.1,
+   "speedup": 11.91
+  },
+  {
+   "n_star": 400000,
+   "full_ms": 1248.63,
+   "full_acc": 0.0667,
+   "full_scan": 400000.0,
+   "ivf_ms": 98.13,
+   "ivf_acc": 0.0667,
+   "ivf_scan": 29557.0,
+   "speedup": 12.72
+  }
+ ],
+ "fit": {
+  "full": [
+   0.003119,
+   0.707187
+  ],
+  "ivf": [
+   0.000242,
+   1.320518
+  ]
+ },
+ "elapsed_sec": 110.4
+}

@@ -1,0 +1,16 @@
+{
+ "experiment": "E-72",
+ "checker": {
+  "acc": 1.0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "tp": 4,
+  "fp": 0,
+  "tn": 10,
+  "fn": 0
+ },
+ "n_corpus": 10,
+ "n_incomplete": 3,
+ "recall_top3": 1.0
+}

@@ -1,0 +1,132 @@
+{
+ "experiment": "E-165",
+ "n_conversations": 10,
+ "total_qa": 1986,
+ "total_sessions": 272,
+ "total_turns": 5882,
+ "ev_forms": [
+  "list"
+ ],
+ "conversations": [
+  {
+   "i": 0,
+   "sample_id": "conv-26",
+   "n_qa": 199,
+   "n_sessions": 19,
+   "n_turns": 419,
+   "ev_forms": [
+    "list"
+   ],
+   "speaker_a": "Caroline",
+   "speaker_b": "Melanie"
+  },
+  {
+   "i": 1,
+   "sample_id": "conv-30",
+   "n_qa": 105,
+   "n_sessions": 19,
+   "n_turns": 369,
+   "ev_forms": [
+    "list"
+   ],
+   "speaker_a": "Jon",
+   "speaker_b": "Gina"
+  },
+  {
+   "i": 2,
+   "sample_id": "conv-41",
+   "n_qa": 193,
+   "n_sessions": 32,
+   "n_turns": 663,
+   "ev_forms": [
+    "list"
+   ],
+   "speaker_a": "John",
+   "speaker_b": "Maria"
+  },
+  {
+   "i": 3,
+   "sample_id": "conv-42",
+   "n_qa": 260,
+   "n_sessions": 29,
+   "n_turns": 629,
+   "ev_forms": [
+    "list"
+   ],
+   "speaker_a": "Joanna",
+   "speaker_b": "Nate"
+  },
+  {
+   "i": 4,
+   "sample_id": "conv-43",
+   "n_qa": 242,
+   "n_sessions": 29,
+   "n_turns": 680,
+   "ev_forms": [
+    "list"
+   ],
+   "speaker_a": "Tim",
+   "speaker_b": "John"
+  },
+  {
+   "i": 5,
+   "sample_id": "conv-44",
+   "n_qa": 158,
+   "n_sessions": 28,
+   "n_turns": 675,
+   "ev_forms": [
+    "list"
+   ],
+   "speaker_a": "Audrey",
+   "speaker_b": "Andrew"
+  },
+  {
+   "i": 6,
+   "sample_id": "conv-47",
+   "n_qa": 190,
+   "n_sessions": 31,
+   "n_turns": 689,
+   "ev_forms": [
+    "list"
+   ],
+   "speaker_a": "James",
+   "speaker_b": "John"
+  },
+  {
+   "i": 7,
+   "sample_id": "conv-48",
+   "n_qa": 239,
+   "n_sessions": 30,
+   "n_turns": 681,
+   "ev_forms": [
+    "list"
+   ],
+   "speaker_a": "Deborah",
+   "speaker_b": "Jolene"
+  },
+  {
+   "i": 8,
+   "sample_id": "conv-49",
+   "n_qa": 196,
+   "n_sessions": 25,
+   "n_turns": 509,
+   "ev_forms": [
+    "list"
+   ],
+   "speaker_a": "Evan",
+   "speaker_b": "Sam"
+  },
+  {
+   "i": 9,
+   "sample_id": "conv-50",
+   "n_qa": 204,
+   "n_sessions": 30,
+   "n_turns": 568,
+   "ev_forms": [
+    "list"
+   ],
+   "speaker_a": "Calvin",
+   "speaker_b": "Dave"
+  }
+ ]
+}

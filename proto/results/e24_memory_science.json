@@ -1,0 +1,148 @@
+{
+ "experiment": "E-24",
+ "feature": "hog128",
+ "threshold": 0.56,
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "per_task": [
+  900,
+  300
+ ],
+ "source": "docs/17 §2.2 记忆科学（间隔/测试效应/再固化窗口）",
+ "orders": [
+  {
+   "order": "massed",
+   "A": 0.9733,
+   "B": 0.9228,
+   "C": 0.9167,
+   "macro": 0.9376,
+   "n_stars": 1115,
+   "n_boosted": 5,
+   "n_massed": 1578
+  },
+  {
+   "order": "interleaved",
+   "A": 0.9689,
+   "B": 0.9239,
+   "C": 0.9178,
+   "macro": 0.9369,
+   "n_stars": 1135,
+   "n_boosted": 287,
+   "n_massed": 1265
+  },
+  {
+   "order": "expanding",
+   "A": 0.9689,
+   "B": 0.9239,
+   "C": 0.9178,
+   "macro": 0.9369,
+   "n_stars": 1135,
+   "n_boosted": 287,
+   "n_massed": 1265
+  }
+ ],
+ "retrieval_reinforce": [
+  {
+   "retrieval_reinforce": 0.0,
+   "A": 0.9689,
+   "B": 0.9239,
+   "C": 0.9178,
+   "macro": 0.9369,
+   "n_stars": 1135
+  },
+  {
+   "retrieval_reinforce": 0.02,
+   "A": 0.97,
+   "B": 0.9273,
+   "C": 0.91,
+   "macro": 0.9358,
+   "n_stars": 1144
+  },
+  {
+   "retrieval_reinforce": 0.05,
+   "A": 0.97,
+   "B": 0.9284,
+   "C": 0.9067,
+   "macro": 0.935,
+   "n_stars": 1132
+  },
+  {
+   "retrieval_reinforce": 0.1,
+   "A": 0.97,
+   "B": 0.9239,
+   "C": 0.9056,
+   "macro": 0.9332,
+   "n_stars": 1161
+  }
+ ],
+ "windows": [
+  {
+   "lo": 0,
+   "hi": 0,
+   "A": 0.9689,
+   "B": 0.9251,
+   "C": 0.9178,
+   "macro": 0.9372,
+   "n_boosted": 0
+  },
+  {
+   "lo": 1,
+   "hi": 5,
+   "A": 0.9689,
+   "B": 0.9284,
+   "C": 0.9189,
+   "macro": 0.9387,
+   "n_boosted": 94
+  },
+  {
+   "lo": 5,
+   "hi": 20,
+   "A": 0.9678,
+   "B": 0.9284,
+   "C": 0.9133,
+   "macro": 0.9365,
+   "n_boosted": 289
+  },
+  {
+   "lo": 20,
+   "hi": 80,
+   "A": 0.9689,
+   "B": 0.9195,
+   "C": 0.9067,
+   "macro": 0.9317,
+   "n_boosted": 551
+  },
+  {
+   "lo": 80,
+   "hi": 300,
+   "A": 0.97,
+   "B": 0.9195,
+   "C": 0.9133,
+   "macro": 0.9343,
+   "n_boosted": 583
+  },
+  {
+   "lo": 300,
+   "hi": 1000,
+   "A": 0.9689,
+   "B": 0.9183,
+   "C": 0.9089,
+   "macro": 0.932,
+   "n_boosted": 142
+  },
+  {
+   "lo": 1000,
+   "hi": 3000,
+   "A": 0.9689,
+   "B": 0.9251,
+   "C": 0.9178,
+   "macro": 0.9372,
+   "n_boosted": 0
+  }
+ ],
+ "baseline_interleaved": 0.9369,
+ "elapsed_sec": 5.7
+}

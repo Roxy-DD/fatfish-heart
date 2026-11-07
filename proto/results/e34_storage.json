@@ -1,0 +1,133 @@
+{
+ "experiment": "E-34",
+ "rows": [
+  {
+   "scheme": "json+npy",
+   "dim": 128,
+   "n": 20000,
+   "write_s": 0.463,
+   "size_mb": 9.78,
+   "load_s": 0.0875,
+   "rand_read_us": 0.5,
+   "scan_ms": 0.295
+  },
+  {
+   "scheme": "sqlite-f32",
+   "dim": 128,
+   "n": 20000,
+   "write_s": 0.107,
+   "size_mb": 11.2,
+   "load_s": 0.0124,
+   "rand_read_us": 10.7,
+   "scan_ms": 0.141,
+   "fullread_s": 0.029
+  },
+  {
+   "scheme": "sqlite-sq8",
+   "dim": 128,
+   "n": 20000,
+   "write_s": 0.04,
+   "size_mb": 0.0,
+   "load_s": 0.0051,
+   "rand_read_us": 8.1,
+   "scan_ms": 5.549,
+   "fullread_s": 0.0139
+  },
+  {
+   "scheme": "json+npy",
+   "dim": 128,
+   "n": 100000,
+   "write_s": 2.639,
+   "size_mb": 48.95,
+   "load_s": 0.299,
+   "rand_read_us": 1.8,
+   "scan_ms": 1.553
+  },
+  {
+   "scheme": "sqlite-f32",
+   "dim": 128,
+   "n": 100000,
+   "write_s": 0.5,
+   "size_mb": 55.95,
+   "load_s": 0.0531,
+   "rand_read_us": 12.1,
+   "scan_ms": 1.777,
+   "fullread_s": 0.1433
+  },
+  {
+   "scheme": "sqlite-sq8",
+   "dim": 128,
+   "n": 100000,
+   "write_s": 0.23,
+   "size_mb": 13.92,
+   "load_s": 0.0153,
+   "rand_read_us": 11.0,
+   "scan_ms": 26.959,
+   "fullread_s": 0.0707
+  },
+  {
+   "scheme": "json+npy",
+   "dim": 384,
+   "n": 20000,
+   "write_s": 1.235,
+   "size_mb": 27.85,
+   "load_s": 0.166,
+   "rand_read_us": 0.4,
+   "scan_ms": 0.525
+  },
+  {
+   "scheme": "sqlite-f32",
+   "dim": 384,
+   "n": 20000,
+   "write_s": 0.253,
+   "size_mb": 39.16,
+   "load_s": 0.038,
+   "rand_read_us": 11.9,
+   "scan_ms": 0.507,
+   "fullread_s": 0.063
+  },
+  {
+   "scheme": "sqlite-sq8",
+   "dim": 384,
+   "n": 20000,
+   "write_s": 0.079,
+   "size_mb": 7.84,
+   "load_s": 0.0094,
+   "rand_read_us": 11.5,
+   "scan_ms": 17.424,
+   "fullread_s": 0.0229
+  },
+  {
+   "scheme": "json+npy",
+   "dim": 384,
+   "n": 100000,
+   "write_s": 6.12,
+   "size_mb": 139.28,
+   "load_s": 0.7203,
+   "rand_read_us": 2.3,
+   "scan_ms": 5.542
+  },
+  {
+   "scheme": "sqlite-f32",
+   "dim": 384,
+   "n": 100000,
+   "write_s": 1.354,
+   "size_mb": 195.8,
+   "load_s": 0.1784,
+   "rand_read_us": 13.2,
+   "scan_ms": 5.92,
+   "fullread_s": 0.3561
+  },
+  {
+   "scheme": "sqlite-sq8",
+   "dim": 384,
+   "n": 100000,
+   "write_s": 0.396,
+   "size_mb": 39.17,
+   "load_s": 0.039,
+   "rand_read_us": 11.9,
+   "scan_ms": 82.689,
+   "fullread_s": 0.1185
+  }
+ ]
+}

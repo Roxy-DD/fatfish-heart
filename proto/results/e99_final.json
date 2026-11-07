@@ -1,0 +1,10 @@
+{
+ "experiment": "E-99",
+ "trigger_recall": 1.0,
+ "migration_ok": true,
+ "affect_recomputed": {
+  "text": "这个千万别搞错要出大事",
+  "affect_peak": 0.95,
+  "valence": -1.0
+ }
+}

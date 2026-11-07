@@ -1,0 +1,80 @@
+{
+ "experiment": "E-44",
+ "n": 73360,
+ "dim": 512,
+ "k": 5,
+ "results": {
+  "EXACT": {
+   "build_s": 0.0,
+   "ms": 4.325,
+   "p90": 4.763,
+   "recall": 1.0,
+   "size_mb": 35.8
+  },
+  "IVF nl=256 np=8": {
+   "build_s": 1.77,
+   "ms": 1.797,
+   "p90": 2.036,
+   "recall": 0.848,
+   "size_mb": 1.1
+  },
+  "IVF nl=256 np=32": {
+   "build_s": 1.78,
+   "ms": 6.106,
+   "p90": 6.756,
+   "recall": 0.928,
+   "size_mb": 1.1
+  },
+  "IVF nl=1024 np=16": {
+   "build_s": 5.64,
+   "ms": 0.762,
+   "p90": 0.907,
+   "recall": 0.85,
+   "size_mb": 2.6
+  },
+  "IVF-PQ np=8": {
+   "build_s": 199.02,
+   "ms": 0.387,
+   "p90": 0.431,
+   "recall": 0.382,
+   "size_mb": 2.1
+  },
+  "IVF-PQ np=32": {
+   "build_s": 199.02,
+   "ms": 0.951,
+   "p90": 1.021,
+   "recall": 0.396,
+   "size_mb": 2.1
+  },
+  "FAISS-IVF np=8": {
+   "build_s": 0.98,
+   "ms": 0.225,
+   "p90": 0.229,
+   "recall": 0.856,
+   "size_mb": 143.3
+  },
+  "FAISS-IVF np=32": {
+   "build_s": 0.98,
+   "ms": 0.718,
+   "p90": 0.797,
+   "recall": 0.944,
+   "size_mb": 143.3
+  },
+  "FAISS-HNSW ef=32": {
+   "build_s": 5.93,
+   "ms": 0.096,
+   "p90": 0.101,
+   "recall": 0.96,
+   "size_mb": 143.3
+  },
+  "FAISS-HNSW ef=64": {
+   "build_s": 5.93,
+   "ms": 0.153,
+   "p90": 0.157,
+   "recall": 0.962,
+   "size_mb": 143.3
+  }
+ },
+ "rebuild_deterministic": true,
+ "truth_layer_mb": 35.8
+}

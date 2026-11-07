@@ -1,0 +1,56 @@
+{
+ "experiment": "E-10",
+ "ablation": "hierarchical vs flat",
+ "n_root": 411,
+ "n_all": 1428,
+ "n_categories": 83,
+ "results": [
+  {
+   "method": "hier_recursive (原实现)",
+   "A": 0.6767,
+   "B": 0.87,
+   "C": 0.86,
+   "macro": 0.8022
+  },
+  {
+   "method": "flat_root_only (411根)",
+   "A": 0.6767,
+   "B": 0.87,
+   "C": 0.86,
+   "macro": 0.8022
+  },
+  {
+   "method": "flat_all_stars (1428)",
+   "A": 0.8467,
+   "B": 0.9067,
+   "C": 0.84,
+   "macro": 0.8644
+  },
+  {
+   "method": "topk3_all_stars",
+   "A": 0.8933,
+   "B": 0.92,
+   "C": 0.8567,
+   "macro": 0.89
+  },
+  {
+   "method": "topk3_root_only",
+   "A": 0.5033,
+   "B": 0.8567,
+   "C": 0.9,
+   "macro": 0.7533
+  },
+  {
+   "method": "topk5_all_stars",
+   "A": 0.8933,
+   "B": 0.8933,
+   "C": 0.84,
+   "macro": 0.8756
+  }
+ ],
+ "verdict": {
+  "flat_minus_hier_A": 0.17,
+  "flat_minus_hier_macro": 0.0622,
+  "hierarchy_hurts": true
+ }
+}

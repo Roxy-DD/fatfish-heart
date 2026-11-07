@@ -1,0 +1,219 @@
+{
+ "experiment": "E-9",
+ "learner": "core.py CorpusCallosum (hierarchical)",
+ "threshold": 0.705,
+ "n_root": 411,
+ "n_all": 1428,
+ "baseline": {
+  "A": 0.8467,
+  "B": 0.9067,
+  "C": 0.84
+ },
+ "variants": [
+  {
+   "variant": "max",
+   "kwargs": {},
+   "A": 0.8467,
+   "B": 0.9067,
+   "C": 0.84,
+   "macro": 0.8644,
+   "dA": 0.0,
+   "dmacro": 0.0
+  },
+  {
+   "variant": "topk3",
+   "kwargs": {
+    "mode": "topk",
+    "topk": 3
+   },
+   "A": 0.8933,
+   "B": 0.92,
+   "C": 0.8567,
+   "macro": 0.89,
+   "dA": 0.0467,
+   "dmacro": 0.0256
+  },
+  {
+   "variant": "topk5",
+   "kwargs": {
+    "mode": "topk",
+    "topk": 5
+   },
+   "A": 0.8933,
+   "B": 0.8933,
+   "C": 0.84,
+   "macro": 0.8756,
+   "dA": 0.0467,
+   "dmacro": 0.0111
+  },
+  {
+   "variant": "topk10",
+   "kwargs": {
+    "mode": "topk",
+    "topk": 10
+   },
+   "A": 0.8933,
+   "B": 0.88,
+   "C": 0.8033,
+   "macro": 0.8589,
+   "dA": 0.0467,
+   "dmacro": -0.0056
+  },
+  {
+   "variant": "topk20",
+   "kwargs": {
+    "mode": "topk",
+    "topk": 20
+   },
+   "A": 0.8733,
+   "B": 0.89,
+   "C": 0.76,
+   "macro": 0.8411,
+   "dA": 0.0267,
+   "dmacro": -0.0233
+  },
+  {
+   "variant": "prior0.02",
+   "kwargs": {
+    "mode": "prior_norm",
+    "beta": 0.02
+   },
+   "A": 0.8533,
+   "B": 0.8833,
+   "C": 0.8633,
+   "macro": 0.8667,
+   "dA": 0.0067,
+   "dmacro": 0.0022
+  },
+  {
+   "variant": "prior0.05",
+   "kwargs": {
+    "mode": "prior_norm",
+    "beta": 0.05
+   },
+   "A": 0.8567,
+   "B": 0.86,
+   "C": 0.8933,
+   "macro": 0.87,
+   "dA": 0.01,
+   "dmacro": 0.0056
+  },
+  {
+   "variant": "prior0.1",
+   "kwargs": {
+    "mode": "prior_norm",
+    "beta": 0.1
+   },
+   "A": 0.8233,
+   "B": 0.7433,
+   "C": 0.9033,
+   "macro": 0.8233,
+   "dA": -0.0233,
+   "dmacro": -0.0411
+  },
+  {
+   "variant": "prior0.2",
+   "kwargs": {
+    "mode": "prior_norm",
+    "beta": 0.2
+   },
+   "A": 0.6533,
+   "B": 0.4267,
+   "C": 0.9067,
+   "macro": 0.6622,
+   "dA": -0.1933,
+   "dmacro": -0.2022
+  },
+  {
+   "variant": "prior0.4",
+   "kwargs": {
+    "mode": "prior_norm",
+    "beta": 0.4
+   },
+   "A": 0.35,
+   "B": 0.0567,
+   "C": 0.7967,
+   "macro": 0.4011,
+   "dA": -0.4967,
+   "dmacro": -0.4633
+  },
+  {
+   "variant": "wtopk3",
+   "kwargs": {
+    "mode": "wtopk",
+    "topk": 3
+   },
+   "A": 0.83,
+   "B": 0.9067,
+   "C": 0.8633,
+   "macro": 0.8667,
+   "dA": -0.0167,
+   "dmacro": 0.0022
+  },
+  {
+   "variant": "wtopk5",
+   "kwargs": {
+    "mode": "wtopk",
+    "topk": 5
+   },
+   "A": 0.8567,
+   "B": 0.9167,
+   "C": 0.8867,
+   "macro": 0.8867,
+   "dA": 0.01,
+   "dmacro": 0.0222
+  },
+  {
+   "variant": "zscore_k3",
+   "kwargs": {
+    "mode": "zscore_k",
+    "cand": 3
+   },
+   "A": 0.1367,
+   "B": 0.0933,
+   "C": 0.1633,
+   "macro": 0.1311,
+   "dA": -0.71,
+   "dmacro": -0.7333
+  },
+  {
+   "variant": "zscore_k5",
+   "kwargs": {
+    "mode": "zscore_k",
+    "cand": 5
+   },
+   "A": 0.0533,
+   "B": 0.0433,
+   "C": 0.1067,
+   "macro": 0.0678,
+   "dA": -0.7933,
+   "dmacro": -0.7967
+  }
+ ],
+ "best_by_A": {
+  "variant": "topk3",
+  "kwargs": {
+   "mode": "topk",
+   "topk": 3
+  },
+  "A": 0.8933,
+  "B": 0.92,
+  "C": 0.8567,
+  "macro": 0.89,
+  "dA": 0.0467,
+  "dmacro": 0.0256
+ },
+ "best_by_macro": {
+  "variant": "topk3",
+  "kwargs": {
+   "mode": "topk",
+   "topk": 3
+  },
+  "A": 0.8933,
+  "B": 0.92,
+  "C": 0.8567,
+  "macro": 0.89,
+  "dA": 0.0467,
+  "dmacro": 0.0256
+ }
+}

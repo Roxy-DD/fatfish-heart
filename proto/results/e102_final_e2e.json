@@ -1,0 +1,7 @@
+{
+ "experiment": "E-102",
+ "identity_trigger_ok": true,
+ "vague_trigger_ok": true,
+ "refiner_cache_ok": false,
+ "migration_ok": true
+}

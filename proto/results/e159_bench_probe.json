@@ -1,0 +1,40 @@
+{
+ "experiment": "E-159",
+ "results": {
+  "LoCoMo GitHub raw (locomo10.json)": {
+   "ok": true,
+   "kind": "json_list",
+   "n": 10,
+   "fields": [
+    "qa",
+    "conversation",
+    "event_summary",
+    "observation",
+    "session_summary",
+    "sample_id"
+   ]
+  },
+  "LoCoMo HF Percena/locomo-mc10": {
+   "ok": false,
+   "error": "HTTP Error 500: Internal Server Error"
+  },
+  "LongMemEval HF xiaowu0162": {
+   "ok": false,
+   "error": "HTTP Error 404: Not Found"
+  },
+  "MemoryAgentBench HF ai-hyz": {
+   "ok": false,
+   "error": "HTTP Error 500: Internal Server Error"
+  },
+  "MemBench GitHub": {
+   "ok": true,
+   "kind": "text",
+   "size": 2529
+  }
+ },
+ "available": {
+  "locomo": true,
+  "longmemeval": false,
+  "memoryagentbench": false
+ }
+}

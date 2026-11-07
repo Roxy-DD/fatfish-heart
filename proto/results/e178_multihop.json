@@ -1,0 +1,109 @@
+{
+ "experiment": "E-178",
+ "n_multi": 92,
+ "found_all": 16,
+ "found_part": 20,
+ "found_none": 56,
+ "ev_counts": {
+  "2": 25,
+  "1": 45,
+  "3": 9,
+  "4": 10,
+  "10": 1,
+  "11": 1,
+  "17": 1
+ },
+ "session_spread": {
+  "1": 61,
+  "2": 14,
+  "3": 7,
+  "4": 7,
+  "7": 1,
+  "6": 1,
+  "8": 1
+ },
+ "samples": [
+  {
+   "q": "What fields would Caroline be likely to pursue in her educaton?",
+   "ev": [
+    "D1:9",
+    "D1:11"
+   ],
+   "found": [
+    "D1:9"
+   ],
+   "sid": "conv-26",
+   "ev_texts": [
+    "[1:56 pm on 8 May, 2023] Caroline: Gonna continue my edu and check out career options, which is pretty exciting!",
+    "[1:56 pm on 8 May, 2023] Caroline: I'm keen on counseling or working in mental health - I'd love to support those with s"
+   ]
+  },
+  {
+   "q": "Would Caroline still want to pursue counseling as a career if she hadn't received support growing up?",
+   "ev": [
+    "D4:15",
+    "D3:5"
+   ],
+   "found": [
+    "D4:15"
+   ],
+   "sid": "conv-26",
+   "ev_texts": [
+    "[10:37 am on 27 June, 2023] Caroline: Thanks, Melanie. It really mattered. My own journey and the support I got made a h",
+    "[7:55 pm on 9 June, 2023] Caroline: Thanks Mel! Your kind words mean a lot. Sharing our experiences isn't always easy, b"
+   ]
+  },
+  {
+   "q": "Would Caroline pursue writing as a career option?",
+   "ev": [
+    "D7:5",
+    "D7:9"
+   ],
+   "found": [],
+   "sid": "conv-26",
+   "ev_texts": [
+    "[4:33 pm on 12 July, 2023] Caroline: Thanks, Mell! I'm still looking into counseling and mental health jobs. It's import",
+    "[4:33 pm on 12 July, 2023] Caroline: Thanks so much, Mel! Seeing this pic just made me appreciate my love of reading eve"
+   ]
+  },
+  {
+   "q": "Would Melanie be more interested in going to a national park or a theme park?",
+   "ev": [
+    "D10:12",
+    "D10:14"
+   ],
+   "found": [],
+   "sid": "conv-26",
+   "ev_texts": [
+    "[8:56 pm on 20 July, 2023] Melanie: We always look forward to our family camping trip. We roast marshmallows, tell stori",
+    "[8:56 pm on 20 July, 2023] Melanie: I'll always remember our camping trip last year when we saw the Perseid meteor showe"
+   ]
+  },
+  {
+   "q": "What would Caroline's political leaning likely be?",
+   "ev": [
+    "D12:1"
+   ],
+   "found": [],
+   "sid": "conv-26",
+   "ev_texts": [
+    "[1:50 pm on 17 August, 2023] Caroline: Hey Mel! How're ya doin'? Recently, I had a not-so-great experience on a hike. I "
+   ]
+  },
+  {
+   "q": "Would Caroline be considered religious?",
+   "ev": [
+    "D14:19",
+    "D12:1"
+   ],
+   "found": [
+    "D12:1"
+   ],
+   "sid": "conv-26",
+   "ev_texts": [
+    "[1:33 pm on 25 August, 2023] Caroline: Thanks! It was made for a local church and shows time changing our lives. I made ",
+    "[1:50 pm on 17 August, 2023] Caroline: Hey Mel! How're ya doin'? Recently, I had a not-so-great experience on a hike. I "
+   ]
+  }
+ ]
+}

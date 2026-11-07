@@ -1,0 +1,13 @@
+{
+ "experiment": "E-158",
+ "n": 37,
+ "by_type": {
+  "temporal-reasoning": 11,
+  "single-session-user": 4,
+  "single-session-preference": 3,
+  "multi-session": 11,
+  "knowledge-update": 4,
+  "single-session-assistant": 4
+ },
+ "k": 10
+}

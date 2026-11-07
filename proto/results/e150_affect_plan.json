@@ -1,0 +1,14 @@
+{
+ "experiment": "E-150",
+ "n": 40,
+ "rule": {
+  "mae": 0.2533,
+  "miss": 13,
+  "false": 0,
+  "ms": 0.12
+ },
+ "trigger_ratio": 0.25,
+ "trigger_recall": 0.45,
+ "est_llm_ms": 800,
+ "est_c_ms": 200.1
+}

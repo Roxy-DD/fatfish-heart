@@ -1,0 +1,367 @@
+{
+ "experiment": "E-158",
+ "n": 37,
+ "acc": 0.6216,
+ "found_rate": 0.7838,
+ "by_type": {
+  "temporal-reasoning": {
+   "hit": 5,
+   "total": 11
+  },
+  "single-session-user": {
+   "hit": 4,
+   "total": 4
+  },
+  "single-session-preference": {
+   "hit": 0,
+   "total": 3
+  },
+  "multi-session": {
+   "hit": 6,
+   "total": 11
+  },
+  "knowledge-update": {
+   "hit": 4,
+   "total": 4
+  },
+  "single-session-assistant": {
+   "hit": 4,
+   "total": 4
+  }
+ },
+ "details": [
+  {
+   "cid": "Q00",
+   "qtype": "temporal-reasoning",
+   "question": "I mentioned cooking something for my friend a couple of days ago. What was it?",
+   "gold": "a chocolate cake",
+   "pred": "I don't know",
+   "found": false,
+   "ok": false
+  },
+  {
+   "cid": "Q01",
+   "qtype": "temporal-reasoning",
+   "question": "Which book did I finish reading first, 'The Hate U Give' or 'The Nightingale'?",
+   "gold": "'The Hate U Give'",
+   "pred": "'The Hate U Give'",
+   "found": true,
+   "ok": true
+  },
+  {
+   "cid": "Q02",
+   "qtype": "temporal-reasoning",
+   "question": "Which trip did I take first, the one to Europe with family or the solo trip to Thailand?",
+   "gold": "The solo trip to Thailand",
+   "pred": "the solo trip to Thailand",
+   "found": true,
+   "ok": true
+  },
+  {
+   "cid": "Q03",
+   "qtype": "single-session-user",
+   "question": "What book am I currently reading?",
+   "gold": "The Seven Husbands of Evelyn Hugo",
+   "pred": "\"The Seven Husbands of Evelyn Hugo\"",
+   "found": true,
+   "ok": true
+  },
+  {
+   "cid": "Q04",
+   "qtype": "temporal-reasoning",
+   "question": "How many days ago did I attend a networking event?",
+   "gold": "26 days. 27 days (including the last day) is also acceptable.",
+   "pred": "I don't know",
+   "found": false,
+   "ok": false
+  },
+  {
+   "cid": "Q05",
+   "qtype": "single-session-preference",
+   "question": "Can you suggest a hotel for my upcoming trip to Miami?",
+   "gold": "The user would prefer suggestions of hotels in Miami that offer great views, possibly of the ocean or the city skyline, and have unique features such as a rooftop pool or a hot tub on the balcony. They may not prefer suggestions of basic or budget hotels without these features.",
+   "pred": "hotels with great views (ocean or city skyline) and unique features like a rooftop pool or balcony hot tub",
+   "found": true,
+   "ok": false
+  },
+  {
+   "cid": "Q06",
+   "qtype": "single-session-user",
+   "question": "What is the name of my cat?",
+   "gold": "Luna",
+   "pred": "Luna",
+   "found": true,
+   "ok": true
+  },
+  {
+   "cid": "Q07",
+   "qtype": "multi-session",
+   "question": "How many sports have I played competitively in the past?",
+   "gold": "two",
+   "pred": "two (tennis and swimming)",
+   "found": true,
+   "ok": true
+  },
+  {
+   "cid": "Q08",
+   "qtype": "multi-session",
+   "question": "How many dinner parties have I attended in the past month?",
+   "gold": "three",
+   "pred": "three (Alex's, Mike's and Sarah's)",
+   "found": true,
+   "ok": true
+  },
+  {
+   "cid": "Q09",
+   "qtype": "single-session-user",
+   "question": "Where did I buy my new bookshelf from?",
+   "gold": "IKEA",
+   "pred": "IKEA",
+   "found": true,
+   "ok": true
+  },
+  {
+   "cid": "Q10",
+   "qtype": "temporal-reasoning",
+   "question": "How many months ago did I attend the photography workshop?",
+   "gold": "3",
+   "pred": "I don't know",
+   "found": false,
+   "ok": false
+  },
+  {
+   "cid": "Q11",
+   "qtype": "temporal-reasoning",
+   "question": "What is the artist that I started to listen to last Friday?",
+   "gold": "a bluegrass band that features a banjo player",
+   "pred": "a bluegrass band that features a banjo player",
+   "found": true,
+   "ok": true
+  },
+  {
+   "cid": "Q12",
+   "qtype": "single-session-preference",
+   "question": "I've been feeling like my chocolate chip cookies need something extra. Any advice?",
+   "gold": "The user would prefer responses that build upon their previous experimentation with turbinado sugar, suggesting ingredients or techniques that complement its richer flavor. They might not prefer generic cookie-making advice or suggestions that don't take into account their existing use of turbinado sugar.",
+   "pred": "pair ingredients that complement turbinado sugar (spices, citrus, nuts) to build on that richer flavor",
+   "found": true,
+   "ok": false
+  },
+  {
+   "cid": "Q13",
+   "qtype": "multi-session",
+   "question": "How old was I when Alex was born?",
+   "gold": "11",
+   "pred": "11",
+   "found": true,
+   "ok": true
+  },
+  {
+   "cid": "Q14",
+   "qtype": "knowledge-update",
+   "question": "How many videos of Corey Schafer's Python programming series have I completed so far?",
+   "gold": "30",
+   "pred": "30",
+   "found": true,
+   "ok": true
+  },
+  {
+   "cid": "Q15",
+   "qtype": "temporal-reasoning",
+   "question": "How many days passed between the day I started watering my herb garden and the day I harvested my first batch of fresh herbs?",
+   "gold": "24 days. 25 days (including the last day) is also acceptable.",
+   "pred": "I don't know",
+   "found": false,
+   "ok": false
+  },
+  {
+   "cid": "Q16",
+   "qtype": "single-session-assistant",
+   "question": "I was looking back at our previous conversation about Caribbean dishes and I was wondering, what was the name of that Jamaican dish you recommended I try with snapper that has fruit in it?",
+   "gold": "Grilled Snapper with Mango Salsa",
+   "pred": "Grilled Snapper with Mango Salsa",
+   "found": true,
+   "ok": true
+  },
+  {
+   "cid": "Q17",
+   "qtype": "multi-session",
+   "question": "What is the total distance I covered in my four road trips?",
+   "gold": "3,000 miles",
+   "pred": "I don't know",
+   "found": false,
+   "ok": false
+  },
+  {
+   "cid": "Q18",
+   "qtype": "multi-session",
+   "question": "How many babies were born to friends and family members in the last few months?",
+   "gold": "5",
+   "pred": "five (Max, Charlotte, Ava, Lily and Jasper)",
+   "found": true,
+   "ok": false
+  },
+  {
+   "cid": "Q19",
+   "qtype": "single-session-user",
+   "question": "How many playlists do I have on Spotify?",
+   "gold": "20",
+   "pred": "20",
+   "found": true,
+   "ok": true
+  },
+  {
+   "cid": "Q20",
+   "qtype": "knowledge-update",
+   "question": "Where do I initially keep my old sneakers?",
+   "gold": "under my bed",
+   "pred": "under my bed",
+   "found": true,
+   "ok": true
+  },
+  {
+   "cid": "Q21",
+   "qtype": "knowledge-update",
+   "question": "Where did Rachel move to after her recent relocation?",
+   "gold": "the suburbs",
+   "pred": "the suburbs",
+   "found": true,
+   "ok": true
+  },
+  {
+   "cid": "Q22",
+   "qtype": "temporal-reasoning",
+   "question": "How many days passed between the day I started playing along to my favorite songs on my old keyboard and the day I discovered a bluegrass band?",
+   "gold": "6 days. 7 days (including the last day) is also acceptable.",
+   "pred": "I don't know",
+   "found": false,
+   "ok": false
+  },
+  {
+   "cid": "Q23",
+   "qtype": "single-session-assistant",
+   "question": "Can you remind me what was the average improvement in framerate when using the Hardware-Aware Modular Training (HAMT) agent in the 'To Adapt or Not to Adapt? Real-Time Adaptation for Semantic Segmentation' submission?",
+   "gold": "The average improvement in framerate was approximately 20% when using the Hardware-Aware Modular Training (HAMT) agent.",
+   "pred": "approximately 20%",
+   "found": true,
+   "ok": true
+  },
+  {
+   "cid": "Q24",
+   "qtype": "temporal-reasoning",
+   "question": "How many days before the team meeting I was preparing for did I attend the workshop on 'Effective Communication in the Workplace'?",
+   "gold": "7 days. 8 days (including the last day) is also acceptable.",
+   "pred": "7 days (January 10 to January 17)",
+   "found": true,
+   "ok": true
+  },
+  {
+   "cid": "Q25",
+   "qtype": "multi-session",
+   "question": "What percentage of packed shoes did I wear on my last trip?",
+   "gold": "40%",
+   "pred": "40% (two of five pairs)",
+   "found": true,
+   "ok": true
+  },
+  {
+   "cid": "Q26",
+   "qtype": "single-session-assistant",
+   "question": "I'm going back to our previous conversation about DIY home decor projects using recycled materials. Can you remind me what sealant you recommended for the newspaper flower vase?",
+   "gold": "Mod Podge or another sealant",
+   "pred": "Mod Podge or another sealant",
+   "found": true,
+   "ok": true
+  },
+  {
+   "cid": "Q27",
+   "qtype": "temporal-reasoning",
+   "question": "How long did I take to finish 'The Seven Husbands of Evelyn Hugo' and 'The Nightingale' combined?",
+   "gold": "5.5 weeks",
+   "pred": "I don't know",
+   "found": false,
+   "ok": false
+  },
+  {
+   "cid": "Q28",
+   "qtype": "multi-session",
+   "question": "How much have I made from selling eggs this month?",
+   "gold": "$120",
+   "pred": "I don't know",
+   "found": false,
+   "ok": false
+  },
+  {
+   "cid": "Q29",
+   "qtype": "multi-session",
+   "question": "How many plants did I initially plant for tomatoes and cucumbers?",
+   "gold": "8",
+   "pred": "8 (5 tomato plants and 3 cucumber plants)",
+   "found": true,
+   "ok": true
+  },
+  {
+   "cid": "Q30",
+   "qtype": "multi-session",
+   "question": "How many times did I bake something in the past two weeks?",
+   "gold": "4",
+   "pred": "three times (chocolate cake, sourdough bread, whole wheat baguette)",
+   "found": true,
+   "ok": false
+  },
+  {
+   "cid": "Q31",
+   "qtype": "multi-session",
+   "question": "How many different museums or galleries did I visit in the month of February?",
+   "gold": "2",
+   "pred": "one (The Art Cube on 2/15)",
+   "found": true,
+   "ok": true
+  },
+  {
+   "cid": "Q32",
+   "qtype": "single-session-preference",
+   "question": "I’m a bit anxious about getting around Tokyo. Do you have any helpful tips?",
+   "gold": "The user would prefer responses that utilize their existing resources, such as their Suica card and TripIt app, to provide personalized tips for navigating Tokyo's public transportation. They might not prefer general tips or recommendations that do not take into account their prior preparations.",
+   "pred": "use your Suica card for the trains and subway; it covers the routes to places like Tsukiji and Shinjuku",
+   "found": true,
+   "ok": false
+  },
+  {
+   "cid": "Q33",
+   "qtype": "multi-session",
+   "question": "How much total money have I spent on bike-related expenses since the start of the year?",
+   "gold": "$185",
+   "pred": "$40 (bike lights)",
+   "found": true,
+   "ok": false
+  },
+  {
+   "cid": "Q34",
+   "qtype": "single-session-assistant",
+   "question": "I was looking back at our previous conversation about environmentally responsible supply chain practices, and I was wondering if you could remind me of the company you mentioned that's doing a great job with sustainability?",
+   "gold": "Patagonia",
+   "pred": "Patagonia",
+   "found": true,
+   "ok": true
+  },
+  {
+   "cid": "Q35",
+   "qtype": "temporal-reasoning",
+   "question": "What was the date on which I attended the first BBQ event in June?",
+   "gold": "June 3rd",
+   "pred": "June 3rd",
+   "found": true,
+   "ok": true
+  },
+  {
+   "cid": "Q36",
+   "qtype": "knowledge-update",
+   "question": "Where is the painting 'Ethereal Dreams' by Emma Taylor currently hanging?",
+   "gold": "in my bedroom",
+   "pred": "in my bedroom, above my bed",
+   "found": true,
+   "ok": true
+  }
+ ]
+}

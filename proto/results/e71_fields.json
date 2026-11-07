@@ -1,0 +1,11 @@
+{
+ "experiment": "E-71",
+ "n": 30,
+ "old_hit": 29,
+ "new_hit": 30,
+ "old_rate": 0.9667,
+ "new_rate": 1.0,
+ "delta": 0.0333,
+ "bare_pronoun_total": 1,
+ "regressions": []
+}

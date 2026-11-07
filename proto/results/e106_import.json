@@ -1,0 +1,17 @@
+{
+ "experiment": "E-106",
+ "before": 4,
+ "after": 44,
+ "added": 40,
+ "stats": {
+  "total": 44,
+  "valid": 44,
+  "invalid": 0,
+  "vectors": 44,
+  "high_cost": 13,
+  "high_affect": 9,
+  "size_mb": 0.08,
+  "incomplete": 3,
+  "identity_can": 7
+ }
+}

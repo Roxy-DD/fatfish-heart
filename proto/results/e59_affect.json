@@ -1,0 +1,78 @@
+{
+ "experiment": "E-59",
+ "n": 32,
+ "rule": {
+  "POS": {
+   "val": 0.5,
+   "aro": 0.0,
+   "detect": 0.0
+  },
+  "NEG": {
+   "val": -0.375,
+   "aro": 0.0416,
+   "detect": 0.125
+  },
+  "NEUTRAL": {
+   "val": 0.0,
+   "aro": 0.0,
+   "detect": 0.0
+  },
+  "SUBTLE": {
+   "val": 0.0,
+   "aro": 0.0,
+   "detect": 0.0
+  }
+ },
+ "snownlp": {
+  "POS": {
+   "val": 0.338,
+   "aro": 0.5084,
+   "detect": 0.875
+  },
+  "NEG": {
+   "val": -0.2497,
+   "aro": 0.6339,
+   "detect": 0.875
+  },
+  "NEUTRAL": {
+   "val": -0.2697,
+   "aro": 0.5052,
+   "detect": 0.875
+  },
+  "SUBTLE": {
+   "val": -0.0284,
+   "aro": 0.414,
+   "detect": 0.875
+  }
+ },
+ "separation": {
+  "rule": 0.875,
+  "snownlp": 0.5876
+ },
+ "centroid_sim": {
+  "POS": {
+   "POS": 1.0,
+   "NEG": 0.7976,
+   "NEUTRAL": 0.695,
+   "SUBTLE": 0.7483
+  },
+  "NEG": {
+   "POS": 0.7976,
+   "NEG": 1.0,
+   "NEUTRAL": 0.7116,
+   "SUBTLE": 0.7974
+  },
+  "NEUTRAL": {
+   "POS": 0.695,
+   "NEG": 0.7116,
+   "NEUTRAL": 1.0,
+   "SUBTLE": 0.6744
+  },
+  "SUBTLE": {
+   "POS": 0.7483,
+   "NEG": 0.7974,
+   "NEUTRAL": 0.6744,
+   "SUBTLE": 1.0
+  }
+ }
+}

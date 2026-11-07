@@ -1,0 +1,44 @@
+==============================================================================================
+E-74 按模型 4 类规则重新审计
+==============================================================================================
+
+库内已定义约定术语: （无）
+
+----------------------------------------------------------------------------------------------
+rid   模型判定                  新规则判定                                   命中?     内容
+----------------------------------------------------------------------------------------------
+R00   ok                    clean                                           我的车牌号是 沪A·5X29K
+R01   ok                    clean                                           12月3日下午两点，我和张工在 7 楼会议室对齐
+R02   missing_object        missing_object                          ✓       医生说要连续吃两周的药，不能断
+R03   ok                    clean                                           我女儿的幼儿园在城南路 18 号
+R04   vague_value           missing_object/vague_value              ✓       这个方案我否决了，因为成本太高
+R05   bare_pronoun          missing_object                          ✓       明天记得带那个东西
+R06   missing_object        missing_object                          ✓       他说不行
+R07   bare_pronoun          clean                                   ✗漏      这个方案后来改了
+R08   vague_value           unanchored_time/vague_value             ✓       上次那个价格谈下来了
+R09   bare_pronoun          missing_object                          ✓       我已经跟他对接过了
+R10   undefined_convention  undefined_convention                    ✓       还是按老规矩办
+R11   bare_pronoun          clean                                   ✗漏      那个文件在共享盘里
+R12   missing_object        missing_object                          ✓       记得提醒我
+R13   unanchored_time       clean                                   ✗漏      大概下周三吧
+R14   undefined_convention  missing_object/undefined_convention     ✓       价格是市场价
+R15   missing_object        missing_object                          ✓       他同意了，但是有条件
+R16   missing_object        missing_object                          ✓       这批货有点问题
+R17   bare_pronoun          missing_object                          ✓       我问过他了，他说等通知
+R18   bare_pronoun          clean                                   ✗漏      那个东西我放起来了
+R19   bare_pronoun          missing_object                          ✓       到那边之后再说
+R20   vague_summary         clean                                   ✗漏      今天开完会之后感觉整体方向还行，但是细节还需要再
+----------------------------------------------------------------------------------------------
+
+模型认为有问题: 18 条
+新规则抓到:      13 条
+误伤（模型说 ok 但规则报警）: 0 条
+
+  召回率 0.7222
+  精确率 1.0000
+  F1     0.8387
+
+  对比 E-73（只有原 3 类）：覆盖 1/18，漏 17
+  现在：覆盖 13/18
+
+写入 C:\Users\xuee\Desktop\肥鱼之心\proto\results\e74_rules.json

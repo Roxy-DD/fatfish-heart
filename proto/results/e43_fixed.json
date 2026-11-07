@@ -1,0 +1,43 @@
+{
+ "experiment": "E-43",
+ "n": 73360,
+ "encode_single": {
+  "median": 4.613,
+  "mean": 4.738,
+  "p10": 4.298,
+  "p90": 5.359,
+  "min": 4.247
+ },
+ "retrieval": {
+  "full_ms": 4.684,
+  "int8_f32_ms": 4.673,
+  "int8_native_ms": 79.443
+ },
+ "cache_hit": [
+  {
+   "scenario": "S1_反复问同一件事",
+   "n": 20,
+   "str_hit": 0.9,
+   "sem_hit": 0.9
+  },
+  {
+   "scenario": "S2_每次问新东西",
+   "n": 40,
+   "str_hit": 0.0,
+   "sem_hit": 0.0
+  },
+  {
+   "scenario": "S3_混合(60%复问)",
+   "n": 40,
+   "str_hit": 0.275,
+   "sem_hit": 0.275
+  },
+  {
+   "scenario": "S4_换说法问",
+   "n": 40,
+   "str_hit": 0.6,
+   "sem_hit": 0.8
+  }
+ ],
+ "note": "E-42 的 45.52ms 是冷启动噪声，本实验预热后重测"
+}

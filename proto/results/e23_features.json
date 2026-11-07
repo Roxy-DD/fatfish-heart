@@ -1,0 +1,142 @@
+{
+ "experiment": "E-23",
+ "setting": "pixel-space features, flat retrieval, top3",
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "per_task": [
+  900,
+  300
+ ],
+ "rows": [
+  {
+   "feature": "raw784",
+   "dim": 784,
+   "threshold": 0.485,
+   "balanced_acc": 0.7019,
+   "same_cos": 0.5291,
+   "diff_cos": 0.3886,
+   "gap": 0.1405,
+   "A": 0.9644,
+   "B": 0.9105,
+   "C": 0.88,
+   "macro": 0.9183,
+   "n_stars": 1262
+  },
+  {
+   "feature": "hog128",
+   "dim": 128,
+   "threshold": 0.56,
+   "balanced_acc": 0.7546,
+   "same_cos": 0.6367,
+   "diff_cos": 0.4454,
+   "gap": 0.1914,
+   "A": 0.97,
+   "B": 0.9273,
+   "C": 0.9167,
+   "macro": 0.938,
+   "n_stars": 1216
+  },
+  {
+   "feature": "pool2_196",
+   "dim": 196,
+   "threshold": 0.565,
+   "balanced_acc": 0.7123,
+   "same_cos": 0.6016,
+   "diff_cos": 0.4544,
+   "gap": 0.1473,
+   "A": 0.9656,
+   "B": 0.8982,
+   "C": 0.89,
+   "macro": 0.9179,
+   "n_stars": 1196
+  },
+  {
+   "feature": "center784",
+   "dim": 784,
+   "threshold": 0.105,
+   "balanced_acc": 0.7382,
+   "same_cos": 0.2185,
+   "diff_cos": -0.0249,
+   "gap": 0.2434,
+   "A": 0.9689,
+   "B": 0.9072,
+   "C": 0.8511,
+   "macro": 0.9091,
+   "n_stars": 1172
+  },
+  {
+   "feature": "pca64",
+   "dim": 64,
+   "threshold": 0.1,
+   "balanced_acc": 0.7395,
+   "same_cos": 0.2517,
+   "diff_cos": -0.0287,
+   "gap": 0.2804,
+   "A": 0.9689,
+   "B": 0.9139,
+   "C": 0.8667,
+   "macro": 0.9165,
+   "n_stars": 1085
+  },
+  {
+   "feature": "pca128",
+   "dim": 128,
+   "threshold": 0.09,
+   "balanced_acc": 0.7378,
+   "same_cos": 0.2326,
+   "diff_cos": -0.0266,
+   "gap": 0.2591,
+   "A": 0.9644,
+   "B": 0.9094,
+   "C": 0.8667,
+   "macro": 0.9135,
+   "n_stars": 1112
+  },
+  {
+   "feature": "pixel+hog",
+   "dim": 912,
+   "threshold": 0.525,
+   "balanced_acc": 0.7487,
+   "same_cos": 0.5829,
+   "diff_cos": 0.417,
+   "gap": 0.1659,
+   "A": 0.9778,
+   "B": 0.9239,
+   "C": 0.9167,
+   "macro": 0.9395,
+   "n_stars": 1263
+  }
+ ],
+ "best": {
+  "feature": "pixel+hog",
+  "dim": 912,
+  "threshold": 0.525,
+  "balanced_acc": 0.7487,
+  "same_cos": 0.5829,
+  "diff_cos": 0.417,
+  "gap": 0.1659,
+  "A": 0.9778,
+  "B": 0.9239,
+  "C": 0.9167,
+  "macro": 0.9395,
+  "n_stars": 1263
+ },
+ "baseline": {
+  "feature": "raw784",
+  "dim": 784,
+  "threshold": 0.485,
+  "balanced_acc": 0.7019,
+  "same_cos": 0.5291,
+  "diff_cos": 0.3886,
+  "gap": 0.1405,
+  "A": 0.9644,
+  "B": 0.9105,
+  "C": 0.88,
+  "macro": 0.9183,
+  "n_stars": 1262
+ },
+ "note": "每个特征独立标定阈值；0.705/0.490 不可跨空间搬运"
+}

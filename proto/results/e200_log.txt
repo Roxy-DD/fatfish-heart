@@ -1,0 +1,46 @@
+==============================================================================================
+E-200 cross-encoder 精排 vs LLM 精排
+==============================================================================================
+  加载模型...
+
+  cross-encoder 精排命中: 190/244 = 0.7787
+  LLM 精排命中（对比）:   193/244 = 0.7910
+  top-1 命中: 136/244 = 0.5574
+  耗时: 1393.7s（含首次加载），平均 5712ms/题
+
+  分题型命中:
+  类别        命中/总          命中率
+----------------------------------------
+  1         31/53         0.5849
+  2         29/33         0.8788
+  3         4/10          0.4000
+  4         92/108        0.8519
+  5         34/40         0.8500
+
+  未命中案例:
+    [R000] cat=2 When did Melanie paint a sunrise?
+      ev:    You'd be a great counselor! Your empathy and 
+      top1:  Yeah, I painted that lake sunrise last year! 
+    [R002] cat=1 What career path has Caroline decided to pers
+      ev:    I'm still figuring out the details, but I'm t
+      top1:  Lately, I've been looking into counseling and
+    [R003] cat=1 What activities does Melanie partake in?
+      ev:    Wow, Caroline! That's great! I just signed up
+      top1:  It so fun! We played games, ate good food, an
+    [R006] cat=3 Would Caroline pursue writing as a career opt
+      ev:    Thanks, Mell! I'm still looking into counseli
+      top1:  Gonna continue my edu and check out career op
+    [R007] cat=1 What activities has Melanie done with her fam
+      ev:    The kids loved it! They were so excited to ge
+      top1:  It so fun! We played games, ate good food, an
+    [R010] cat=1 What musical artists/bands has Melanie seen?
+      ev:    "Summer Sounds"- The playing an awesome pop s
+      top1:  I'm a fan of both classical like Bach and Moz
+    [R011] cat=1 How many children does Melanie have?
+      ev:    Hey Caroline, that roadtrip this past weekend
+      top1:  I'm lucky to have my husband and kids; they k
+    [R012] cat=1 What items has Melanie bought?
+      ev:    Congrats, Caroline! Adoption sounds awesome. 
+      top1:  Yep, Melanie! I've got some other stuff with 
+
+写入 C:\Users\xuee\Desktop\肥鱼之心\proto\results\e200_cross_encoder.json

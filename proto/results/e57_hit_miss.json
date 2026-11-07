@@ -1,0 +1,39 @@
+{
+ "experiment": "E-57",
+ "report": {
+  "HIT_1": {
+   "n": 20,
+   "right": 20,
+   "wrong": 0,
+   "abstain": 0,
+   "acc": 1.0
+  },
+  "HIT_10": {
+   "n": 20,
+   "right": 20,
+   "wrong": 0,
+   "abstain": 0,
+   "acc": 1.0
+  },
+  "MISS_0": {
+   "n": 20,
+   "right": 20,
+   "wrong": 0,
+   "abstain": 0,
+   "acc": 1.0
+  },
+  "MISS_NEAR": {
+   "n": 20,
+   "right": 20,
+   "wrong": 0,
+   "abstain": 0,
+   "acc": 1.0
+  },
+  "verdict": "MISS_0 诚实弃答",
+  "summary": {
+   "hit_stable": true,
+   "abstains_when_absent": true,
+   "copies_literal": true
+  }
+ }
+}

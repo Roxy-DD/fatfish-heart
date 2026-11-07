@@ -1,0 +1,12 @@
+==============================================================================================
+E-197 下载 bge-reranker-v2-m3
+==============================================================================================
+  下载 config.json ... 795 bytes
+  下载 model.safetensors ... 失败: IncompleteRead(2763774 bytes read, 2268308078 more expected)
+  下载 tokenizer.json ... 17,098,273 bytes
+  下载 tokenizer_config.json ... 1,173 bytes
+  下载 sentencepiece.bpe.model ... 失败: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1032)>
+  下载 special_tokens_map.json ... 失败: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1032)>
+
+  总计 17,100,241 bytes，耗时 93s
+写入 C:\Users\xuee\Desktop\肥鱼之心\proto\results\e197_download.json

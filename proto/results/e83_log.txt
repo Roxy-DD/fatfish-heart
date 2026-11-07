@@ -1,0 +1,82 @@
+================================================================================================
+E-83 交叉验证：修好的规则 vs 模型标注（全新语料）
+================================================================================================
+
+【第三批·全新 20 条】
+------------------------------------------------------------------------------------------------
+rid   模型      规则      命中                一致    记忆
+------------------------------------------------------------------------------------------------
+J00   True    False   positional        ✗     陈默是我们组的架构师
+J01   False   False   naked_id          ✓     订单号 20250308-1174 已经发货了
+J02   True    True    stable_slot       ✓     我公公今年七十三
+J03   True    True    fullname          ✓     王雅琴医生给我开的药单
+J04   True    False   fallback_false    ✗     我家的车是白色的卡罗拉
+J05   False   False   deictic           ✓     那个快递好像丢了
+J06   False   False   indefinite        ✓     别人都说这个不错
+J07   False   False   fallback_false    ✓     他让我明天去一趟
+J08   False   False   indefinite        ✓     有几个同事提过这事
+J09   False   False   indefinite        ✓     有人建议改一下流程
+J10   False   False   positional        ✓     楼下便利店的老板说可以赊账
+J11   False   False   positional        ✓     我们楼的水管工很靠谱
+J12   True    False   positional        ✗     菜市场的张大姐给我多称了半斤
+J13   False   False   positional        ✓     那个送外卖的小哥态度很好
+J14   False   False   second_order      ✓     我舅妈家的表哥在银行上班
+J15   False   False   second_order      ✓     我同学的妈妈是老师
+J16   False   False   naked_id          ✓     保单号是 PA-9931
+J17   True    True    id+bound          ✓     我的保单号是 PA-9931
+J18   True    True    name_title        ✓     小周说他下周回来
+J19   True    True    fullname          ✓     周经理批了这个预算
+------------------------------------------------------------------------------------------------
+
+  [E-83 全新] TP=5 FP=0 TN=12 FN=3
+  准确率 0.8500  精确率 1.0000  召回 0.6250  F1 0.7692
+
+  不一致：
+    [J00] 模型=True 规则=False ['positional']
+      陈默是我们组的架构师
+      模型理由: 陈默是全名，唯一指向某个人
+    [J04] 模型=True 规则=False ['fallback_false']
+      我家的车是白色的卡罗拉
+      模型理由: '我家的车'为自家物品关系槽，唯一
+    [J12] 模型=True 规则=False ['positional']
+      菜市场的张大姐给我多称了半斤
+      模型理由: '张大姐'为姓+称呼，按具名判据唯一
+
+================================================================================================
+回归测试：前两批成绩是否保持
+================================================================================================
+
+【第一批 E-81 24 条】
+------------------------------------------------------------------------------------------------
+rid   模型      规则      命中                一致    记忆
+------------------------------------------------------------------------------------------------
+I00   True    True    name_title        ✓     张工说这周五交
+I01   True    True    id+bound          ✓     我的身份证号是 3101011990010112
+I02   True    True    name_title        ✓     小李是我的大学室友
+I03   True    True    stable_slot       ✓     我老婆叫陈静
+I04   False   False   naked_id          ✓     工牌编号 A-2261
+I05   True    True    fullname          ✓     李建国经理负责这个项目
+I06   False   False   fallback_false    ✓     他说不行
+I07   False   True    name_title        ✗     那次出差回来之后总觉得累
+I08   False   False   deictic           ✓     那个方案后来改了
+I09   False   False   indefinite        ✓     有人跟我说过这事
+I10   False   False   indefinite        ✓     大家都觉得这个方案不错
+I11   True    True    id+bound          ✓     我的工牌编号是 A-2261
+I12   False   False   second_order      ✓     我表姐家的孩子今年上三年级
+I13   True    True    stable_slot       ✓     我女儿今年六岁
+I14   False   False   positional        ✓     我们组的后端负责人不同意
+I15   False   False   positional        ✓     前台的小姑娘让我登记一下
+I16   False   False   deictic           ✓     上周那个客户又打电话来了
+I17   True    True    stable_slot       ✓     我妈说家里一切都好
+I18   True    True    id+bound          ✓     我电脑的登录密码是 8848
+I19   True    True    stable_slot       ✓     城南路18号是我女儿幼儿园
+I20   False   False   positional        ✓     小区门口的修车师傅姓王
+I21   True    True    stable_slot       ✓     我老板姓张
+I22   True    False   fallback_false    ✗     房东说下个月涨房租
+I23   False   False   positional        ✓     快递员把包裹放门口了
+------------------------------------------------------------------------------------------------
+
+  [E-81 回归] TP=11 FP=1 TN=11 FN=1
+  准确率 0.9167  精确率 0.9167  召回 0.9167  F1 0.9167
+
+写入 C:\Users\xuee\Desktop\肥鱼之心\proto\results\e83_crossval.json

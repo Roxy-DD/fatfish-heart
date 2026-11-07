@@ -1,0 +1,12 @@
+{
+ "experiment": "E-101",
+ "n": 14,
+ "tp": 3,
+ "fp": 2,
+ "tn": 7,
+ "fn": 2,
+ "accuracy": 0.7143,
+ "precision": 0.6,
+ "recall": 0.6,
+ "f1": 0.6
+}

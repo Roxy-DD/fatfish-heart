@@ -1,0 +1,173 @@
+{
+ "experiment": "E-196b",
+ "total": 244,
+ "n_trap": 34,
+ "n_trap_empty": 13,
+ "trap_cids": [
+  "R021",
+  "R022",
+  "R032",
+  "R049",
+  "R050",
+  "R051",
+  "R195",
+  "R220",
+  "R222",
+  "R240",
+  "R241",
+  "R242",
+  "R243"
+ ],
+ "reasons": [
+  [
+   "R021",
+   "What motivated Melanie to pursue counsel",
+   "Trap—Melanie never pursued counseling (that was Caroline); n"
+  ],
+  [
+   "R022",
+   "How did Caroline feel about her family a",
+   "Trap—the accident was Melanie's son, not Caroline's family."
+  ],
+  [
+   "R032",
+   "What is Jon's favorite style of painting",
+   "Trap—Jon is a dancer, not a painter; no candidate on paintin"
+  ],
+  [
+   "R049",
+   "What activity did Maria's colleague, Rob",
+   "Trap—Rob is John's colleague, not Maria's."
+  ],
+  [
+   "R050",
+   "What was one of the biggest challenges M",
+   "Trap—it was John (not Maria) who became assistant manager."
+  ],
+  [
+   "R051",
+   "What recognition did John receive at the",
+   "Trap—the medal went to Maria, not John."
+  ],
+  [
+   "R064",
+   "What recipes has Nate made?",
+   "Nate 做过巧克力香草漩涡、无乳巧克力莓果蛋糕，掌握椰奶食谱。"
+  ],
+  [
+   "R069",
+   "Which dairy-free dessert flavors does Na",
+   "Nate 喜欢椰奶、巧克力和混合莓果等无乳口味。"
+  ],
+  [
+   "R080",
+   "What ingredient did Nate use to make the",
+   "用椰奶（coconut milk）让冰淇淋无乳糖。"
+  ],
+  [
+   "R082",
+   "Why did Nate get a third turtle?",
+   "在宠物店看到另一只、鱼缸现在够大，所以养了第三只乌龟。"
+  ],
+  [
+   "R083",
+   "For how long has Nate had his snakes?",
+   "养了 3 年（实为乌龟，对话中并无蛇）。"
+  ],
+  [
+   "R084",
+   "What did Nate think of the caramel ice c",
+   "觉得相当好吃、浓稠绵密（实为椰奶冰淇淋，非焦糖）。"
+  ],
+  [
+   "R085",
+   "What flavor of cake did Nate make for hi",
+   "做的是巧克力香草漩涡冰淇淋（实为冰淇淋，非蛋糕）。"
+  ],
+  [
+   "R087",
+   "What is Joanna creating for YouTube on 9",
+   "YouTube 创作内容是游戏内容（实为 Nate，非 Joanna）。"
+  ],
+  [
+   "R088",
+   "Why did Joanna get a third turtle?",
+   "在宠物店看到第三只、鱼缸够大才再养（实为 Nate，非 Joanna）。"
+  ],
+  [
+   "R104",
+   "What kind of soup did John make recently",
+   "John 最近做菜加了鼠尾草调味、即兴发挥（无明确汤名）。"
+  ],
+  [
+   "R112",
+   "Which team did Tim sign with on 21 May, ",
+   "签约的是明尼苏达森林狼（实为 John，非 Tim）。"
+  ],
+  [
+   "R114",
+   "What is Tim's number one goal in his bas",
+   "第一目标是赢得总冠军（实为 John，非 Tim）。"
+  ],
+  [
+   "R115",
+   "Why did John's teammates sign the footba",
+   "队友签名是为了表达友谊（实为篮球，非橄榄球）。"
+  ],
+  [
+   "R116",
+   "What tradition does Tim mention they lov",
+   "提到的是感恩节看《小鬼当家》（实为感恩节，非万圣节）。"
+  ],
+  [
+   "R117",
+   "What is one of Tim's favorite crime TV s",
+   "Tim 提到最爱的奇幻剧（fantasy show，非犯罪剧）。"
+  ],
+  [
+   "R118",
+   "How long has John been playing the piano",
+   "弹琴约四个月（实为 Tim，非 John）。"
+  ],
+  [
+   "R119",
+   "What movie did Tim just finish watching ",
+   "Tim 刚完成的是《魔龙的狂舞》（实为书，非电影）。"
+  ],
+  [
+   "R184",
+   "What activity did Jolene and her partner",
+   "计划跟伴侣一起玩主机游戏（而非恢复瑜伽）"
+  ],
+  [
+   "R195",
+   "Where did Deborah get her dogs?",
+   "对话中 Deborah 只有猫（Max/Luna），无养狗信息"
+  ],
+  [
+   "R196",
+   "When did Jolene release her pet snake?",
+   "蛇的获得时间是两年前领养（release 疑为获得义）"
+  ],
+  [
+   "R197",
+   "How did Jolene and her rival initially m",
+   "唯一\"如何认识\"的事实：工程课认识（rival 疑为 partner 误标）"
+  ],
+  [
+   "R220",
+   "What did Sam mention he had been searchi",
+   "找钥匙半小时的是 Evan，Sam 无此内容（张冠李戴）"
+  ],
+  [
+   "R221",
+   "What activity did Evan quit one year ago",
+   "一年前开始的活动是举重（quit 疑为 take up 误译）"
+  ],
+  [
+   "R222",
+   "What was Sam limiting himself to on his ",
+   "每天两块姜饼是 Evan 的限制，Sam 无具体\"限量\"内容"
+  ]
+ ]
+}

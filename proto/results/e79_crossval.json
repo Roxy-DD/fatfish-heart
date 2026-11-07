@@ -1,0 +1,211 @@
+{
+ "experiment": "E-79",
+ "n_memories": 14,
+ "dim_total": 84,
+ "dim_agree": 62,
+ "dim_agree_rate": 0.7381,
+ "n_diff_memories": 12,
+ "dim_conflict": {
+  "time_range": 9,
+  "existence": 4,
+  "value": 3,
+  "identity": 3,
+  "location": 3
+ },
+ "diffs": [
+  {
+   "rid": "T00",
+   "text": "上周四的评审会上，产品经理把登录页的改版方案否了",
+   "conflicts": [
+    {
+     "dim": "time_range",
+     "rule": false,
+     "model": true
+    }
+   ],
+   "model_note": "评审会上方案被否是成立的事件，产品经理为定指主体（未给姓名），上周四可粗略定位但无绝对日期，无具体数值与场所"
+  },
+  {
+   "rid": "T01",
+   "text": "我答应这周五之前把接口文档发给他",
+   "conflicts": [
+    {
+     "dim": "existence",
+     "rule": false,
+     "model": true
+    },
+    {
+     "dim": "time_range",
+     "rule": false,
+     "model": true
+    }
+   ],
+   "model_note": "答应这件事这一行为成立，但“他”是代词无法指认，这周五之前只作期限性时间锚，无地点无数值"
+  },
+  {
+   "rid": "T03",
+   "text": "我每天要吃一片降压药，早上饭后",
+   "conflicts": [
+    {
+     "dim": "time_range",
+     "rule": false,
+     "model": true
+    },
+    {
+     "dim": "value",
+     "rule": false,
+     "model": true
+    }
+   ],
+   "model_note": "用药习惯不是事件，每天与早上饭后给出频率时段，一片是可引用剂量，降压药为泛称无特定指认"
+  },
+  {
+   "rid": "T04",
+   "text": "上个月搬家的那天，把一箱旧书落在旧房子里了",
+   "conflicts": [
+    {
+     "dim": "time_range",
+     "rule": false,
+     "model": true
+    },
+    {
+     "dim": "value",
+     "rule": false,
+     "model": true
+    }
+   ],
+   "model_note": "落下旧书是可确认事件，上个月可模糊定位，一箱是可引用数量，旧房子与旧书都无标定无法指认"
+  },
+  {
+   "rid": "T05",
+   "text": "去年冬天我妈摔了一跤，现在走路还有点不利索",
+   "conflicts": [
+    {
+     "dim": "identity",
+     "rule": false,
+     "model": true
+    },
+    {
+     "dim": "time_range",
+     "rule": false,
+     "model": true
+    },
+    {
+     "dim": "location",
+     "rule": true,
+     "model": false
+    }
+   ],
+   "model_note": "摔跤事件成立，我妈是明确主体，去年冬天只到季节粒度，无剂量类数值且完全没提地点"
+  },
+  {
+   "rid": "T06",
+   "text": "我的工牌编号是 A-2261",
+   "conflicts": [
+    {
+     "dim": "identity",
+     "rule": true,
+     "model": false
+    }
+   ],
+   "model_note": "工牌编号是静态属性不是事件，A-2261是可引用编号值，我的工牌为泛称，无时间无地点"
+  },
+  {
+   "rid": "T08",
+   "text": "小李是我的大学室友，现在在深圳做后端",
+   "conflicts": [
+    {
+     "dim": "location",
+     "rule": false,
+     "model": true
+    }
+   ],
+   "model_note": "室友关系与职业是状态不是事件，小李有专名可指认，深圳提供城市级地点，现在不构成可用时间范围，无数字值"
+  },
+  {
+   "rid": "T09",
+   "text": "我表姐家的孩子今年上三年级",
+   "conflicts": [
+    {
+     "dim": "time_range",
+     "rule": false,
+     "model": true
+    },
+    {
+     "dim": "value",
+     "rule": false,
+     "model": true
+    }
+   ],
+   "model_note": "就读年级是状态不是事件，表姐家的孩子可指认，今年粗定阶段，三年级是可引用数值，无地点"
+  },
+  {
+   "rid": "T10",
+   "text": "前几天在电梯里碰到个老同事，聊了几句就散了",
+   "conflicts": [
+    {
+     "dim": "time_range",
+     "rule": false,
+     "model": true
+    }
+   ],
+   "model_note": "电梯偶遇是成立的事件，个老同事为不定指无法识别，前几天可模糊定位，几句非具体值，电梯里未标定"
+  },
+  {
+   "rid": "T11",
+   "text": "那次出差回来之后就总觉得累",
+   "conflicts": [
+    {
+     "dim": "existence",
+     "rule": false,
+     "model": true
+    },
+    {
+     "dim": "identity",
+     "rule": true,
+     "model": false
+    }
+   ],
+   "model_note": "出差往返与随后持续疲劳可确认发生过，但无任何主体指认，之后无参照点不构成可用时间锚，无数值无地点"
+  },
+  {
+   "rid": "T12",
+   "text": "2025年3月8日下午3点，在B座12层签的合同",
+   "conflicts": [
+    {
+     "dim": "existence",
+     "rule": false,
+     "model": true
+    },
+    {
+     "dim": "time_range",
+     "rule": false,
+     "model": true
+    },
+    {
+     "dim": "location",
+     "rule": false,
+     "model": true
+    }
+   ],
+   "model_note": "签合同是事件，2025年3月8日下午3点精确到点也可粗定位，日期与楼层12是数值，B座12层是具体楼栋，但合同无名称无签约方指认"
+  },
+  {
+   "rid": "T13",
+   "text": "他说月底之前一定把尾款结清",
+   "conflicts": [
+    {
+     "dim": "existence",
+     "rule": false,
+     "model": true
+    },
+    {
+     "dim": "time_range",
+     "rule": false,
+     "model": true
+    }
+   ],
+   "model_note": "承诺结清这一行为成立，但他为代词不可指认，月底之前是期限性模糊时间，未提具体金额，无地点"
+  }
+ ]
+}

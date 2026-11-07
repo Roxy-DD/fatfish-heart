@@ -1,0 +1,108 @@
+================================================================================================
+E-45 编码加速：PyTorch vs ONNX vs 量化
+================================================================================================
+
+测试文本 2000 条
+torch 线程数 14
+
+Loading weights:   0%|          | 0/71 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 71/71 [00:00<00:00, 1893.51it/s]
+
+------------------------------------------------------------------------------------------------
+基线：PyTorch
+------------------------------------------------------------------------------------------------
+  单条: 7.12 ms  (p10 6.63 / p90 8.17)
+  批 8: 33.50 ms → 每条 4.19 ms
+  批16: 47.74 ms → 每条 2.98 ms
+  批32: 127.31 ms → 每条 3.98 ms
+
+------------------------------------------------------------------------------------------------
+A. ONNX Runtime
+------------------------------------------------------------------------------------------------
+C:\Users\xuee\Desktop\肥鱼之心\proto\run_e45_encode.py:130: UserWarning: # 'dynamic_axes' is not recommended when dynamo=True, and may lead to 'torch._dynamo.exc.UserError: Constraints violated.' Supply the 'dynamic_shapes' argument instead if export is unsuccessful.
+  torch.onnx.export(
+W1026 17:21:02.441000 27652 site-packages\torch\onnx\_internal\exporter\_compat.py:133] Setting ONNX exporter to use operator set version 18 because the requested opset_version 14 is a lower version than we have implementations for. Automatic version conversion will be performed, which may not be successful at converting to the requested version. If version conversion is unsuccessful, the opset version of the exported model will be kept at 18. Please consider setting opset_version >=18 to leverage latest ONNX features
+W1026 17:21:03.185000 27652 site-packages\torch\onnx\_internal\exporter\_registration.py:107] torchvision is not installed. Skipping torchvision::nms
+W1026 17:21:03.186000 27652 site-packages\torch\onnx\_internal\exporter\_registration.py:107] torchvision is not installed. Skipping torchvision::roi_align
+W1026 17:21:03.187000 27652 site-packages\torch\onnx\_internal\exporter\_registration.py:107] torchvision is not installed. Skipping torchvision::roi_pool
+W1026 17:21:03.187000 27652 site-packages\torch\onnx\_internal\exporter\_registration.py:107] torchvision is not installed. Skipping torchvision::deform_conv2d
+[torch.onnx] Obtain model graph for `Wrap([...]` with `torch.export.export(..., strict=False)`...
+[torch.onnx] Obtain model graph for `Wrap([...]` with `torch.export.export(..., strict=False)`... ✅
+[torch.onnx] Run decompositions...
+D:\anaconda3\Lib\copyreg.py:99: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+  return cls.__new__(cls, *args)
+[torch.onnx] Run decompositions... ✅
+[torch.onnx] Translate the graph into ONNX...
+[torch.onnx] Translate the graph into ONNX... ✅
+The model version conversion is not supported by the onnxscript version converter and fallback is enabled. The model will be converted using the onnx C API (target version: 14).
+Failed to convert the model to the target version 14 using the ONNX C API. The model was not modified
+Traceback (most recent call last):
+  File "D:\anaconda3\Lib\site-packages\onnxscript\version_converter\__init__.py", line 137, in call
+    converted_proto = _c_api_utils.call_onnx_api(
+        func=_partial_convert_version, model=model
+    )
+  File "D:\anaconda3\Lib\site-packages\onnxscript\version_converter\_c_api_utils.py", line 65, in call_onnx_api
+    result = func(proto)
+  File "D:\anaconda3\Lib\site-packages\onnxscript\version_converter\__init__.py", line 132, in _partial_convert_version
+    return onnx.version_converter.convert_version(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        proto, target_version=self.target_version
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\anaconda3\Lib\site-packages\onnx\version_converter.py", line 39, in convert_version
+    converted_model_str = C.convert_version(model_str, target_version)
+RuntimeError: D:\a\onnx\onnx\onnx/version_converter/adapters/no_previous_version.h:23: adapt: Assertion `false` failed: No Previous Version of LayerNormalization exists
+[torch.onnx] Optimize the ONNX graph...
+[torch.onnx] Optimize the ONNX graph... ✅
+D:\anaconda3\Lib\site-packages\torch\onnx\_internal\exporter\_onnx_program.py:486: UserWarning: # The axis name: s will not be used, since it shares the same shape constraints with another axis: s.
+  rename_mapping = _dynamic_shapes.create_rename_mapping(
+  导出 ONNX: 0.5 MB
+  线程 4: 单条 4.06 ms  (p10 3.50/p90 4.51)  余弦一致性 1.000000
+  线程 8: 单条 4.46 ms  (p10 3.93/p90 4.91)  余弦一致性 1.000000
+  线程14: 单条 4.33 ms  (p10 3.85/p90 4.83)  余弦一致性 1.000000
+  线程14 批 8: 25.23 ms → 每条 3.15 ms
+  线程14 批16: 49.96 ms → 每条 3.12 ms
+  线程14 批32: 152.24 ms → 每条 4.76 ms
+
+------------------------------------------------------------------------------------------------
+B. PyTorch 动态量化（int8 权重）
+------------------------------------------------------------------------------------------------
+C:\Users\xuee\Desktop\肥鱼之心\proto\run_e45_encode.py:179: DeprecationWarning: torch.ao.quantization is deprecated and will be removed in 2.10. 
+For migrations of users: 
+1. Eager mode quantization (torch.ao.quantization.quantize, torch.ao.quantization.quantize_dynamic), please migrate to use torchao eager mode quantize_ API instead 
+2. FX graph mode quantization (torch.ao.quantization.quantize_fx.prepare_fx,torch.ao.quantization.quantize_fx.convert_fx, please migrate to use torchao pt2e quantization API instead (prepare_pt2e, convert_pt2e) 
+3. pt2e quantization has been migrated to torchao (https://github.com/pytorch/ao/tree/main/torchao/quantization/pt2e) 
+see https://github.com/pytorch/ao/issues/2259 for more details
+  qmdl = torch.quantization.quantize_dynamic(mdl, {torch.nn.Linear}, dtype=torch.qint8)
+D:\anaconda3\Lib\site-packages\torch\ao\nn\quantized\modules\utils.py:72: UserWarning: torch.quantize_per_tensor, torch.quantize_per_channel and other quantized tensor creation functions that produce tensors with dtype torch.quint8, torch.qint8, and torch.qint32 are deprecated and will be removed in a future PyTorch release. Please see https://github.com/pytorch/pytorch/issues/184982 for more information. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\aten\src\ATen\quantized\Quantizer.cpp:116.)
+  qweight = torch.quantize_per_tensor(
+  单条 8.45 ms  (p10 7.99/p90 9.17)
+  余弦一致性 0.951670
+
+------------------------------------------------------------------------------------------------
+C. 缩短 max_length（减少序列长度）
+------------------------------------------------------------------------------------------------
+  maxlen= 64: 8.36 ms  余弦一致性 1.0000  （文本均长 22 字）
+  maxlen= 32: 8.13 ms  余弦一致性 0.9988  （文本均长 22 字）
+
+------------------------------------------------------------------------------------------------
+D. 截断维度（512 → 256 / 128，不做降维投影）
+------------------------------------------------------------------------------------------------
+  维度 256: top5 与全维重叠 68.7%
+  维度 128: top5 与全维重叠 52.7%
+
+================================================================================================
+汇总（单条编码延迟）
+================================================================================================
+方案                      单条ms        加速        余弦一致性
+------------------------------------------------------------------------------------------------
+onnx_t4                 4.06        1.75      1.000000
+onnx_t14                4.33        1.65      1.000000
+onnx_t8                 4.46        1.59      1.000000
+pytorch                 7.12        1.00      —
+pt_maxlen32             8.13        0.88      0.998800
+pt_maxlen64             8.36        0.85      1.000000
+pt_dynamic_int8         8.45        0.84      0.951670
+
+写入 C:\Users\xuee\Desktop\肥鱼之心\proto\results\e45_encode_speed.json

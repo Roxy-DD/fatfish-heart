@@ -1,0 +1,6 @@
+==============================================================================================
+E-199e 直连下载（trust_env=False 绕过代理）
+==============================================================================================
+    尝试1: TypeError Session.request() got an unexpected keyw
+    尝试21: TypeError Session.request() got an unexpected keyw
+    尝试41: TypeError Session.request() got an unexpected keyw

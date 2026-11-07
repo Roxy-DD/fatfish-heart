@@ -1,0 +1,11 @@
+{
+ "experiment": "E-209",
+ "n": 244,
+ "llm_hit": 193,
+ "ce_hit": 191,
+ "fused_hit": 215,
+ "fused_rate": 0.8811,
+ "baseline": 0.5802,
+ "llm_recall": 0.6776,
+ "fused_recall": 0.6887
+}
