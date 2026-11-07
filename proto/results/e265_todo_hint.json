@@ -1,0 +1,54 @@
+{
+ "experiment": "E-265",
+ "n_pass": 9,
+ "n_total": 9,
+ "first_created": 3,
+ "second_created": 0,
+ "results": [
+  {
+   "name": "创建了待办",
+   "ok": true,
+   "detail": "3 条"
+  },
+  {
+   "name": "todos 表有记录",
+   "ok": true,
+   "detail": "3 条"
+  },
+  {
+   "name": "kind 都是 note_hint",
+   "ok": true,
+   "detail": "['note_hint', 'note_hint', 'note_hint']"
+  },
+  {
+   "name": "状态都是 pending",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "第二次创建 0 条",
+   "ok": true,
+   "detail": "0"
+  },
+  {
+   "name": "第二次全部跳过",
+   "ok": true,
+   "detail": "3"
+  },
+  {
+   "name": "待办总数未增加",
+   "ok": true,
+   "detail": "3 vs 3"
+  },
+  {
+   "name": "新主题创建了待办",
+   "ok": true,
+   "detail": "2"
+  },
+  {
+   "name": "空库创建 0 条",
+   "ok": true,
+   "detail": "0"
+  }
+ ]
+}

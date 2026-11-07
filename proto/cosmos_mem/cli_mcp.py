@@ -1162,6 +1162,12 @@ def cmd_knowledge_hint(st, payload) -> dict:
     # E-264：缓存结果（按记忆数+笔记数做 key，数据变了才重算）
     # 首次分词要 1.3 秒（jieba 词典），每次 assemble 都算会明显拖慢
     import json as _json
+    # E-265：先确保 notes/todos 表存在（新库首次调用会因缺表崩溃）
+    try:
+        import notebook as _nb_init
+        _nb_init._init(st)
+    except Exception:
+        pass
     try:
         n_ep = st.con.execute(
             "SELECT COUNT(*) FROM episodes WHERE invalid_at IS NULL").fetchone()[0]
@@ -1237,6 +1243,20 @@ def cmd_knowledge_hint(st, payload) -> dict:
 
     result = {"ok": True, "hints": hints, "text": "\n".join(lines),
               "count": len(hints)}
+
+    # E-265：同步创建 note_hint 待办（机械去重，确保"待整理"不会丢）
+    # 即使模型没主动写笔记，待办列表里也始终有这些项目
+    if payload.get("sync_todos", True):
+        try:
+            import notebook as _nb
+            synced = _nb.sync_note_hints(st, min_count=min_count)
+            result["todos_created"] = synced.get("created", 0)
+            result["todos_skipped"] = synced.get("skipped", 0)
+            if synced.get("created"):
+                result["todos_items"] = synced.get("items", [])
+        except Exception as e:
+            result["todos_error"] = f"{type(e).__name__}: {e}"
+
     _save_kh_cache(st, cache_key, result)
     return result
 

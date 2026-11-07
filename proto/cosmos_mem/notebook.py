@@ -679,11 +679,90 @@ def suggest_scrap_promote(st, min_scraps: int = 3) -> list[dict]:
     return out
 
 
+def sync_note_hints(st, min_count: int = 3) -> dict:
+    """
+    把"该整理了"的信号同步成 note_hint 待办（E-265，纯机械去重）。
+
+    背景：
+      knowledge_hint 把提示送到模型面前，但模型未必真的会去写笔记。
+      系统机械地创建 note_hint 待办，确保"待整理"这件事不会丢。
+
+    去重规则：按 title 判断，同一个 title 只创建一次。
+
+    返回 {"created": n, "skipped": n, "items": [...]}
+    """
+    _init(st)
+
+    existing = set()
+    rows = st.con.execute(
+        "SELECT title FROM todos WHERE invalid_at IS NULL "
+        "AND kind='note_hint'").fetchall()
+    for (title,) in rows:
+        existing.add(title)
+
+    created, skipped = [], []
+    candidates = []
+
+    # 信号 1：主题累积
+    try:
+        for x in suggest_note_topics(st, min_count=min_count)[:5]:
+            candidates.append({
+                "title": f"整理主题「{x['topic']}」为笔记",
+                "detail": f"该主题已有 {x['count']} 条记忆",
+                "priority": min(10, x["count"]),
+            })
+    except Exception:
+        pass
+
+    # 信号 2：少见但重要的记忆（依赖 triage）
+    try:
+        import triage as _tg
+        for x in _tg.suggest_from_triage(st, note_hint_min=min_count):
+            if x["suggest_tier"] != "note":
+                continue
+            candidates.append({
+                "title": f"整理 {x['count']} 条重要但少用的记忆为详细笔记",
+                "detail": f"{x['quadrant']} 类（少见但重要）",
+                "priority": min(10, x["count"]),
+            })
+    except Exception:
+        pass
+
+    # 信号 3：随笔可装订
+    try:
+        import compose as _cp
+        for x in _cp.compile_all_topics(st, tier="scrap",
+                                        min_items=min_count)[:3]:
+            candidates.append({
+                "title": f"装订主题「{x['topic']}」的随笔成册",
+                "detail": f"已有 {x['count']} 条随笔",
+                "priority": min(10, x["count"]),
+            })
+    except Exception:
+        pass
+
+    for c in candidates:
+        if c["title"] in existing:
+            skipped.append(c["title"])
+            continue
+        try:
+            todo_add(st, title=c["title"], detail=c["detail"],
+                     kind="note_hint", priority=c["priority"])
+            created.append(c["title"])
+            existing.add(c["title"])
+        except Exception:
+            continue
+
+    return {"created": len(created), "skipped": len(skipped),
+            "items": created, "skipped_items": skipped}
+
+
 __all__ = [
     "note_add", "get_note", "note_revise", "note_promote", "note_invalidate",
     "note_list", "note_search", "note_children", "note_stats",
     "todo_add", "get_todo", "todo_update", "todo_done",
     "todo_list", "todo_invalidate", "todo_stats",
     "suggest_note_topics", "suggest_manual_topics", "suggest_scrap_promote",
+    "sync_note_hints",
     "TIERS", "TIER_NAMES", "TODO_STATUS", "TODO_KINDS",
 ]
