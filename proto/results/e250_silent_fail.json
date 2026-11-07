@@ -1,0 +1,47 @@
+{
+ "experiment": "E-250",
+ "n_pass": 8,
+ "n_total": 8,
+ "results": [
+  {
+   "name": "触发了判定",
+   "ok": true,
+   "detail": "need_judge=True"
+  },
+  {
+   "name": "judge 返回 ok",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "relation=replace",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "旧记忆已失效",
+   "ok": true,
+   "detail": "invalid_at=1794066028.2697823"
+  },
+  {
+   "name": "旧记忆指向新的",
+   "ok": true,
+   "detail": "superseded_by=903aceff"
+  },
+  {
+   "name": "actions 含 invalidated",
+   "ok": true,
+   "detail": "{'relation': 'replace', 'invalidated': '8843e9cede894fd7', 'superseded_by': '903"
+  },
+  {
+   "name": "确认静默失败（relation 说 replace 但没执行）",
+   "ok": true,
+   "detail": "这就是问题：调用方以为成功，实际没做事"
+  },
+  {
+   "name": "target=null 时也确实没执行",
+   "ok": true,
+   "detail": "同上：静默失败"
+  }
+ ]
+}

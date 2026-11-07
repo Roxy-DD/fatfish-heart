@@ -378,6 +378,23 @@ def apply_verdict(st, verdict: Verdict, new_ep_id: str) -> dict:
     """
     actions = {"relation": verdict.relation}
 
+    # E-250 修：防止"静默失败"。
+    # 原来若 relation 是 replace/merge/duplicate/conflict 但 target_ep_id 为空
+    # （模型给了 target_ep_id 而非 target、或给 null），
+    # 所有 elif 分支都不成立，函数静默返回 {"relation": ...}，
+    # 调用方以为成功，实际什么都没做。
+    #
+    # 现在：这类情况显式标记 warned / no_action，让调用方能察觉。
+    needs_target = verdict.relation in ("duplicate", "replace", "merge", "conflict")
+    if needs_target and not verdict.target_ep_id:
+        actions["no_action"] = True
+        actions["warn"] = (
+            f"relation={verdict.relation} 但未解析出目标记忆"
+            f"（模型需返回 target 字段=候选原文；当前返回: "
+            f"{'target=null' if not verdict.target_text else '目标无法匹配'}），"
+            f"本次未做任何改动")
+        return actions
+
     if verdict.relation == "duplicate" and verdict.target_ep_id:
         # 新写入的是冗余 → 新记忆作废，指向已有的那条
         st.invalidate(new_ep_id, superseded_by=verdict.target_ep_id)

@@ -227,12 +227,17 @@ def cmd_judge(st, payload) -> dict:
         st.invalidate_vector_cache()
 
         # 审计日志：conflict（矛盾判定落盘）
+        # E-250：若没解析出目标（no_action），用 warn 级别记录，便于排查
         _audit(st, "conflict",
-               msg=f"判定 {verdict.relation} ← {ep.raw_text[:40]}",
+               msg=(f"判定 {verdict.relation}"
+                    + ("（未执行:" + str(actions.get("warn", ""))[:40] + "）"
+                       if actions.get("no_action") else "")
+                    + f" ← {ep.raw_text[:40]}"),
                ep_id=ep_id,
                extra={"relation": verdict.relation,
-                      "target_text": (verdict.target_text or "")[:80],
+                      "target_ep_id": verdict.target_ep_id,
                       "confidence": verdict.confidence,
+                      "no_action": bool(actions.get("no_action")),
                       "actions": actions})
 
         return {
@@ -242,6 +247,9 @@ def cmd_judge(st, payload) -> dict:
             "target_text": verdict.target_text,
             "reason": verdict.reason,
             "actions": actions,
+            # E-250：显式告知调用方本次是否真的做了改动
+            "no_action": bool(actions.get("no_action")),
+            "warn": actions.get("warn", ""),
         }
     except Exception as e:
         _audit(st, "error", msg="矛盾判定失败",

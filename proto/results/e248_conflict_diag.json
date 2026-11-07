@@ -1,0 +1,8 @@
+{
+ "experiment": "E-248",
+ "issues": [],
+ "meta_conflict_records": 140,
+ "has_judge_param": true,
+ "has_prepare": true,
+ "has_judge_call": true
+}
