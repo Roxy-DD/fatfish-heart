@@ -1048,6 +1048,10 @@ def cmd_triage(st, payload) -> dict:
             eid = payload.get("ep_id") or ""
             if not eid:
                 return {"ok": False, "error": "ep_id 不能为空"}
+            # E-251 修：id 不存在时必须报错，不能返回伪造的"minor"结论
+            if not st.get(eid):
+                return {"ok": False, "error": f"记忆不存在: {eid}",
+                        "not_found": True}
             return {"ok": True, **_tg.classify(st, eid)}
 
         if action == "all":
@@ -1100,6 +1104,10 @@ def cmd_history(st, payload) -> dict:
             eid = payload.get("id") or ""
             if not eid:
                 return {"ok": False, "error": "id 不能为空"}
+            # E-251 修：记忆不存在时报错，不要返回空版本列表还标 ok
+            if not st.get(eid):
+                return {"ok": False, "error": f"记忆不存在: {eid}",
+                        "not_found": True}
             h = _hist.episode_history(st, eid)
             return {"ok": True, "ep_id": eid, "versions": h,
                     "count": len(h)}
@@ -1108,6 +1116,11 @@ def cmd_history(st, payload) -> dict:
             nid = payload.get("id") or ""
             if not nid:
                 return {"ok": False, "error": "id 不能为空"}
+            # E-251 修：笔记不存在时报错
+            import notebook as _nb
+            if not _nb.get_note(st, nid):
+                return {"ok": False, "error": f"笔记不存在: {nid}",
+                        "not_found": True}
             h = _hist.note_history(st, nid)
             return {"ok": True, "note_id": nid, "versions": h,
                     "count": len(h)}
@@ -1123,6 +1136,8 @@ def cmd_scan_conflicts(st, payload) -> dict:
 
     limit = int(payload.get("limit") or 20)
     out = []
+    # E-251：显式统计各类跳过原因，便于调用方判断"是否真的扫完了"
+    skipped = {"already_judged": 0, "no_candidates": 0, "error": 0}
     rows = st.con.execute(
         "SELECT ep_id, raw_text FROM episodes WHERE invalid_at IS NULL "
         "ORDER BY created_at DESC LIMIT ?", (limit,)).fetchall()
@@ -1130,15 +1145,20 @@ def cmd_scan_conflicts(st, payload) -> dict:
         # 已有判定记录就跳过
         rec = st.conflict_of(eid)
         if rec:
+            skipped["already_judged"] += 1
             continue
         try:
             pack = _conflict.prepare_candidates(st, _Emb.get(), txt)
             if _conflict.needs_model(pack):
                 out.append({"ep_id": eid,
                             "pack": _conflict.pack_to_prompt(pack, eid)})
+            else:
+                skipped["no_candidates"] += 1
         except Exception:
+            skipped["error"] += 1
             continue
-    return {"ok": True, "items": out, "count": len(out)}
+    return {"ok": True, "items": out, "count": len(out),
+            "scanned": len(rows), "skipped": skipped}
 
 
 def cmd_search(st, payload) -> dict:

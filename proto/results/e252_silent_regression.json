@@ -1,0 +1,82 @@
+{
+ "experiment": "E-252",
+ "n_pass": 15,
+ "n_total": 15,
+ "results": [
+  {
+   "name": "未解析目标时标记 no_action",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "有明确 warn 说明",
+   "ok": true,
+   "detail": "relation=replace 但未解析出目标记忆（模型需返回 target 字段=候选原文；当前"
+  },
+  {
+   "name": "旧记忆未被误改",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "正确 target 时有实际动作",
+   "ok": true,
+   "detail": "{'relation': 'replace', 'invalidated': '18796b54d4b94651', '"
+  },
+  {
+   "name": "不存在时报错",
+   "ok": true,
+   "detail": "记忆不存在: nonexistent_xyz"
+  },
+  {
+   "name": "标记 not_found",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "不返回伪造分诊结论",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "记忆不存在时报错",
+   "ok": true,
+   "detail": "记忆不存在: nonexistent_xyz"
+  },
+  {
+   "name": "笔记不存在时报错",
+   "ok": true,
+   "detail": "笔记不存在: nonexistent_xyz"
+  },
+  {
+   "name": "note get 不存在返回 ok=False",
+   "ok": true,
+   "detail": "{'ok': False, 'note': None}"
+  },
+  {
+   "name": "note revise 不存在返回 ok=False",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "todo done 不存在返回 ok=False",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "明确告知不足",
+   "ok": true,
+   "detail": "该主题只有 0 条scrap，不足 3 条，暂不合并"
+  },
+  {
+   "name": "返回 scanned 计数",
+   "ok": true,
+   "detail": "2"
+  },
+  {
+   "name": "返回 skipped 分类",
+   "ok": true,
+   "detail": "{\"already_judged\": 2, \"no_candidates\": 0, \"error\": 0}"
+  }
+ ]
+}

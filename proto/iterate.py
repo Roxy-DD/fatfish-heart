@@ -50,6 +50,8 @@ REGRESSION_SUITE = [
     ("分层保护", "run_e28_levels.py", 200),
     ("生命周期", "run_e29_lifecycle.py", 200),
     ("集成测试", "run_e22b_integration.py", 300),
+    # E-252：静默失败回归（返回 ok 但实际没做事，极危险）
+    ("静默失败", "run_e252_silent_regression.py", 200),
 ]
 
 

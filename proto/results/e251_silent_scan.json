@@ -1,0 +1,20 @@
+{
+ "experiment": "E-251",
+ "code_findings": [
+  {
+   "file": "store_v2.py",
+   "func": "issues_of",
+   "line": 268,
+   "risk": "返回空列表，无法区分'确实为空'与'出错'"
+  },
+  {
+   "file": "cli_mcp.py",
+   "func": "cmd_scan_conflicts",
+   "line": 1133,
+   "risk": "有跳过逻辑但无 warn 告知"
+  }
+ ],
+ "tested": 7,
+ "silent_count": 0,
+ "silent_tests": []
+}

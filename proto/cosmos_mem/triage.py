@@ -98,9 +98,21 @@ def classify(st, ep_id: str,
 
     row = st.con.execute(
         "SELECT raw_text FROM episodes WHERE ep_id=?", (ep_id,)).fetchone()
+    if not row:
+        # E-251：记忆不存在时明确标记，不要伪造一个 "minor" 结论
+        return {
+            "ep_id": ep_id,
+            "text": "",
+            "exists": False,
+            "visits": 0, "cost": 0.0,
+            "freq": "unknown", "imp": "unknown",
+            "quadrant": "not_found",
+            "strategy": "记忆不存在，无法分诊",
+        }
     return {
         "ep_id": ep_id,
-        "text": row[0] if row else "",
+        "text": row[0],
+        "exists": True,
         "visits": visits, "cost": round(cost, 3),
         "freq": freq, "imp": imp,
         "quadrant": q,
