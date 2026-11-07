@@ -740,6 +740,141 @@ def cmd_inject_history(st, payload) -> dict:
         return {"ok": False, "error": f"{type(e).__name__}: {e}"}
 
 
+def cmd_note(st, payload) -> dict:
+    """
+    笔记管理（记忆系统的另一半：把可复用的记忆沉淀成知识）。
+
+    用户要求（2026-11-07）：
+      "记忆系统应该记录应该记住的内容以及长期记忆。
+       像编程语言等技术性和体系性的内容，新学的人也不可能一直记着。
+       所以需要定期把可复用的记忆整理出来记录成笔记。
+       这就是记笔记的能力，也就是写书、写手册的能力。"
+
+    payload:
+      action  add | get | revise | invalidate | list | search | stats | suggest
+      ...     各 action 的字段
+    """
+    import notebook as _nb
+
+    action = payload.get("action") or "list"
+    try:
+        if action == "add":
+            r = _nb.note_add(
+                st,
+                title=payload.get("title") or "",
+                body=payload.get("body") or "",
+                topic=payload.get("topic") or "",
+                tags=payload.get("tags") or [],
+                source_ep_ids=payload.get("source_ep_ids") or [],
+                level=payload.get("level") or "")
+            _audit(st, "note", msg=f"新建笔记 {r['title'][:40]}",
+                   extra={"note_id": r["note_id"], "chars": r["chars"],
+                          "topic": r["topic"]})
+            return {"ok": True, "note": r}
+
+        if action == "get":
+            n = _nb.get_note(st, payload.get("note_id") or "")
+            return {"ok": bool(n), "note": n}
+
+        if action == "revise":
+            n = _nb.note_revise(
+                st, payload.get("note_id") or "",
+                title=payload.get("title"),
+                body=payload.get("body"),
+                topic=payload.get("topic"),
+                tags=payload.get("tags"))
+            if n:
+                _audit(st, "note", msg=f"修订笔记 {n['title'][:40]}",
+                       extra={"note_id": n["note_id"], "revision": n["revision"]})
+            return {"ok": bool(n), "note": n}
+
+        if action == "invalidate":
+            ok = _nb.note_invalidate(st, payload.get("note_id") or "",
+                                     payload.get("superseded_by") or "")
+            return {"ok": ok}
+
+        if action == "list":
+            return {"ok": True,
+                    "notes": _nb.note_list(
+                        st, topic=payload.get("topic") or "",
+                        include_invalid=bool(payload.get("include_invalid")),
+                        limit=int(payload.get("limit") or 100)),
+                    "stats": _nb.note_stats(st)}
+
+        if action == "search":
+            return {"ok": True,
+                    "notes": _nb.note_search(st, payload.get("query") or "",
+                                             int(payload.get("limit") or 20))}
+
+        if action == "stats":
+            return {"ok": True, "stats": _nb.note_stats(st)}
+
+        if action == "suggest":
+            return {"ok": True,
+                    "topics": _nb.suggest_note_topics(
+                        st, int(payload.get("min_count") or 5))}
+
+        return {"ok": False, "error": f"未知 action: {action}"}
+    except Exception as e:
+        return {"ok": False, "error": f"{type(e).__name__}: {e}"}
+
+
+def cmd_todo(st, payload) -> dict:
+    """
+    待办管理（模型自己的任务队列，模型自主完全控制）。
+
+    payload:
+      action  add | list | update | done | invalidate | stats
+      kind    task | note_hint | review
+    """
+    import notebook as _nb
+
+    action = payload.get("action") or "list"
+    try:
+        if action == "add":
+            t = _nb.todo_add(
+                st,
+                title=payload.get("title") or "",
+                detail=payload.get("detail") or "",
+                kind=payload.get("kind") or "task",
+                priority=int(payload.get("priority") or 0),
+                ref_ep_ids=payload.get("ref_ep_ids") or [])
+            _audit(st, "todo", msg=f"新建待办 {t['title'][:40]}",
+                   extra={"todo_id": t["todo_id"], "kind": t["kind"]})
+            return {"ok": True, "todo": t}
+
+        if action == "list":
+            return {"ok": True,
+                    "todos": _nb.todo_list(
+                        st, status=payload.get("status") or "",
+                        kind=payload.get("kind") or "",
+                        include_done=bool(payload.get("include_done")),
+                        limit=int(payload.get("limit") or 200)),
+                    "stats": _nb.todo_stats(st)}
+
+        if action == "update":
+            t = _nb.todo_update(
+                st, payload.get("todo_id") or "",
+                **(payload.get("fields") or
+                   {k: payload[k] for k in
+                    ("title", "detail", "priority", "status") if k in payload}))
+            return {"ok": bool(t), "todo": t}
+
+        if action == "done":
+            t = _nb.todo_done(st, payload.get("todo_id") or "")
+            return {"ok": bool(t), "todo": t}
+
+        if action == "invalidate":
+            return {"ok": _nb.todo_invalidate(st, payload.get("todo_id") or "")}
+
+        if action == "stats":
+            return {"ok": True, "stats": _nb.todo_stats(st)}
+
+        return {"ok": False, "error": f"未知 action: {action}"}
+    except Exception as e:
+        return {"ok": False, "error": f"{type(e).__name__}: {e}"}
+
+
 def cmd_scan_conflicts(st, payload) -> dict:
     import conflict as _conflict
     from store_v1 import Embedder as _Emb
@@ -936,6 +1071,8 @@ def main():
         "trace": cmd_trace,
         "inject_log": cmd_inject_log,
         "inject_history": cmd_inject_history,
+        "note": cmd_note,
+        "todo": cmd_todo,
     }
     fn = handlers.get(args.cmd)
     if not fn:

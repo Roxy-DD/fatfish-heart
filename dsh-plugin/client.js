@@ -257,6 +257,35 @@ window.__ModuleLoader__.load({
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.json();
       },
+      async getNotes(q, topic) {
+        const p = new URLSearchParams();
+        if (q) p.set('q', q);
+        if (topic) p.set('topic', topic);
+        const r = await fetch(BASE + '/note?' + p.toString());
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      },
+      async postNote(o) {
+        const r = await fetch(BASE + '/note', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(o),
+        });
+        return r.json();
+      },
+      async getTodos(includeDone) {
+        const r = await fetch(BASE + '/todo' + (includeDone ? '?include_done=1' : ''));
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      },
+      async postTodo(o) {
+        const r = await fetch(BASE + '/todo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(o),
+        });
+        return r.json();
+      },
     };
 
     // ============================================================
@@ -795,6 +824,256 @@ window.__ModuleLoader__.load({
     }
 
     // ============================================================
+    // 笔记视图（记忆系统的另一半：知识沉淀）
+    // ============================================================
+    function NoteView(props) {
+      const [notes, setNotes] = useState([]);
+      const [stats, setStats] = useState({});
+      const [busy, setBusy] = useState(false);
+      const [showNew, setShowNew] = useState(false);
+      const [form, setForm] = useState({ title: '', body: '', topic: '' });
+      const [expanded, setExpanded] = useState({});
+
+      const load = useCallback(async () => {
+        try {
+          const r = await api.getNotes();
+          setNotes((r && r.notes) || []);
+          setStats((r && r.stats) || {});
+        } catch (e) {
+          console.error('读取笔记失败', e);
+        }
+      }, []);
+
+      useEffect(() => { load(); }, [load]);
+
+      const onCreate = async () => {
+        if (!form.title.trim() || !form.body.trim()) {
+          setErr('标题和正文都不能为空');
+          return;
+        }
+        setBusy(true);
+        try {
+          await api.postNote({ action: 'add', ...form });
+          setForm({ title: '', body: '', topic: '' });
+          setShowNew(false);
+          await load();
+        } finally {
+          setBusy(false);
+        }
+      };
+
+      const [err, setErr] = useState('');
+
+      return h('div', null,
+        h('div', { style: S.header },
+          h('div', { style: S.title }, '笔记'),
+          h('button', {
+            style: S.btnPrimary,
+            onClick: () => setShowNew(!showNew),
+          }, showNew ? '取消' : '写笔记')
+        ),
+        err ? h('div', { style: S.err }, err) : null,
+        h('div', { style: S.hint },
+          '记忆记录「我经历过什么」，笔记沉淀「我总结出了什么」。' +
+          '把可复用的知识整理成体系化的笔记，以后查阅而不是反复记忆。'
+        ),
+
+        showNew ? h('div', {
+          style: { margin: '14px 0', padding: 14, border: '1px solid var(--dsw-alias-border-l1)', borderRadius: 6 },
+        },
+          h('input', {
+            style: Object.assign({}, S.input, { width: '100%', marginBottom: 8 }),
+            placeholder: '标题（如：Python 装饰器原理）',
+            value: form.title,
+            onChange: (e) => setForm({ ...form, title: e.target.value }),
+          }),
+          h('input', {
+            style: Object.assign({}, S.input, { width: '100%', marginBottom: 8 }),
+            placeholder: '主题分类（如：python / 数据库 / 项目架构）',
+            value: form.topic,
+            onChange: (e) => setForm({ ...form, topic: e.target.value }),
+          }),
+          h('textarea', {
+            style: Object.assign({}, S.input, {
+              width: '100%', minHeight: 160, fontFamily: 'monospace', resize: 'vertical',
+            }),
+            placeholder: '正文，支持 Markdown...',
+            value: form.body,
+            onChange: (e) => setForm({ ...form, body: e.target.value }),
+          }),
+          h('button', {
+            style: Object.assign({}, S.btnPrimary, { marginTop: 8 }),
+            disabled: busy,
+            onClick: onCreate,
+          }, busy ? '保存中…' : '保存')
+        ) : null,
+
+        notes.length === 0
+          ? h('div', { style: S.empty }, '还没有笔记。当某个主题的记忆攒多了，就把它整理成笔记。')
+          : h('div', { style: S.list },
+              notes.map((n) => {
+                const isOpen = !!expanded[n.note_id];
+                const date = n.updated_at
+                  ? new Date(n.updated_at * 1000).toLocaleDateString('zh-CN')
+                  : '';
+                return h('div', {
+                  key: n.note_id,
+                  style: {
+                    padding: 14, borderBottom: '1px solid var(--dsw-alias-border-l1)',
+                    background: 'var(--dsw-alias-bg-layer-1)',
+                  },
+                },
+                  h('div', {
+                    style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' },
+                    onClick: () => setExpanded({ ...expanded, [n.note_id]: !isOpen }),
+                  },
+                    h('div', { style: { fontSize: 13, fontWeight: 600 } },
+                      (isOpen ? '▾ ' : '▸ ') + n.title),
+                    h('div', { style: { fontSize: 11, color: 'var(--dsw-alias-label-caption)' } },
+                      (n.topic ? n.topic + ' · ' : '') + n.chars + ' 字 · ' + date)
+                  ),
+                  isOpen ? h('div', {
+                    style: {
+                      marginTop: 10, paddingLeft: 10,
+                      borderLeft: '2px solid var(--dsw-alias-border-l1)',
+                      fontSize: 12, whiteSpace: 'pre-wrap', lineHeight: 1.7,
+                    },
+                  }, n.body) : null
+                );
+              })
+            )
+      );
+    }
+
+    // ============================================================
+    // 待办视图（模型自己的任务队列）
+    // ============================================================
+    function TodoView(props) {
+      const [todos, setTodos] = useState([]);
+      const [stats, setStats] = useState({});
+      const [includeDone, setIncludeDone] = useState(false);
+      const [busy, setBusy] = useState(false);
+      const [newTitle, setNewTitle] = useState('');
+
+      const load = useCallback(async (withDone) => {
+        try {
+          const r = await api.getTodos(withDone);
+          setTodos((r && r.todos) || []);
+          setStats((r && r.stats) || {});
+        } catch (e) {
+          console.error('读取待办失败', e);
+        }
+      }, []);
+
+      useEffect(() => { load(false); }, [load]);
+
+      const onAdd = async () => {
+        if (!newTitle.trim()) return;
+        setBusy(true);
+        try {
+          await api.postTodo({ action: 'add', title: newTitle.trim() });
+          setNewTitle('');
+          await load(includeDone);
+        } finally {
+          setBusy(false);
+        }
+      };
+
+      const onDone = async (id) => {
+        setBusy(true);
+        try {
+          await api.postTodo({ action: 'done', todo_id: id });
+          await load(includeDone);
+        } finally {
+          setBusy(false);
+        }
+      };
+
+      const kindLabel = { task: '任务', note_hint: '📝 待整理', review: '回顾' };
+
+      return h('div', null,
+        h('div', { style: S.header },
+          h('div', { style: S.title }, '待办'),
+          h('button', { style: S.btn, onClick: () => load(includeDone) }, '刷新')
+        ),
+        h('div', { style: S.hint },
+          '这是模型自己的任务队列，可以自主控制。' +
+          '「待整理」（📝）表示某主题记忆攒多了，该整理成笔记了。'
+        ),
+        h('div', { style: S.stats },
+          [['待办', stats.pending], ['进行中', stats.doing],
+           ['已完成', stats.done], ['总计', stats.total]].map((c, i) =>
+            h('div', { key: 'st' + i, style: S.statCard },
+              h('div', { style: S.statLabel }, c[0]),
+              h('div', { style: S.statValue }, String(c[1] == null ? '-' : c[1]))
+            ))
+        ),
+        h('div', { style: S.toolbar },
+          h('input', {
+            style: S.input,
+            placeholder: '新增待办…',
+            value: newTitle,
+            onChange: (e) => setNewTitle(e.target.value),
+            onKeyDown: (e) => { if (e.key === 'Enter') onAdd(); },
+          }),
+          h('button', { style: S.btnPrimary, disabled: busy, onClick: onAdd }, '添加'),
+          h('label', {
+            style: {
+              fontSize: 12, display: 'flex', alignItems: 'center', gap: 6,
+              color: 'var(--dsw-alias-label-secondary)', cursor: 'pointer',
+            },
+          },
+            h('input', {
+              type: 'checkbox',
+              checked: includeDone,
+              onChange: (e) => { setIncludeDone(e.target.checked); load(e.target.checked); },
+            }),
+            '含已完成'
+          )
+        ),
+        todos.length === 0
+          ? h('div', { style: S.empty }, '没有待办。')
+          : h('div', { style: S.list },
+              todos.map((t) => {
+                const done = t.status === 'done';
+                return h('div', {
+                  key: t.todo_id,
+                  style: {
+                    display: 'flex', alignItems: 'center', gap: 10,
+                    padding: '10px 14px',
+                    borderBottom: '1px solid var(--dsw-alias-border-l1)',
+                    background: 'var(--dsw-alias-bg-layer-1)',
+                    opacity: done ? 0.55 : 1,
+                  },
+                },
+                  h('input', {
+                    type: 'checkbox',
+                    checked: done,
+                    disabled: busy || done,
+                    onChange: () => onDone(t.todo_id),
+                  }),
+                  h('div', { style: { flex: 1, fontSize: 12 } },
+                    h('div', {
+                      style: { textDecoration: done ? 'line-through' : 'none' },
+                    }, t.title),
+                    t.detail ? h('div', {
+                      style: { fontSize: 11, color: 'var(--dsw-alias-label-caption)', marginTop: 2 },
+                    }, t.detail) : null
+                  ),
+                  h('span', {
+                    style: {
+                      fontSize: 10, padding: '1px 6px', borderRadius: 3,
+                      background: 'var(--dsw-alias-bg-layer-2)',
+                      color: 'var(--dsw-alias-label-secondary)',
+                    },
+                  }, kindLabel[t.kind] || t.kind)
+                );
+              })
+            )
+      );
+    }
+
+    // ============================================================
     // 记忆页面
     // ============================================================
     function MemoryPage(props) {
@@ -910,6 +1189,8 @@ window.__ModuleLoader__.load({
           h('button', { style: tab === 'inject' ? S.tabActive : S.tab, onClick: () => setTab('inject') }, '注入历史'),
           h('button', { style: tab === 'sleep' ? S.tabActive : S.tab, onClick: () => setTab('sleep') }, '睡眠历史'),
           h('button', { style: tab === 'audit' ? S.tabActive : S.tab, onClick: () => setTab('audit') }, '审计日志'),
+          h('button', { style: tab === 'note' ? S.tabActive : S.tab, onClick: () => setTab('note') }, '笔记'),
+          h('button', { style: tab === 'todo' ? S.tabActive : S.tab, onClick: () => setTab('todo') }, '待办'),
           h('button', { style: tab === 'config' ? S.tabActive : S.tab, onClick: () => setTab('config') }, '配置')
         ),
 
@@ -960,7 +1241,11 @@ window.__ModuleLoader__.load({
               ? h(SleepHistoryView, null)
               : tab === 'audit'
                 ? h(AuditView, null)
-                : tab === 'timeline'
+                : tab === 'note'
+                  ? h(NoteView, null)
+                  : tab === 'todo'
+                    ? h(TodoView, null)
+                    : tab === 'timeline'
                   ? h(TimelineView, { items: displayItems })
                   : h('div', null,
                       h('div', { style: S.stats },

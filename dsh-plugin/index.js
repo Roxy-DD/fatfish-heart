@@ -1001,6 +1001,33 @@ export function apply(ctx, config) {
         const r = await callKernel(cfg, 'seed', body, undefined, 60000)
         return sendJson(res, 200, r)
       }
+      // 笔记（记忆系统的另一半：知识沉淀）
+      if (sub === '/note' && method === 'GET') {
+        const q = url.searchParams.get('q') || ''
+        const topic = url.searchParams.get('topic') || ''
+        const r = q
+          ? await callKernel(cfg, 'note', { action: 'search', query: q }, undefined, 15000)
+          : await callKernel(cfg, 'note', { action: 'list', topic }, undefined, 15000)
+        return sendJson(res, 200, r)
+      }
+      if (sub === '/note' && method === 'POST') {
+        const body = await readBody(req)
+        const r = await callKernel(cfg, 'note', body, undefined, 20000)
+        return sendJson(res, 200, r)
+      }
+      // 待办
+      if (sub === '/todo' && method === 'GET') {
+        const r = await callKernel(cfg, 'todo', {
+          action: 'list',
+          include_done: url.searchParams.get('include_done') === '1',
+        }, undefined, 15000)
+        return sendJson(res, 200, r)
+      }
+      if (sub === '/todo' && method === 'POST') {
+        const body = await readBody(req)
+        const r = await callKernel(cfg, 'todo', body, undefined, 15000)
+        return sendJson(res, 200, r)
+      }
       return sendJson(res, 404, { ok: false, error: 'unknown endpoint ' + sub })
     } catch (e) {
       debugLog(cfg, 'http-error', { sub, error: String(e && e.message) })
@@ -1025,7 +1052,7 @@ export function apply(ctx, config) {
   //   ① 用模块级 Set 记录已注册的 path，跨 apply 调用保持
   //   ② 已注册的跳过，不重复注册
   //   ③ 注册失败时记录到 stderr，不只靠 debugLog
-  const routes = ['/list', '/invalidate', '/revise', '/stats', '/config', '/inject-history', '/sleep-history', '/audit', '/hook', '/seed']
+  const routes = ['/list', '/invalidate', '/revise', '/stats', '/config', '/inject-history', '/sleep-history', '/audit', '/hook', '/seed', '/note', '/todo']
   let routeOk = 0
   let routeSkip = 0
   let routeFail = 0
@@ -1459,6 +1486,88 @@ export function apply(ctx, config) {
     },
     async execute(args, runCtx) {
       return await callKernel(cfg, 'trace', args, runCtx && runCtx.signal)
+    },
+  })
+
+  ctx.tools.register({
+    name: 'mem_note',
+    description: '记笔记（写书/写手册的能力）。记忆记录"我经历过什么"，笔记沉淀"我总结出了什么"——把可复用的知识整理成体系化的笔记，避免重复记忆。支持：add 新建、search 查找、list 列表、suggest 查看哪些主题该整理了。',
+    parameters: {
+      type: 'object',
+      properties: {
+        action: { type: 'string', description: 'add | get | revise | search | list | stats | suggest' },
+        title: { type: 'string', description: '标题（add/revise）' },
+        body: { type: 'string', description: '正文，Markdown（add/revise）' },
+        topic: { type: 'string', description: '主题分类，如 python / 数据库 / 项目架构' },
+        tags: { type: 'array', items: { type: 'string' }, description: '标签' },
+        source_ep_ids: { type: 'array', items: { type: 'string' }, description: '由哪些记忆整理而来（可溯源）' },
+        note_id: { type: 'string', description: '笔记 ID（get/revise）' },
+        query: { type: 'string', description: '搜索关键词（search）' },
+      },
+      required: ['action'],
+    },
+    output: {
+      schema: { type: 'object' },
+      render: (_a, v) => {
+        if (!v || !v.ok) return [{ type: 'text', text: '笔记操作失败：' + ((v && v.error) || '未知') }]
+        if (v.note) {
+          const n = v.note
+          return [{ type: 'text', text: `[${n.note_id}] ${n.title}（${n.chars}字，rev${n.revision}）\n${String(n.body).slice(0, 200)}` }]
+        }
+        if (v.notes) {
+          const lines = v.notes.map((n) => `[${n.note_id.slice(0, 8)}] ${n.title}（${n.chars}字）`)
+          return [{ type: 'text', text: `共 ${v.notes.length} 篇笔记\n` + lines.join('\n') }]
+        }
+        if (v.topics) {
+          const lines = v.topics.map((t) => `· ${t.topic}：${t.count} 条记忆，建议整理成笔记`)
+          return [{ type: 'text', text: lines.length ? '建议整理的主题：\n' + lines.join('\n') : '暂无需要整理的主题' }]
+        }
+        return [{ type: 'text', text: JSON.stringify(v).slice(0, 500) }]
+      },
+    },
+    async execute(args, runCtx) {
+      return await callKernel(cfg, 'note', args, runCtx && runCtx.signal)
+    },
+  })
+
+  ctx.tools.register({
+    name: 'mem_todo',
+    description: '待办清单（模型自己的任务队列，完全自主控制）。支持：add 新增、list 列表、done 完成、update 更新。kind=note_hint 用于标记"这块该整理成笔记了"。',
+    parameters: {
+      type: 'object',
+      properties: {
+        action: { type: 'string', description: 'add | list | done | update | stats' },
+        title: { type: 'string', description: '待办标题（add）' },
+        detail: { type: 'string', description: '详细说明（add/update）' },
+        kind: { type: 'string', description: 'task 普通任务 | note_hint 该整理成笔记 | review 定期回顾' },
+        priority: { type: 'number', description: '优先级，越大越靠前' },
+        todo_id: { type: 'string', description: '待办 ID（done/update）' },
+        status: { type: 'string', description: 'pending | doing | done | dropped' },
+        include_done: { type: 'boolean', description: 'list 时是否包含已完成' },
+      },
+      required: ['action'],
+    },
+    output: {
+      schema: { type: 'object' },
+      render: (_a, v) => {
+        if (!v || !v.ok) return [{ type: 'text', text: '待办操作失败：' + ((v && v.error) || '未知') }]
+        if (v.todo) {
+          const t = v.todo
+          return [{ type: 'text', text: `[${t.todo_id.slice(0, 8)}] ${t.title}（${t.status}，${t.kind}）` }]
+        }
+        if (v.todos) {
+          const lines = v.todos.map((t) => `[${t.status === 'done' ? '✓' : ' '}] ${t.title}${t.kind === 'note_hint' ? ' 📝' : ''}`)
+          const s = v.stats || {}
+          return [{ type: 'text', text: `待办 ${v.todos.length} 条（待办 ${s.pending || 0} / 进行中 ${s.doing || 0} / 已完成 ${s.done || 0}）\n` + lines.join('\n') }]
+        }
+        if (v.stats) {
+          return [{ type: 'text', text: JSON.stringify(v.stats) }]
+        }
+        return [{ type: 'text', text: JSON.stringify(v).slice(0, 500) }]
+      },
+    },
+    async execute(args, runCtx) {
+      return await callKernel(cfg, 'todo', args, runCtx && runCtx.signal)
     },
   })
 

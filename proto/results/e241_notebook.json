@@ -1,0 +1,97 @@
+{
+ "experiment": "E-241",
+ "n_pass": 18,
+ "n_total": 18,
+ "results": [
+  {
+   "name": "新建笔记",
+   "ok": true,
+   "detail": "ntdd5d78"
+  },
+  {
+   "name": "读取笔记",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "修订笔记",
+   "ok": true,
+   "detail": "rev=2"
+  },
+  {
+   "name": "搜索笔记",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "新建待办",
+   "ok": true,
+   "detail": "td28cb53"
+  },
+  {
+   "name": "列出待办",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "标记完成",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "待办统计",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "默认不含已完成",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "含已完成时能列出",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "发现待整理主题",
+   "ok": true,
+   "detail": "1 个"
+  },
+  {
+   "name": "episodes 数量一致",
+   "ok": true,
+   "detail": "6 → 6"
+  },
+  {
+   "name": "vectors 数量一致",
+   "ok": true,
+   "detail": "6 → 6"
+  },
+  {
+   "name": "notes 表独立存在",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "todos 表独立存在",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "笔记仍存在",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "已打失效标记",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "正文未丢失",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}
