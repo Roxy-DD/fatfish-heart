@@ -39,10 +39,13 @@ AFFECT_SYSTEM_PROMPT = """你在判断一条记忆的**情绪强度**。这是�
    0.6 = 明显情绪
    1.0 = 极强情绪（丧亲、重大创伤、极度喜悦）
 
-2. valence：-1 / 0 / +1
-   -1 = 负面（悲伤/痛苦/恐惧/愤怒/羞耻/焦虑）
-   0  = 中性或无明显方向
-   +1 = 正面（喜悦/兴奋/欣慰/感动）
+2. valence：-1.0 ~ +1.0 的连续值
+   -1.0 = 强烈负面（丧亲、创伤、极度痛苦）
+   -0.5 = 中等负面（挫败、烦躁、遗憾）
+    0.0 = 中性或无明显方向
+   +0.5 = 中等正面（顺利、欣慰）
+   +1.0 = 强烈正面（极度喜悦、重大成就）
+   请给出**连续的强度**，不要只给 -1/0/+1 三个值。
    若 affect = 0，valence 必须为 0
 
 关键判据：
@@ -58,7 +61,7 @@ AFFECT_SYSTEM_PROMPT = """你在判断一条记忆的**情绪强度**。这是�
   「张伟说他改完了接口」→ 工作事实，0
   「同事在所有人面前说我做的东西是垃圾」→ 经历+羞辱，0.88
 
-只输出：{"affect":0.00,"valence":0,"reason":"一句话"}"""
+只输出：{"affect":0.00,"valence":0.0,"reason":"一句话"}"""
 
 
 def build_prompt(text: str) -> tuple[str, str]:
@@ -70,7 +73,8 @@ def parse_affect_output(raw: str) -> dict | None:
     """
     机械解析模型输出。
 
-    返回 {"affect": float, "valence": int, "reason": str} 或 None
+    返回 {"affect": float, "valence": float, "reason": str} 或 None
+    valence 是连续值 [-1, 1]（E-268 修，原为三值 -1/0/+1）
     """
     if not raw:
         return None
@@ -93,14 +97,25 @@ def parse_affect_output(raw: str) -> dict | None:
     affect = round(affect, 3)
 
     try:
-        valence = int(d.get("valence") or 0)
+        # E-268 修：valence 改为**连续值** [-1, 1]
+        #
+        # 原实现强制 int 且只允许 -1/0/+1，与两处不一致：
+        #   ① episodes.valence 是 REAL 字段
+        #   ② 共振判断（store_v1._expand）要求 |valence| >= 0.15
+        #      → 三值化后 |valence| 只能是 0 或 1，
+        #        绝大多数记忆 valence=0，共振路径永不触发
+        #        （E-149 已实测"只有 3.1% 满足"，三值化让它更糟）
+        #
+        # 现在接受连续值，钳制到 [-1, 1]。
+        # 同时兼容模型返回三值的情况（-1/0/+1 是连续值的合法特例）。
+        valence = float(d.get("valence") or 0)
+        valence = max(-1.0, min(1.0, valence))
+        valence = round(valence, 3)
     except Exception:
-        valence = 0
-    if valence not in (-1, 0, 1):
-        valence = 0
+        valence = 0.0
     # 一致性：affect=0 时 valence 必须 0
     if affect <= 0.0:
-        valence = 0
+        valence = 0.0
 
     return {
         "affect": affect,
@@ -182,8 +197,8 @@ def resonance_score(a_affect: float, a_valence: float,
     """
     a = max(0.0, min(1.0, float(a_affect or 0)))
     b = max(0.0, min(1.0, float(b_affect or 0)))
-    av = float(a_valence or 0)
-    bv = float(b_valence or 0)
+    av = max(-1.0, min(1.0, float(a_valence or 0)))
+    bv = max(-1.0, min(1.0, float(b_valence or 0)))
 
     # 任一为 0 → 无共振
     if a <= 0.05 or b <= 0.05:
@@ -192,8 +207,18 @@ def resonance_score(a_affect: float, a_valence: float,
     if av == 0 or bv == 0 or av * bv <= 0:
         return 0.0
 
-    # 强度相似度：1 - |a-b|
+    # 强度相似度：情绪强度接近程度
     strength_sim = 1.0 - abs(a - b)
     # 强度本身也要够（取两者较小值作为权重）
     magnitude = min(a, b)
-    return round(strength_sim * magnitude, 4)
+
+    # E-268 修：valence 的**强度**也要参与计算。
+    # 原实现只用 av*bv>0 判断方向，完全忽略 |valence| 的大小，
+    # 导致 (-0.8, -0.2) 与 (-0.8, -0.75) 得到**完全相同**的分数。
+    # 现在用两者 |valence| 的较小值作为第三个因子：
+    #   · 都是强负面 → 因子接近 1
+    #   · 一个强一个弱 → 因子小
+    # 这样连续 valence 才有意义（三值化时这一步恒为 1，无影响）。
+    valence_mag = min(abs(av), abs(bv))
+
+    return round(strength_sim * magnitude * valence_mag, 4)

@@ -21,7 +21,7 @@
   {
    "name": "正确 target 时有实际动作",
    "ok": true,
-   "detail": "{'relation': 'replace', 'invalidated': 'ee594477bc4a46c4', '"
+   "detail": "{'relation': 'replace', 'invalidated': '6dbe779b0d1f4c29', '"
   },
   {
    "name": "不存在时报错",

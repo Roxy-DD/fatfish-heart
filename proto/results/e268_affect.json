@@ -1,0 +1,112 @@
+{
+ "experiment": "E-268",
+ "n_pass": 21,
+ "n_total": 21,
+ "results": [
+  {
+   "name": "连续负值",
+   "ok": true,
+   "detail": "affect=0.92 valence=-0.85"
+  },
+  {
+   "name": "连续正值",
+   "ok": true,
+   "detail": "affect=0.45 valence=0.50"
+  },
+  {
+   "name": "三值兼容",
+   "ok": true,
+   "detail": "affect=0.50 valence=-1.00"
+  },
+  {
+   "name": "affect=0 归零",
+   "ok": true,
+   "detail": "affect=0.00 valence=0.00"
+  },
+  {
+   "name": "越界钳制",
+   "ok": true,
+   "detail": "affect=0.80 valence=1.00"
+  },
+  {
+   "name": "负向越界",
+   "ok": true,
+   "detail": "affect=0.60 valence=-1.00"
+  },
+  {
+   "name": "连续 -0.85 不再被截断",
+   "ok": true,
+   "detail": "得到 -0.85"
+  },
+  {
+   "name": "写入成功",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "返回 need_affect",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "返回 affect_prompt",
+   "ok": true,
+   "detail": "system 749 字"
+  },
+  {
+   "name": "cmd_affect 成功",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "affect 正确写入",
+   "ok": true,
+   "detail": "0.92"
+  },
+  {
+   "name": "valence 正确写入",
+   "ok": true,
+   "detail": "-0.85"
+  },
+  {
+   "name": "落库 affect_peak",
+   "ok": true,
+   "detail": "0.92"
+  },
+  {
+   "name": "落库 valence",
+   "ok": true,
+   "detail": "-0.85"
+  },
+  {
+   "name": "共振分数 > 0",
+   "ok": true,
+   "detail": "0.570"
+  },
+  {
+   "name": "|valence| >= 0.15 满足",
+   "ok": true,
+   "detail": "|-0.8|"
+  },
+  {
+   "name": "强负面共振 > 弱负面共振",
+   "ok": true,
+   "detail": "0.570 vs 0.114"
+  },
+  {
+   "name": "audit 里有 affect 记录",
+   "ok": true,
+   "detail": "3 条"
+  },
+  {
+   "name": "降级返回 affect",
+   "ok": true,
+   "detail": "{'affect': 0.9, 'valence': -1, 'reason': '规则降级（affect_v3）', "
+  },
+  {
+   "name": "降级有 reason",
+   "ok": true,
+   "detail": "规则降级（affect_v3）"
+  }
+ ]
+}

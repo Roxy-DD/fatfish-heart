@@ -397,12 +397,20 @@ def cmd_affect(st, payload) -> dict:
         st.con.commit()
 
         # 审计日志：affect（情绪判断写回）
-        _audit(st, "affect",
-               msg=f"情绪 {parsed['affect']:.2f}/{parsed['valence']:+d} ← {ep.raw_text[:36]}",
-               ep_id=ep_id,
-               extra={"affect": parsed["affect"],
-                      "valence": parsed["valence"],
-                      "reason": (parsed.get("reason") or "")[:80]})
+        # E-268 修：valence 已改为连续 float，格式化不能用 :+d（会抛 ValueError）
+        # 原 bug：UPDATE 已提交但审计抛异常 → 返回 ok=False，
+        #        造成"数据写成功了却说失败"的假失败。
+        try:
+            _audit(st, "affect",
+                   msg=f"情绪 {parsed['affect']:.2f}/{parsed['valence']:+.2f} "
+                       f"← {ep.raw_text[:36]}",
+                   ep_id=ep_id,
+                   extra={"affect": parsed["affect"],
+                          "valence": parsed["valence"],
+                          "reason": (parsed.get("reason") or "")[:80]})
+        except Exception:
+            # 审计失败不应影响已成功的写入
+            pass
 
         return {
             "ok": True,

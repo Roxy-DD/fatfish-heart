@@ -1172,8 +1172,35 @@ export function apply(ctx, config) {
       }],
     },
     async execute(args, runCtx) {
-      const r = await callKernel(cfg, 'add', { ...args, judge: true },
-                                 runCtx && runCtx.signal)
+      // E-268：judge_affect=true 让内核带上情绪判断的 prompt
+      //（模型 MAE 0.0598 vs 规则 0.2702，E-152 实测）
+      const r = await callKernel(cfg, 'add',
+        { ...args, judge: true, judge_affect: true },
+        runCtx && runCtx.signal)
+
+      // ---- 情绪判断（模型版）----
+      // 原来插件从未传 judge_affect，导致系统一直走规则降级路径。
+      if (r && r.ok && r.need_affect && r.affect_prompt) {
+        try {
+          const p = r.affect_prompt
+          const ar = await callModel(ctx, cfg, p.system, p.user, 300,
+                                     runCtx && runCtx.signal)
+          if (ar && ar.ok && ar.text) {
+            r.affect = await callKernel(cfg, 'affect', {
+              ep_id: r.ep_id,
+              raw: ar.text,
+            }, runCtx && runCtx.signal)
+            debugLog(cfg, 'affect-done', {
+              ep_id: r.ep_id,
+              affect: r.affect && r.affect.affect,
+              valence: r.affect && r.affect.valence,
+            })
+          }
+        } catch (e) {
+          debugLog(cfg, 'affect-fail', { error: String(e && e.message) })
+        }
+      }
+
       // 系统预筛认为值得判断 → 调模型判断（含按需扩散），再把结果送回内核落盘
       if (r && r.ok && r.need_judge && r.pack) {
         try {
