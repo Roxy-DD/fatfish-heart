@@ -54,6 +54,11 @@ REGRESSION_SUITE = [
     ("静默失败", "run_e252_silent_regression.py", 200),
 ]
 
+# 前端安全检查（node 脚本，单独跑）
+CLIENT_CHECKS = [
+    ("前端安全", "check-client.mjs"),
+]
+
 
 # ============================================================
 # git 辅助
@@ -172,8 +177,51 @@ def run_regression(verbose: bool = True) -> dict:
     skipped = [k for k, v in results.items() if v["pass"] is None]
     if skipped:
         all_pass = False
+
+    # ---------- 前端安全检查（node 脚本）----------
+    import shutil as _sh
+    node = _sh.which("node")
+    for name, script in CLIENT_CHECKS:
+        path = os.path.join(_HERE, script)
+        if not os.path.exists(path):
+            results[name] = {"pass": None, "output": "脚本不存在",
+                             "summary": "跳过"}
+            if verbose:
+                print(f"  ⚠ {name}  脚本不存在，跳过")
+            all_pass = False
+            continue
+        if not node:
+            results[name] = {"pass": None, "output": "node 不可用",
+                             "summary": "跳过"}
+            if verbose:
+                print(f"  ⚠ {name}  node 不可用，跳过")
+            continue
+        try:
+            r = subprocess.run([node, path], cwd=_HERE, env=env,
+                               capture_output=True, text=True, timeout=120,
+                               encoding="utf-8", errors="replace")
+            out = (r.stdout or "") + (r.stderr or "")
+            ok = r.returncode == 0
+            summary = ""
+            for line in out.splitlines():
+                if "全部检查通过" in line:
+                    summary = "全部检查通过"
+                elif "发现" in line and "问题" in line:
+                    summary = line.strip()
+            results[name] = {"pass": ok, "output": out[-2000:],
+                             "summary": summary}
+            if verbose:
+                mark = "✅" if ok else "❌"
+                print(f"  {mark} {name}  {summary}")
+        except Exception as e:
+            results[name] = {"pass": False, "output": str(e),
+                             "summary": str(e)}
+            if verbose:
+                print(f"  ❌ {name}  {e}")
+
+    all_pass = all(v["pass"] is True for v in results.values())
     return {"all_pass": all_pass, "items": results,
-            "skipped": skipped}
+            "skipped": [k for k, v in results.items() if v["pass"] is None]}
 
 
 # ============================================================

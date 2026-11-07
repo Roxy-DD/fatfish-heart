@@ -659,20 +659,21 @@ window.__ModuleLoader__.load({
           : history.length === 0
             ? h('div', { style: S.empty }, '还没有注入记录。开一个新对话就会产生第一条。')
             : h('div', { style: S.list },
-                history.map((h, i) => {
-                  const time = h.at ? new Date(h.at).toLocaleString('zh-CN') : '';
+                // 注意：回调参数不能叫 h —— 会遮蔽 React.createElement
+                history.map((rec, i) => {
+                  const time = rec.at ? new Date(rec.at).toLocaleString('zh-CN') : '';
                   return h('div', { key: 'h' + i, style: { padding: '14px', borderBottom: '1px solid var(--dsw-alias-border-l1)', background: 'var(--dsw-alias-bg-layer-1)' } },
                     h('div', { style: { fontSize: 12, color: 'var(--dsw-alias-label-caption)', marginBottom: 6 } },
-                      time + ' · ' + modeLabel(h.mode) + (h.sid ? ' · ' + h.sid : '')),
+                      time + ' · ' + modeLabel(rec.mode) + (rec.sid ? ' · ' + rec.sid : '')),
                     h('div', { style: { fontSize: 12, color: 'var(--dsw-alias-label-secondary)', marginBottom: 8 } },
-                      '触发消息: ' + (h.query || '(空)')),
-                    h.prewarm
+                      '触发消息: ' + (rec.query || '(空)')),
+                    rec.prewarm
                       ? h('div', { style: { fontSize: 11, color: 'var(--dsw-alias-state-business-primary)', marginBottom: 8, background: 'var(--dsw-alias-state-business-tertiary)', padding: '6px 8px', borderRadius: 4 } },
-                          '前瞻: ' + h.prewarm)
+                          '前瞻: ' + rec.prewarm)
                       : null,
-                    (h.items || []).length
+                    (rec.items || []).length
                       ? h('div', null,
-                          (h.items || []).map((it, j) => h('div', {
+                          (rec.items || []).map((it, j) => h('div', {
                             key: 'it' + j,
                             style: { fontSize: 12, padding: '4px 0', paddingLeft: 12, borderLeft: '2px solid var(--dsw-alias-border-l1)', marginBottom: 4 },
                           },
@@ -724,20 +725,22 @@ window.__ModuleLoader__.load({
           : history.length === 0
             ? h('div', { style: S.empty }, '还没有睡眠记录。当模型觉得一个任务完结时，会主动整理。')
             : h('div', { style: S.list },
-                history.map((h, i) => {
-                  const time = h.at ? new Date(h.at * 1000).toLocaleString('zh-CN') : '';
-                  const merged = (h.merged || []).length;
-                  const invalidated = (h.invalidated || []).length;
-                  const bumped = (h.bumped || []).length;
+                // 注意：回调参数不能叫 h —— 会遮蔽 React.createElement 的 h，
+                // 导致 h('div', ...) 变成把数据对象当函数调用 → TypeError → 白屏
+                history.map((rec, i) => {
+                  const time = rec.at ? new Date(rec.at * 1000).toLocaleString('zh-CN') : '';
+                  const merged = (rec.merged || []).length;
+                  const invalidated = (rec.invalidated || []).length;
+                  const bumped = (rec.bumped || []).length;
                   return h('div', { key: 's' + i, style: { padding: '14px', borderBottom: '1px solid var(--dsw-alias-border-l1)', background: 'var(--dsw-alias-bg-layer-1)' } },
                     h('div', { style: { fontSize: 12, color: 'var(--dsw-alias-label-caption)', marginBottom: 8 } },
-                      time + ' · 动作 ' + (h.actions || 0) + ' 项'),
+                      time + ' · 动作 ' + (rec.actions || 0) + ' 项'),
                     h('div', { style: { display: 'flex', gap: 10, flexWrap: 'wrap', fontSize: 11, marginBottom: 6 } },
                       merged ? h('span', { style: badge('var(--dsw-alias-state-business-tertiary)', 'var(--dsw-alias-state-business-primary)') }, '合并 ' + merged + ' 对') : null,
                       invalidated ? h('span', { style: badge('var(--dsw-alias-state-idle-primary)', 'var(--dsw-alias-label-primary-inverted)') }, '遗忘 ' + invalidated + ' 条') : null,
                       bumped ? h('span', { style: badge('var(--dsw-alias-state-warn-secondary)', 'var(--dsw-alias-state-warn-primary)') }, '强化 ' + bumped + ' 条') : null
                     ),
-                    (h.merged || []).map((m, j) => h('div', {
+                    (rec.merged || []).map((m, j) => h('div', {
                       key: 'm' + j,
                       style: { fontSize: 11, padding: '3px 0', paddingLeft: 12, color: 'var(--dsw-alias-label-secondary)' },
                     },
