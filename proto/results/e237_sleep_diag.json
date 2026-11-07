@@ -1,0 +1,10 @@
+{
+ "experiment": "E-237",
+ "memory_count": 41,
+ "l3_count": 25,
+ "pair_count": 20,
+ "top_cos": 0.9325,
+ "l3_candidates": 25,
+ "worth_sleeping": true,
+ "tool_registered": true
+}

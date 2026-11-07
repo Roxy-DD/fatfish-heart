@@ -16,7 +16,7 @@
   {
    "name": "睡眠后游标推进",
    "ok": true,
-   "detail": "cursor=1794063204.2"
+   "detail": "cursor=1794063323.4"
   },
   {
    "name": "第二次睡眠走增量窗口",
@@ -66,7 +66,7 @@
   {
    "name": "tip 是最新",
    "ok": true,
-   "detail": "tip=d2088429"
+   "detail": "tip=20997462"
   },
   {
    "name": "链条顺序（老→新）",
