@@ -1,0 +1,19 @@
+{
+ "experiment": "E-284",
+ "n_cases": 70,
+ "baseline": {
+  "1": 0.5,
+  "5": 0.7429,
+  "10": 0.9
+ },
+ "trigram": {
+  "1": 0.5286,
+  "5": 0.7571,
+  "10": 0.9
+ },
+ "better": 6,
+ "worse": 0,
+ "same": 64,
+ "delta_10": 0.0,
+ "verdict": "no_improve"
+}

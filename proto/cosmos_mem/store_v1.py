@@ -322,9 +322,25 @@ class MemoryStore:
             revision INTEGER, text_hash TEXT, schema_version TEXT)""")
         c.execute("""CREATE TABLE IF NOT EXISTS vectors (
             ep_id TEXT PRIMARY KEY, dim INTEGER, vec BLOB)""")
+        # E-284：FTS5 用 trigram 分词器
+        #
+        # 原来用默认的 unicode61，它按空格切分，
+        # 中文整句被当成**一个 token**，导致：
+        #   '记忆系统' → 0 条命中（因为库里存的是"记忆系统的检索通道"整个 token）
+        #   '记忆'     → 11 条（部分记忆恰好以"记忆"开头？实际是误匹配）
+        #
+        # 实测（E-283/E-284，70 个用例）：
+        #   纯 FTS recall@10:  unicode61 2.9% → trigram 24.3%
+        #   融合检索 recall@1:  50.0% → 52.9%（+2.9pp）
+        #   融合检索 recall@5:  74.3% → 75.7%（+1.4pp）
+        #   逐用例: 变好 6 / 变差 0 / 不变 64  ← 零退步
+        #
+        # 已知局限：trigram 按 3 字符切分，**2 字查询查不到**
+        #（如"记忆"匹配不到）。但向量通道能覆盖这部分，
+        # 实测零退步，所以可接受。
         c.execute("""CREATE VIRTUAL TABLE IF NOT EXISTS ep_fts
             USING fts5(raw_text, atmosphere, content='episodes',
-                       content_rowid='rowid')""")
+                       content_rowid='rowid', tokenize='trigram')""")
         for f in ("person", "time", "location"):
             c.execute(f"CREATE INDEX IF NOT EXISTS ix_{f} ON episodes({f})")
         c.execute("CREATE INDEX IF NOT EXISTS ix_valid ON episodes(invalid_at)")
