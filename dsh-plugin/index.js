@@ -879,11 +879,32 @@ function formatProtected(items, full) {
   return lines.join('\n')
 }
 
-/** 已注册的 HTTP 路由（模块级，跨 apply 调用保持）
- *  原因：DSH 的 webServer.register 遇重复 (kind,path) 直接 throw，
- *  而 apply() 可能被多次调用（热重载），第二次会让后续路由全注册失败。
- *  详见 apply() 内 E-239 的注释。 */
-const REGISTERED_ROUTES = new Set()
+/** 已注册的 HTTP 路由 —— 按 ctx 实例隔离
+ *
+ *  E-254 修的坑：
+ *    原来用模块级 `const REGISTERED_ROUTES = new Set()`，
+ *    跨 apply() 调用一直存在。但 DSH 重载插件时，
+ *    模块可能没重新初始化（缓存），而宿主**已经重建了 webServer**，
+ *    路由表是空的。
+ *    于是新 Set 里记着"这些路由都注册过了"，
+ *    全部 skip，一条都没真注册 → 所有端点 404。
+ *    日志特征：http-route-summary ok=0, skip=14, fail=0
+ *
+ *  修法：
+ *    · 用 WeakMap 按 ctx 实例隔离（ctx 换 = 新 webServer = 重新注册）
+ *    · ctx 被回收时记录自动释放，不会泄漏
+ *    · 注册成功后写入；失败不写入（下次还能重试）
+ */
+const REGISTERED_BY_CTX = new WeakMap()
+
+function routesOf(ctx) {
+  let s = REGISTERED_BY_CTX.get(ctx)
+  if (!s) {
+    s = new Set()
+    REGISTERED_BY_CTX.set(ctx, s)
+  }
+  return s
+}
 
 export function apply(ctx, config) {
   const cfg = { ...DEFAULTS, ...(config || {}) }
@@ -1056,28 +1077,19 @@ export function apply(ctx, config) {
 
   // 显式注册 exact 路由（比 prefix 更可靠，也便于排错）
   //
-  // E-239 修的重要 bug：
-  //   DSH 的 webServer.register 遇到重复 (kind, path) 会直接 throw：
-  //     "webserver: duplicate exact route ..."
-  //   而 apply() 可能被调用多次（热重载 / profile 重载），
-  //   第二次注册时第一个路由就抛异常，
-  //   导致后面所有路由都注册不上 → 全部 404。
-  //
-  //   原代码把 register 包在 ctx.effect 里，异常被 effect 吞掉，
-  //   只在我们的 debugLog 里留了 http-route-fail，
-  //   但日志里根本没有这条（因为 debugLog 也没执行到）—— 极难排查。
-  //
-  // 修法：
-  //   ① 用模块级 Set 记录已注册的 path，跨 apply 调用保持
-  //   ② 已注册的跳过，不重复注册
-  //   ③ 注册失败时记录到 stderr，不只靠 debugLog
+  // E-239：DSH 的 webServer.register 遇重复 (kind,path) 会直接 throw，
+  //        而 apply() 可能被多次调用，第二次会让后续路由全注册失败。
+  // E-254：去重记录必须**按 ctx 隔离**（见 routesOf 的注释）。
+  //        模块级 Set 会在宿主重建 webServer 后仍记着"已注册"，
+  //        导致全部 skip、一条都不注册 → 所有端点 404。
   const routes = ['/list', '/invalidate', '/revise', '/stats', '/config', '/inject-history', '/sleep-history', '/audit', '/hook', '/seed', '/note', '/todo', '/compose', '/triage']
   let routeOk = 0
   let routeSkip = 0
   let routeFail = 0
+  const registered = routesOf(ctx)
   for (const r of routes) {
     const full = base + r
-    if (REGISTERED_ROUTES.has(full)) {
+    if (registered.has(full)) {
       routeSkip++
       continue
     }
@@ -1087,7 +1099,7 @@ export function apply(ctx, config) {
         path: full,
         handler: httpHandler,
       }))
-      REGISTERED_ROUTES.add(full)
+      registered.add(full)
       routeOk++
       debugLog(cfg, 'http-route-ok', { path: full })
     } catch (e) {
