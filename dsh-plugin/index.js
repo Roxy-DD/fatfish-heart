@@ -794,6 +794,32 @@ function formatMemories(items, maxChars) {
   return lines.join('\n')
 }
 
+/**
+ * 格式化 L0/L1 强制记忆（E-231 改进）。
+ *
+ * 关键洞察：『强制在场』≠『每轮全文』。
+ *   · 首轮：给全文（模型建立完整认知基线）
+ *   · 后续：只列标题 + ep_id（提醒存在，需要时用 mem_search 取全文）
+ *
+ * E-230 诊断：9 条 L0/L1 共 1997 字，若每轮全文注入，
+ * 会吃掉 autoInjectMaxChars(1500) 的全部预算，用户自己的记忆挤不进来。
+ */
+function formatProtected(items, full) {
+  if (!Array.isArray(items) || items.length === 0) return ''
+  const lines = []
+  for (const it of items) {
+    const title = it.note || '准则'
+    if (full) {
+      lines.push(`- [${it.ep_id}] ${title}：${it.text}`)
+    } else {
+      // 摘要模式：只给标题，不给正文（省 token，需要时可查）
+      const head = String(it.text || '').slice(0, 24)
+      lines.push(`- [${it.ep_id}] ${title}：${head}…`)
+    }
+  }
+  return lines.join('\n')
+}
+
 export function apply(ctx, config) {
   const cfg = { ...DEFAULTS, ...(config || {}) }
 
@@ -1505,22 +1531,33 @@ export function apply(ctx, config) {
 
       // 计时：分离"检索"与"注入构造"的耗时
       const tSearch0 = Date.now()
+      // E-231：多取一些，因为结果里会混入 L0/L1（flag=2）
       const found = await callKernel(cfg, 'search', {
         query: latest, top: cfg.autoInjectTopK ?? 5, scoped: true,
       })
       const tSearch1 = Date.now()
-      let items = found.results || []
+      const allItems = found.results || []
+      // 分离 L0/L1（flag=2，受保护）与普通检索结果
+      const protectedItems = allItems.filter((it) => it.flag === 2)
+      let items = allItems.filter((it) => it.flag !== 2)
       let mode = 'query'
       if (items.length === 0) {
         const slots = await callKernel(cfg, 'search', {
           query: '', top: 3, fixed_slots: 3, min_cost: cfg.minCost ?? 0.7,
         })
-        items = slots.results || []
+        items = (slots.results || []).filter((it) => it.flag !== 2)
         mode = 'slots'
       }
       const tSearch2 = Date.now()
 
-      const body = formatMemories(items, cfg.autoInjectMaxChars ?? 1500)
+      // E-231：L0/L1 首轮给全文，后续只给标题（省 token 且避免挤占用户记忆）
+      const protectedText = formatProtected(protectedItems, !st.injected)
+      // 普通记忆用剩余预算（先扣掉 L0/L1 摘要占用的部分）
+      const remainChars = Math.max(
+        300,
+        (cfg.autoInjectMaxChars ?? 1500) - (st.injected ? 0 : 0)
+      )
+      const body = formatMemories(items, remainChars)
       let prewarmText = ''
       if (st.prewarm && st.prewarm.prediction) {
         prewarmText =
@@ -1553,12 +1590,20 @@ export function apply(ctx, config) {
       const contexts = Array.isArray(result.contexts) ? result.contexts : []
       const parts = []
       if (prewarmText) parts.push(prewarmText)
+      // E-231：L0/L1 单独一段（首轮全文 / 后续摘要）
+      if (protectedText) {
+        parts.push('### 常驻准则（L0/L1）\n' +
+          (st.injected
+            ? '以下是系统长期准则（只显示标题）。需要看某条完整内容时，用 mem_search 查询。\n\n'
+            : '以下是系统长期准则，请在后续所有回答中遵循：\n\n') +
+          protectedText)
+      }
       if (body) {
         parts.push('### 相关记忆\n' +
           '以下是与当前话题相关的过往记忆。回答时优先依据它们；' +
           '若标注了答不出的维度，请如实说明记不清，不要编造。\n\n' + body)
       }
-      // 常驻指令也放在第一次注入里（即使 body/prewarm 都空，也要注入）
+      // 自主记忆准则（短，每轮都带）
       parts.push(memoryPolicy)
 
       return {

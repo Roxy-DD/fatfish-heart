@@ -721,7 +721,11 @@ def cmd_search(st, payload) -> dict:
     for tup in raw:
         ep = tup[0]
         sc = tup[1] if len(tup) > 1 else None
-        items.append({"ep_id": ep.ep_id, "text": ep.raw_text, "score": sc})
+        fl = tup[2] if len(tup) > 2 else 0
+        # E-231：返回 flag，让调用方能区分"受保护的 L0/L1"与"普通检索结果"
+        # flag: 0=普通, 1=固定席位, 2=L0/L1 强制在场
+        items.append({"ep_id": ep.ep_id, "text": ep.raw_text,
+                      "score": sc, "flag": fl})
 
     # 审计日志：recall（检索）
     _audit(st, "recall", msg="检索 " + query[:60],

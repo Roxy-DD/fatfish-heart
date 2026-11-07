@@ -1,0 +1,53 @@
+{
+ "experiment": "E-231",
+ "n_pass": 8,
+ "n_total": 8,
+ "full_chars": 3819,
+ "summary_chars": 681,
+ "saved_per_round": 3138,
+ "budget": 1500,
+ "remain_before": -2319,
+ "remain_after": 819,
+ "results": [
+  {
+   "name": "每条结果都有 flag 字段",
+   "ok": true,
+   "detail": "10 条"
+  },
+  {
+   "name": "能识别 L0/L1（flag=2）",
+   "ok": true,
+   "detail": "9 条"
+  },
+  {
+   "name": "能识别普通结果（flag=0）",
+   "ok": true,
+   "detail": "1 条"
+  },
+  {
+   "name": "摘要模式确实更省",
+   "ok": true,
+   "detail": "681 < 3819*0.5"
+  },
+  {
+   "name": "改动后用户记忆有更多空间",
+   "ok": true,
+   "detail": "819 > -2319"
+  },
+  {
+   "name": "  '今天天气' 有普通结果",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "  'Python 函数' 有普通结果",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "  '记忆系统设计' 有普通结果",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}
