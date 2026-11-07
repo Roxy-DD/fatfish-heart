@@ -166,11 +166,19 @@ def cmd_expand(st, payload) -> dict:
     prev_k = int(payload.get("prev_k") or 10)
     next_k = int(payload.get("next_k") or 20)
 
+    # E-267：offset 超过候选总数时无法扩散，必须明确告知（避免静默返回空）
+    n_valid = st.con.execute(
+        "SELECT COUNT(*) FROM episodes WHERE invalid_at IS NULL").fetchone()[0]
+    if prev_k >= n_valid:
+        return {"ok": True, "candidates": [], "exhausted": True,
+                "n_candidates": 0, "total_valid": n_valid,
+                "note": f"已扩散到全部 {n_valid} 条记忆（prev_k={prev_k}），"
+                        f"候选池已耗尽"}
+
     try:
         # offset=prev_k：跳过已经看过的那部分，只给新增的
         pack = _conflict.prepare_candidates(
             st, _Emb.get(), ep.raw_text, top_k=next_k, offset=prev_k)
-
         out = {
             "ok": True,
             "ep_id": ep_id,
@@ -178,6 +186,11 @@ def cmd_expand(st, payload) -> dict:
             "prev_k": prev_k,
             "next_k": next_k,
             "new_candidates": len(pack.candidates),
+            # E-267：顶层给一份候选数组，避免调用方误把 new_candidates（数字）当数组
+            "candidates": [
+                {"text": c.text, "cos": c.cos, "ep_id": c.ep_id}
+                for c in pack.candidates
+            ],
             "pack": _conflict.pack_to_prompt(pack, ep_id),
         }
 
@@ -286,11 +299,14 @@ def cmd_chain_prepare(st, payload) -> dict:
         pack = _chain.prepare_chain_candidates(
             st, _Emb.get(), ep.raw_text,
             query=payload.get("query") or "", top_n=top_n)
+        pack_dict = _chain.chain_to_prompt(pack)
+        # E-267：顶层也放一份 candidates，避免调用方误读（原来只在 pack 里）
         return {
             "ok": True,
             "seed_ep_id": seed_id,
             "n_candidates": len(pack.candidates),
-            "pack": _chain.chain_to_prompt(pack),
+            "candidates": pack_dict.get("candidates", []),
+            "pack": pack_dict,
         }
     except Exception as e:
         return {"ok": False, "error": f"{type(e).__name__}: {e}"}

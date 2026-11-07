@@ -1,0 +1,32 @@
+{
+ "experiment": "E-267b",
+ "n_pass": 5,
+ "n_total": 5,
+ "results": [
+  {
+   "name": "evolution_chain 正常返回",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "链长度 >= 2",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "cmd_expand 返回候选",
+   "ok": true,
+   "detail": "15 条"
+  },
+  {
+   "name": "chain_prepare 返回候选",
+   "ok": true,
+   "detail": "19 条"
+  },
+  {
+   "name": "chain_apply 可调用",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}
