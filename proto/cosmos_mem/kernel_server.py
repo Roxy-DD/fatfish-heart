@@ -70,6 +70,7 @@ def handle(st, cmd: str, payload: dict) -> dict:
         "triage": cli_mcp.cmd_triage,
         "knowledge_hint": cli_mcp.cmd_knowledge_hint,
         "config": cli_mcp.cmd_config,
+        "backup": cli_mcp.cmd_backup,
         "history": cli_mcp.cmd_history,
     }
     fn = handlers.get(cmd)

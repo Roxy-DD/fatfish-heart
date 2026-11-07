@@ -1179,6 +1179,57 @@ def diff_config(old: dict, new: dict) -> dict:
     return changed
 
 
+def cmd_backup(st, payload) -> dict:
+    """
+    安全备份/恢复/校验（E-279）。
+
+    **为什么需要专门的工具**：
+      SQLite 的 WAL 模式下，新写入先落在 .db-wal，
+      主库 .db 可能只有 4KB（几乎空），真实数据在 1.2MB 的 -wal 里。
+      实测：直接 shutil.copy2 主库文件 → 得到空库 → 恢复后数据全丢。
+
+    本命令用 sqlite3 的 backup API（官方一致性快照机制）。
+
+    payload:
+      action   backup | restore | verify | list
+      out_path （backup 时）输出路径，可选
+      path     （restore/verify 时）备份文件路径
+    """
+    import backup as _bk
+
+    action = payload.get("action") or "backup"
+    db_path = getattr(st, "path", None) or getattr(st, "db_path", "")
+    try:
+        if action == "backup":
+            r = _bk.backup_db(db_path, payload.get("out_path"))
+            if r.get("ok"):
+                _audit(st, "config",
+                       msg=f"备份数据库 → {os.path.basename(r['path'])}"
+                           f"（{r['bytes']//1024} KB）",
+                       extra={"path": r["path"], "bytes": r["bytes"],
+                              "verify": r.get("verify", {})})
+            return r
+
+        if action == "restore":
+            p = payload.get("path") or ""
+            if not p:
+                return {"ok": False, "error": "path 不能为空"}
+            return _bk.restore_db(p, db_path)
+
+        if action == "verify":
+            p = payload.get("path") or ""
+            if not p:
+                return {"ok": False, "error": "path 不能为空"}
+            return _bk.verify_backup(db_path, p)
+
+        if action == "list":
+            return {"ok": True, "backups": _bk.list_backups(db_path)}
+
+        return {"ok": False, "error": f"未知 action: {action}"}
+    except Exception as e:
+        return {"ok": False, "error": f"{type(e).__name__}: {e}"}
+
+
 def cmd_config(st, payload) -> dict:
     """
     配置审计（E-266）。
@@ -1589,6 +1640,7 @@ def main():
         "triage": cmd_triage,
         "knowledge_hint": cmd_knowledge_hint,
         "config": cmd_config,
+        "backup": cmd_backup,
         "history": cmd_history,
     }
     fn = handlers.get(args.cmd)

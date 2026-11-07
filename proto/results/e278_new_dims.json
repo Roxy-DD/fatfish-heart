@@ -1,0 +1,16 @@
+{
+ "experiment": "E-278",
+ "issues": [
+  {
+   "sev": "high",
+   "what": "备份恢复不完整：30→0",
+   "fix": "备份策略需改进"
+  }
+ ],
+ "r3_same": 4,
+ "r3_total": 4,
+ "backup_ok": false,
+ "edge_failed": [],
+ "write_degradation": 0.96,
+ "rebuild_ms": 90.1
+}

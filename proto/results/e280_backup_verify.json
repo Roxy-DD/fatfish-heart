@@ -1,0 +1,68 @@
+{
+ "experiment": "E-280",
+ "n_pass": 12,
+ "n_total": 12,
+ "naive_copy_lost": 20,
+ "results": [
+  {
+   "name": "直接复制确实丢失数据",
+   "ok": true,
+   "detail": "直接复制得 0 条（原 20 条）"
+  },
+  {
+   "name": "备份成功",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "备份有校验",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "episodes 数量一致",
+   "ok": true,
+   "detail": "(20, 20)"
+  },
+  {
+   "name": "恢复成功",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "恢复到原始数量",
+   "ok": true,
+   "detail": "20 vs 20"
+  },
+  {
+   "name": "检测出损坏备份",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "cmd_backup backup",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "cmd_backup list",
+   "ok": true,
+   "detail": "1 个备份"
+  },
+  {
+   "name": "cmd_backup verify",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "备份写入了审计",
+   "ok": true,
+   "detail": "1 条"
+  },
+  {
+   "name": "能列出备份",
+   "ok": true,
+   "detail": "1 个"
+  }
+ ]
+}
