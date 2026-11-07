@@ -1,0 +1,92 @@
+{
+ "experiment": "E-266",
+ "n_pass": 17,
+ "n_total": 17,
+ "results": [
+  {
+   "name": "只记录变化的字段",
+   "ok": true,
+   "detail": "1 项"
+  },
+  {
+   "name": "正确识别字段",
+   "ok": true,
+   "detail": "['autoInjectMaxChars']"
+  },
+  {
+   "name": "旧值正确",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "新值正确",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "无变化时返回空",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "apiKey 被脱敏",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "apiKey 不暴露原值",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "普通字段正常记录",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "序列化后不含密钥明文",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "写入成功",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "记录 1 项变更",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "name": "audit_log 有 config 记录",
+   "ok": true,
+   "detail": "1 条"
+  },
+  {
+   "name": "无变化返回 changed=0",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "未写入新日志",
+   "ok": true,
+   "detail": "1 → 1"
+  },
+  {
+   "name": "有 3 条 config 记录",
+   "ok": true,
+   "detail": "3 条"
+  },
+  {
+   "name": "能追溯 a 的变更历史",
+   "ok": true,
+   "detail": "[2, 3]"
+  },
+  {
+   "name": "stats 里 config 有计数",
+   "ok": true,
+   "detail": "3"
+  }
+ ]
+}

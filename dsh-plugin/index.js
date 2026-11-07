@@ -967,9 +967,11 @@ export function apply(ctx, config) {
         const writable = ['autoInject', 'autoInjectTopK', 'autoInjectMaxChars',
           'autoRemember', 'reviewWindow', 'minImportance', 'minCost',
           'debugLog', 'prewarm', 'prewarmSlots']
+        const before = {}
         const changed = {}
         for (const k of writable) {
           if (k in body) {
+            before[k] = cfg[k]
             let v = body[k]
             if (typeof cfg[k] === 'number') v = Number(v)
             if (typeof cfg[k] === 'boolean') v = !!v
@@ -978,6 +980,16 @@ export function apply(ctx, config) {
           }
         }
         debugLog(cfg, 'config-write', changed)
+        // E-266：配置变更写入审计（可追溯），失败不影响主流程
+        if (Object.keys(changed).length) {
+          try {
+            await callKernel(cfg, 'config', {
+              action: 'log', old: before, new: changed, source: 'ui',
+            }, undefined, 8000)
+          } catch (e) {
+            debugLog(cfg, 'config-audit-fail', { error: String(e && e.message) })
+          }
+        }
         return sendJson(res, 200, { ok: true, changed })
       }
       // 注入历史（只读，供 UI「注入历史」Tab）
@@ -1073,6 +1085,12 @@ export function apply(ctx, config) {
           { action: 'stats' }, undefined, 20000)
         return sendJson(res, 200, r)
       }
+      // 配置变更历史（E-266）
+      if (sub === '/config-history' && method === 'GET') {
+        const r = await callKernel(cfg, 'config',
+          { action: 'history', limit: 50 }, undefined, 15000)
+        return sendJson(res, 200, r)
+      }
       return sendJson(res, 404, { ok: false, error: 'unknown endpoint ' + sub })
     } catch (e) {
       debugLog(cfg, 'http-error', { sub, error: String(e && e.message) })
@@ -1087,7 +1105,7 @@ export function apply(ctx, config) {
   // E-254：去重记录必须**按 ctx 隔离**（见 routesOf 的注释）。
   //        模块级 Set 会在宿主重建 webServer 后仍记着"已注册"，
   //        导致全部 skip、一条都不注册 → 所有端点 404。
-  const routes = ['/list', '/invalidate', '/revise', '/stats', '/config', '/inject-history', '/sleep-history', '/audit', '/hook', '/seed', '/note', '/todo', '/compose', '/triage', '/knowledge-hint']
+  const routes = ['/list', '/invalidate', '/revise', '/stats', '/config', '/inject-history', '/sleep-history', '/audit', '/hook', '/seed', '/note', '/todo', '/compose', '/triage', '/knowledge-hint', '/config-history']
   let routeOk = 0
   let routeSkip = 0
   let routeFail = 0

@@ -1130,6 +1130,88 @@ def cmd_history(st, payload) -> dict:
         return {"ok": False, "error": f"{type(e).__name__}: {e}"}
 
 
+# 敏感配置字段（审计时脱敏，只记"变了"不记具体值）
+_SENSITIVE_CFG = {"apiKey", "token", "password", "secret",
+                  "dbPath", "pythonPath", "kernelPath"}
+
+
+def diff_config(old: dict, new: dict) -> dict:
+    """
+    计算配置差异（E-266，纯机械）。
+
+    只记录变化的字段；敏感字段脱敏。
+    """
+    changed = {}
+    all_keys = set(old or {}) | set(new or {})
+    for k in all_keys:
+        ov = (old or {}).get(k)
+        nv = (new or {}).get(k)
+        if ov == nv:
+            continue
+        if k in _SENSITIVE_CFG:
+            changed[k] = {"old": "***", "new": "***", "sensitive": True}
+        else:
+            changed[k] = {"old": ov, "new": nv}
+    return changed
+
+
+def cmd_config(st, payload) -> dict:
+    """
+    配置审计（E-266）。
+
+    配置变更也要可追溯——与 R4 一致：
+    不只记忆内容可追溯，配置也要能查"谁在什么时候改了什么"。
+
+    payload:
+      action  log | diff | history
+      old     旧配置（dict）
+      new     新配置（dict）
+      source  变更来源（ui / model / default）
+      limit   （history 时）返回条数
+    """
+    action = payload.get("action") or "log"
+
+    try:
+        if action == "diff":
+            d = diff_config(payload.get("old") or {}, payload.get("new") or {})
+            return {"ok": True, "changed": d, "count": len(d)}
+
+        if action == "log":
+            old = payload.get("old") or {}
+            new = payload.get("new") or {}
+            source = payload.get("source") or "ui"
+            d = diff_config(old, new)
+            if not d:
+                return {"ok": True, "changed": 0, "note": "无变化"}
+            _audit(st, "config",
+                   msg=f"配置变更 {len(d)} 项（来源 {source}）："
+                       + ", ".join(list(d.keys())[:5]),
+                   extra={"changed": d, "source": source,
+                          "n_changed": len(d)})
+            return {"ok": True, "changed": len(d), "fields": list(d.keys())}
+
+        if action == "history":
+            limit = int(payload.get("limit") or 50)
+            rows = st.con.execute(
+                "SELECT seq, at, msg, extra FROM audit_log "
+                "WHERE kind='config' ORDER BY seq DESC LIMIT ?",
+                (limit,)).fetchall()
+            out = []
+            for seq, at, msg, extra in rows:
+                try:
+                    ex = json.loads(extra) if extra else {}
+                except Exception:
+                    ex = {}
+                out.append({"seq": seq, "at": at, "msg": msg,
+                            "changed": ex.get("changed", {}),
+                            "source": ex.get("source", "")})
+            return {"ok": True, "history": out, "count": len(out)}
+
+        return {"ok": False, "error": f"未知 action: {action}"}
+    except Exception as e:
+        return {"ok": False, "error": f"{type(e).__name__}: {e}"}
+
+
 def cmd_knowledge_hint(st, payload) -> dict:
     """
     知识整理提示（机械发现"该写笔记了"，判断权交模型）。
@@ -1482,6 +1564,7 @@ def main():
         "compose": cmd_compose,
         "triage": cmd_triage,
         "knowledge_hint": cmd_knowledge_hint,
+        "config": cmd_config,
         "history": cmd_history,
     }
     fn = handlers.get(args.cmd)
