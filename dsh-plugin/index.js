@@ -254,9 +254,34 @@ function debugLog(cfg, kind, data) {
   } catch { /* ignore */ }
 }
 
-/** 会话状态：sid -> { prewarm, processed: Set<hash>, injected: bool, prewarmPromise } */
-const sessions = new Map()
+/**
+ * 会话状态：sid -> { prewarm, processed: Set<hash>, injected: bool, prewarmPromise }
+ *
+ * E-307 修的坑：原来是模块级 `const sessions = new Map()`。
+ *   自重启（HMR 重载模块）后，模块被重新求值 → Map 被重置
+ *   → `processed` 集合清空 → 同一批 user message 被重新识别
+ *   → **同一件事被记了 2~3 次**（实测：12 组近义重复）。
+ *
+ * 修法：挂到 globalThis 上。globalThis 不随模块重载而重置，
+ *       这样重载前后的"已处理"记录能接上。
+ *
+ * 这与 E-254 是同一条铁律的另一面：
+ *   · 跨 apply() 要**丢弃**的状态（路由记录）→ 用 WeakMap 按 ctx 隔离
+ *   · 跨 apply() 要**保留**的状态（已处理消息）→ 用 globalThis
+ */
+const SESSIONS_KEY = '__COSMOS_MEM_SESSIONS__'
+
+function sessionsMap() {
+  let m = globalThis[SESSIONS_KEY]
+  if (!(m instanceof Map)) {
+    m = new Map()
+    try { globalThis[SESSIONS_KEY] = m } catch { /* ignore */ }
+  }
+  return m
+}
+
 function sessState(sid) {
+  const sessions = sessionsMap()
   if (!sessions.has(sid)) {
     sessions.set(sid, {
       prewarm: null, processed: new Set(),
@@ -2335,7 +2360,8 @@ export function apply(ctx, config) {
     try {
       const sid = payload && payload.agent && payload.agent.id
       if (sid) {
-        sessions.delete(String(sid))
+        // E-307：sessions 现在挂在 globalThis 上，用 sessionsMap() 取
+        sessionsMap().delete(String(sid))
         scanCursor.delete(String(sid))
       }
     } catch { /* ignore */ }

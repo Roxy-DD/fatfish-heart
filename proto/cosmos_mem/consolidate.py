@@ -373,19 +373,21 @@ def _append_merged(st, keep_id: str, drop_id: str,
 
     E-244：替代原来"用模型生成的 merged_text 覆盖 keep 原文"的做法。
 
+    E-312 修：加长度上限和去重
+      实测问题：一条记忆被合并 139 次后达到 6637 字，
+      内容是同一句话的 139 种略微不同的说法，
+      远超注入预算（1500 字），一旦被检索到就挤掉所有其他记忆。
+
+      → 合并必须有两个约束：
+        ① 长度上限 MAX_MERGED_CHARS（默认 1200）
+        ② 内容去重：如果 drop 的文字与已有段落高度重复，不再追加
+
     拼接格式（清晰可辨，可人工核对）：
         <keep 原文>
         ｜合并: <drop 原文>
-
-    关于 model_hint：
-      早期版本会把模型给的 merged_text 作为"备注"附上，
-      但实测发现模型给的往往是一段**完整的重写文本**，
-      附上去等于变相引入模型改写（E-244 测试发现的 bug）。
-      因此现在**完全忽略 model_hint**——宁可少一条备注，
-      也不让模型的重写内容混入记忆原文。
-
-      若确实需要"更完整的表述"，应由模型显式调用 mem_note 写笔记，
-      而不是偷偷改记忆。
+        ｜合并: <drop2 原文>
+        ...
+        ｜（另有 N 条近重复已折叠）
 
     返回是否成功。
     """
@@ -396,14 +398,75 @@ def _append_merged(st, keep_id: str, drop_id: str,
             return False
         k_text = (keep.raw_text or "").strip()
         d_text = (drop.raw_text or "").strip()
-        if not d_text or d_text in k_text:
+        if not d_text:
+            return True
+        if d_text in k_text:
             # 已经包含，无需拼接
             return True
 
-        # 只拼接原文，不掺入任何模型生成的文本
-        merged = f"{k_text}\n\n｜合并: {d_text}"
+        # ---- ① 内容去重：与已有段落高度相似就不追加 ----
+        # 按合并标记切分已有段落
+        existing_parts = [
+            p.strip() for p in k_text.split("｜合并:")
+            if p.strip()
+        ]
+        for part in existing_parts:
+            # 简单的字符集合相似度（够用，不必上向量）
+            sa, sb = set(part), set(d_text)
+            if sa and sb:
+                overlap = len(sa & sb) / len(sa | sb)
+                if overlap > 0.85:
+                    # 已经有一条几乎一样的，只记计数
+                    _bump_folded_count(st, keep_id, k_text)
+                    return True
+
+        # ---- ② 长度上限 ----
+        MAX_MERGED_CHARS = 1200
+        folded_marker = "｜（另有"
+
+        # 统计已折叠数
+        folded_n = _get_folded_count(k_text)
+        base_text = k_text
+        if folded_marker in k_text:
+            # 去掉旧的折叠标记，稍后重加
+            import re as _re
+            base_text = _re.sub(r"\n｜（另有 \d+ 条近重复已折叠）", "",
+                                k_text).strip()
+
+        candidate = f"{base_text}\n\n｜合并: {d_text}"
+        new_folded = folded_n + 1 if folded_n else 0
+
+        # 估算加折叠标记后的长度
+        tail = f"\n｜（另有 {new_folded} 条近重复已折叠）" if new_folded else ""
+        if len(candidate) + len(tail) > MAX_MERGED_CHARS:
+            # 超限：不追加正文，只增加折叠计数
+            if not new_folded:
+                new_folded = 1
+            merged = base_text + f"\n｜（另有 {new_folded} 条近重复已折叠）"
+        else:
+            merged = candidate + tail
 
         # 走 revise 以保留历史（revise 会先快照旧内容）
+        return bool(st.revise(keep_id, new_text=merged))
+    except Exception:
+        return False
+
+
+def _get_folded_count(text: str) -> int:
+    """从文本里读出已折叠的条数"""
+    import re as _re
+    m = _re.search(r"｜（另有 (\d+) 条近重复已折叠）", text or "")
+    return int(m.group(1)) if m else 0
+
+
+def _bump_folded_count(st, keep_id: str, current_text: str) -> bool:
+    """内容重复时只增加折叠计数，不追加正文"""
+    try:
+        import re as _re
+        n = _get_folded_count(current_text) + 1
+        base = _re.sub(r"\n｜（另有 \d+ 条近重复已折叠）", "",
+                       current_text).strip()
+        merged = base + f"\n｜（另有 {n} 条近重复已折叠）"
         return bool(st.revise(keep_id, new_text=merged))
     except Exception:
         return False

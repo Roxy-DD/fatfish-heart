@@ -16,7 +16,7 @@
   {
    "name": "sleep_prepare 找到候选对",
    "ok": true,
-   "detail": "10 对"
+   "detail": "3 对"
   },
   {
    "name": "sleep_apply 成功",
@@ -66,7 +66,7 @@
   {
    "name": "cmd_chain_apply 成功",
    "ok": true,
-   "detail": "chain_count=1"
+   "detail": "chain_count=0"
   },
   {
    "name": "chain 有日志",

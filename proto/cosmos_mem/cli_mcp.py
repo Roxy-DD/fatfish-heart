@@ -45,6 +45,83 @@ def _read_payload() -> dict:
     return json.loads(raw)
 
 
+def _find_near_dup(st, text: str, threshold: float = 0.80,
+                   top_k: int = 5) -> dict | None:
+    """
+    找与 text 高度相似的已有记忆（E-307）。
+
+    用向量余弦，不依赖字符串匹配 —— 这样"换个说法"也能识别。
+
+    ── 阈值标定（E-309 实测）──
+    构造 10 对「确定同一件事」+ 12 对「确定不同的事」：
+      同一件事: 0.629 ~ 0.916
+      不同的事: 0.349 ~ 0.532
+      分界线 0.580
+    选 0.80：零误判下识别率最高（50%）。
+    宁可漏判（多写一条，后续可在睡眠时合并）也不误杀（丢失信息）。
+
+    ── E-313 修：数字差异保护 ──
+    实测发现：「登录密码改成 9999 了」与「测试密码是 1111」
+    余弦可能超过 0.80，但它们是**不同的事实**，不能合并。
+
+    规则：如果两句话只有数字/序号不同，视为不同记忆（不判重复）。
+    因为数字往往承载关键信息（密码、版本号、阈值、条数…）。
+
+    返回 {"ep_id", "text", "sim"} 或 None
+    """
+    try:
+        import re as _re
+        import numpy as np
+        from store_v1 import Embedder
+
+        st._load_vectors(include_invalid=False)
+        if st._vec is None or len(st._vec) == 0:
+            return None
+
+        emb = Embedder.get()
+        qv = emb.encode(text)[0]
+        qn = float(np.linalg.norm(qv)) or 1.0
+
+        # 已有向量矩阵
+        norms = np.linalg.norm(st._vec, axis=1)
+        norms[norms == 0] = 1.0
+        sims = (st._vec @ qv) / (norms * qn)
+
+        # 取最高的几个
+        k = min(top_k, len(sims))
+        idx = np.argsort(-sims)[:k]
+
+        # 提取数字（用于判断"是否只有数字不同"）
+        nums_new = tuple(_re.findall(r"\d+", text))
+        skeleton_new = _re.sub(r"\d+", "#", text)
+
+        for i in idx:
+            s = float(sims[i])
+            if s < threshold:
+                continue
+            eid = st._vec_ids[i]
+            row = st.con.execute(
+                "SELECT raw_text FROM episodes WHERE ep_id=?",
+                (eid,)).fetchone()
+            if not row:
+                continue
+            old_text = row[0]
+
+            # ---- 数字差异保护 ----
+            # 若两句话去掉数字后几乎相同，但数字不同 → 是不同事实，不算重复
+            nums_old = tuple(_re.findall(r"\d+", old_text))
+            skeleton_old = _re.sub(r"\d+", "#", old_text)
+            if nums_old != nums_new and skeleton_old == skeleton_new:
+                # 只有数字不同 → 放行（不同事实）
+                continue
+
+            return {"ep_id": eid, "text": old_text,
+                    "sim": round(s, 4)}
+        return None
+    except Exception:
+        return None
+
+
 def cmd_add(st, payload) -> dict:
     text = payload.get("text") or ""
     if not text:
@@ -60,9 +137,83 @@ def cmd_add(st, payload) -> dict:
         "SELECT ep_id, raw_text FROM episodes WHERE text_hash=? AND invalid_at IS NULL",
         (h,)).fetchone()
     if dup:
+        # E-313：精确重复的 return 也要写审计（否则 remember 计数偏少）
+        _audit(st, "remember",
+               msg="精确重复跳过 " + text[:60],
+               ep_id=dup[0],
+               extra={"deduped": True, "exact_dup": True})
         return {"ok": True, "ep_id": dup[0], "text": dup[1],
                 "scope": [], "issues": [], "deduped": True,
                 "note": "已存在相同记忆，未重复写入"}
+
+    # E-307：语义级近重复检测
+    #
+    # 原 md5 去重只处理**逐字符相同**（去空白后）的情况。
+    # 实测问题：同一件事换个说法就绕过去重 ——
+    #   「不必无损迁移」
+    #   「不必要求无损迁移」
+    #   「不必要求无损迁移（即无损迁移是可选的、非强制的）」
+    # 这三条都被写入，形成 12 组近义重复（E-306/307 实测）。
+    #
+    # 现在加一层向量相似度检查：与已有记忆的余弦 >= NEAR_DUP_THRESHOLD
+    # 时，视为近重复，不写入，返回已有那条。
+    #
+    # ── 阈值标定（E-309 实测，不是拍脑袋）──
+    #   构造 10 对「确定是同一件事（措辞不同）」+ 12 对「确定是不同的事」：
+    #     同一件事相似度: 0.629 ~ 0.916（均值 0.775）
+    #     不同的事相似度: 0.349 ~ 0.532（均值 0.430）
+    #     分界线: 0.580，间隔 0.098 —— 有清晰可分区间
+    #
+    #   阈值 → 识别率 / 误判率:
+    #     0.80 → 50% / 0%
+    #     0.85 → 20% / 0%
+    #     0.95 →  0% / 0%   ← 原值，等于完全失效
+    #
+    #   选 0.80：零误判前提下识别率最高。
+    #   宁可漏判（多写一条）也不要误杀（丢失不同信息）——
+    #   因为漏判可以在睡眠整理时合并，误杀则数据永久丢失。
+    NEAR_DUP_THRESHOLD = float(payload.get("near_dup_threshold") or 0.80)
+    # E-313 修：冲突判定优先于去重
+    #
+    # 实测问题：sleep 把两条记忆合并成一条长记忆后，
+    # 新写的「登录密码改成 9999 了」与合并结果相似度 0.8184，
+    # 被近重复检测拦截 → need_judge 从未触发 → 冲突判定失效。
+    #
+    # 逻辑上：调用方显式要求 judge=True 时，说明它怀疑有冲突，
+    # 这时**不应**用去重挡住 —— 因为"冲突"恰恰意味着
+    # "和已有记忆很像但内容不同"，正是去重最想拦的情况。
+    #
+    # 所以：judge=True 时跳过近重复检测（但仍做精确去重，
+    # 因为完全相同的东西没必要求模型判）。
+    want_judge = bool(payload.get("judge"))
+    check_near = payload.get("check_near_dup", True) and not want_judge
+
+    if check_near:
+        try:
+            near = _find_near_dup(st, text, NEAR_DUP_THRESHOLD)
+            if near:
+                # E-313 修：近重复 return 也要写审计
+                # 原来直接 return，绕过了末尾的 _audit，
+                # 导致 remember 审计条数少于实际调用次数。
+                _audit(st, "remember",
+                       msg="近重复跳过 " + text[:60],
+                       ep_id=near["ep_id"],
+                       extra={"deduped": True, "near_dup": True,
+                              "similarity": near["sim"],
+                              "threshold": NEAR_DUP_THRESHOLD})
+                return {
+                    "ok": True,
+                    "ep_id": near["ep_id"],
+                    "text": near["text"],
+                    "scope": [], "issues": [],
+                    "deduped": True,
+                    "near_dup": True,
+                    "similarity": near["sim"],
+                    "note": f"与已有记忆高度相似（cos={near['sim']:.3f}），"
+                            f"未重复写入",
+                }
+        except Exception:
+            pass   # 近重复检测失败不应阻断写入
 
     # 矛盾处理：系统先打包候选，判断交给模型（插件层回调）
     # 插件可以传 judge=true 表示"需要我判断"，此时先只建包、

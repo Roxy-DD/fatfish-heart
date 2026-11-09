@@ -1,0 +1,62 @@
+{
+ "experiment": "E-305",
+ "reloaded": true,
+ "marker_before": "apply@2026-11-09T07:15:29.315Z#dh1tp1",
+ "marker_after": "apply@2026-11-09T07:16:18.234Z#t4li5f",
+ "n_mem_before": 140,
+ "n_mem_after": 140,
+ "checks": [
+  {
+   "name": "stats 端点",
+   "ok": true,
+   "detail": "ok"
+  },
+  {
+   "name": "note 端点",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "todo 端点",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "triage 端点",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "config-history 端点",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "记忆数量未变",
+   "ok": true,
+   "detail": "140 → 140"
+  },
+  {
+   "name": "指纹已更新",
+   "ok": true,
+   "detail": "apply@2026-11-09T07:16:18.234Z#t4li5f"
+  },
+  {
+   "name": "lifecycle 已重新 attach",
+   "ok": true,
+   "detail": "13 次"
+  },
+  {
+   "name": "无重复注册",
+   "ok": true,
+   "detail": "0 次"
+  },
+  {
+   "name": "无路由注册失败",
+   "ok": true,
+   "detail": "0 次"
+  }
+ ],
+ "n_pass": 10,
+ "n_total": 10
+}

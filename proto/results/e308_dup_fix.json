@@ -1,0 +1,62 @@
+{
+ "experiment": "E-308",
+ "n_pass": 11,
+ "n_total": 11,
+ "results": [
+  {
+   "name": "首次写入成功",
+   "ok": true,
+   "detail": "ep=e649fff1"
+  },
+  {
+   "name": "完全相同被去重",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "近义变体被去重",
+   "ok": true,
+   "detail": "near_dup=True, sim=0.8248"
+  },
+  {
+   "name": "报告了相似度",
+   "ok": true,
+   "detail": "0.8248"
+  },
+  {
+   "name": "不同内容正常写入",
+   "ok": true,
+   "detail": "ep=4834a0e4"
+  },
+  {
+   "name": "第二条不同内容也写入",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "低阈值时更激进去重",
+   "ok": true,
+   "detail": "sim=0.9229"
+  },
+  {
+   "name": "高阈值时放行近义",
+   "ok": true,
+   "detail": "ep=a6de15da"
+  },
+  {
+   "name": "关闭时不做近重复检测",
+   "ok": true,
+   "detail": "ep=b3b32029"
+  },
+  {
+   "name": "写入数量合理",
+   "ok": true,
+   "detail": "5 条"
+  },
+  {
+   "name": "相关但不同都保留",
+   "ok": true,
+   "detail": "a=None, b=None"
+  }
+ ]
+}

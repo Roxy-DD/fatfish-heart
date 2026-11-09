@@ -1,0 +1,11 @@
+{
+ "experiment": "E-311",
+ "valid": 78,
+ "invalid": 346,
+ "total_rows": 424,
+ "merged_records": 139,
+ "dangling": 0,
+ "n_marked": 17,
+ "remaining_pairs": 5,
+ "issues": []
+}
