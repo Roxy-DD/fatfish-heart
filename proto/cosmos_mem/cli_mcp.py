@@ -1384,19 +1384,27 @@ def cmd_knowledge_hint(st, payload) -> dict:
         _save_kh_cache(st, cache_key, result)
         return result
 
+    # E-294：输出精简
+    # 原来把全部 hints 都列出来（含「主题『模型』已有 24 条」这类泛词），
+    # 491 字里有 200+ 字是低价值信息。
+    # 现在：只保留**有行动价值**的条目，且同类最多 2 条。
     lines = [
-        "### 可以整理成知识的内容（系统扫描发现）",
+        "### 可以整理成知识的内容",
         "",
-        "以下是已积累到一定量的内容。你可以自主决定是否整理：",
-        "- 写笔记 → mem_note(action=add, tier=scrap|note)",
-        "- 装订成册 → mem_compose(action=compose, topic=...)",
-        "",
+        "用 mem_note 写笔记 / mem_compose 装订成册（你自行决定是否做）：",
     ]
-    for h in hints[:8]:
+    seen_kinds = {}
+    for h in hints:
+        k = h["kind"]
+        seen_kinds[k] = seen_kinds.get(k, 0) + 1
+        if seen_kinds[k] > 2:
+            continue
         lines.append(f"- {h['text']}")
-        for s in h.get("samples", []):
-            if s:
-                lines.append(f"    例: {str(s)[:48]}")
+        # 只在 triage 类附带一个例子（其余不需要）
+        if k == "triage" and seen_kinds[k] == 1:
+            for s in (h.get("samples") or [])[:1]:
+                if s:
+                    lines.append(f"    例: {str(s)[:40]}")
 
     result = {"ok": True, "hints": hints, "text": "\n".join(lines),
               "count": len(hints)}

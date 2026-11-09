@@ -1,0 +1,13 @@
+{
+ "experiment": "E-294",
+ "first_round_chars": 5646,
+ "later_round_chars": 2174,
+ "protected_full": 3151,
+ "protected_summary": 570,
+ "search_body": 404,
+ "memory_policy": 1200,
+ "knowledge_hint": 491,
+ "prewarm": 400,
+ "log_samples": 0,
+ "log_avg": null
+}

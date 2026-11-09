@@ -1,0 +1,50 @@
+{
+ "experiment": "E-293",
+ "comparison": [
+  {
+   "claim": "1. 个体可以终结，谱系仍可延续",
+   "doc": "生命周期环终结后，只要有一条存续路径（含休眠可恢复），谱系仍存续",
+   "impl": "lifecycle.py 有 snapshot_version / migrate_to / version_chain",
+   "status": "PARTIAL",
+   "gap": "当前版本链是**单线**的（v1→v2→v3），没有「多个版本同时存续」的概念。migrate_to 是切换，不是并存。文档 3.5 要求的「V2 与 V3 独立并存」未实现。"
+  },
+  {
+   "claim": "2. 继承不要求全量复制",
+   "doc": "只需保留跨代延续所必需的机制与结构，不必复制全部状态",
+   "impl": "R1 红线要求 100% 无损迁移；lifecycle snapshot 是全量快照",
+   "status": "CONFLICT",
+   "gap": "**直接冲突**。R1 说「无损迁移 100%」，文档说「不要求绝对无损」。这两个主张是对立的——需要用户裁定哪个优先。"
+  },
+  {
+   "claim": "3. 旧版本可以继续独立存在",
+   "doc": "新版本不必取代旧版本，可以并存",
+   "impl": "snapshot_version 保存版本；但 migrate_to 是单向切换",
+   "status": "PARTIAL",
+   "gap": "快照存在磁盘上，但没有「同时运行多个生命周期」的能力。当前只有一个 Python 内核进程。"
+  },
+  {
+   "claim": "4. 演化关系不必是单一树状链",
+   "doc": "多谱系可交换、交叉重组形成新分支",
+   "impl": "version_chain 是线性链",
+   "status": "MISSING",
+   "gap": "完全没有分支/交换/重组能力。version_hooks 是标记，不是谱系关系。"
+  },
+  {
+   "claim": "5. 自然环境不是内部评价器",
+   "doc": "环境筛选来自真实物理因果后果，不是系统对自身的评分",
+   "impl": "cost / affect_peak 是**内部规则计算**的评分",
+   "status": "CONFLICT",
+   "gap": "**核心冲突**。cost 由 estimate_cost() 用关键词表算出，这恰恰是文档 5.2 表格里「人类评价/内部奖励」那一列。文档明确说：「内部奖励也不能冒充自然环境的因果筛选」。"
+  },
+  {
+   "claim": "6. 生命与环境共同变化",
+   "doc": "生命改变环境，环境改变又影响后续生命",
+   "impl": "记忆系统只影响自己的数据库",
+   "status": "MISSING",
+   "gap": "没有任何环境改造能力。系统与环境是单向的（用户→系统）。"
+  }
+ ],
+ "conflicts": 2,
+ "partial": 2,
+ "missing": 2
+}

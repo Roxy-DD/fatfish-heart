@@ -901,9 +901,17 @@ function formatProtected(items, full) {
     if (full) {
       lines.push(`- [${it.ep_id}] ${title}：${it.text}`)
     } else {
-      // 摘要模式：只给标题，不给正文（省 token，需要时可查）
-      const head = String(it.text || '').slice(0, 24)
-      lines.push(`- [${it.ep_id}] ${title}：${head}…`)
+      // E-294：摘要模式再精简
+      //
+      // 原来给「标题 + 正文前 24 字…」，
+      // 11 条合计 570 字，每轮都发送。
+      // 但那 24 字预览并不能让模型理解准则内容
+      // （看到"红线：记忆系统四条不可动摇的红…"仍然不知道具体是什么），
+      // 反而占了 264 字。
+      //
+      // 现在只给「标题」，模型看到标题知道有这条准则，
+      // 需要细节时用 mem_search 查。11 条约 306 字。
+      lines.push(`- ${title}`)
     }
   }
   return lines.join('\n')
@@ -2132,8 +2140,23 @@ export function apply(ctx, config) {
       }
       // E-263：知识整理提示（机械扫描结果，是否整理由模型决定）
       if (knowledgeHint) parts.push(knowledgeHint)
-      // 自主记忆准则（短，每轮都带）
-      parts.push(memoryPolicy)
+
+      // E-294：自主记忆准则改为「首轮全文 / 后续一行」
+      //
+      // 原来无条件每轮注入 877 字（约 585 tokens），占后续轮注入的 40%+。
+      // 但这段内容是**固定不变的**——模型看一遍就记住了，
+      // 每轮重复发送是纯浪费。
+      //
+      // 现在：
+      //   首轮  → 完整准则（877 字，只发一次）
+      //   后续  → 一行提醒（约 30 字）
+      //
+      // 节省：后续每轮约 847 字 / 565 tokens。
+      if (st.injected) {
+        parts.push('记忆工具：mem_search / mem_add / mem_sleep 按需主动使用。')
+      } else {
+        parts.push(memoryPolicy)
+      }
 
       return {
         ...result,
