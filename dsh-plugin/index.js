@@ -20,7 +20,7 @@
  */
 import { spawn } from 'node:child_process'
 import { resolve, join } from 'node:path'
-import { appendFileSync } from 'node:fs'
+import { appendFileSync, statSync, renameSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 
 // ============================================================
@@ -224,10 +224,29 @@ function toUiItem(st, ep) {
   }
 }
 
+// E-292：日志轮转
+// 原来 appendFileSync 无限追加，实测涨到 5.1MB / 9900 行，
+// 每组 scan-debug 约 1.5KB，会拖慢 assemble 并占满磁盘。
+// 现在：超过 2MB 就轮转一次（保留当前文件为 .1，覆盖更旧的）。
+const _LOG_MAX_BYTES = 2 * 1024 * 1024
+let _logSizeChecked = 0
+
 function debugLog(cfg, kind, data) {
   if (!cfg.debugLog) return
   try {
-    appendFileSync(join(cfg.kernelDir, 'plugin-debug.jsonl'),
+    const p = join(cfg.kernelDir, 'plugin-debug.jsonl')
+    // 每 200 次检查一次大小（避免每次都 statSync）
+    _logSizeChecked++
+    if (_logSizeChecked % 200 === 1) {
+      try {
+        const st = statSync(p)
+        if (st && st.size > _LOG_MAX_BYTES) {
+          // 轮转：当前 → .1（覆盖旧的 .1）
+          try { renameSync(p, p + '.1') } catch { /* ignore */ }
+        }
+      } catch { /* 文件不存在，忽略 */ }
+    }
+    appendFileSync(p,
       JSON.stringify({ t: new Date().toISOString(), kind, ...data }) + '\n', 'utf8')
   } catch { /* ignore */ }
 }
@@ -1812,7 +1831,10 @@ export function apply(ctx, config) {
   //
   // 安全边界（防止无限空转）：最大次数 / 进展检测 / 同 turn 防重入。
   try {
-    const sup = createLifecycleSupervisor(cfg, debugLog || (() => {}))
+    // 注意：debugLog 的签名是 (cfg, kind, data)，
+    // lifecycle 里调用的是 log(kind, data)，所以这里要包一层适配。
+    const lcLog = (kind, data) => debugLog(cfg, kind, data)
+    const sup = createLifecycleSupervisor(cfg, lcLog)
     sup.attach(ctx)
     ctx.set('cosmosMemLifecycle', sup)
   } catch (e) {
@@ -1863,33 +1885,43 @@ export function apply(ctx, config) {
       const sid = scope && scope.id ? String(scope.id) : ''
       const st = sessState(sid)
 
+      let st_diag_counter = st._diagCounter || 0
       const recent = recentUserMessages(log, cfg.reviewWindow ?? 8, sid)
       const latest = recent.length ? recent[recent.length - 1].text : ''
       // 诊断：如果 recent 为空，把真实的 user/message 事件结构打出来
+      // E-292：这条诊断日志曾经每轮都触发（因为 lifecycle 消息的结构与
+      //        预期不同，导致 recent 一直为空），每组打印 ~1.5KB，
+      //        日志暴涨到 2469 条，拖慢了 assemble。
+      //        现在只在「首次或每 50 次」打一次，避免刷屏。
       if (!recent.length && Array.isArray(log)) {
-        const samples = []
-        let umCount = 0
-        for (let i = log.length - 1; i >= 0 && samples.length < 2; i--) {
-          const e = log[i]
-          if (e && e.type === 'user/message') {
-            umCount++
-            samples.push({
-              keys: Object.keys(e),
-              dataKeys: e.data ? Object.keys(e.data) : null,
-              dataShape: JSON.stringify(e.data || {}).slice(0, 400),
-            })
+        st_diag_counter = (st_diag_counter || 0) + 1
+        if (st_diag_counter === 1 || st_diag_counter % 50 === 0) {
+          const samples = []
+          let umCount = 0
+          for (let i = log.length - 1; i >= 0 && samples.length < 2; i--) {
+            const e = log[i]
+            if (e && e.type === 'user/message') {
+              umCount++
+              samples.push({
+                keys: Object.keys(e),
+                dataKeys: e.data ? Object.keys(e.data) : null,
+                dataShape: JSON.stringify(e.data || {}).slice(0, 200),
+              })
+            }
           }
+          const typeSet = new Set()
+          for (let i = Math.max(0, log.length - 200); i < log.length; i++) {
+            const e = log[i]
+            if (e && e.type) typeSet.add(e.type)
+          }
+          debugLog(cfg, 'scan-debug', {
+            nth: st_diag_counter,
+            foundUserMessage: umCount, samples,
+            recentTypes: Array.from(typeSet).slice(0, 15),
+          })
         }
-        // 统计所有出现过的 type
-        const typeSet = new Set()
-        for (let i = Math.max(0, log.length - 200); i < log.length; i++) {
-          const e = log[i]
-          if (e && e.type) typeSet.add(e.type)
-        }
-        debugLog(cfg, 'scan-debug', {
-          foundUserMessage: umCount, samples,
-          recentTypes: Array.from(typeSet).slice(0, 15),
-        })
+        // 写回计数器（否则每次都从 0 开始，退化成每次都打印）
+        st._diagCounter = st_diag_counter
       }
       debugLog(cfg, 'assemble-scan', {
         sid: sid.slice(0, 40), recentCount: recent.length,
