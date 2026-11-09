@@ -57,6 +57,8 @@ REGRESSION_SUITE = [
 # 前端安全检查（node 脚本，单独跑）
 CLIENT_CHECKS = [
     ("前端安全", "check-client.mjs"),
+    # E-290：生命周期监督器离线验证
+    ("生命周期拦截", "check-lifecycle.mjs"),
 ]
 
 

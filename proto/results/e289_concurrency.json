@@ -1,0 +1,19 @@
+{
+ "experiment": "E-289",
+ "journal_mode": "wal",
+ "busy_timeout": 5000,
+ "expected": 40,
+ "ok": 10,
+ "errors": 3,
+ "n_total": 10,
+ "n_vec": 10,
+ "n_fts": 10,
+ "orphans": 0,
+ "missing_vec": 0,
+ "found": 1,
+ "issues": [
+  "3 次写入失败（并发冲突）",
+  "丢失 30 条写入",
+  "只找到 1/4 个 worker 的记忆"
+ ]
+}

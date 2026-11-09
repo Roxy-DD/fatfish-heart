@@ -57,6 +57,8 @@ export const inject = ['tools', 'llm', 'webServer']
 import { createRequire } from 'node:module'
 import { homedir } from 'node:os'
 import { join as _join } from 'node:path'
+// E-290：自主生命周期管理（拦截 turn-stopping，必要时 steer 续跑）
+import { createLifecycleSupervisor } from './lifecycle.js'
 
 function _loadSchemastery() {
   // 候选解析基准：插件自身 → 各 profile 目录
@@ -106,6 +108,7 @@ const DEFAULTS = {
   warmupWaitMs: 30000,
   debugLog: true,
   httpBase: '/cosmos-mem',
+  lifecycle: { enabled: true, maxConsecutive: 20, requireProgress: true, debugLog: true },
 }
 
 export let Config
@@ -131,6 +134,14 @@ if (_Schema && typeof _Schema.object === 'function') {
     warmupWaitMs: _Schema.number().default(DEFAULTS.warmupWaitMs),
     debugLog: _Schema.boolean().default(DEFAULTS.debugLog),
     httpBase: _Schema.string().default(DEFAULTS.httpBase),
+    // E-290：自主生命周期管理配置
+    lifecycle: _Schema.object({
+      enabled: _Schema.boolean().default(true),
+      maxConsecutive: _Schema.number().default(20),
+      requireProgress: _Schema.boolean().default(true),
+      message: _Schema.string().default(''),
+      debugLog: _Schema.boolean().default(true),
+    }).default(DEFAULTS.lifecycle),
   })
 } else {
   // 无 schemastery 的兜底（E-240）：
@@ -1784,6 +1795,29 @@ export function apply(ctx, config) {
       return await callKernel(cfg, 'triage', args, runCtx && runCtx.signal)
     },
   })
+
+  // ================= 自主生命周期管理（E-290）=================
+  //
+  // 目的：解决"模型写完总结就停下"的问题。
+  //
+  // 已从 DSH 实际代码验证的关键事实（不是文档推测）：
+  //   dsh-agent-loop 的回合循环里：
+  //     if (turnEnds && this.inbox.nextStep.length === 0) {
+  //         await dispatch.serial("agent/turn-stopping", {...})
+  //     }
+  //     if (turnEnds && this.inbox.nextStep.length === 0) break; // 仍空才结束
+  //     target = "next-step";                                     // 否则继续
+  //   agent.steer(input) 正是往 inbox.nextStep 推消息。
+  //   → 在 turn-stopping 事件里 steer，回合就不会结束。
+  //
+  // 安全边界（防止无限空转）：最大次数 / 进展检测 / 同 turn 防重入。
+  try {
+    const sup = createLifecycleSupervisor(cfg, debugLog || (() => {}))
+    sup.attach(ctx)
+    ctx.set('cosmosMemLifecycle', sup)
+  } catch (e) {
+    console.error('[cosmos-mem] lifecycle attach failed:', e && e.message)
+  }
 
   // ================= 阶段 1：会话开始预判 =================
 
