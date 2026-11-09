@@ -1,3 +1,4 @@
+
 /**
  * cosmos-mem 插件 v3：两阶段记忆循环（用户核心设计）
  *
@@ -983,6 +984,18 @@ function resetRoutesForNewApply(ctx, myKey) {
 }
 
 export function apply(ctx, config) {
+  // E-302：重载指纹
+  //
+  // 用途：验证自重启（mem_selfreload）是否真的重新执行了模块代码，
+  //      而不是只 reconcile 配置。
+  // 每次 apply() 都会重新计算这个指纹并挂到 globalThis，
+  // /selfreload 的 diagnose 会读它。
+  // 指纹变化 = 代码真的重载了。
+  try {
+    globalThis.__COSMOS_RELOAD_MARKER__ = 'apply@' +
+      new Date().toISOString() + '#' + Math.random().toString(36).slice(2, 8)
+  } catch { /* ignore */ }
+
   const cfg = { ...DEFAULTS, ...(config || {}) }
 
   // E-298：每次 apply() 都是新的加载周期，旧的 ctx.effect 已被 dispose，
@@ -1186,7 +1199,8 @@ export function apply(ctx, config) {
           return sendJson(res, 200, { ok: false, error: 'reloader 未初始化' })
         }
         const body = await readBody(req)
-        const r = await selfReloader.reload(body || {})
+        // E-304：用 reloadVerified，返回 reloaded 字段说明代码是否真的重载
+        const r = await selfReloader.reloadVerified(body || {})
         return sendJson(res, 200, r)
       }
       return sendJson(res, 404, { ok: false, error: 'unknown endpoint ' + sub })
@@ -1953,9 +1967,28 @@ export function apply(ctx, config) {
           }]
         }
         if (v.ok) {
+          // E-304：区分"触发成功"和"代码真的重载了"
+          const strat = v.tried
+            ? v.tried.filter(t => t.ok).map(t => t.strategy).join(',')
+            : v.path
+          if (v.reloaded === true) {
+            return [{
+              type: 'text',
+              text: `✅ 代码已真正重载（策略 ${strat}）\n`
+                + `  指纹: ${v.markerBefore} → ${v.markerAfter}`,
+            }]
+          }
+          if (v.reloaded === false) {
+            return [{
+              type: 'text',
+              text: `⚠ 触发了 reconcile，但**代码没有重载**（策略 ${strat}）\n`
+                + `  指纹未变: ${v.markerBefore}\n`
+                + `  原因: ${v.hint || ''}`,
+            }]
+          }
           return [{
             type: 'text',
-            text: `重载成功（策略 ${v.tried ? v.tried.filter(t => t.ok).map(t => t.strategy).join(',') : v.path}）`,
+            text: `重载已触发（策略 ${strat}）${v.hint ? '：' + v.hint : ''}`,
           }]
         }
         return [{
@@ -1971,7 +2004,8 @@ export function apply(ctx, config) {
       if (args.action === 'diagnose') {
         return { ok: true, ...selfReloader.diagnose() }
       }
-      return await selfReloader.reload({ strategy: args.strategy })
+      // E-304：用 reloadVerified，避免「返回 ok 但代码没重载」的误判
+      return await selfReloader.reloadVerified({ strategy: args.strategy })
     },
   })
 

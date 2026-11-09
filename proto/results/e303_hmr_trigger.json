@@ -1,0 +1,9 @@
+{
+ "experiment": "E-303",
+ "verdict": "module_content_matters",
+ "baseline": "apply@2026-11-09T07:10:40.526Z#iaycpd",
+ "after_patch_only": "apply@2026-11-09T07:10:40.526Z#iaycpd",
+ "after_plugin_edit": "apply@2026-11-09T07:11:39.838Z#8zoyew",
+ "changed_patch_only": false,
+ "changed_plugin_edit": true
+}

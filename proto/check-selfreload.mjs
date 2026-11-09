@@ -171,6 +171,36 @@ console.log('\n【6】日志记录')
     added.map((l) => l.kind).join(','))
 }
 
+// ---------- ⑦ reloadVerified：指纹不变时要报 reloaded=false ----------
+console.log('\n【7】reloadVerified：识别「空操作」')
+{
+  const ctx = makeCtx({ withCE: true })
+  ce_setup(ctx)
+  const sr = createSelfReloader(ctx, {}, log)
+
+  // 预置一个指纹，且不让它变化（模拟模块没重载）
+  globalThis.__COSMOS_RELOAD_MARKER__ = 'marker-before-xyz'
+
+  const r = await sr.reloadVerified({ waitMs: 10 })
+  check('返回 reloaded 字段', 'reloaded' in r, String(r.reloaded))
+  check('指纹不变时 reloaded=false', r.reloaded === false,
+    String(r.reloaded))
+  check('给出 hint 说明原因', !!r.hint, (r.hint || '').slice(0, 40))
+  check('记录 markerBefore', r.markerBefore === 'marker-before-xyz',
+    String(r.markerBefore))
+}
+
+// ---------- ⑧ reloadVerified：dryRun 时 reloaded=null ----------
+console.log('\n【8】reloadVerified：dryRun 不判定')
+{
+  const ctx = makeCtx({ withCE: true })
+  ce_setup(ctx)
+  const sr = createSelfReloader(ctx, {}, log)
+  const r = await sr.reloadVerified({ dryRun: true, waitMs: 10 })
+  check('dryRun 时 reloaded=null', r.reloaded === null, String(r.reloaded))
+  check('dryRun 有说明', !!r.hint, (r.hint || '').slice(0, 30))
+}
+
 // ---------- 汇总 ----------
 console.log('\n' + '='.repeat(66))
 console.log(`结果：${pass}/${pass + fail} 通过`)

@@ -1,0 +1,30 @@
+{
+ "experiment": "E-302",
+ "verdict": "issues",
+ "results": [
+  {
+   "cycle": 1,
+   "ok": true,
+   "marker_changed": false,
+   "body_ok": true,
+   "n_backups": 2,
+   "marker": "apply@2026-11-09T07:10:40.526Z#iaycpd"
+  },
+  {
+   "cycle": 2,
+   "ok": true,
+   "marker_changed": false,
+   "body_ok": true,
+   "n_backups": 3,
+   "marker": "apply@2026-11-09T07:10:40.526Z#iaycpd"
+  },
+  {
+   "cycle": 3,
+   "ok": true,
+   "marker_changed": false,
+   "body_ok": true,
+   "n_backups": 4,
+   "marker": "apply@2026-11-09T07:10:40.526Z#iaycpd"
+  }
+ ]
+}

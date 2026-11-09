@@ -51,9 +51,34 @@
  * 本模块实现 A 和 C，B 需要更复杂的自举。
  */
 
-import { readFileSync, writeFileSync, existsSync, copyFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { readFileSync, writeFileSync, existsSync, readdirSync, unlinkSync }
+  from 'node:fs'
+import { join, dirname, basename } from 'node:path'
 import { homedir } from 'node:os'
+
+/** 去掉 reload 标记行，用于比较"正文是否变化" */
+function stripStamps(s) {
+  return String(s || '')
+    .split('\n')
+    .filter((line) => !line.startsWith('# __reload_stamp__'))
+    .join('\n')
+    .trimEnd()
+}
+
+/** 只保留最近 N 份备份，删更旧的 */
+function pruneOldBackups(patchPath, keep = 5) {
+  try {
+    const dir = dirname(patchPath)
+    const base = basename(patchPath) + '.cosmos-bak-'
+    const files = readdirSync(dir)
+      .filter((f) => f.startsWith(base))
+      .sort()   // 时间戳命名，字典序即时间序
+    while (files.length > keep) {
+      const victim = files.shift()
+      try { unlinkSync(join(dir, victim)) } catch { /* ignore */ }
+    }
+  } catch { /* ignore */ }
+}
 
 /**
  * @param {object} ctx    Cordis context
@@ -145,17 +170,21 @@ export function createSelfReloader(ctx, cfg, log) {
   }
 
   /**
-   * 路径 A：直接改 cordis.patch.yml（E-299 实测：这是唯一真正有效的方式）
+   * 路径 A：改 cordis.patch.yml 触发重载（E-299 实测唯一有效）
    *
-   * 为什么 configEditor 不行：
-   *   我的插件在 cordis.patch.yml 里**没有配置段**（是 bundle patch 引入的），
-   *   所以 configEditor.edit 改不到影响模块加载的东西。
-   *   日志证据：configEditor 触发了多次 apply（17 路由全注册），
-   *   但代码 marker 始终不变 —— 模块被缓存，没有重新执行。
+   * E-301 改进：不再直接污染用户的配置文件
    *
-   * 为什么改 patch 文件有效：
-   *   DSH 有 config watcher，检测到 cordis.patch.yml 变化后
-   *   会真正重新加载模块。实测连续 3 次都能更新 marker。
+   * 原做法的问题（实测数据）：
+   *   · 每次 reload 都改写用户 26KB 的 cordis.patch.yml，只为加一行注释
+   *   · .bak 被反复覆盖（第2次覆盖第1次、第3次覆盖第2次）
+   *     → 连续 3 次后，.bak 里是第 2 次的内容，不是最初的原件
+   *     → 若第 3 次写坏，无法回滚到干净状态
+   *
+   * 新做法：
+   *   1. 只在**文件末尾**操作标记行（不动正文），正文保持逐字节一致
+   *   2. .bak 用时间戳命名，保留历史（最多 5 份，超出删最旧）
+   *   3. 写完立即读回校验：正文必须与原文件逐字节一致
+   *   4. 校验失败则自动用备份回滚
    *
    * @param {object} opts  { dryRun: true } 时不写文件（供离线测试）
    */
@@ -169,23 +198,52 @@ export function createSelfReloader(ctx, cfg, log) {
       const patch = join(prof, 'cordis.patch.yml')
       if (!existsSync(patch)) continue
       try {
-        let content = readFileSync(patch, 'utf8')
+        const original = readFileSync(patch, 'utf8')
         const stamp = new Date().toISOString()
 
+        // 去掉正文里的旧标记，得到"干净正文"
+        const cleanBody = original
+          .replace(/^# __reload_stamp__.*\n?/gm, '')
+          .trimEnd()
+
+        const nextContent = cleanBody + `\n# __reload_stamp__ ${stamp}\n`
+
         if (opts.dryRun) {
-          // 离线测试：只验证能找到文件、能算出新内容，不落盘
-          return { ok: true, path: 'patchFile', profile: prof, stamp,
-                   dryRun: true }
+          // 离线测试：只计算，不写盘
+          return {
+            ok: true, path: 'patchFile', profile: prof, stamp,
+            dryRun: true,
+            bodyUnchanged: stripStamps(original) === stripStamps(nextContent),
+          }
         }
 
-        // 备份一次（保留最近一份）
-        writeFileSync(patch + '.bak', content, 'utf8')
-        // 移除旧的标记行
-        content = content.replace(/^# __reload_stamp__.*$\n?/gm, '')
-        // 追加新标记
-        content = content.trimEnd() + `\n# __reload_stamp__ ${stamp}\n`
-        writeFileSync(patch, content, 'utf8')
-        return { ok: true, path: 'patchFile', profile: prof, stamp }
+        // ---- 1. 带时间戳的备份（保留历史）----
+        const ts = stamp.replace(/[:.]/g, '-')
+        const bak = `${patch}.cosmos-bak-${ts}`
+        writeFileSync(bak, original, 'utf8')
+        pruneOldBackups(patch, 5)
+
+        // ---- 2. 写入 ----
+        writeFileSync(patch, nextContent, 'utf8')
+
+        // ---- 3. 读回校验：正文必须与原文件一致 ----
+        const verify = readFileSync(patch, 'utf8')
+        const bodyOk = stripStamps(verify) === stripStamps(original)
+        if (!bodyOk) {
+          // 校验失败 → 用备份回滚
+          try {
+            writeFileSync(patch, original, 'utf8')
+          } catch { /* ignore */ }
+          return {
+            ok: false, path: 'patchFile',
+            error: '正文校验失败，已回滚', rolledBack: true,
+          }
+        }
+
+        return {
+          ok: true, path: 'patchFile', profile: prof, stamp,
+          backup: bak, bodyUnchanged: true,
+        }
       } catch (e) {
         return { ok: false, path: 'patchFile', error: String(e && e.message) }
       }
@@ -272,5 +330,58 @@ export function createSelfReloader(ctx, cfg, log) {
     }
   }
 
-  return { reload, diagnose, findMyEntry, state }
+  /**
+   * 带验证的重载（E-304）
+   *
+   * E-303/E-304 实测发现的陷阱：
+   *   reload() 返回 ok=True **不代表代码真的重载了**。
+   *   如果 index.js 的内容没变，Node 模块缓存命中，
+   *   apply() 不会重新执行 —— 是一次空操作。
+   *
+   *   证据：
+   *     · 只改 patch 注释      → 指纹不变（空操作）
+   *     · 改 index.js 内容     → 指纹变化（真重载）
+   *
+   * 这个函数做三件事：
+   *   1. 记录重载前的指纹
+   *   2. 触发 reload
+   *   3. 等 waitMs 后读新指纹，判定是否真的重载
+   */
+  async function reloadVerified(opts = {}) {
+    const waitMs = opts.waitMs ?? 6000
+    const readMarker = () => {
+      try { return globalThis.__COSMOS_RELOAD_MARKER__ || null } catch { return null }
+    }
+
+    const markerBefore = readMarker()
+    const r = await reload(opts)
+
+    if (!r.ok) {
+      return { ...r, reloaded: false, markerBefore, markerAfter: markerBefore }
+    }
+    if (opts.dryRun) {
+      return {
+        ...r, reloaded: null, markerBefore, markerAfter: markerBefore,
+        hint: 'dryRun：未真正触发重载',
+      }
+    }
+
+    await new Promise((res) => setTimeout(res, waitMs))
+    const markerAfter = readMarker()
+    const reloaded = !!(markerAfter && markerBefore &&
+                        markerAfter !== markerBefore)
+
+    return {
+      ...r,
+      reloaded,
+      markerBefore,
+      markerAfter,
+      hint: reloaded
+        ? '代码已真正重载'
+        : '触发了 reconcile，但模块内容未变，Node 缓存命中 —— '
+          + '代码没有重新执行。若刚改过代码，请确认文件确实已写入。',
+    }
+  }
+
+  return { reload, reloadVerified, diagnose, findMyEntry, state }
 }

@@ -1,0 +1,30 @@
+{
+ "experiment": "E-301",
+ "issues": [],
+ "snapshots": [
+  {
+   "cycle": 1,
+   "patch_md5": "15bd76bcf970b9a3652e606f2a674854",
+   "patch_size": 26512,
+   "bak_md5": "61702cef9910263c616115d979a2f6b9",
+   "bak_size": 26468
+  },
+  {
+   "cycle": 2,
+   "patch_md5": "2385dd6d0f256bd431b81ce21807110b",
+   "patch_size": 26512,
+   "bak_md5": "15bd76bcf970b9a3652e606f2a674854",
+   "bak_size": 26512
+  },
+  {
+   "cycle": 3,
+   "patch_md5": "9559f8094cba7f565f9c5a4d63629ade",
+   "patch_size": 26512,
+   "bak_md5": "2385dd6d0f256bd431b81ce21807110b",
+   "bak_size": 26512
+  }
+ ],
+ "baseline_md5": "61702cef9910263c616115d979a2f6b9",
+ "final_md5": "9559f8094cba7f565f9c5a4d63629ade",
+ "n_stamps": 1
+}
