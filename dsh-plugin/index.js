@@ -59,6 +59,8 @@ import { homedir } from 'node:os'
 import { join as _join } from 'node:path'
 // E-290：自主生命周期管理（拦截 turn-stopping，必要时 steer 续跑）
 import { createLifecycleSupervisor } from './lifecycle.js'
+// E-296：自重启（通过 configEditor / patch 文件触发 Loader reconcile）
+import { createSelfReloader } from './selfreload.js'
 
 function _loadSchemastery() {
   // 候选解析基准：插件自身 → 各 profile 目录
@@ -1129,6 +1131,21 @@ export function apply(ctx, config) {
           { action: 'history', limit: 50 }, undefined, 15000)
         return sendJson(res, 200, r)
       }
+      // 自重启（E-296）
+      if (sub === '/selfreload' && method === 'GET') {
+        if (!selfReloader) {
+          return sendJson(res, 200, { ok: false, error: 'reloader 未初始化' })
+        }
+        return sendJson(res, 200, { ok: true, ...selfReloader.diagnose() })
+      }
+      if (sub === '/selfreload' && method === 'POST') {
+        if (!selfReloader) {
+          return sendJson(res, 200, { ok: false, error: 'reloader 未初始化' })
+        }
+        const body = await readBody(req)
+        const r = await selfReloader.reload(body || {})
+        return sendJson(res, 200, r)
+      }
       return sendJson(res, 404, { ok: false, error: 'unknown endpoint ' + sub })
     } catch (e) {
       debugLog(cfg, 'http-error', { sub, error: String(e && e.message) })
@@ -1143,7 +1160,7 @@ export function apply(ctx, config) {
   // E-254：去重记录必须**按 ctx 隔离**（见 routesOf 的注释）。
   //        模块级 Set 会在宿主重建 webServer 后仍记着"已注册"，
   //        导致全部 skip、一条都不注册 → 所有端点 404。
-  const routes = ['/list', '/invalidate', '/revise', '/stats', '/config', '/inject-history', '/sleep-history', '/audit', '/hook', '/seed', '/note', '/todo', '/compose', '/triage', '/knowledge-hint', '/config-history']
+  const routes = ['/list', '/invalidate', '/revise', '/stats', '/config', '/inject-history', '/sleep-history', '/audit', '/hook', '/seed', '/note', '/todo', '/compose', '/triage', '/knowledge-hint', '/config-history', '/selfreload']
   let routeOk = 0
   let routeSkip = 0
   let routeFail = 0
@@ -1848,6 +1865,72 @@ export function apply(ctx, config) {
   } catch (e) {
     console.error('[cosmos-mem] lifecycle attach failed:', e && e.message)
   }
+
+  // ================= 自重启（E-296）=================
+  //
+  // 目的：改完插件代码后能自己重载，不用让用户重启 DSH。
+  //
+  // 依据（已从 cordis_inspect_query 实测确认）：
+  //   · configEditor.edit(entry, change) 会走 Loader reconciliation，
+  //     返回说明是 "Fulfillment after Loader reconciliation completes."
+  //   · 事件 'app-boot/config-reload' 存在，说明配置变更能在运行中生效
+  //   · RestartReason 有 'no-hmr'，反过来说明有 HMR 的路径
+  let selfReloader = null
+  try {
+    const lcLog = (kind, data) => debugLog(cfg, kind, data)
+    selfReloader = createSelfReloader(ctx, cfg, lcLog)
+  } catch (e) {
+    console.error('[cosmos-mem] selfreload init failed:', e && e.message)
+  }
+
+  ctx.tools.register({
+    name: 'mem_selfreload',
+    description: '让记忆插件自己重载（改完插件代码后不用重启 DSH）。action=diagnose 先看能不能重载；action=reload 尝试重载。原理：通过 configEditor 触发 Cordis Loader 的 reconcile，或改 cordis.patch.yml 让 watchdog 检测。',
+    parameters: {
+      type: 'object',
+      properties: {
+        action: { type: 'string', description: 'diagnose | reload' },
+        strategy: { type: 'string', description: 'configEditor（默认）| patch' },
+      },
+      required: ['action'],
+    },
+    output: {
+      schema: { type: 'object' },
+      render: (_a, v) => {
+        if (!v) return [{ type: 'text', text: '无返回' }]
+        if (v.ok && v.entryFound !== undefined) {
+          return [{
+            type: 'text',
+            text: `自重启诊断：\n` +
+              `  configEditor: ${v.hasConfigEditor ? '✅' : '❌'}\n` +
+              `  pluginManager: ${v.hasPluginManager ? '✅' : '❌'}\n` +
+              `  找到我的 entry: ${v.entryFound ? '✅ ' + JSON.stringify(v.entry) : '❌ ' + (v.reason || '')}\n` +
+              `  entries 总数: ${v.entriesTotal}\n` +
+              (v.sample ? `  样例: ${JSON.stringify(v.sample)}\n` : ''),
+          }]
+        }
+        if (v.ok) {
+          return [{
+            type: 'text',
+            text: `重载成功（策略 ${v.tried ? v.tried.filter(t => t.ok).map(t => t.strategy).join(',') : v.path}）`,
+          }]
+        }
+        return [{
+          type: 'text',
+          text: `重载失败：${JSON.stringify(v.tried || v)}`.slice(0, 500),
+        }]
+      },
+    },
+    async execute(args, runCtx) {
+      if (!selfReloader) {
+        return { ok: false, error: 'reloader 未初始化' }
+      }
+      if (args.action === 'diagnose') {
+        return { ok: true, ...selfReloader.diagnose() }
+      }
+      return await selfReloader.reload({ strategy: args.strategy })
+    },
+  })
 
   // ================= 阶段 1：会话开始预判 =================
 

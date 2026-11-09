@@ -59,6 +59,8 @@ CLIENT_CHECKS = [
     ("前端安全", "check-client.mjs"),
     # E-290：生命周期监督器离线验证
     ("生命周期拦截", "check-lifecycle.mjs"),
+    # E-296：自重启机制离线验证
+    ("自重启", "check-selfreload.mjs"),
 ]
 
 
