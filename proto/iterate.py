@@ -61,6 +61,8 @@ CLIENT_CHECKS = [
     ("生命周期拦截", "check-lifecycle.mjs"),
     # E-296：自重启机制离线验证
     ("自重启", "check-selfreload.mjs"),
+    # E-329：消息提取游标（含 log 重置边界）
+    ("消息提取", "check-scan-cursor.mjs"),
 ]
 
 

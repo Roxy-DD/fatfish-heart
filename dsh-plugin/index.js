@@ -314,21 +314,52 @@ const scanCursor = new Map()   // sid -> lastSeq
 function recentUserMessages(log, n, sid) {
   if (!Array.isArray(log) || n <= 0) return []
 
-  // 增量：从上次扫到的位置开始（回退 2 条防止边界丢失）
-  let start = 0
-  const last = sid ? scanCursor.get(sid) : undefined
-  if (typeof last === 'number' && last > 0) {
-    start = Math.max(0, last - 2)
-  }
-  if (sid && log.length) {
-    const tail = log[log.length - 1]
-    if (tail && typeof tail.seq === 'number') scanCursor.set(sid, tail.seq)
+  // E-324/329 修：cursor 的语义与 log 重置处理
+  //
+  // 历史上的三个 bug：
+  //   ① 原实现 scanCursor.set(sid, tail.seq) 记的是"末尾事件的 seq"，
+  //      下次从末尾-2 扫，看不到彼此之间的新消息（E-324）
+  //   ② cursor 记太大时，条件 seq <= last 会跳过所有新消息
+  //   ③ **log 会被重置**（session 压缩/checkpoint）：
+  //      实测 9 次重置，logLen 从 25000+ 突然变 2500+，
+  //      seq 从 1 重新开始，而 cursor 还留着 27000，
+  //      导致 1 <= 27000 → 所有消息被跳过 → recentCount 长期为 0
+  //
+  // 现在：
+  //   · cursor 记"最后一条被采纳的用户消息的 seq"
+  //   · 扫描前检测 log 是否重置：末尾 seq < cursor → 说明重置了，清空 cursor
+  //   · 只在实际提取到消息时才更新 cursor
+  let last = sid ? scanCursor.get(sid) : undefined
+
+  // ---- log 重置检测 ----
+  if (typeof last === 'number' && last > 0 && log.length > 0) {
+    // 找 log 里最大的 seq（末尾几条通常 seq 最大）
+    let maxSeq = 0
+    for (let i = log.length - 1; i >= Math.max(0, log.length - 5); i--) {
+      const e = log[i]
+      if (e && typeof e.seq === 'number' && e.seq > maxSeq) {
+        maxSeq = e.seq
+      }
+    }
+    if (maxSeq > 0 && maxSeq < last) {
+      // log 被重置了（seq 重新从小数开始）→ 清空 cursor
+      try {
+        globalThis.__COSMOS_SCAN_RESET__ =
+          (globalThis.__COSMOS_SCAN_RESET__ || 0) + 1
+      } catch { /* ignore */ }
+      scanCursor.delete(sid)
+      last = undefined
+    }
   }
 
   const out = []
-  for (let i = log.length - 1; i >= start && out.length < n; i--) {
+  for (let i = log.length - 1; i >= 0 && out.length < n; i--) {
     const e = log[i]
     if (!e || e.type !== 'user/message') continue
+    if (typeof last === 'number' && typeof e.seq === 'number' &&
+        e.seq <= last) {
+      continue
+    }
     const d = e.data
     if (!d) continue
     const src = d.source && d.source.kind
@@ -341,9 +372,24 @@ function recentUserMessages(log, n, sid) {
         .map((c) => c.text).join(' ')
     }
     text = (text || '').trim()
+    // 排除系统注入的消息
     if (text.startsWith('Time sampled while preparing')) continue
+    if (text.startsWith('Current runtime context')) continue
+    if (text.startsWith('background job')) continue
     if (text) out.push({ seq: e.seq, text })
   }
+
+  if (sid && out.length > 0) {
+    const maxSeq = Math.max(...out.map((x) =>
+      typeof x.seq === 'number' ? x.seq : 0))
+    if (maxSeq > 0) {
+      const prev = scanCursor.get(sid)
+      if (typeof prev !== 'number' || maxSeq > prev) {
+        scanCursor.set(sid, maxSeq)
+      }
+    }
+  }
+
   return out.reverse()
 }
 
