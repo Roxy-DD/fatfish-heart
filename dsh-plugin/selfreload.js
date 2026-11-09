@@ -145,12 +145,21 @@ export function createSelfReloader(ctx, cfg, log) {
   }
 
   /**
-   * 路径 C：直接改 cordis.patch.yml
+   * 路径 A：直接改 cordis.patch.yml（E-299 实测：这是唯一真正有效的方式）
    *
-   * 在文件末尾追加/更新一个 reload 标记注释，
-   * 若 DSH 启用了 watchdog，会检测到文件变化并 reconcile。
+   * 为什么 configEditor 不行：
+   *   我的插件在 cordis.patch.yml 里**没有配置段**（是 bundle patch 引入的），
+   *   所以 configEditor.edit 改不到影响模块加载的东西。
+   *   日志证据：configEditor 触发了多次 apply（17 路由全注册），
+   *   但代码 marker 始终不变 —— 模块被缓存，没有重新执行。
+   *
+   * 为什么改 patch 文件有效：
+   *   DSH 有 config watcher，检测到 cordis.patch.yml 变化后
+   *   会真正重新加载模块。实测连续 3 次都能更新 marker。
+   *
+   * @param {object} opts  { dryRun: true } 时不写文件（供离线测试）
    */
-  function reloadViaPatchFile() {
+  function reloadViaPatchFile(opts = {}) {
     const profiles = [
       join(homedir(), '.dsh', 'profiles', 'desktop'),
       join(homedir(), '.dsh', 'profiles', 'web'),
@@ -161,14 +170,20 @@ export function createSelfReloader(ctx, cfg, log) {
       if (!existsSync(patch)) continue
       try {
         let content = readFileSync(patch, 'utf8')
-        // 备份一次
+        const stamp = new Date().toISOString()
+
+        if (opts.dryRun) {
+          // 离线测试：只验证能找到文件、能算出新内容，不落盘
+          return { ok: true, path: 'patchFile', profile: prof, stamp,
+                   dryRun: true }
+        }
+
+        // 备份一次（保留最近一份）
         writeFileSync(patch + '.bak', content, 'utf8')
         // 移除旧的标记行
-        content = content.replace(/^# __reload_stamp__.*$/gm, '')
+        content = content.replace(/^# __reload_stamp__.*$\n?/gm, '')
         // 追加新标记
-        const stamp = new Date().toISOString()
-        content = content.trimEnd() +
-          `\n# __reload_stamp__ ${stamp}\n`
+        content = content.trimEnd() + `\n# __reload_stamp__ ${stamp}\n`
         writeFileSync(patch, content, 'utf8')
         return { ok: true, path: 'patchFile', profile: prof, stamp }
       } catch (e) {
@@ -179,18 +194,34 @@ export function createSelfReloader(ctx, cfg, log) {
   }
 
   /**
-   * 综合尝试：先 configEditor，失败再试 patch 文件
+   * 综合尝试：默认用 patch 文件（实测更可靠）
+   *
+   * E-298 实测对比：
+   *   · configEditor 策略：能触发 reconcile，17 个路由重新注册（修复后）
+   *     但 **marker 不更新** —— 因为我的插件在 cordis.patch.yml 里
+   *     没有配置段，edit() 改不到真正影响模块加载的东西。
+   *   · patch 文件策略：改 cordis.patch.yml 追加标记行，
+   *     DSH 的 config watcher 检测到文件变化 → 真正重新加载模块
+   *     （实测：marker 更新成功，端点恢复）
+   *
+   * 所以默认顺序改为：patch 文件优先，configEditor 作为回退。
    */
   async function reload(opts = {}) {
     state.attempts += 1
     state.lastAttempt = Date.now()
 
-    const strategies = opts.strategy === 'patch'
-      ? [['patchFile', reloadViaPatchFile]]
-      : [
-          ['configEditor', reloadViaConfigEditor],
-          ['patchFile', () => reloadViaPatchFile()],
-        ]
+    let strategies
+    if (opts.strategy === 'configEditor') {
+      strategies = [['configEditor', reloadViaConfigEditor]]
+    } else if (opts.strategy === 'patch') {
+      strategies = [['patchFile', () => reloadViaPatchFile(opts)]]
+    } else {
+      // 默认：patch 优先（E-299 实测：这是唯一真正重载代码的方式）
+      strategies = [
+        ['patchFile', () => reloadViaPatchFile(opts)],
+        ['configEditor', reloadViaConfigEditor],
+      ]
+    }
 
     const tried = []
     for (const [name, fn] of strategies) {
@@ -216,6 +247,10 @@ export function createSelfReloader(ctx, cfg, log) {
 
   /** 只诊断不执行 */
   function diagnose() {
+    // E-297：返回当前生效的代码标记（验证重载是否真的发生）
+    let marker = null
+    try { marker = globalThis.__COSMOS_RELOAD_MARKER__ || null } catch {}
+
     const found = findMyEntry()
     const ce = ctx.get('configEditor')
     const pm = ctx.get('pluginManager')
@@ -229,6 +264,7 @@ export function createSelfReloader(ctx, cfg, log) {
         name: found.entry.name,
       } : null,
       entriesTotal: found.entries || 0,
+      __marker: marker,
       reason: found.reason || null,
       sample: found.sample || null,
       attempts: state.attempts,

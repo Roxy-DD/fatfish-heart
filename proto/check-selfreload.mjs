@@ -45,6 +45,18 @@ function makeCtx({ services = {}, withCE = true, withPM = false } = {}) {
 const logs = []
 const log = (kind, data) => logs.push({ kind, ...data })
 
+/**
+ * 装好一个 configEditor，并让 entries() 返回「我的 entry」
+ * @returns {object} configEditor 假对象（带 calls）
+ */
+function ce_setup(ctx) {
+  const ce = ctx._services.configEditor
+  ce._entries = [
+    { id: 'b', moduleName: '@local/dsh-cosmos-mem', __config: { a: 1 } },
+  ]
+  return ce
+}
+
 console.log('='.repeat(66))
 console.log('selfreload 离线验证')
 console.log('='.repeat(66))
@@ -56,7 +68,7 @@ console.log('\n【1】无 configEditor 时优雅降级')
   const sr = createSelfReloader(ctx, {}, log)
   const d = sr.diagnose()
   check('hasConfigEditor 为 false', d.hasConfigEditor === false)
-  const r = await sr.reload()
+  const r = await sr.reload({ dryRun: true })
   check('reload 不抛异常', !!r)
   check('返回 ok=false 或有回退尝试', r.ok === false || r.tried)
 }
@@ -85,23 +97,38 @@ console.log('\n【2】找到/找不到自己的 entry')
   check('给出原因', !!found.reason, found.reason)
 }
 
-// ---------- ③ reloadViaConfigEditor 调用 edit ----------
-console.log('\n【3】reload 会调用 configEditor.edit')
+// ---------- ③ 默认策略是 patchFile（E-299 实测更可靠）----------
+console.log('\n【3】默认策略：patchFile 优先（dryRun 不写文件）')
 {
   const ctx = makeCtx({ withCE: true })
-  const ce = ctx._services.configEditor
-  ce._entries = [{ id: 'b', moduleName: '@local/dsh-cosmos-mem', __config: { a: 1 } }]
+  ce_setup(ctx)
   const sr = createSelfReloader(ctx, {}, log)
-  const r = await sr.reload()
+  // dryRun：只验证选择策略与产出，不真的改用户 patch 文件
+  const r = await sr.reload({ dryRun: true })
 
-  check('reload 成功', r.ok === true, JSON.stringify(r).slice(0, 100))
+  check('reload 成功', r.ok === true)
+  const used = (r.tried || []).filter((t) => t.ok).map((t) => t.strategy)
+  check('默认走 patchFile', used.includes('patchFile'), used.join(','))
+  check('dryRun 标记存在', !!r.dryRun || (r.tried || []).some((t) => t.dryRun))
+}
+
+// ---------- ③b 显式指定 configEditor 时才用它 ----------
+console.log('\n【3b】显式 strategy=configEditor 时调用 edit')
+{
+  const ctx = makeCtx({ withCE: true })
+  const ce = ce_setup(ctx)
+  const sr = createSelfReloader(ctx, {}, log)
+  const r = await sr.reload({ strategy: 'configEditor' })
+
+  check('reload 成功', r.ok === true)
   check('edit 被调用', ce.calls.length >= 1, `${ce.calls.length} 次`)
-  // 第一次 edit 加 ___reloadAt
-  const firstChange = ce.calls[0].change({ a: 1 }, {})
-  check('edit 注入了 ___reloadAt',
-    Object.prototype.hasOwnProperty.call(firstChange, '___reloadAt'),
-    JSON.stringify(Object.keys(firstChange)))
-  check('保留了原配置', firstChange.a === 1)
+  if (ce.calls.length > 0) {
+    const firstChange = ce.calls[0].change({ a: 1 }, {})
+    check('edit 注入了 ___reloadAt',
+      Object.prototype.hasOwnProperty.call(firstChange, '___reloadAt'),
+      JSON.stringify(Object.keys(firstChange)))
+    check('保留了原配置', firstChange.a === 1)
+  }
 }
 
 // ---------- ④ 诊断输出结构 ----------
@@ -124,8 +151,9 @@ console.log('\n【5】重复调用累计计数')
   const ctx = makeCtx({ withCE: true })
   ctx._services.configEditor._entries = [{ id: 'b', moduleName: 'cosmos-mem', __config: {} }]
   const sr = createSelfReloader(ctx, {}, log)
-  await sr.reload()
-  await sr.reload()
+  // dryRun：离线测试绝不写用户的 cordis.patch.yml
+  await sr.reload({ dryRun: true })
+  await sr.reload({ dryRun: true })
   check('attempts = 2', sr.state.attempts === 2, String(sr.state.attempts))
 }
 
@@ -136,7 +164,7 @@ console.log('\n【6】日志记录')
   const ctx = makeCtx({ withCE: true })
   ctx._services.configEditor._entries = [{ id: 'b', moduleName: 'cosmos-mem', __config: {} }]
   const sr = createSelfReloader(ctx, {}, log)
-  await sr.reload()
+  await sr.reload({ dryRun: true })
   const added = logs.slice(before)
   check('记录了 selfreload 日志',
     added.some((l) => String(l.kind).startsWith('selfreload')),

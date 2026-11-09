@@ -1,0 +1,19 @@
+{
+ "experiment": "E-297",
+ "verdict": "success",
+ "old_marker": null,
+ "new_marker": "marker-1794207651",
+ "reload_result": {
+  "ok": true,
+  "path": "configEditor",
+  "stamp": 1794207652075,
+  "tried": [
+   {
+    "strategy": "configEditor",
+    "ok": true,
+    "path": "configEditor",
+    "stamp": 1794207652075
+   }
+  ]
+ }
+}

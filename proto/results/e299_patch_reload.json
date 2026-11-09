@@ -1,0 +1,26 @@
+{
+ "experiment": "E-299",
+ "strategy": "patch",
+ "success": 3,
+ "total": 3,
+ "results": [
+  {
+   "cycle": 1,
+   "ok": true,
+   "expected": "patch-1-1794207841",
+   "got": "patch-1-1794207841"
+  },
+  {
+   "cycle": 2,
+   "ok": true,
+   "expected": "patch-2-1794207847",
+   "got": "patch-2-1794207847"
+  },
+  {
+   "cycle": 3,
+   "ok": true,
+   "expected": "patch-3-1794207854",
+   "got": "patch-3-1794207854"
+  }
+ ]
+}

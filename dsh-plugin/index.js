@@ -946,8 +946,51 @@ function routesOf(ctx) {
   return s
 }
 
+/**
+ * E-298 修的坑：重载时 ctx 不变 → 路由全部被 skip
+ *
+ * 日志证据（自重启第一次验证）：
+ *   07:01:25  http-route-summary ok=0, skip=17, fail=0
+ *
+ * 根因：
+ *   · 自重启（configEditor reconcile）触发时，**ctx 对象是同一个**
+ *   · 但上一轮的 ctx.effect 被 dispose → webServer 上的路由被移除了
+ *   · 而 REGISTERED_BY_CTX 里仍记着"17 个都注册过了"
+ *   · 于是全部 skip → 路由表空了 → 所有端点 404
+ *
+ * 与 E-254 是同一类错误的不同触发路径：
+ *   E-254：模块级 Set 跨进程残留
+ *   E-298：按 ctx 隔离的 Set 跨 apply() 残留（ctx 没换，但 effect 被清理）
+ *
+ * 修法：
+ *   · 每次 apply() 开始时，把本次 key 记到 ctx 上
+ *   · 如果发现是**新的 apply()**（key 变了），就清空该 ctx 的记录
+ *   · 这样重载时会重新注册，而同一次 apply 内部仍能去重
+ */
+const APPLY_KEY_BY_CTX = new WeakMap()
+// E-298：本次加载周期的唯一标记。apply() 内联调用一次，避免中途误重置。
+let _applySeq = 0
+
+function resetRoutesForNewApply(ctx, myKey) {
+  const prev = APPLY_KEY_BY_CTX.get(ctx)
+  if (prev !== myKey) {
+    // 新的 apply()：旧 effect 已被 dispose，路由也没了，必须重注册
+    APPLY_KEY_BY_CTX.set(ctx, myKey)
+    REGISTERED_BY_CTX.delete(ctx)
+    return true   // 表示"重置过"
+  }
+  return false
+}
+
 export function apply(ctx, config) {
   const cfg = { ...DEFAULTS, ...(config || {}) }
+
+  // E-298：每次 apply() 都是新的加载周期，旧的 ctx.effect 已被 dispose，
+  // webServer 上的路由已被移除，必须清空去重记录重新注册。
+  try {
+    _applySeq += 1
+    resetRoutesForNewApply(ctx, _applySeq)
+  } catch (e) { /* ignore */ }
 
   // ================= 管理界面 HTTP API =================
   // Client 通过 fetch 调用这些端点读取/操作记忆

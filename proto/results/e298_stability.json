@@ -1,0 +1,28 @@
+{
+ "experiment": "E-298",
+ "verdict": "unstable",
+ "cycles": 3,
+ "success": 1,
+ "endpoints_ok": 5,
+ "endpoints_total": 5,
+ "results": [
+  {
+   "cycle": 1,
+   "ok": true,
+   "expected": "cycle-1-1794207779",
+   "got": "cycle-1-1794207779"
+  },
+  {
+   "cycle": 2,
+   "ok": false,
+   "expected": "cycle-2-1794207784",
+   "got": "cycle-1-1794207779"
+  },
+  {
+   "cycle": 3,
+   "ok": false,
+   "expected": "cycle-3-1794207788",
+   "got": "cycle-1-1794207779"
+  }
+ ]
+}
