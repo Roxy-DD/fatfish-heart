@@ -1,0 +1,16 @@
+{
+ "experiment": "E-332",
+ "n_sessions": 2,
+ "sessions": [
+  {
+   "sid": "session-7413467a-df16-4a04-bc58-105",
+   "count": 354,
+   "last": "2026-11-09T07:45:42"
+  },
+  {
+   "sid": "session-e7348c8d-e7ec-425d-a8ba-b76",
+   "count": 76,
+   "last": "2026-11-09T07:45:31"
+  }
+ ]
+}
