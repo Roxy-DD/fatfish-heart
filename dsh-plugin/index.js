@@ -98,6 +98,8 @@ const DEFAULTS = {
   autoInject: true,
   autoInjectTopK: 5,
   autoInjectMaxChars: 1500,
+  // E-320：低于此分数的检索结果不注入（避免不相关记忆污染上下文）
+  minInjectScore: 1.0,
   autoRemember: true,
   reviewWindow: 8,
   reviewProvider: 'workbuddy',
@@ -124,6 +126,7 @@ if (_Schema && typeof _Schema.object === 'function') {
     autoInject: _Schema.boolean().default(DEFAULTS.autoInject),
     autoInjectTopK: _Schema.number().default(DEFAULTS.autoInjectTopK),
     autoInjectMaxChars: _Schema.number().default(DEFAULTS.autoInjectMaxChars),
+    minInjectScore: _Schema.number().default(DEFAULTS.minInjectScore),
     autoRemember: _Schema.boolean().default(DEFAULTS.autoRemember),
     reviewWindow: _Schema.number().default(DEFAULTS.reviewWindow),
     reviewProvider: _Schema.string().default(DEFAULTS.reviewProvider),
@@ -898,17 +901,32 @@ async function reviewAndRemember(ctx, cfg, sid, messages, signal) {
   return out
 }
 
-function formatMemories(items, maxChars) {
-  if (!Array.isArray(items) || items.length === 0) return ''
+function formatMemories(items, maxChars, minScore = 0) {
+  if (!Array.isArray(items) || items.length === 0) {
+    return { text: '', skipped: 0, kept: 0 }
+  }
   const lines = []
   let total = 0
+  let skipped = 0
   for (const it of items) {
+    // E-320：低分结果不注入
+    //
+    // 实测问题：查询「Docker 容器」（库里没有相关内容）时，
+    // 检索仍返回 5 条"矮子里拔将军"的结果，最高分只有 0.88。
+    // 这些不相关的记忆会污染上下文，让模型误以为用户提到过这些。
+    //
+    // minScore 由调用方传入，默认 0（不过滤，保持旧行为）。
+    const sc = typeof it.score === 'number' ? it.score : null
+    if (minScore > 0 && sc !== null && sc < minScore) {
+      skipped++
+      continue
+    }
     const line = '- [' + it.ep_id + '] ' + it.text + (it.note ? '  (' + it.note + ')' : '')
     if (total + line.length > maxChars) break
     lines.push(line)
     total += line.length
   }
-  return lines.join('\n')
+  return { text: lines.join('\n'), skipped, kept: lines.length }
 }
 
 /**
@@ -2249,7 +2267,24 @@ export function apply(ctx, config) {
         300,                                   // 至少留一点，避免为 0
         totalBudget - protectedChars
       )
-      const body = formatMemories(items, remainChars)
+      // E-320：低分结果不注入（避免不相关记忆污染上下文）
+      //
+      // minInjectScore 由配置控制，默认 1.0。
+      // 依据：实测「Docker 容器」这类库里无相关内容的查询，
+      // 返回的最高分只有 0.96，其余 0.85~0.92，全都不相关。
+      // 而真正相关的查询（如「跨版本迁移能力」）最高分 3.05。
+      // 1.0 是保守门槛：低于它的多半是"矮子里拔将军"。
+      const minScore = typeof cfg.minInjectScore === 'number'
+        ? cfg.minInjectScore : 1.0
+      const bodyResult = formatMemories(items, remainChars, minScore)
+      const body = bodyResult.text
+      if (bodyResult.skipped > 0) {
+        debugLog(cfg, 'inject-score-filter', {
+          kept: bodyResult.kept,
+          skipped: bodyResult.skipped,
+          minScore,
+        })
+      }
 
       // E-263：知识整理提示（仅在会话首次注入，且是机械扫描，无模型调用）
       // 目的：让 note 从"有代码零使用"变成"模型能看到该整理了"

@@ -1,0 +1,23 @@
+{
+ "experiment": "E-321",
+ "relevant_scores": [
+  3.814,
+  3.376,
+  1.503,
+  3.44,
+  1.704,
+  2.59,
+  2.747,
+  3.145
+ ],
+ "irrelevant_scores": [
+  0.96,
+  2.345,
+  1.099,
+  0.641,
+  0.996
+ ],
+ "best_threshold": 1.1,
+ "current": 1.0,
+ "verdict": "overlap"
+}

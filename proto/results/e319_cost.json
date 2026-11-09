@@ -1,0 +1,7 @@
+{
+ "experiment": "E-319",
+ "flag2_json_chars": 3450,
+ "normal_json_chars": 850,
+ "flag2_ratio": 0.802,
+ "verdict": "不改（本地传输成本低，模型上下文已优化）"
+}

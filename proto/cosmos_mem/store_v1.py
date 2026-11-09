@@ -722,16 +722,29 @@ class MemoryStore:
         # L0/L1 记忆永远在场（docs/72）：
         # 红线（L0）与常驻准则（L1）必须每次都参与，缺了模型行为就变。
         # 与固定席位一样是**追加**而非替换，flag=2 标识受保护。
+        #
+        # E-316 修：强制注入不应挤占 top-k 名额。
+        #
+        # 实测问题：11 条 L0/L1 被追加到结果里，得分 0.0，
+        # 但因为它们在列表里，调用方取 top=5 时会把真正相关的
+        # 记忆挤到第 4 名之后。
+        #   证据：查询「跨版本迁移能力」，
+        #         目标记忆 top=20 时排第 1，top=5 时排第 4。
+        #
+        # 修法：把强制注入的**单独放在 out 末尾**（不参与打分排序），
+        #       并保证它们不影响正常结果的相对顺序。
+        #       调用方可以通过 flag==2 区分。
         try:
             import hook as _hook
             hid = _hook.present_ids(self)
             if hid:
                 present = {ep.ep_id for ep, _, _ in out}
+                # 1) 已在结果里的，升级 flag 为 2（保留原位）
+                out = [(ep, sc, 2 if ep.ep_id in hid else fl)
+                       for ep, sc, fl in out]
+                # 2) 不在结果里的，追加到**最末尾**
                 for eid in hid:
                     if eid in present:
-                        # 已在结果里，升级 flag 为 2
-                        out = [(ep, sc, 2 if ep.ep_id == eid else fl)
-                               for ep, sc, fl in out]
                         continue
                     ep = self.get(eid)
                     if ep and not ep.invalid_at:
