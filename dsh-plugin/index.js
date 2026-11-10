@@ -2115,6 +2115,95 @@ export function apply(ctx, config) {
     },
   })
 
+  // ================= 环境事件（E-398/400，主张6）=================
+  //
+  // 《环管群》主张6：生命改变环境，环境又影响后续生命。
+  // 前提是能记录**真实环境反馈**，而不是人的评价。
+  //
+  // 5.2 节的约束：
+  //   「内部奖励不能冒充自然环境的因果筛选」
+  // 所以这个工具只接客观因果（退出码、状态码、文件存在），
+  // 拒绝一切主观标签（user_liked / feels_right 之类会被内核白名单挡回）。
+  ctx.tools.register({
+    name: 'mem_environment',
+    description: '记录/查询真实环境事件（主张6）。只接客观因果：命令退出码、测试通过/失败、文件/进程是否存在、HTTP 状态码。拒绝主观标签（因为《环管群》5.2 要求内部奖励不能冒充环境因果）。action=record 记录一次真实执行；recent 查最近；stats 看统计；for_episode 查某条记忆关联的事件。',
+    parameters: {
+      type: 'object',
+      properties: {
+        action: {
+          type: 'string',
+          description: 'record | recent | stats | for_episode',
+        },
+        kind: {
+          type: 'string',
+          description: 'record 用：exec_ok/exec_fail/test_pass/test_fail/'
+            + 'file_exists/file_missing/proc_alive/proc_dead/'
+            + 'http_ok/http_error/timeout',
+        },
+        source: { type: 'string', description: '产生该动作的命令/URL/路径' },
+        outcome: { type: 'string', description: '客观结果（退出码/状态码/耗时）' },
+        detail: { type: 'string', description: '附加细节（报错摘要等）' },
+        task: { type: 'string', description: '所属实验/任务' },
+        ep_id: { type: 'string', description: 'for_episode 用' },
+        limit: { type: 'number', description: 'recent 用，默认 20' },
+      },
+      required: ['action'],
+    },
+    output: {
+      schema: { type: 'object' },
+      render: (_a, v) => {
+        if (!v) return [{ type: 'text', text: '无返回' }]
+        if (v.error) {
+          return [{ type: 'text', text: `环境事件失败：${v.error}` }]
+        }
+        if (v.stats) {
+          const s = v.stats
+          const kinds = Object.entries(s.by_kind || {})
+            .map(([k, n]) => `${k}=${n}`).join(', ')
+          return [{
+            type: 'text',
+            text: `环境事件统计\n`
+              + `  总计: ${s.total}\n`
+              + `  成功: ${s.ok} / 失败: ${s.fail}`
+              + (s.success_rate !== null
+                ? `（成功率 ${(s.success_rate * 100).toFixed(0)}%）` : '')
+              + `\n  分布: ${kinds || '无'}`,
+          }]
+        }
+        if (v.events) {
+          const lines = v.events.slice(0, 15).map((e) => {
+            const t = new Date(e.at * 1000)
+              .toISOString().slice(5, 16).replace('T', ' ')
+            return `  ${t} [${e.kind}] ${String(e.source || '').slice(0, 36)}`
+              + ` → ${String(e.outcome || '')}`
+          })
+          return [{
+            type: 'text',
+            text: `环境事件 ${v.count} 条\n` + lines.join('\n'),
+          }]
+        }
+        if (v.event_id) {
+          return [{
+            type: 'text',
+            text: `已记录环境事件 ${v.event_id}（${v.kind}）`,
+          }]
+        }
+        return [{ type: 'text', text: JSON.stringify(v).slice(0, 400) }]
+      },
+    },
+    async execute(args) {
+      const payload = { action: args.action }
+      for (const k of ['kind', 'source', 'outcome', 'detail',
+                       'task', 'ep_id']) {
+        if (args[k] !== undefined) payload[k] = args[k]
+      }
+      if (args.limit) payload.limit = args.limit
+      const r = await callKernel(cfg, 'environment', payload,
+        undefined, 15000)
+      return r
+    },
+  })
+
   // ================= 阶段 1：会话开始预判 =================
 
   ctx.on('agent/created', async (payload) => {
