@@ -52,6 +52,9 @@ const DEFAULT_CONFIG = {
   enabled: true,
   maxConsecutive: 20,
   requireProgress: true,
+  // E-356：连续多少个「无工具调用」回合后才真正放行。
+  // 原逻辑是「1 次无进展就放行」，导致一轮纯文本总结后永久停止。
+  maxNoProgress: 3,
   message: '',
   debugLog: false,
 }
@@ -124,6 +127,8 @@ export function createLifecycleSupervisor(cfg, log) {
         lastToolCalls: -1,
         lastSteerTurn: -1,
         totalSteers: 0,
+        // E-356：连续无进展次数；达到 maxNoProgress 才真正放行
+        noProgressStreak: 0,
       }
       states.set(agent, s)
     }
@@ -180,14 +185,57 @@ export function createLifecycleSupervisor(cfg, log) {
           return
         }
 
-        // 进展检测
+        // 进展检测（E-356 修）
+        //
+        // 原实现：
+        //   const tc = countToolCalls(agent)
+        //   if (requireProgress && s.lastToolCalls >= 0 &&
+        //       tc <= s.lastToolCalls) {
+        //     log('lifecycle-no-progress', ...); return    // ← 直接放弃
+        //   }
+        //
+        // 实际行为（读日志核对过，不是推测）：
+        //   · lastToolCalls 初始 -1，第一次 tc(0) > -1 → 通过，正常 steer
+        //     （steer 后 lastToolCalls 被设成 0）
+        //   · 第二次纯文本回合 tc(0) <= 0 → 放弃
+        //
+        // 所以它不是"第一次就失效"，而是：
+        //   **纯文本的回合最多只能被续跑一次，之后就永远放行**。
+        //
+        // 实测证据（E-356）：
+        //   06:29:11 lifecycle-steer        {turn:269}  ← 第一次，通过
+        //   06:57:22 lifecycle-no-progress  {turn:271, toolCalls:0, last:0}
+        //   → 我上一轮说「接下来继续迭代」然后纯文本结束，被放行
+        //
+        // 根本问题：**"没有工具调用" ≠ "任务完成了"**
+        //   纯文字回答（总结、汇报）也可能任务没完就停了。
+        //
+        // 新语义：
+        //   · 有实质进展（工具调用增加）→ 续跑，noProgressStreak 归零
+        //   · 没有进展（纯文本）→ **仍然续跑**，但累计 noProgressStreak，
+        //     连续达到 maxNoProgress（默认 3）才真正放行
+        //   · 这样纯文本回合也能被连续追几次，而不是一次后就永久放行
         const tc = countToolCalls(agent)
-        if (conf.requireProgress && s.lastToolCalls >= 0 &&
-            tc <= s.lastToolCalls) {
+        const hasProgress = !(s.lastToolCalls >= 0 && tc <= s.lastToolCalls)
+
+        if (conf.requireProgress && !hasProgress) {
+          s.noProgressStreak = (s.noProgressStreak || 0) + 1
+          const limit = conf.maxNoProgress ?? 3
+          if (s.noProgressStreak >= limit) {
+            log('lifecycle-no-progress', {
+              turn, toolCalls: tc, last: s.lastToolCalls,
+              streak: s.noProgressStreak, limit,
+              action: 'give-up',
+            })
+            return
+          }
           log('lifecycle-no-progress', {
             turn, toolCalls: tc, last: s.lastToolCalls,
+            streak: s.noProgressStreak, limit,
+            action: 'continue-anyway',
           })
-          return
+        } else {
+          s.noProgressStreak = 0
         }
 
         // steer
@@ -218,6 +266,7 @@ export function createLifecycleSupervisor(cfg, log) {
         }
         s.consecutive = 0
         s.lastToolCalls = -1
+        s.noProgressStreak = 0
       } catch (e) { /* ignore */ }
     }
     ctx.on('agent/user-message', reset)

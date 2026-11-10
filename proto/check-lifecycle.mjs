@@ -151,15 +151,29 @@ console.log('\n【4】进展检测：没有新工具调用时不 steer')
   await ctx.fire('agent/turn-stopping', { agent, turn: 1 })
   const after1 = agent.steerCalls.length
 
-  // 第二次：工具调用数没变，应被拦
+  // 第二次：工具调用数没变
+  //
+  // E-356 修：旧行为是「第 2 次无进展就永久放行」，
+  // 导致一轮纯文本总结后系统彻底停止（真实发生过）。
+  // 新语义：无进展也继续 steer，累计 streak，达到 maxNoProgress(默认3) 才放行。
   await ctx.fire('agent/turn-stopping', { agent, turn: 2 })
   const after2 = agent.steerCalls.length
 
   check('第一次 steer（有进展）', after1 === 1, `${after1}`)
-  check('第二次不 steer（无进展）', after2 === 1, `${after2}`)
+  check('第二次仍 steer（无进展也继续）', after2 === 2, `${after2}`)
+
+  // 连续到 maxNoProgress 才放行
+  await ctx.fire('agent/turn-stopping', { agent, turn: 3 })
+  const after3 = agent.steerCalls.length
+  await ctx.fire('agent/turn-stopping', { agent, turn: 4 })
+  const after4 = agent.steerCalls.length
+  check('第三次仍 steer（streak=2 < 3）', after3 === 3, `${after3}`)
+  check('第四次放行（streak=3 达上限）', after4 === 3, `${after4}`)
 
   const noProg = logs.filter((l) => l.kind === 'lifecycle-no-progress')
   check('记录了 no-progress 日志', noProg.length > 0, `${noProg.length} 条`)
+  const gaveUp = noProg.filter((l) => l.action === 'give-up')
+  check('记录了 give-up 动作', gaveUp.length >= 1, `${gaveUp.length} 条`)
 }
 
 // ---------- ⑤ 用户消息清零 ----------

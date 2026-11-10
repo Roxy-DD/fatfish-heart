@@ -1,0 +1,12 @@
+{
+ "experiment": "E-356",
+ "n_events": 2327,
+ "lc_kinds": {
+  "lifecycle-attached": 32,
+  "lifecycle-steer": 11,
+  "lifecycle-no-progress": 6
+ },
+ "stops": 0,
+ "steers": 11,
+ "skips": 0
+}
