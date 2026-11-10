@@ -97,6 +97,8 @@ CLIENT_CHECKS = [
     ("汇报机制", "run_e416_n_calib.py"),
     # E-417：MESH_EP 让回归自动关联记忆（仍要求人工标注，不做自动推断）
     ("自动关联", "run_e417_mesh_ep.py"),
+    # E-418：关联覆盖率指标（主张6 的进度条）
+    ("关联率", "run_e418_link_ratio.py"),
 ]
 
 

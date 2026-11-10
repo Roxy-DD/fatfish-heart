@@ -175,9 +175,24 @@ def stats(st) -> dict:
         rate = None
         if ok_n + fail_n > 0:
             rate = round(ok_n / (ok_n + fail_n), 3)
+
+        # E-418：关联覆盖率（多少事件能追溯到具体记忆）
+        #
+        # 这个指标决定主张6 是否真的有价值：
+        #   覆盖率低 → 只知道"操作成功"，不知道"哪条记忆起作用"
+        #             = 操作日志，不是环境筛选
+        #   覆盖率高 → 才能回答"这条记忆扛住了几次真实检验"
+        linked_n = st.con.execute(
+            "SELECT COUNT(*) FROM environment_events "
+            "WHERE invalid_at IS NULL "
+            "AND ep_ids IS NOT NULL AND ep_ids != '[]' "
+            "AND ep_ids != ''").fetchone()[0]
+        link_ratio = round(linked_n / total, 3) if total > 0 else None
+
         return {"total": total, "by_kind": by_kind,
                 "ok": ok_n, "fail": fail_n, "success_rate": rate,
-                "invalid": invalid_n}
+                "invalid": invalid_n,
+                "linked": linked_n, "link_ratio": link_ratio}
     except Exception as e:
         return {"error": f"{type(e).__name__}: {e}"}
 
