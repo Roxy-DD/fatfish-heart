@@ -1,0 +1,8 @@
+{
+ "experiment": "E-341",
+ "inject_total": 28,
+ "n_sids": 2,
+ "max_per_sid": 24,
+ "assemble_enter": 580,
+ "verdict": "injected_reset"
+}

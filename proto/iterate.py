@@ -63,6 +63,8 @@ CLIENT_CHECKS = [
     ("自重启", "check-selfreload.mjs"),
     # E-329：消息提取游标（含 log 重置边界）
     ("消息提取", "check-scan-cursor.mjs"),
+    # E-348：只注入一次（首轮判断顺序 + 并发防重）
+    ("注入控制", "check-inject-once.mjs"),
 ]
 
 

@@ -1,0 +1,64 @@
+{
+ "experiment": "E-342",
+ "inject_total": 28,
+ "n_segments": 11,
+ "segments": [
+  {
+   "seg": 1,
+   "n": 1,
+   "span_min": 0.0
+  },
+  {
+   "seg": 2,
+   "n": 1,
+   "span_min": 0.0
+  },
+  {
+   "seg": 3,
+   "n": 2,
+   "span_min": 5.7
+  },
+  {
+   "seg": 4,
+   "n": 1,
+   "span_min": 0.0
+  },
+  {
+   "seg": 5,
+   "n": 1,
+   "span_min": 0.0
+  },
+  {
+   "seg": 6,
+   "n": 2,
+   "span_min": 6.0
+  },
+  {
+   "seg": 7,
+   "n": 2,
+   "span_min": 0.4
+  },
+  {
+   "seg": 8,
+   "n": 15,
+   "span_min": 25.2
+  },
+  {
+   "seg": 9,
+   "n": 1,
+   "span_min": 0.0
+  },
+  {
+   "seg": 10,
+   "n": 1,
+   "span_min": 0.0
+  },
+  {
+   "seg": 11,
+   "n": 1,
+   "span_min": 0.0
+  }
+ ],
+ "reloads": 23,
+ "verdict": "real_bug"
+}

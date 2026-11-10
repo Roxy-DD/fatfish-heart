@@ -1,0 +1,8 @@
+{
+ "experiment": "E-348",
+ "n_inject": 18,
+ "n_unique_query": 4,
+ "dup_total": 15,
+ "n_multi_clusters": 5,
+ "verdict": "dup"
+}

@@ -1,0 +1,8 @@
+{
+ "experiment": "E-346",
+ "n_apply": 31,
+ "n_reload": 23,
+ "delta": 8,
+ "n_disposed": 0,
+ "verdict": "注入次数正常，真正问题是新会话用旧 query 检索"
+}

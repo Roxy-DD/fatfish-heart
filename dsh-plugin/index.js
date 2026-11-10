@@ -289,6 +289,10 @@ function sessState(sid) {
     sessions.set(sid, {
       prewarm: null, processed: new Set(),
       injected: false, prewarmPromise: null,
+      // E-348：注入进行中标记，防并发重复注入
+      // 实测：同一轮内出现 2 次注入，因为检索耗时 1.5~6.3 秒，
+      //      两个 assemble 调用在这段时间内都能看到 injected=false。
+      injecting: false,
     })
   }
   return sessions.get(sid)
@@ -2248,8 +2252,9 @@ export function apply(ctx, config) {
 
       // ---- 相关记忆 + 前瞻：只在会话第一次注入 ----
       // 之后每一轮，模型靠"主动 mem_search"自己回忆，系统不再被动塞记忆。
-      if (st.injected) {
-        // 已注入过：只补常驻指令（相关记忆不再自动塞）
+      if (st.injected || st.injecting) {
+        // 已注入过，或正在注入中（E-348 防并发）：
+        // 只补常驻指令（相关记忆不再自动塞）
         const contexts = Array.isArray(result.contexts) ? result.contexts : []
         return {
           ...result,
@@ -2259,7 +2264,19 @@ export function apply(ctx, config) {
           ],
         }
       }
+      // E-348 修：先记下"是否首轮"，再置位
+      //
+      // 原代码顺序错误：
+      //   st.injected = true
+      //   ...
+      //   formatProtected(protectedItems, !st.injected)   ← 永远是 false
+      //
+      // 后果：formatProtected 的 full 参数永远是 false，
+      //       "首轮给全文"的逻辑从未生效，永远走摘要模式。
+      //       （E-231 设计的首轮全文被这行静默吃掉了）
+      const isFirstTurn = !st.injected
       st.injected = true
+      st.injecting = true
 
       // 等待前瞻完成（若还没跑完），超时保护，避免第一次响应卡太久
       if (st.prewarmPromise) {
@@ -2293,7 +2310,7 @@ export function apply(ctx, config) {
       const tSearch2 = Date.now()
 
       // E-231：L0/L1 首轮给全文，后续只给标题（省 token 且避免挤占用户记忆）
-      const protectedText = formatProtected(protectedItems, !st.injected)
+      const protectedText = formatProtected(protectedItems, isFirstTurn)
 
       // E-288 修：普通记忆必须用**真正剩余**的预算。
       //
@@ -2394,9 +2411,9 @@ export function apply(ctx, config) {
       // E-231：L0/L1 单独一段（首轮全文 / 后续摘要）
       if (protectedText) {
         parts.push('### 常驻准则（L0/L1）\n' +
-          (st.injected
-            ? '以下是系统长期准则（只显示标题）。需要看某条完整内容时，用 mem_search 查询。\n\n'
-            : '以下是系统长期准则，请在后续所有回答中遵循：\n\n') +
+          (isFirstTurn
+            ? '以下是系统长期准则，请在后续所有回答中遵循：\n\n'
+            : '以下是系统长期准则（只显示标题）。需要看某条完整内容时，用 mem_search 查询。\n\n') +
           protectedText)
       }
       if (body) {
@@ -2418,11 +2435,14 @@ export function apply(ctx, config) {
       //   后续  → 一行提醒（约 30 字）
       //
       // 节省：后续每轮约 847 字 / 565 tokens。
-      if (st.injected) {
-        parts.push('记忆工具：mem_search / mem_add / mem_sleep 按需主动使用。')
-      } else {
+      if (isFirstTurn) {
         parts.push(memoryPolicy)
+      } else {
+        parts.push('记忆工具：mem_search / mem_add / mem_sleep 按需主动使用。')
       }
+
+      // E-348：注入完成，释放并发锁
+      st.injecting = false
 
       return {
         ...result,
@@ -2433,6 +2453,12 @@ export function apply(ctx, config) {
       }
     } catch (err) {
       debugLog(cfg, 'assemble-error', { error: String(err && err.message) })
+      // E-348：异常时也要释放并发锁，否则该会话永远无法再注入
+      try {
+        const scope2 = context && context.scope
+        const sid2 = scope2 && scope2.id ? String(scope2.id) : ''
+        if (sid2) sessState(sid2).injecting = false
+      } catch { /* ignore */ }
       return result
     }
   })
