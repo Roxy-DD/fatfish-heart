@@ -101,6 +101,8 @@ CLIENT_CHECKS = [
     ("关联率", "run_e418_link_ratio.py"),
     # E-419：备份全表校验（R1 红线：全部无损，不是三张表无损）
     ("备份全表", "run_e419_backup_full.py"),
+    # E-420：逐字段比对（R1 硬验证，比行数更深一层）
+    ("字段比对", "run_e420_field_level.py"),
 ]
 
 
