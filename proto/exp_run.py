@@ -15,6 +15,20 @@ E-409 发现的缺口：
 
 用法：
   python exp_run.py <脚本路径> [参数...]
+  python exp_run.py --ep EP_ID[,EP_ID] <脚本路径> [参数...]
+
+E-413：新增 --ep 参数，允许**人工标注**这次实验用了哪些记忆。
+
+★ 为什么必须人工标注，不能自动推断：
+  自动推断等于让模型自己说"这条记忆有用"，
+  那又回到《环管群》主张5 禁止的
+  「内部奖励冒充自然环境的因果筛选」。
+
+  只有显式标注，才能区分：
+    · "我跑了实验，成功了"          → 操作事实
+    · "因为我用了记忆 X 才成功"      → 因果关系（需人工认定）
+
+  前者可自动记录，后者必须人工标注。
 """
 import sys
 import os
@@ -29,7 +43,8 @@ MEM = os.path.join(_HERE, "cosmos_mem")
 
 
 def record_environment(kind: str, source: str, outcome: str,
-                       detail: str = "", task: str = "") -> None:
+                       detail: str = "", task: str = "",
+                       ep_ids=None) -> None:
     """记录环境事件（失败不阻断）"""
     try:
         sys.path.insert(0, MEM)
@@ -42,26 +57,39 @@ def record_environment(kind: str, source: str, outcome: str,
         st = MemoryStore(db)
         env.init(st)
         env.record(st, kind, source=source, outcome=outcome,
-                   detail=detail, task=task)
+                   detail=detail, task=task, ep_ids=ep_ids)
         st.con.close()
     except Exception:
         pass
 
 
 def main():
-    if len(sys.argv) < 2:
-        print("用法: python exp_run.py <脚本路径> [参数...]")
-        print("作用: 跑实验脚本并自动记录环境事件")
+    args = sys.argv[1:]
+    if not args:
+        print("用法: python exp_run.py [--ep ID1,ID2] <脚本路径> [参数...]")
         return 1
 
-    script = sys.argv[1]
-    extra = sys.argv[2:]
+    # E-413：解析 --ep 参数（人工标注用了哪些记忆）
+    ep_ids = []
+    if args and args[0] == "--ep":
+        if len(args) < 3:
+            print("❌ --ep 需要跟一个 ID 列表和一个脚本路径")
+            return 1
+        ep_ids = [x.strip() for x in args[1].split(",") if x.strip()]
+        args = args[2:]
+
+    if not args:
+        print("用法: python exp_run.py [--ep ID1,ID2] <脚本路径> [参数...]")
+        return 1
+
+    script = args[0]
+    extra = args[1:]
 
     if not os.path.exists(script):
         print(f"❌ 脚本不存在: {script}")
         record_environment("exec_fail", f"exp_run.py {script}",
                            "file_missing", f"脚本不存在: {script}",
-                           task="_exp_run")
+                           task="_exp_run", ep_ids=ep_ids)
         return 1
 
     # 用脚本名作为 task 标识（提取 run_eXXX 里的编号）
@@ -91,14 +119,14 @@ def main():
         code = -1
         record_environment("timeout", f"exp_run.py {base}",
                            f"{elapsed:.0f}s", "执行超时 1800s",
-                           task=task)
+                           task=task, ep_ids=ep_ids)
         print(f"\n❌ 超时（{elapsed:.0f} 秒）")
         return 1
     except Exception as e:
         elapsed = time.time() - t0
         record_environment("exec_fail", f"exp_run.py {base}",
                            "exception", f"{type(e).__name__}: {e}",
-                           task=task)
+                           task=task, ep_ids=ep_ids)
         print(f"\n❌ 异常: {type(e).__name__}: {e}")
         return 1
 
@@ -111,8 +139,11 @@ def main():
     if code == 0:
         record_environment("exec_ok", f"exp_run.py {base}",
                            f"exit=0, {elapsed:.1f}s",
-                           f"{n_lines} 行输出", task=task)
+                           f"{n_lines} 行输出", task=task,
+                           ep_ids=ep_ids)
         print(f"\n✅ 成功（{elapsed:.1f}s，{n_lines} 行输出）")
+        if ep_ids:
+            print(f"   已关联记忆: {', '.join(e[:8] for e in ep_ids)}")
     else:
         # 失败时提取报错摘要（最有价值的信息）
         err_lines = [l for l in lines
@@ -122,7 +153,7 @@ def main():
         summary = " | ".join(err_lines[:5])[:800] or "无明确报错行"
         record_environment("exec_fail", f"exp_run.py {base}",
                            f"exit={code}, {elapsed:.1f}s",
-                           summary, task=task)
+                           summary, task=task, ep_ids=ep_ids)
         print(f"\n❌ 失败（exit={code}，{elapsed:.1f}s）")
         print(f"   报错摘要: {summary[:200]}")
 

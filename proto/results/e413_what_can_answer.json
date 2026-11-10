@@ -1,0 +1,9 @@
+{
+ "experiment": "E-413",
+ "n_events": 16,
+ "success_rate": 0.875,
+ "n_fails": 2,
+ "events_with_ep_ids": 0,
+ "can_link_memory_to_outcome": false,
+ "verdict": "只能回答操作成功率，不能回答记忆有效性"
+}
