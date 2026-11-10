@@ -85,6 +85,8 @@ CLIENT_CHECKS = [
     ("文档一致", "run_e396_doc_check.py"),
     # E-399：环境事件模块（主张6 最小实现，白名单守边界）
     ("环境事件", "run_e399_env_reg.py"),
+    # E-400：验证回归自动记录环境事件（闭环成立）
+    ("环境闭环", "run_e400_verify.py"),
 ]
 
 
@@ -252,8 +254,63 @@ def run_regression(verbose: bool = True) -> dict:
                 print(f"  ❌ {name}  {e}")
 
     all_pass = all(v["pass"] is True for v in results.values())
+    # E-400：把回归结果记成环境事件
+    #
+    # 《环管群》主张6 要求记录真实环境反馈，
+    # 但如果是手工记录，就永远只有测试数据。
+    # 这里让每次跑回归都自动落一条真实事件：
+    #   · 回归全过   → test_pass，outcome="N/N"
+    #   · 有失败     → test_fail，outcome="N/M"，detail 列出失败项
+    #
+    # 这是客观事实（脚本真的跑了、返回码真的如此），
+    # 不是我的主观评价 —— 符合 5.2 的「内部奖励不能冒充环境因果」。
+    _record_regression_event(results, all_pass)
+
     return {"all_pass": all_pass, "items": results,
             "skipped": [k for k, v in results.items() if v["pass"] is None]}
+
+
+def _record_regression_event(results: dict, all_pass: bool) -> None:
+    """
+    把一次回归的结果记成环境事件（E-400）。
+
+    失败不影响主流程 —— 环境记录是观测，不是门禁。
+    """
+    try:
+        sys.path.insert(0, _MEM)
+        from store_v2 import MemoryStore
+        import environment as env
+
+        if not os.path.exists(_DB):
+            return
+
+        st = MemoryStore(_DB)
+        env.init(st)
+
+        total = len(results)
+        passed = sum(1 for v in results.values() if v.get("pass") is True)
+        failed = [k for k, v in results.items() if v.get("pass") is False]
+
+        if all_pass:
+            env.record(
+                st, "test_pass",
+                source="iterate.py check",
+                outcome=f"{passed}/{total}",
+                detail="全部回归通过",
+                task="regression",
+            )
+        else:
+            env.record(
+                st, "test_fail",
+                source="iterate.py check",
+                outcome=f"{passed}/{total}",
+                detail=("失败项: " + ", ".join(failed[:8]))[:900],
+                task="regression",
+            )
+        st.con.close()
+    except Exception:
+        # 环境记录失败不阻断回归
+        pass
 
 
 # ============================================================
