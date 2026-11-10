@@ -1,0 +1,8 @@
+{
+ "experiment": "E-387",
+ "n_pairs": 24,
+ "sim_min": 0.421,
+ "sim_max": 0.852,
+ "sim_mean": 0.557,
+ "sim_median": 0.538
+}

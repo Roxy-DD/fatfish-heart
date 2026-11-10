@@ -75,6 +75,8 @@ CLIENT_CHECKS = [
     ("同轮续跑", "run_e378_same_turn.py"),
     # E-386：注入策略实验的可信判据（覆盖率可信、效率不可靠）
     ("注入策略", "run_e386_regression.py"),
+    # E-389：话题切换检测的否证（防止重复尝试已失败方案）
+    ("话题检测", "run_e389_falsified.py"),
 ]
 
 

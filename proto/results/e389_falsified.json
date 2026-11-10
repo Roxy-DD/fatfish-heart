@@ -1,0 +1,8 @@
+{
+ "experiment": "E-389",
+ "verdict": "相邻相似度不可用于话题切换检测（有双向反例）",
+ "has_high_case": true,
+ "has_low_case": true,
+ "is_unimodal": true,
+ "future_direction": "不猜话题，改看检索分数，或用固定N"
+}
