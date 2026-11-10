@@ -1,0 +1,66 @@
+{
+ "experiment": "E-384",
+ "n_turns": 30,
+ "rows": [
+  {
+   "N": 1,
+   "n_turns": 30,
+   "chars": 42423,
+   "hits": 85,
+   "coverage": 0.767,
+   "eff": 2.004,
+   "cost_ratio": 19.88
+  },
+  {
+   "N": 2,
+   "n_turns": 15,
+   "chars": 20059,
+   "hits": 39,
+   "coverage": 0.367,
+   "eff": 1.944,
+   "cost_ratio": 9.4
+  },
+  {
+   "N": 3,
+   "n_turns": 10,
+   "chars": 15008,
+   "hits": 21,
+   "coverage": 0.267,
+   "eff": 1.399,
+   "cost_ratio": 7.03
+  },
+  {
+   "N": 5,
+   "n_turns": 6,
+   "chars": 9854,
+   "hits": 27,
+   "coverage": 0.167,
+   "eff": 2.74,
+   "cost_ratio": 4.62
+  },
+  {
+   "N": 10,
+   "n_turns": 3,
+   "chars": 4164,
+   "hits": 15,
+   "coverage": 0.067,
+   "eff": 3.602,
+   "cost_ratio": 1.95
+  },
+  {
+   "N": 30,
+   "n_turns": 1,
+   "chars": 2134,
+   "hits": 5,
+   "coverage": 0.033,
+   "eff": 2.343,
+   "cost_ratio": 1.0
+  }
+ ],
+ "is_monotonic": true,
+ "eff_range": [
+  1.399,
+  3.602
+ ],
+ "verdict": "固定N是线性交换无最优；应改用话题切换触发"
+}

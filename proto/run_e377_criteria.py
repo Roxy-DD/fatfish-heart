@@ -122,10 +122,19 @@ check("段 0 的记录被正确识别为「不可判定」",
 # 设计意图断言：st.injected 存在，且守卫条件正确
 IDX = os.path.join(os.path.dirname(_HERE), "dsh-plugin", "index.js")
 src = open(IDX, encoding="utf-8").read()
-has_guard = "if (st.injected || st.injecting)" in src
+
+# E-381 给守卫加了 injectEveryTurn 开关，所以匹配要宽松：
+#   旧: if (st.injected || st.injecting)
+#   新: if (!injectEvery && (st.injected || st.injecting))
+has_guard = ("st.injected || st.injecting" in src)
 has_set = "st.injected = true" in src
-check("注入守卫存在（每会话只注入一次的设计）", has_guard)
+check("注入守卫存在（每会话只注入一次的设计）", has_guard,
+      "已含 E-381 的 injectEveryTurn 开关" if has_guard else "")
 check("st.injected 置位存在", has_set)
+
+# E-381：默认必须是「只注入一次」，否则行为被悄悄改变了
+has_switch_off = "injectEveryTurn: false" in src
+check("injectEveryTurn 默认 false（不改变现有行为）", has_switch_off)
 
 # 零注入是合法的：只要有会话已注入过，后续零注入正常
 check("「零注入」被理解为设计意图而非异常",

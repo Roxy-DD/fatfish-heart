@@ -1,0 +1,158 @@
+{
+ "experiment": "E-382",
+ "n_turns": 10,
+ "once_total_chars": 2134,
+ "every_total_chars": 15386,
+ "once_total_hits": 5,
+ "every_total_hits": 36,
+ "coverage_once": 0.1,
+ "coverage_every": 0.9,
+ "cost_ratio": 7.21,
+ "eff_ratio": 1.0,
+ "per_turn": {
+  "once": [
+   {
+    "turn": 1,
+    "query": "AGI 的核心观点是什么",
+    "chars": 2134,
+    "hits": 5,
+    "n_items": 5
+   },
+   {
+    "turn": 2,
+    "query": "版本回退怎么实现",
+    "chars": 0,
+    "hits": 0,
+    "n_items": 0
+   },
+   {
+    "turn": 3,
+    "query": "记忆系统为什么耗 token",
+    "chars": 0,
+    "hits": 0,
+    "n_items": 0
+   },
+   {
+    "turn": 4,
+    "query": "插件热重载要注意什么",
+    "chars": 0,
+    "hits": 0,
+    "n_items": 0
+   },
+   {
+    "turn": 5,
+    "query": "去重机制怎么设计",
+    "chars": 0,
+    "hits": 0,
+    "n_items": 0
+   },
+   {
+    "turn": 6,
+    "query": "检索质量怎么评估",
+    "chars": 0,
+    "hits": 0,
+    "n_items": 0
+   },
+   {
+    "turn": 7,
+    "query": "重要性的定义是什么",
+    "chars": 0,
+    "hits": 0,
+    "n_items": 0
+   },
+   {
+    "turn": 8,
+    "query": "怎么判断证据可信",
+    "chars": 0,
+    "hits": 0,
+    "n_items": 0
+   },
+   {
+    "turn": 9,
+    "query": "自重启怎么实现",
+    "chars": 0,
+    "hits": 0,
+    "n_items": 0
+   },
+   {
+    "turn": 10,
+    "query": "记忆怎么容灾",
+    "chars": 0,
+    "hits": 0,
+    "n_items": 0
+   }
+  ],
+  "every": [
+   {
+    "turn": 1,
+    "query": "AGI 的核心观点是什么",
+    "chars": 2134,
+    "hits": 5,
+    "n_items": 5
+   },
+   {
+    "turn": 2,
+    "query": "版本回退怎么实现",
+    "chars": 1479,
+    "hits": 13,
+    "n_items": 5
+   },
+   {
+    "turn": 3,
+    "query": "记忆系统为什么耗 token",
+    "chars": 1273,
+    "hits": 3,
+    "n_items": 5
+   },
+   {
+    "turn": 4,
+    "query": "插件热重载要注意什么",
+    "chars": 1276,
+    "hits": 3,
+    "n_items": 2
+   },
+   {
+    "turn": 5,
+    "query": "去重机制怎么设计",
+    "chars": 1117,
+    "hits": 1,
+    "n_items": 5
+   },
+   {
+    "turn": 6,
+    "query": "检索质量怎么评估",
+    "chars": 1557,
+    "hits": 3,
+    "n_items": 5
+   },
+   {
+    "turn": 7,
+    "query": "重要性的定义是什么",
+    "chars": 2446,
+    "hits": 4,
+    "n_items": 5
+   },
+   {
+    "turn": 8,
+    "query": "怎么判断证据可信",
+    "chars": 686,
+    "hits": 3,
+    "n_items": 5
+   },
+   {
+    "turn": 9,
+    "query": "自重启怎么实现",
+    "chars": 2392,
+    "hits": 0,
+    "n_items": 5
+   },
+   {
+    "turn": 10,
+    "query": "记忆怎么容灾",
+    "chars": 1026,
+    "hits": 1,
+    "n_items": 5
+   }
+  ]
+ }
+}

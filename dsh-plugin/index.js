@@ -100,6 +100,14 @@ const DEFAULTS = {
   autoInjectMaxChars: 1500,
   // E-320：低于此分数的检索结果不注入（避免不相关记忆污染上下文）
   minInjectScore: 1.0,
+  // E-381：注入策略开关（默认 false = 只注入一次，保持现状）
+  //
+  //   false → 会话首轮注入相关记忆，后续靠模型主动 mem_search（当前设计）
+  //   true  → 每轮都检索并注入（成本高，但记忆必然参与）
+  //
+  // 这是为 A/B 对照实验准备的开关，**默认不改变现有行为**。
+  // 是否切换要看实验数据，不凭直觉。
+  injectEveryTurn: false,
   autoRemember: true,
   reviewWindow: 8,
   reviewProvider: 'workbuddy',
@@ -127,6 +135,7 @@ if (_Schema && typeof _Schema.object === 'function') {
     autoInjectTopK: _Schema.number().default(DEFAULTS.autoInjectTopK),
     autoInjectMaxChars: _Schema.number().default(DEFAULTS.autoInjectMaxChars),
     minInjectScore: _Schema.number().default(DEFAULTS.minInjectScore),
+    injectEveryTurn: _Schema.boolean().default(DEFAULTS.injectEveryTurn),
     autoRemember: _Schema.boolean().default(DEFAULTS.autoRemember),
     reviewWindow: _Schema.number().default(DEFAULTS.reviewWindow),
     reviewProvider: _Schema.string().default(DEFAULTS.reviewProvider),
@@ -2252,7 +2261,17 @@ export function apply(ctx, config) {
 
       // ---- 相关记忆 + 前瞻：只在会话第一次注入 ----
       // 之后每一轮，模型靠"主动 mem_search"自己回忆，系统不再被动塞记忆。
-      if (st.injected || st.injecting) {
+      // E-381：注入策略开关
+      //
+      //   injectEveryTurn=false（默认）：
+      //     只注入一次，后续靠模型主动 mem_search —— 现状
+      //   injectEveryTurn=true：
+      //     每轮都检索并注入，st.injected 不置位
+      //
+      // 这个开关是为 A/B 对照实验准备的，默认不改变行为。
+      const injectEvery = cfg.injectEveryTurn === true
+
+      if (!injectEvery && (st.injected || st.injecting)) {
         // 已注入过，或正在注入中（E-348 防并发）：
         // 只补常驻指令（相关记忆不再自动塞）
         const contexts = Array.isArray(result.contexts) ? result.contexts : []
@@ -2274,8 +2293,22 @@ export function apply(ctx, config) {
       // 后果：formatProtected 的 full 参数永远是 false，
       //       "首轮给全文"的逻辑从未生效，永远走摘要模式。
       //       （E-231 设计的首轮全文被这行静默吃掉了）
-      const isFirstTurn = !st.injected
-      st.injected = true
+      // E-381：isFirstTurn 的语义要区分两种模式
+      //
+      //   injectEveryTurn=false：
+      //     isFirstTurn = !st.injected（就是真正的会话首轮）
+      //   injectEveryTurn=true：
+      //     st.injected 永不置位，所以要用另一个标记判断"是不是真的首轮"
+      //     否则每轮都给 L0/L1 全文（4333 字），成本爆炸
+      //
+      // 用 st.turnCount 计数：只有第 1 轮给全文，之后给摘要。
+      st.turnCount = (st.turnCount || 0) + 1
+      const isFirstTurn = injectEvery
+        ? st.turnCount === 1
+        : !st.injected
+      // E-381：只有「只注入一次」模式才置位 injected。
+      // 每轮注入模式必须保持 injected=false，否则下一轮会被守卫挡住。
+      if (!injectEvery) st.injected = true
       st.injecting = true
 
       // 等待前瞻完成（若还没跑完），超时保护，避免第一次响应卡太久

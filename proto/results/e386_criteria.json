@@ -1,0 +1,7 @@
+{
+ "experiment": "E-386",
+ "coverage_max_diff_pp": 13.3,
+ "coverage_monotonic": true,
+ "eff_spread": 2.203,
+ "switch_exists": true
+}

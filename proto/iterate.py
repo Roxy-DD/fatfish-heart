@@ -73,6 +73,8 @@ CLIENT_CHECKS = [
     ("注入判据", "run_e377_criteria.py"),
     # E-378：同一 turn 多次 steer 的真实证据（E-371 修复生效证明）
     ("同轮续跑", "run_e378_same_turn.py"),
+    # E-386：注入策略实验的可信判据（覆盖率可信、效率不可靠）
+    ("注入策略", "run_e386_regression.py"),
 ]
 
 

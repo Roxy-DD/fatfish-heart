@@ -1,0 +1,13 @@
+{
+ "experiment": "E-385",
+ "coverage_consistent": 5,
+ "eff_range_383": [
+  1.389,
+  2.343
+ ],
+ "eff_range_384": [
+  1.399,
+  3.602
+ ],
+ "verdict": "不改固定N；效率指标不可靠；应改用话题切换触发"
+}
