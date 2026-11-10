@@ -95,6 +95,8 @@ CLIENT_CHECKS = [
     ("结果关联", "run_e414_link_reg.py"),
     # E-416：周期汇报机制 + N 值标定（省 token）
     ("汇报机制", "run_e416_n_calib.py"),
+    # E-417：MESH_EP 让回归自动关联记忆（仍要求人工标注，不做自动推断）
+    ("自动关联", "run_e417_mesh_ep.py"),
 ]
 
 
@@ -283,6 +285,14 @@ def _record_regression_event(results: dict, all_pass: bool) -> None:
     把一次回归的结果记成环境事件（E-400）。
 
     失败不影响主流程 —— 环境记录是观测，不是门禁。
+
+    E-417：支持 MESH_EP 环境变量传入关联记忆 id（逗号分隔）。
+      用法：
+        MESH_EP=79e9614e,1c149c21 python iterate.py check E-418
+
+      ★ 仍然要求**人工标注**，不接受自动推断。
+        自动推断 = 模型自己说"这条有用"，违反《环管群》5.2。
+        环境变量只是让标注更方便，不改变"必须显式标注"的性质。
     """
     try:
         sys.path.insert(0, _MEM)
@@ -295,6 +305,10 @@ def _record_regression_event(results: dict, all_pass: bool) -> None:
         st = MemoryStore(_DB)
         env.init(st)
 
+        # E-417：读人工标注的关联记忆
+        ep_env = os.environ.get("MESH_EP", "").strip()
+        ep_ids = [x.strip() for x in ep_env.split(",") if x.strip()]
+
         total = len(results)
         passed = sum(1 for v in results.values() if v.get("pass") is True)
         failed = [k for k, v in results.items() if v.get("pass") is False]
@@ -306,6 +320,7 @@ def _record_regression_event(results: dict, all_pass: bool) -> None:
                 outcome=f"{passed}/{total}",
                 detail="全部回归通过",
                 task="regression",
+                ep_ids=ep_ids,
             )
         else:
             env.record(
@@ -314,6 +329,7 @@ def _record_regression_event(results: dict, all_pass: bool) -> None:
                 outcome=f"{passed}/{total}",
                 detail=("失败项: " + ", ".join(failed[:8]))[:900],
                 task="regression",
+                ep_ids=ep_ids,
             )
         st.con.close()
     except Exception:
