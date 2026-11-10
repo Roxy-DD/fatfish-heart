@@ -1,0 +1,9 @@
+{
+ "experiment": "E-373",
+ "old_removed": true,
+ "new_present": true,
+ "has_log": true,
+ "n_reentry": 0,
+ "n_after_fix": 0,
+ "n_steers": 14
+}
