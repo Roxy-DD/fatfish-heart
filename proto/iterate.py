@@ -71,6 +71,8 @@ CLIENT_CHECKS = [
     ("注入链路", "run_e361_chain_reg.py"),
     # E-377：注入次数的正确判据（零注入≠bug，多次须按进程段切分）
     ("注入判据", "run_e377_criteria.py"),
+    # E-378：同一 turn 多次 steer 的真实证据（E-371 修复生效证明）
+    ("同轮续跑", "run_e378_same_turn.py"),
 ]
 
 

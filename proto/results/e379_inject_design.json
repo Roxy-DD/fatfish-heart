@@ -1,0 +1,7 @@
+{
+ "experiment": "E-379",
+ "recall": 12,
+ "inject": 28,
+ "avg_chars": 1033.0,
+ "verdict": "证据不足，需 A/B 对照实验"
+}
