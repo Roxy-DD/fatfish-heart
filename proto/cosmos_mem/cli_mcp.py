@@ -866,6 +866,9 @@ def cmd_inject_log(st, payload) -> dict:
       protected_count  L0/L1 条数
       content_chars    注入内容总字符数
       has_prewarm      是否有前瞻
+      protected_mode   （E-390）'full' | 'summary'，验证 E-348 首轮判断
+      protected_preview（E-390）L0/L1 注入内容前 100 字
+      is_first_turn    （E-390）是否首轮
     """
     import json as _json
 
@@ -882,6 +885,10 @@ def cmd_inject_log(st, payload) -> dict:
                    "protected_count": payload.get("protected_count", 0),
                    "content_chars": payload.get("content_chars", 0),
                    "has_prewarm": bool(payload.get("has_prewarm")),
+                   # E-390：补观测字段，让 E-348/E-350 的修复可被验证
+                   "protected_mode": payload.get("protected_mode"),
+                   "protected_preview": payload.get("protected_preview"),
+                   "is_first_turn": payload.get("is_first_turn"),
                })
         return {"ok": True, "logged": len(ep_ids)}
     except Exception as e:

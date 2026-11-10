@@ -1,0 +1,7 @@
+{
+ "experiment": "E-390",
+ "base": "http://127.0.0.1:52160/cosmos-mem",
+ "n_history": 0,
+ "n_with_protected": 0,
+ "blind_spot": "injectHistory 未保存 protectedText 内容"
+}

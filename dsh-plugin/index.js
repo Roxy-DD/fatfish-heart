@@ -2414,6 +2414,18 @@ export function apply(ctx, config) {
         msTotal: Date.now() - tSearch0,
       })
       // 记录注入历史（供 UI「注入历史」Tab 展示）
+      //
+      // E-390：补两个观测字段
+      //
+      // 原实现只记了 protectedCount（条数），没记住内容，
+      // 导致两个修复**无法验证**：
+      //   · E-350（L0/L1 是否真的被注入）→ 只能看条数，看不到内容
+      //   · E-348（首轮是否真给全文 vs 摘要）→ 完全看不出来
+      //
+      // 补：
+      //   protectedPreview  前 120 字，能看出是全文还是标题
+      //   protectedMode     'full' | 'summary'，直接标明模式
+      const protectedMode = isFirstTurn ? 'full' : 'summary'
       const injectRec = {
         at: Date.now(),
         sid: sid.slice(0, 20),
@@ -2421,6 +2433,12 @@ export function apply(ctx, config) {
         mode,
         items: items.map((it) => ({ ep_id: it.ep_id, text: it.text })),
         protectedCount: protectedItems.length,
+        // E-390 观测字段
+        protectedMode,
+        protectedPreview: (protectedText || '').slice(0, 120),
+        bodyPreview: (body || '').slice(0, 80),
+        // E-348 的核心：首轮应给全文，后续给摘要
+        isFirstTurn,
         prewarm: prewarmText ? st.prewarm.prediction.slice(0, 200) : '',
       };
       injectHistory.unshift(injectRec)
@@ -2436,6 +2454,10 @@ export function apply(ctx, config) {
         protected_count: protectedItems.length,
         content_chars: (protectedText || '').length + (body || '').length,
         has_prewarm: !!prewarmText,
+        // E-390：落库也带上观测字段，否则 DB 侧仍无法验证 E-348/E-350
+        protected_mode: protectedMode,
+        protected_preview: (protectedText || '').slice(0, 100),
+        is_first_turn: isFirstTurn,
       }, undefined, 8000).catch(() => { /* 审计失败不影响主流程 */ })
 
       const contexts = Array.isArray(result.contexts) ? result.contexts : []

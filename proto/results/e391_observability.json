@@ -1,0 +1,10 @@
+{
+ "experiment": "E-391",
+ "n_pass": 15,
+ "n_total": 15,
+ "fields": [
+  "protected_mode",
+  "protected_preview",
+  "is_first_turn"
+ ]
+}

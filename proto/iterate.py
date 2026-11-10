@@ -77,6 +77,8 @@ CLIENT_CHECKS = [
     ("注入策略", "run_e386_regression.py"),
     # E-389：话题切换检测的否证（防止重复尝试已失败方案）
     ("话题检测", "run_e389_falsified.py"),
+    # E-391：注入观测字段（让 E-348/E-350 的修复可被验证）
+    ("注入观测", "run_e391_observability.py"),
 ]
 
 
