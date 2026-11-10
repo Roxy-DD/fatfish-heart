@@ -24,18 +24,46 @@ function check(name, cond, detail = '') {
   }
 }
 
-/** 假 agent：记录 steer 调用 */
+/**
+ * 假 agent：记录 steer 调用
+ *
+ * E-422：session 结构必须与真实 DSH 一致，否则测试会骗人。
+ *
+ * 真实结构（从 asar 提取 dsh-agent-loop/lib/index.js 确认）：
+ *   agent.session.surface.nodes   → seq 列表
+ *   agent.session.eventAt(seq)    → 取事件
+ *
+ * 之前假 agent 用的是 session.events，
+ * 而生产代码 countToolCalls 也读 session.events ——
+ * 两边一致所以测试一直"通过"，但真实环境里
+ * agent.session.events 根本不存在，恒返回 0。
+ *
+ * 这就是"测试和生产用了同一个错误假设"的典型。
+ */
 function makeAgent({ toolCalls = 0 } = {}) {
-  const events = []
+  const evs = new Map()
+  const nodes = []
+  function push(ev) {
+    const seq = nodes.length + 1
+    nodes.push(seq)
+    evs.set(seq, ev)
+  }
   for (let i = 0; i < toolCalls; i++) {
-    events.push({ type: 'tool/call', n: i })
+    push({ type: 'tool/call', n: i })
   }
   return {
     steerCalls: [],
     steer(msg) {
       this.steerCalls.push(msg)
     },
-    session: { events },
+    // 测试辅助：模拟新增一次工具调用
+    addToolCall() {
+      push({ type: 'tool/call', n: nodes.length })
+    },
+    session: {
+      surface: { nodes },
+      eventAt(seq) { return evs.get(seq) },
+    },
   }
 }
 
@@ -135,7 +163,7 @@ console.log('\n【3】上限保护：达到 maxConsecutive 后放行')
   const agent = makeAgent({ toolCalls: 10 })
   // 每次用不同的 turn，且工具调用数持续增长
   for (let t = 1; t <= 10; t++) {
-    agent.session.events.push({ type: 'tool/call', n: t })
+    agent.addToolCall()
     await ctx.fire('agent/turn-stopping', { agent, turn: t })
   }
 
@@ -251,6 +279,41 @@ console.log('\n【7】agent 缺少 steer 时安全跳过')
     threw = true
   }
   check('不抛异常', !threw)
+}
+
+// ---------- ⑧ countToolCalls 必须真的数出来 ----------
+console.log('\n【8】countToolCalls 不能恒返回 0（E-422）')
+{
+  const sup = createLifecycleSupervisor(
+    { lifecycle: { enabled: true } }, () => {}
+  )
+  const counter = sup.countToolCalls
+  if (typeof counter !== 'function') {
+    check('暴露了 countToolCalls', false, '未导出')
+  } else {
+    // 0 次
+    const a0 = makeAgent({ toolCalls: 0 })
+    check('0 次工具调用 → 0', counter(a0) === 0, String(counter(a0)))
+
+    // 5 次
+    const a5 = makeAgent({ toolCalls: 5 })
+    check('5 次工具调用 → 5', counter(a5) === 5, String(counter(a5)))
+
+    // 增长
+    const a10 = makeAgent({ toolCalls: 10 })
+    check('10 次工具调用 → 10', counter(a10) === 10, String(counter(a10)))
+
+    // 空 agent 不抛
+    let threw2 = false
+    try { counter(null) } catch (e) { threw2 = true }
+    check('null agent 不抛异常', !threw2)
+
+    // ★ 关键：如果接口不对，必须返回 0 但也说明"数不出来"
+    //   这里反向验证：给一个没有 surface 的 session，应返回 0
+    const brokenAgent = { session: { foo: 1 } }
+    check('不支持的 session 形状 → 0（不谎报）',
+      counter(brokenAgent) === 0, String(counter(brokenAgent)))
+  }
 }
 
 // ---------- 汇总 ----------

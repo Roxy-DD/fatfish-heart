@@ -180,21 +180,51 @@ export function createLifecycleSupervisor(cfg, log) {
     return s
   }
 
-  /** 工具调用计数（用于进展检测） */
+  /**
+   * 工具调用计数（用于进展检测）
+   *
+   * E-422 修：原实现全是猜的接口，实测恒返回 0。
+   *
+   * 原代码猜了 sess.events / sess.length / sess.size ——
+   * 从 DSH asar 提取真实的 dsh-agent-loop/lib/index.js 后确认：
+   *   · agent.session 存在（this.session，出现 29 次）
+   *   · agent.events / agent.messages / agent.history 都不存在（0 次）
+   *   · 读事件的真实方式是：
+   *       this.session.surface.nodes   → 所有 seq
+   *       this.session.eventAt(seq)    → 取事件
+   *     这段用法在 agent-loop 第 244-245 行有现成例子
+   *
+   * 为什么这个 bug 之前没被发现：
+   *   返回值恒为 0，而 lastToolCalls 初始 -1，
+   *   第一次 0 > -1 通过，看起来"正常"。
+   *   之后每次都是 0 <= 0 → 判为无进展 → streak 累加 → give-up。
+   *   表现就是"跑几轮后永久停止"。
+   */
   function countToolCalls(agent) {
     try {
-      const sess = agent.session || agent.state
+      const sess = agent && agent.session
       if (!sess) return 0
-      // 尝试多种可能的接口
-      if (Array.isArray(sess.events)) {
+
+      // 真实接口：session.surface.nodes + session.eventAt(seq)
+      if (sess.surface && Array.isArray(sess.surface.nodes) &&
+          typeof sess.eventAt === 'function') {
         let n = 0
-        for (const e of sess.events) {
-          if (e && (e.type === 'tool/call' || e.type === 'tool-call')) n++
+        for (const seq of sess.surface.nodes) {
+          const ev = sess.eventAt(seq)
+          if (!ev) continue
+          // 工具调用在 session 里记为 tool/call 或 tool-call
+          const t = ev.type
+          if (t === 'tool/call' || t === 'tool-call') n++
         }
         return n
       }
-      if (typeof sess.length === 'number') return sess.length
-      if (typeof sess.size === 'number') return sess.size
+
+      // 退化路径：万一将来接口变了，尽量不静默返回 0
+      if (typeof sess.countOf === 'function') {
+        const c = sess.countOf('tool/call')
+        if (typeof c === 'number') return c
+      }
+
       return 0
     } catch (e) {
       return 0
