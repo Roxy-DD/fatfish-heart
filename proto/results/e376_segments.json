@@ -1,0 +1,7 @@
+{
+ "experiment": "E-376",
+ "n_kernels": 34,
+ "n_segments": 17,
+ "max_per_seg": 8,
+ "verdict": "real_bug"
+}
