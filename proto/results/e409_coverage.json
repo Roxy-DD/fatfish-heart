@@ -1,0 +1,28 @@
+{
+ "experiment": "E-409",
+ "n_events": 7,
+ "by_kind": {
+  "exec_ok": 1,
+  "test_pass": 5,
+  "exec_fail": 1
+ },
+ "by_source": {
+  "python iterate.py check E-396": 1,
+  "run_e396_doc_check.py": 1,
+  "python -c 引号未转义": 1,
+  "iterate.py check": 4
+ },
+ "debug_kinds": 22,
+ "top_debug": {
+  "assemble-enter": 1109,
+  "assemble-scan": 1109,
+  "http-route-ok": 578,
+  "scan-debug": 150,
+  "auto-remember-model": 86,
+  "review-ok": 47,
+  "http-route-summary": 38,
+  "lifecycle-attached": 38,
+  "kernel-ready": 38,
+  "selfreload-ok": 29
+ }
+}
