@@ -1,0 +1,9 @@
+{
+ "experiment": "E-406",
+ "notes_with_test_word": 2,
+ "episodes_with_test_word": 18,
+ "test_eps": 6,
+ "real_eps": 12,
+ "need_clean": 0,
+ "clean_list": []
+}

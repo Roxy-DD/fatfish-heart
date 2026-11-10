@@ -120,19 +120,27 @@ def record(st, kind: str, source: str = "", outcome: str = "",
         return {"ok": False, "error": f"{type(e).__name__}: {e}"}
 
 
-def recent(st, limit: int = 20, kind: str = None) -> list:
-    """读最近的环境事件"""
+def recent(st, limit: int = 20, kind: str = None,
+           include_invalid: bool = False) -> list:
+    """
+    读最近的环境事件。
+
+    E-407：默认过滤 invalid_at（标记为测试数据的记录）。
+    这与记忆表的约定一致 —— 标记不删除，但默认不显示。
+    """
     try:
+        w = "" if include_invalid else "AND invalid_at IS NULL"
         if kind:
             rows = st.con.execute(
                 "SELECT event_id, at, kind, source, outcome, detail, "
                 "ep_ids, task FROM environment_events WHERE kind=? "
-                "ORDER BY at DESC LIMIT ?", (kind, limit)).fetchall()
+                f"{w} ORDER BY at DESC LIMIT ?", (kind, limit)).fetchall()
         else:
             rows = st.con.execute(
                 "SELECT event_id, at, kind, source, outcome, detail, "
                 "ep_ids, task FROM environment_events "
-                "ORDER BY at DESC LIMIT ?", (limit,)).fetchall()
+                f"WHERE 1=1 {w} ORDER BY at DESC LIMIT ?",
+                (limit,)).fetchall()
         out = []
         for r in rows:
             out.append({
@@ -146,13 +154,17 @@ def recent(st, limit: int = 20, kind: str = None) -> list:
 
 
 def stats(st) -> dict:
-    """环境事件统计"""
+    """环境事件统计（E-407：默认只看有效的）"""
     try:
         rows = st.con.execute(
             "SELECT kind, COUNT(*) FROM environment_events "
-            "GROUP BY kind").fetchall()
+            "WHERE invalid_at IS NULL GROUP BY kind").fetchall()
         by_kind = {k: n for k, n in rows}
         total = sum(by_kind.values())
+        # 已完成标记的（用于审计）
+        invalid_n = st.con.execute(
+            "SELECT COUNT(*) FROM environment_events "
+            "WHERE invalid_at IS NOT NULL").fetchone()[0]
         # 成功率（只针对成对的 kind）
         ok_n = sum(by_kind.get(k, 0) for k in
                    ("exec_ok", "test_pass", "http_ok",
@@ -164,7 +176,8 @@ def stats(st) -> dict:
         if ok_n + fail_n > 0:
             rate = round(ok_n / (ok_n + fail_n), 3)
         return {"total": total, "by_kind": by_kind,
-                "ok": ok_n, "fail": fail_n, "success_rate": rate}
+                "ok": ok_n, "fail": fail_n, "success_rate": rate,
+                "invalid": invalid_n}
     except Exception as e:
         return {"error": f"{type(e).__name__}: {e}"}
 

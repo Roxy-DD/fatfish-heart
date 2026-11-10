@@ -1,0 +1,20 @@
+{
+ "experiment": "E-405",
+ "episodes_found": 1,
+ "episodes_valid": 0,
+ "notes_found": 2,
+ "notes_valid": 1,
+ "todos_found": 0,
+ "todos_valid": 0,
+ "total_valid": 1,
+ "details": [
+  {
+   "ep_id": "dd51083f185e464d",
+   "text": "我电脑的登录密码是 8848",
+   "invalid": true,
+   "created_at": 1793175418.4613295,
+   "pattern": "登录密码是 8848",
+   "desc": "集成测试数据"
+  }
+ ]
+}

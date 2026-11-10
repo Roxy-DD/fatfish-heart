@@ -3,10 +3,10 @@
  "n_pass": 10,
  "n_total": 10,
  "total_events": 6,
- "regression_events": 2,
+ "regression_events": 3,
  "latest": {
-  "event_id": "69daee74866144b6",
-  "at": 1794300501.6195493,
+  "event_id": "4f35c5e3ba06441e",
+  "at": 1794300664.1276128,
   "kind": "test_pass",
   "source": "iterate.py check",
   "outcome": "22/22",

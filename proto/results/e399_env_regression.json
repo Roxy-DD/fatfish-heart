@@ -17,6 +17,7 @@
   },
   "ok": 10,
   "fail": 5,
-  "success_rate": 0.667
+  "success_rate": 0.667,
+  "invalid": 2
  }
 }

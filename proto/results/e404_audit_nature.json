@@ -1,0 +1,15 @@
+{
+ "experiment": "E-404",
+ "n_total": 64,
+ "n_marked": 0,
+ "n_normal": 64,
+ "kinds": {
+  "remember": 47,
+  "conflict": 8,
+  "note": 3,
+  "recall": 1,
+  "affect": 2,
+  "todo": 3
+ },
+ "seqs_to_clean": []
+}

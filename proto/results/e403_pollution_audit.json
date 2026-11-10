@@ -1,0 +1,28 @@
+{
+ "experiment": "E-403",
+ "episodes_total": 443,
+ "episodes_suspicious": 0,
+ "audit_test_sids": 1,
+ "env_total": 8,
+ "env_test": 2,
+ "notes_test": 0,
+ "todos_test": 0,
+ "total_pollution": 3,
+ "details": {
+  "episodes": [],
+  "env": [
+   {
+    "event_id": "c2964319e201488e",
+    "kind": "test_pass",
+    "source": "E-399 end-to-end",
+    "task": "E-399"
+   },
+   {
+    "event_id": "bb16fe8037ea4887",
+    "kind": "test_pass",
+    "source": "mem_environment 工具自检",
+    "task": "E-402"
+   }
+  ]
+ }
+}
