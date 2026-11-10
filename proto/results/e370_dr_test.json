@@ -1,0 +1,13 @@
+{
+ "experiment": "E-370",
+ "n_episodes": 5,
+ "n_vectors": 5,
+ "n_meta": 6,
+ "n_history": 1,
+ "episodes_lossless": true,
+ "vectors_lossless": true,
+ "meta_lossless": true,
+ "history_lossless": true,
+ "all_lossless": true,
+ "backup_kb": 104
+}

@@ -1,0 +1,9 @@
+{
+ "experiment": "E-365",
+ "n_enter": 772,
+ "n_attach": 33,
+ "n_steer": 12,
+ "n_noprog": 6,
+ "steer_per_attach": 0.364,
+ "verdict": "turn-stopping 不是每次回合结束都触发，拦截点选错"
+}

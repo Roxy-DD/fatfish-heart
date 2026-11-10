@@ -129,6 +129,8 @@ export function createLifecycleSupervisor(cfg, log) {
         totalSteers: 0,
         // E-356：连续无进展次数；达到 maxNoProgress 才真正放行
         noProgressStreak: 0,
+        // E-371：steer 是否正在进行中（替代 turn 号防重入）
+        steerInFlight: false,
       }
       states.set(agent, s)
     }
@@ -173,8 +175,38 @@ export function createLifecycleSupervisor(cfg, log) {
 
         const s = stateOf(agent)
 
-        // 防重入：同一 turn 只 steer 一次
-        if (s.lastSteerTurn === turn) return
+        // 防重入（E-371 修：原实现会静默吃掉所有后续 steer）
+        //
+        // 原实现：
+        //   if (s.lastSteerTurn === turn) return      // 静默 return，无日志
+        //
+        // 致命问题（从 DSH 源码 + 实测日志确认）：
+        //   turn() 是 while(true) 循环，turn 号在进入循环前定好：
+        //       const turn = phase.turn + 1;
+        //       phase.turn = turn;
+        //       while (true) {
+        //           ...
+        //           target = "next-step";    // steer 后走这里，**turn 不变**
+        //       }
+        //
+        //   → steer 一次后继续工作，仍在一个 turn 里；
+        //     工作完再次结束时，dispatch 的 turn 号还是同一个。
+        //   → lastSteerTurn === turn 成立 → 静默 return → 永远不再 steer。
+        //
+        // 实测证据（E-368/E-371）：
+        //   15:19:36  steer(turn=272)，lastSteerTurn=272
+        //   15:19:47~15:22:43  工作 23 步（turn 仍=272）
+        //   15:22:43  再次结束 → 静默 return → 零日志 → 停止
+        //
+        // 修法：
+        //   允许同一 turn 内多次 steer，靠 consecutive 计数封顶
+        //   （maxConsecutive 默认 20，足够安全）。
+        //   真正的防重入需求是「同一次 dispatch 内不重复 steer」，
+        //   这个用 in-flight 标记处理，而不是用 turn 号。
+        if (s.steerInFlight) {
+          log('lifecycle-reentry-skip', { turn })
+          return
+        }
 
         // 上限
         if (s.consecutive >= conf.maxConsecutive) {
@@ -239,8 +271,18 @@ export function createLifecycleSupervisor(cfg, log) {
         }
 
         // steer
-        const text = conf.message || DEFAULT_MESSAGE
-        agent.steer(makeUserMessage(text))
+        //
+        // E-371：用 steerInFlight 做真正的防重入（同步置位、同步释放）。
+        // steer() 是同步调用（只是往 inbox 推消息），所以置位后立即释放即可；
+        // 它的作用是防止同一次 dispatch 内重入，而不是阻止同一 turn 的多次
+        // 合法续跑（turn 号在 steer 后不会变，用 turn 号做防重入会永久锁死）。
+        s.steerInFlight = true
+        try {
+          const text = conf.message || DEFAULT_MESSAGE
+          agent.steer(makeUserMessage(text))
+        } finally {
+          s.steerInFlight = false
+        }
 
         s.consecutive += 1
         s.totalSteers += 1

@@ -1,0 +1,13 @@
+{
+ "experiment": "E-364",
+ "kinds_after": {
+  "assemble-enter": 42,
+  "assemble-scan": 42,
+  "selfreload-ok": 1,
+  "lifecycle-steer": 1,
+  "review-ok": 1
+ },
+ "n_lifecycle_after": 1,
+ "n_assemble_after": 84,
+ "n_errors": 1
+}

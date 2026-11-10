@@ -90,7 +90,7 @@ console.log('\n【1】基本拦截：有进展时应 steer')
 }
 
 // ---------- ② 防重入：同一 turn 只 steer 一次 ----------
-console.log('\n【2】防重入：同一 turn 重复触发只 steer 一次')
+console.log('\n【2】同一 turn 多次触发（E-371：应每次都 steer）')
 
 {
   const sup = createLifecycleSupervisor(
@@ -105,8 +105,19 @@ console.log('\n【2】防重入：同一 turn 重复触发只 steer 一次')
   await ctx.fire('agent/turn-stopping', { agent, turn: 5 })
   await ctx.fire('agent/turn-stopping', { agent, turn: 5 })
 
-  check('只 steer 1 次', agent.steerCalls.length === 1,
+  // E-371 修：同一 turn 内允许多次 steer
+  //
+  // 原断言「只 steer 1 次」固化的正是**导致永久停机**的行为。
+  // 源码确认：turn() 是 while(true) 循环，steer 后 target="next-step"，
+  // **turn 号不变**。所以同一 turn 的多次 turn-stopping 是正常工作流，
+  // 不是重入。用 turn 号做防重入会让第二次起永久静默 return。
+  check('同一 turn 内可多次 steer（E-371）',
+    agent.steerCalls.length === 3,
     `实际 ${agent.steerCalls.length}`)
+
+  // 同时确认没有把 reentry 当成重入挡掉
+  const reentry = logs.filter((l) => l.kind === 'lifecycle-reentry-skip')
+  check('未误判为重入', reentry.length === 0, `${reentry.length} 条`)
 }
 
 // ---------- ③ 上限保护 ----------
