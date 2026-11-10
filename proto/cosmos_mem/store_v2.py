@@ -286,48 +286,87 @@ class MemoryStore(MemoryStoreV1):
         按问题维度路由的检索。
         返回 (list[(ep, score, note)], qdims, stats)
           note = None 或 "这条能答X，但答不出Y"
+
+        E-350 修：原实现有两个严重问题
+
+          ① **丢弃 flag**：返回的三元组是 (ep, score, note)，
+             note 是字符串或 None，与 flag(int) 语义完全不同。
+             而 cli_mcp.cmd_search 的 scoped 分支把它当 note 用，
+             插件侧 `filter(it => it.flag === 2)` 永远拿不到东西
+             → **L0/L1 的"永远在场"从未生效**
+
+          ② **维度过滤会丢掉 L0/L1**：只有"能力维度与问题匹配"的记忆
+             才会进入 full/partial。L0/L1 是准则类记忆，
+             其能力维度往往与用户问题无关，于是被整体过滤掉。
+
+        修法：
+          · 返回值第四位带上 flag，由 cli_mcp 透传给插件
+          · 无论维度是否匹配，L0/L1 都必须强制保留（flag=2）
         """
         qdims = detect_question_dims(query)
 
         # 先做普通检索，取更多候选
         base = self.search(query, top=top * 3, include_invalid=include_invalid,
                            expand=False, hops=hops, fixed_slots=fixed_slots)
-        # base 元素是 (ep, score, slot) 三元组
-        norm = [(ep, sc, slot) for ep, sc, slot in base]
+        # base 元素是 (ep, score, flag) 三元组
+        norm = [(ep, sc, flag) for ep, sc, flag in base]
 
-        full, partial = [], []
-        for ep, sc, slot in norm:
+        full, partial, forced = [], [], []
+        for ep, sc, flag in norm:
+            # E-350：flag==2（L0/L1）无条件保留，不参与维度过滤
+            if flag == 2:
+                forced.append((ep, sc, flag, None))
+                continue
             s = self.scope_of(ep.ep_id)
             hit = sum(1 for d in qdims if s.get(d))
             miss = [d for d in qdims if not s.get(d)]
             if hit == len(qdims):
-                full.append((ep, sc, slot, None))
+                full.append((ep, sc, flag, None))
             elif hit > 0:
                 note = (f"能答{'/'.join(d for d in qdims if s.get(d))}，"
                         f"答不出{'/'.join(miss)}")
-                partial.append((ep, sc, slot, note))
+                partial.append((ep, sc, flag, note))
 
         picked = full + partial
         out = []
-        for ep, sc, slot, note in picked[:top]:
-            out.append((ep, sc, note))
+        # E-350 修（第二处）：L0/L1 不能占用 top 名额
+        #
+        # 上一版写成 picked = forced + full + partial 然后 [:top]，
+        # 但 forced 有 11 条，top=5 时直接把名额吃光，
+        # 普通检索结果一条都进不来（实测「Docker 容器」查询
+        # 返回 5 条全是 flag=2 且 cos=0.00）。
+        #
+        # 正确语义（与 store_v1.search 一致）：
+        #   普通结果照常给 top 条，L0/L1 追加在后面。
+        for ep, sc, flag, note in picked[:top]:
+            out.append((ep, sc, note, flag))
+        # 强制在场的 L0/L1 追加到末尾（不占 top 名额）
+        present = {ep.ep_id for ep, _, _, _ in out}
+        for ep, sc, flag, note in forced:
+            if ep.ep_id not in present:
+                out.append((ep, sc, note, flag))
         if expand:
             out = self._expand_scoped(out, include_invalid, hops)
 
-        stats = {"qdims": qdims, "full": len(full), "partial": len(partial)}
+        stats = {"qdims": qdims, "full": len(full),
+                 "partial": len(partial), "forced": len(forced)}
         return out, qdims, stats
 
     def _expand_scoped(self, base, include_invalid, hops=2):
-        """链式展开（复用 v1 的 _expand，但 base 是三元组+note）"""
-        triples = [(ep, sc, 0) for ep, sc, _ in base]
+        """链式展开（复用 v1 的 _expand，但 base 是四元组+note+flag）"""
+        triples = [(ep, sc, flag) for ep, sc, _, flag in base]
         expanded = self._expand(triples, include_invalid, hops)
-        # 重新附 note
+        # 重新附 note 与 flag
         out = []
-        for ep, sc, slot in expanded:
-            qdims = detect_question_dims("")   # 展开阶段不重判维度
-            s = self.scope_of(ep.ep_id)
+        base_flag = {ep.ep_id: flag for ep, _, _, flag in base}
+        for ep, sc, flag in expanded:
             note = None
-            out.append((ep, sc, note))
+            # 展开出来的新节点不保留原 flag；原节点保留
+            if ep.ep_id in base_flag:
+                flag = base_flag[ep.ep_id]
+            else:
+                flag = 0 if flag == 0 else flag
+            out.append((ep, sc, note, flag))
         return out
 
     # ---------- stats 扩展 ----------

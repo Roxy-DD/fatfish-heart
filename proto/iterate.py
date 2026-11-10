@@ -65,6 +65,8 @@ CLIENT_CHECKS = [
     ("消息提取", "check-scan-cursor.mjs"),
     # E-348：只注入一次（首轮判断顺序 + 并发防重）
     ("注入控制", "check-inject-once.mjs"),
+    # E-350：search_scoped 的 flag 透传与 L0/L1 名额语义
+    ("分层检索", "run_e351_scoped.py"),
 ]
 
 
@@ -186,7 +188,8 @@ def run_regression(verbose: bool = True) -> dict:
     if skipped:
         all_pass = False
 
-    # ---------- 前端安全检查（node 脚本）----------
+    # ---------- 客户端/针对性检查（node 或 python 脚本）----------
+    # E-351：支持 .py，因为有些检查需要读 SQLite / 调 Python 侧 API
     import shutil as _sh
     node = _sh.which("node")
     for name, script in CLIENT_CHECKS:
@@ -198,15 +201,18 @@ def run_regression(verbose: bool = True) -> dict:
                 print(f"  ⚠ {name}  脚本不存在，跳过")
             all_pass = False
             continue
-        if not node:
-            results[name] = {"pass": None, "output": "node 不可用",
+        is_py = script.endswith(".py")
+        runner = _sh.which("python") if is_py else node
+        if not runner:
+            results[name] = {"pass": None,
+                             "output": "python/node 不可用",
                              "summary": "跳过"}
             if verbose:
-                print(f"  ⚠ {name}  node 不可用，跳过")
+                print(f"  ⚠ {name}  解释器不可用，跳过")
             continue
         try:
-            r = subprocess.run([node, path], cwd=_HERE, env=env,
-                               capture_output=True, text=True, timeout=120,
+            r = subprocess.run([runner, path], cwd=_HERE, env=env,
+                               capture_output=True, text=True, timeout=180,
                                encoding="utf-8", errors="replace")
             out = (r.stdout or "") + (r.stderr or "")
             ok = r.returncode == 0

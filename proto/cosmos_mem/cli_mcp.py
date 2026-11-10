@@ -1642,9 +1642,19 @@ def cmd_search(st, payload) -> dict:
 
     if payload.get("scoped"):
         results, qdims, stats = st.search_scoped(query, top=top)
-        items = [{"ep_id": ep.ep_id, "text": ep.raw_text,
-                  "score": sc, "note": note}
-                 for ep, sc, note in results]
+        # E-350 修：原实现丢掉了 flag，导致插件侧
+        #   protectedItems = allItems.filter(it => it.flag === 2)
+        # 永远为空 → L0/L1「永远在场」从未生效。
+        # 现在 search_scoped 返回四元组 (ep, sc, note, flag)，
+        # 这里把它透传给插件。
+        items = []
+        for tup in results:
+            ep = tup[0]
+            sc = tup[1] if len(tup) > 1 else None
+            note = tup[2] if len(tup) > 2 else None
+            fl = tup[3] if len(tup) > 3 else 0
+            items.append({"ep_id": ep.ep_id, "text": ep.raw_text,
+                          "score": sc, "note": note, "flag": fl})
         return {"ok": True, "query": query, "dims": qdims,
                 "results": items, "stats": stats}
 
