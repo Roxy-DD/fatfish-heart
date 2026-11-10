@@ -1779,6 +1779,65 @@ def cmd_list(st, payload) -> dict:
     return {"ok": True, "items": items, "stats": st.stats()}
 
 
+def cmd_environment(st, payload) -> dict:
+    """
+    环境事件记录与查询（E-398，主张6 最小实现）。
+
+    ★ 设计原则（《环管群》5.2）：
+      「内部奖励不能冒充自然环境的因果筛选」
+      所以这里只接真实因果，不接人的评价、不接我的主观判断。
+
+    payload:
+      action   record / recent / stats / for_episode
+      kind     事件类型（必须白名单）
+      source   产生该动作的命令行 / URL / 文件路径
+      outcome  客观结果（退出码、状态码、耗时）
+      detail   附加细节（报错摘要等）
+      ep_ids   关联的记忆 id 数组（可选）
+      task     所属实验 / 任务
+      limit    recent 用，默认 20
+      ep_id    for_episode 用
+    """
+    try:
+        import environment as _env
+
+        # 首次调用自动建表
+        _env.init(st)
+
+        action = payload.get("action") or "recent"
+
+        if action == "record":
+            return _env.record(
+                st,
+                kind=payload.get("kind") or "",
+                source=payload.get("source") or "",
+                outcome=payload.get("outcome") or "",
+                detail=payload.get("detail") or "",
+                ep_ids=payload.get("ep_ids"),
+                task=payload.get("task") or "",
+            )
+
+        if action == "recent":
+            limit = int(payload.get("limit") or 20)
+            items = _env.recent(st, limit=limit,
+                                kind=payload.get("kind"))
+            return {"ok": True, "count": len(items), "events": items}
+
+        if action == "stats":
+            return {"ok": True, "stats": _env.stats(st)}
+
+        if action == "for_episode":
+            ep_id = payload.get("ep_id") or ""
+            if not ep_id:
+                return {"ok": False, "error": "ep_id 不能为空"}
+            items = _env.events_for_episode(st, ep_id)
+            return {"ok": True, "count": len(items), "events": items}
+
+        return {"ok": False, "error": f"未知 action: {action}"}
+    except Exception as e:
+        return {"ok": False, "error": f"{type(e).__name__}: {e}"}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--db", required=True)
@@ -1818,6 +1877,7 @@ def main():
         "config": cmd_config,
         "backup": cmd_backup,
         "history": cmd_history,
+        "environment": cmd_environment,
     }
     fn = handlers.get(args.cmd)
     if not fn:

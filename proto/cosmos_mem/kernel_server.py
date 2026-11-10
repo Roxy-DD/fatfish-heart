@@ -72,6 +72,7 @@ def handle(st, cmd: str, payload: dict) -> dict:
         "config": cli_mcp.cmd_config,
         "backup": cli_mcp.cmd_backup,
         "history": cli_mcp.cmd_history,
+        "environment": cli_mcp.cmd_environment,
     }
     fn = handlers.get(cmd)
     if not fn:

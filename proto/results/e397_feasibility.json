@@ -1,0 +1,29 @@
+{
+ "experiment": "E-397",
+ "claim4_feasible": false,
+ "claim4_reason": "需要多谱系并存，当前只有单一实例",
+ "claim6_feasible": "partial",
+ "claim6_reason": "代码执行是真实环境反馈，但范围窄",
+ "tables": [
+  "audit_log",
+  "ep_fts",
+  "ep_fts_config",
+  "ep_fts_data",
+  "ep_fts_docsize",
+  "ep_fts_idx",
+  "episodes",
+  "episodes_history",
+  "meta",
+  "notes",
+  "notes_history",
+  "sqlite_sequence",
+  "todos",
+  "vectors"
+ ],
+ "lineage_fields": [],
+ "hook_kinds": [
+  "policy",
+  "identity",
+  "principle"
+ ]
+}

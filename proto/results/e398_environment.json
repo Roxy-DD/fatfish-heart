@@ -1,0 +1,30 @@
+{
+ "experiment": "E-398",
+ "module": "environment.py",
+ "module_bytes": 5490,
+ "event_kinds": [
+  "exec_ok",
+  "exec_fail",
+  "test_pass",
+  "test_fail",
+  "file_exists",
+  "file_missing",
+  "proc_alive",
+  "proc_dead",
+  "http_ok",
+  "http_error",
+  "timeout"
+ ],
+ "stats": {
+  "total": 3,
+  "by_kind": {
+   "exec_fail": 1,
+   "exec_ok": 1,
+   "test_pass": 1
+  },
+  "ok": 2,
+  "fail": 1,
+  "success_rate": 0.667
+ },
+ "rejects_subjective": true
+}

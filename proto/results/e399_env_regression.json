@@ -1,0 +1,22 @@
+{
+ "experiment": "E-399",
+ "n_pass": 14,
+ "n_total": 14,
+ "event_kinds": 11,
+ "stats": {
+  "total": 13,
+  "by_kind": {
+   "exec_fail": 2,
+   "exec_ok": 3,
+   "file_exists": 1,
+   "file_missing": 1,
+   "http_error": 1,
+   "http_ok": 1,
+   "test_fail": 1,
+   "test_pass": 3
+  },
+  "ok": 8,
+  "fail": 5,
+  "success_rate": 0.615
+ }
+}
