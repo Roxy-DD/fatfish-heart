@@ -67,6 +67,8 @@ CLIENT_CHECKS = [
     ("注入控制", "check-inject-once.mjs"),
     # E-350：search_scoped 的 flag 透传与 L0/L1 名额语义
     ("分层检索", "run_e351_scoped.py"),
+    # E-361：插件实际调用链路能拿到 L0/L1（含数据新鲜度诚实检查）
+    ("注入链路", "run_e361_chain_reg.py"),
 ]
 
 

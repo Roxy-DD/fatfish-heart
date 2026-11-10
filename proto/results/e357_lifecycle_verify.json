@@ -1,0 +1,10 @@
+{
+ "experiment": "E-357",
+ "n_noprogs": 6,
+ "actions": {
+  "(无标记-旧版)": 6
+ },
+ "has_action_field": false,
+ "after_fix": 1,
+ "verdict": "not_active"
+}

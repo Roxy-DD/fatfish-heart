@@ -1,0 +1,10 @@
+{
+ "experiment": "E-361",
+ "n_pass": 5,
+ "n_total": 5,
+ "protected": 11,
+ "normal": 5,
+ "last_inject": 1794289343.7784712,
+ "fix_time": 1794292200.0,
+ "data_fresh": false
+}
