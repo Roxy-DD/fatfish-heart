@@ -81,6 +81,8 @@ CLIENT_CHECKS = [
     ("注入观测", "run_e391_observability.py"),
     # E-394：注入预算的两种语义（body 预算 vs 总量上限）
     ("注入预算", "run_e394_budget.py"),
+    # E-396：架构文档一致性（配置覆盖、决策记录、字段名）
+    ("文档一致", "run_e396_doc_check.py"),
 ]
 
 

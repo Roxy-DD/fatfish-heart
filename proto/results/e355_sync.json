@@ -1,12 +1,12 @@
 {
  "experiment": "E-355",
- "episodes": 439,
- "valid": 91,
- "invalid": 348,
+ "episodes": 443,
+ "valid": 94,
+ "invalid": 349,
  "prot": {
   "L0": 2,
   "L1": 9,
   "L2": 5
  },
- "generated_at": "2026-11-10 14:55"
+ "generated_at": "2026-11-10 16:37"
 }

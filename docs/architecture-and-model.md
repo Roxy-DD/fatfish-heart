@@ -117,10 +117,12 @@ sequenceDiagram
         C-->>K: results[{ep_id,text,score,flag}]
         K-->>P: JSON 响应
         P->>P: 分离 flag=2 / 普通结果<br/>minInjectScore=1.0 过滤低分
-        P->>P: formatProtected(首轮全文/后续标题)<br/>+ formatMemories(剩余预算)
+        P->>P: protectedMode = isFirstTurn ? 'full' : 'summary'<br/>remainChars = max(200, min(1500, 6000 - protectedChars))
+        P->>P: formatProtected(protectedItems, isFirstTurn)<br/>+ formatMemories(items, remainChars, minScore)
         P-->>H: contexts += 记忆文本
-        P->>P: st.injected = true
-    else 后续轮次
+        P->>P: st.injected = true（injectEveryTurn=false 时）
+        P->>K: inject_log {protected_mode, protected_preview, is_first_turn}
+    else 后续轮次（injectEveryTurn=false）
         P-->>H: contexts += memoryPolicy(一行提醒)
     end
     H->>U: 模型响应(带记忆)
@@ -130,19 +132,19 @@ sequenceDiagram
 ---
 
 <!-- AUTO-GENERATED: 由 proto/run_e355_sync_docs.py 生成，勿手改 -->
-> **实测快照**（自动生成于 2026-11-10 14:55）
+> **实测快照**（自动生成于 2026-11-10 16:37）
 >
 > | 指标 | 数值 |
 > |---|---|
-> | episodes 总行数 | 439 |
-> | 有效记忆 | 91 |
-> | 失效记忆（只打标记） | 348 |
-> | vectors 向量行 | 439 |
-> | audit_log 审计 | 227 |
-> | episodes_history 快照 | 221 |
+> | episodes 总行数 | 443 |
+> | 有效记忆 | 94 |
+> | 失效记忆（只打标记） | 349 |
+> | vectors 向量行 | 443 |
+> | audit_log 审计 | 248 |
+> | episodes_history 快照 | 222 |
 > | notes 笔记 | 6 |
 > | todos 待办 | 7 |
-> | meta 键值 | 406 |
+> | meta 键值 | 421 |
 > | L0 / L1 / L2 保护 | 2 / 9 / 5 |
 >
 > 数字由脚本读取真实 SQLite 生成，不是手写；DB 持续写入，重新运行脚本即可刷新。
@@ -348,10 +350,15 @@ total=16, normal=5, forced=11
 | minInjectScore 1.0 | E-321 标定 | 保留相关 100% / 过滤无关 60%（最优 1.1，差 0.1） |
 | 合并长度上限 1200 字 | E-312/313 | 最长记忆 6637 字 → 969 字，折叠原文进 history |
 | 强制注入追加末尾 | E-316/317 | 目标记忆排名从第 4 恢复到第 1 |
-| 会话首轮才注入 | E-336 | 主动检索 4 次 / 自动注入 26 次（此设计仍待复核） |
+| 会话首轮才注入 | E-381 加开关；E-382~386 A/B 后**保持现状** | 覆盖率 N=1:77% / N=30:3%，成本 N=1:19.9x / N=30:1.0x；效率指标不可靠，无最优 N |
+| 首轮给全文 / 后续给摘要 | E-348 修复，E-392 逻辑验证 | 原代码先置 `injected=true` 再读 `!st.injected`，恒为 false → 「首轮给全文」从未生效；全文 2856 字 vs 摘要 132 字，差 21 倍 |
 | 自重启改 patch 文件 | E-303 A/B | 只改 patch → 指纹不变；改 index.js 内容 → 指纹变化 |
 | sessions 挂 globalThis | E-307 | 模块级 Map 重载后重置导致重复记忆 |
 | scanCursor 按 sid + log 重置检测 | E-324/329 | 9 次 log 重置，cursor 失效导致 recentCount 长期 0 |
+| 防重入用 steerInFlight 而非 turn 号 | E-371 | turn 号在 steer 后不变，用它防重入会永久锁死（实测 turn 272 只 steer 1 次就停） |
+| 预算分两层：body 1500 / 总量 6000 | E-393/394 | autoInjectMaxChars 原只管 body，实测总注入 3156 字 = 预算 2.1 倍 |
+| L0/L1 全额注入不压缩 | E-393 | 11 条 2856 字；它们是红线与常驻准则，缺一条行为就变 |
+| 不用语义相似度检测话题切换 | E-387~389 **否证** | 24 对实测 0.421~0.852 单峰无分界；反例：「重复抱怨」0.852、「同一话题换词」0.464 |
 
 ---
 
@@ -364,7 +371,54 @@ total=16, normal=5, forced=11
 
 ---
 
-## 五、文件位置
+## 六、配置项（23 项，来自代码 DEFAULTS）
+
+> 自动生成于脚本运行时；值来自 `dsh-plugin/index.js` 的 `DEFAULTS`。
+> 语义说明是手写维护的——**如果代码新增配置但这里没说明，脚本会报出来**。
+
+| 配置 | 默认值 | 作用 | 说明 |
+|---|---|---|---|
+| `pythonPath` | `'python'` | 运行内核的 Python | 保持 `python` 即可 |
+| `kernelDir` | `'C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto\\cosmos_mem'` | 内核脚本目录 | cosmos_mem 所在路径 |
+| `dbPath` | `'C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto\\cosmos_mem\\dsh_mem.db'` | SQLite 数据库路径 | 全部记忆存这一个文件 |
+| `autoInject` | `true` | 是否自动注入记忆 | 关掉则完全靠模型主动 mem_search |
+| `autoInjectTopK` | `5` | 检索返回条数 | 普通结果占这么多名额，L0/L1 额外追加 |
+| `autoInjectMaxChars` | `1500` | **普通检索结果**的字符预算 | 只用限制 body；E-393 起明确不管 L0/L1 |
+| `minInjectScore` | `1.0` | 注入的最低检索分数 | E-321 标定 1.0：保留相关 100% / 过滤无关 60% |
+| `autoInjectMaxTotal` | `6000` | **总注入量**上限（含 L0/L1 全文） | E-393 新增，防止 L0/L1 增长后失控；默认 6000 |
+| `injectEveryTurn` | `false` | 注入策略开关 | false=只注入一次（默认）；true=每轮注入（实验用） |
+| `autoRemember` | `true` | 是否自动复盘记忆 | 每轮异步提炼值得记的内容 |
+| `reviewWindow` | `8` | 复盘窗口（最近几条消息） | 越大越能捕捉跨轮信息，成本也越高 |
+| `reviewProvider` | `'workbuddy'` | 复盘用的模型供应商 | 与主对话可不同 |
+| `reviewModel` | `'deepseek-v4.1-flash'` | 复盘用的模型 | 建议用小模型省钱 |
+| `reviewMaxTokens` | `900` | 复盘的最大输出 token | 限制提炼长度 |
+| `minImportance` | `0.5` | 自动记忆的最低重要性 | 低于此值不记，防止噪音 |
+| `minCost` | `0.7` | 固定席位的最低 cost | cost 低于此值不进固定席位 |
+| `prewarm` | `true` | 是否做会话前瞻 | 开新会话时推测用户要说什么，提前准备 |
+| `prewarmSlots` | `8` | 前瞻取几条高价值记忆 | 默认取 cost 最高的若干条 |
+| `prewarmKernel` | `true` | 是否预热内核 | 避免首次检索等模型加载 |
+| `warmupWaitMs` | `30000` | 预热等待上限 | 超时则不等，避免首响应卡太久 |
+| `debugLog` | `true` | 是否写调试日志 | 排障时开；正常关掉省 IO |
+| `httpBase` | `'/cosmos-mem'` | HTTP 路由前缀 | 管理界面调用这些端点 |
+| `lifecycle` | `{ enabled: true` | 生命周期监督器配置 | 拦截 turn-stopping 续跑；含 maxConsecutive / maxNoProgress |
+
+### 注入相关的两个预算（容易混）
+
+| 配置 | 管什么 | 默认 |
+|---|---|---|
+| `autoInjectMaxChars` | **只管普通检索结果**（body） | 1500 |
+| `autoInjectMaxTotal` | **管总注入量**，含 L0/L1 全文 | 6000 |
+
+E-393 之前只有一个 `autoInjectMaxChars`，名字说"最大注入字符数"，
+但实际 `formatProtected` 没有长度限制参数，L0/L1 全文不受控：
+实测 2856 字 L0/L1 + 300 字 body = 3156 字 = 预算的 2.1 倍。
+
+**为什么不压缩 L0/L1**：它们是红线与常驻准则，缺一条模型行为就变。
+压缩等于破坏设计意图，所以正确做法是拆成两个预算。
+
+---
+
+## 七、文件位置
 
 | 内容 | 路径 |
 |---|---|
