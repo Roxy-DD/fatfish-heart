@@ -20,7 +20,7 @@ flowchart TB
     end
 
     subgraph L4["④ DSH 插件层 · dsh-plugin/ (JS, 4 模块 ~4558 行)"]
-        IDX["index.js · 2456行<br/>name / inject / apply<br/>14 个 mem_* 工具<br/>17 条 HTTP 路由<br/>3 个事件监听"]
+        IDX["index.js · 2482行<br/>name / inject / apply<br/>14 个 mem_* 工具<br/>17 条 HTTP 路由<br/>3 个事件监听"]
         LIFE["lifecycle.js · 234行<br/>createLifecycleSupervisor<br/>拦截 turn-stopping / steer 续跑"]
         SELF["selfreload.js · 388行<br/>createSelfReloader<br/>patchFile 触发 HMR + reloadVerified"]
         CLI["client.js · 1480行<br/>React 管理界面 · 8 个 Tab"]
@@ -31,7 +31,7 @@ flowchart TB
         WARM["启动时预热<br/>BGE 模型 + FTS + jieba<br/>→ [kernel] ready"]
     end
 
-    subgraph L2["② 能力层 · cli_mcp.py (1822行) + 领域模块"]
+    subgraph L2["② 能力层 · cli_mcp.py (1832行) + 领域模块"]
         CMD["cmd_* 命令层<br/>29 个命令实现"]
         subgraph DOM["领域模块 (21 个)"]
             direction LR
@@ -57,7 +57,7 @@ flowchart TB
     end
 
     subgraph L1["① 数据层 · SQLite 单文件 dsh_mem.db"]
-        DB[("episodes 432<br/>vectors 432<br/>ep_fts 432<br/>audit_log 202<br/>episodes_history 220<br/>notes 3<br/>todos 0<br/>meta 393")]
+        DB[("episodes 438<br/>vectors 438<br/>ep_fts 438<br/>audit_log 210<br/>episodes_history 220<br/>notes 5<br/>todos 7<br/>meta 400")]
         GPU["BGE-small-zh · 512维<br/>onnxruntime-gpu · RTX3060"]
         FS["Git 版本标签<br/>E-001 ~ E-333"]
     end
@@ -126,6 +126,27 @@ sequenceDiagram
     H->>U: 模型响应(带记忆)
     Note over P,K: 阶段2 异步 autoRemember<br/>reviewAndRemember → callKernel('add')<br/>去重: md5 + 向量近重复(0.80) + 数字差异保护
 ```
+
+---
+
+<!-- AUTO-GENERATED: 由 proto/run_e355_sync_docs.py 生成，勿手改 -->
+> **实测快照**（自动生成于 2026-11-10 14:55）
+>
+> | 指标 | 数值 |
+> |---|---|
+> | episodes 总行数 | 439 |
+> | 有效记忆 | 91 |
+> | 失效记忆（只打标记） | 348 |
+> | vectors 向量行 | 439 |
+> | audit_log 审计 | 227 |
+> | episodes_history 快照 | 221 |
+> | notes 笔记 | 6 |
+> | todos 待办 | 7 |
+> | meta 键值 | 406 |
+> | L0 / L1 / L2 保护 | 2 / 9 / 5 |
+>
+> 数字由脚本读取真实 SQLite 生成，不是手写；DB 持续写入，重新运行脚本即可刷新。
+<!-- /AUTO-GENERATED -->
 
 ---
 
@@ -216,7 +237,7 @@ erDiagram
     }
 ```
 
-**当前实测行数**：episodes 432（有效 78 / 失效 354）、vectors 432、ep_fts 432、audit_log 202、episodes_history 220、notes 3、todos 0、meta 393。
+**当前实测行数**：episodes 438（有效 78 / 失效 354）、vectors 438、ep_fts 438、audit_log 210、episodes_history 220、notes 5、todos 7、meta 400。
 
 ### 2.2 概念模型（记忆是什么 · 怎么运作）
 
@@ -274,24 +295,46 @@ flowchart TB
 
 ```mermaid
 flowchart LR
-    Q["查询 text"] --> V["语义通道<br/>BGE 512维余弦 × 2.0"]
-    Q --> F["关键词通道<br/>FTS5 trigram BM25"]
-    Q --> ST["结构化通道<br/>person/time/location<br/>命中 +0.8 (默认关)"]
-    V --> FUSE["融合 scores{}"]
-    F --> FUSE
-    ST -.->|默认关闭| FUSE
-    FUSE --> FAM["熟练度加权<br/>×(1 + familiarity×fam)<br/>默认 0"]
-    FAM --> SORT["sorted 降序 → top[:k]"]
-    SORT --> FIX["固定席位追加 (flag=1)"]
-    FIX --> FORCE["L0/L1 强制在场 (flag=2)<br/>命中的保留分数<br/>未命中的 cos=0.0 追加末尾"]
-    FORCE --> RERANK["可选 CrossEncoder 精排<br/>E-207: 156ms, 78.3%"]
-    RERANK --> OUT["返回 (ep, score, flag)"]
-    OUT --> FILT["插件侧 minInjectScore=1.0<br/>过滤低分污染 (E-320/321)"]
+    Q["查询 text"] --> G{"调用方选哪条路径"}
 
-    style V fill:#e8f0fe
-    style F fill:#e8f0fe
-    style FORCE fill:#f0e8f8
-    style FILT fill:#fff4e6
+    G -->|"普通: search()"| V["语义通道<br/>BGE 512维余弦 × 2.0"]
+    G -->|"插件实际用: scoped=true"| SC["search_scoped()<br/>先普通检索取 top*3"]
+
+    V --> F["关键词通道<br/>FTS5 trigram BM25"]
+    F --> FUSE["融合 scores{}"]
+    FUSE --> FAM["熟练度加权<br/>×(1+familiarity×fam) 默认 0"]
+    FAM --> SORT["sorted 降序 → top[:k]"]
+    SORT --> FORCE1["L0/L1 强制在场 flag=2<br/>命中保留分数 / 未命中 cos=0 追加末尾"]
+    FORCE1 --> OUT1["(ep, score, flag)"]
+
+    SC --> DIM["能力维度过滤<br/>full = 维度全中<br/>partial = 部分命中带 note"]
+    DIM --> KEEP["E-350: flag==2 无条件保留<br/>不参与维度过滤"]
+    KEEP --> SORT2["普通结果占 top 名额"]
+    SORT2 --> FORCE2["L0/L1 追加末尾<br/>★ 不占 top 名额"]
+    FORCE2 --> OUT2["(ep, score, note, flag)<br/>★ 2026-11-10 修复前这里没有 flag"]
+
+    OUT1 --> FILT["插件侧 minInjectScore=1.0<br/>过滤低分"]
+    OUT2 --> FILT
+    FILT --> RERANK["可选 CrossEncoder 精排<br/>E-207: 156ms, 78.3%"]
+    RERANK --> DONE["注入上下文"]
+
+    style SC fill:#ffe6e6,stroke:#c0392b
+    style OUT2 fill:#ffe6e6,stroke:#c0392b
+    style FORCE2 fill:#ffe6e6,stroke:#c0392b
+    style KEEP fill:#fff4e6
+```
+
+**E-350 修复的三处（图中红色）**：
+
+| 问题 | 后果 |
+|---|---|
+| `search_scoped` 返回三元组 `(ep, sc, note)`，**没有 flag** | 插件 `filter(it => it.flag === 2)` 恒为空 → **L0/L1「永远在场」从未生效** |
+| L0/L1 参与「能力维度匹配」过滤 | 准则类记忆的维度与用户问题无关，被整体过滤掉 |
+| 修完第一处后写成 `forced + full + partial` 再 `[:top]` | 11 条强制记忆吃光 top=5，普通结果一条进不来 |
+
+修复后实测（三条不同查询结果一致）：
+```
+total=16, normal=5, forced=11
 ```
 
 ---

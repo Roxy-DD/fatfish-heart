@@ -51,16 +51,18 @@
   <a href="#c">六、设计决策与边界</a>
 </div>
 
+<!-- AUTO-GENERATED: 由 proto/run_e355_sync_docs.py 生成，勿手改 -->
 <div class="stat">
-  <div><b>432</b>episodes 行</div>
-  <div><b>78</b>有效记忆</div>
-  <div><b>21</b>Python 领域模块</div>
-  <div><b>29</b>kernel 命令</div>
-  <div><b>14</b>mem_* 工具</div>
-  <div><b>17</b>HTTP 路由</div>
-  <div><b>512</b>向量维度</div>
-  <div><b>43</b>Git 版本标签</div>
+  <div><b>439</b>episodes 行</div>
+  <div><b>91</b>有效记忆</div>
+  <div><b>348</b>失效(只打标记)</div>
+  <div><b>439</b>向量行</div>
+  <div><b>6</b>笔记</div>
+  <div><b>7</b>待办</div>
+  <div><b>2/9/5</b>L0/L1/L2</div>
 </div>
+<div class="sub">实测快照，自动生成于 2026-11-10 14:55，由 <code>proto/run_e355_sync_docs.py</code> 读取真实 SQLite 生成</div>
+<!-- /AUTO-GENERATED -->
 
 <h2 id="a1">一、系统架构图</h2>
 <div class="note">五层结构：宿主层 → DSH 插件层 → 常驻内核 → 能力层 → 数据层。插件通过 JSONL stdio 与常驻 Python 内核通信，避免每轮重启加载 BGE 模型。</div>
@@ -72,7 +74,7 @@ flowchart TB
         GUI["Web GUI · 127.0.0.1:52160"]
     end
     subgraph L4["④ DSH 插件层 · dsh-plugin/ (JS 4 模块 ~4558 行)"]
-        IDX["index.js · 2456行<br/>name/inject/apply<br/>14 个 mem_* 工具<br/>17 条 HTTP 路由<br/>3 个事件监听"]
+        IDX["index.js · 2482行<br/>name/inject/apply<br/>14 个 mem_* 工具<br/>17 条 HTTP 路由<br/>3 个事件监听"]
         LIFE["lifecycle.js · 234行<br/>拦截 turn-stopping / steer 续跑"]
         SELF["selfreload.js · 388行<br/>patchFile 触发 HMR + reloadVerified"]
         CLI["client.js · 1480行<br/>React 管理界面 · 8 Tab"]
@@ -81,7 +83,7 @@ flowchart TB
         KS["handlers{} 分发表<br/>29 个命令"]
         WARM["启动预热 BGE + FTS + jieba<br/>→ [kernel] ready"]
     end
-    subgraph L2["② 能力层 · cli_mcp.py (1822行) + 领域模块"]
+    subgraph L2["② 能力层 · cli_mcp.py (1832行) + 领域模块"]
         CMD["cmd_* 命令层"]
         ST1["store_v1 · 真值层<br/>SQLite / FTS5 / 向量 / 红线"]
         ST2["store_v2 · 组装层<br/>能力范围 / 完整性闸 / 情绪"]
@@ -100,7 +102,7 @@ flowchart TB
         RER["rerank_v1 精排"]
     end
     subgraph L1["① 数据层 · SQLite 单文件 dsh_mem.db"]
-        DB[("episodes/vectors/ep_fts 432<br/>audit_log 202<br/>episodes_history 220<br/>notes 3 / todos 0 / meta 393")]
+        DB[("episodes/vectors/ep_fts 438<br/>audit_log 210<br/>episodes_history 220<br/>notes 5 / todos 7 / meta 400")]
         GPU["BGE-small-zh · 512维<br/>onnxruntime-gpu RTX3060"]
         FS["Git 标签 E-001~E-333"]
     end
