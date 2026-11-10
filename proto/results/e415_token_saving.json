@@ -1,0 +1,11 @@
+{
+ "experiment": "E-415",
+ "default_chars": 72,
+ "report_chars": 120,
+ "total_turns_assumed": 20,
+ "baseline_chars": 12000,
+ "n5_chars": 1632,
+ "reply_saving_ratio": 0.933,
+ "report_every_default": 5,
+ "logic_ok": true
+}

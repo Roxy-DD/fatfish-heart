@@ -93,6 +93,8 @@ CLIENT_CHECKS = [
     ("实验记录", "run_e412_exp_run_reg.py"),
     # E-414：记忆↔环境结果关联（人工标注 --ep，不虚构）
     ("结果关联", "run_e414_link_reg.py"),
+    # E-416：周期汇报机制 + N 值标定（省 token）
+    ("汇报机制", "run_e416_n_calib.py"),
 ]
 
 

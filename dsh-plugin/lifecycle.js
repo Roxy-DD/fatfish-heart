@@ -55,21 +55,64 @@ const DEFAULT_CONFIG = {
   // E-356：连续多少个「无工具调用」回合后才真正放行。
   // 原逻辑是「1 次无进展就放行」，导致一轮纯文本总结后永久停止。
   maxNoProgress: 3,
+  // E-415/416：每多少轮做一次结构化汇报（0 = 关闭）。
+  //
+  // 标定依据（E-416 实测，不是拍脑袋）：
+  //   普通模板 72 字（每轮注入） / 汇报模板 120 字（低频）
+  //   假设 30 轮会话，约束「最长静默 <= 10 轮」（用户体验下限）
+  //
+  //   N    汇报次数   最长静默   steer 总字符
+  //   1       30         1         3600
+  //   5        6         5         2448
+  //   8        3         8         2304  ← 可行解里最省
+  //   10       3        10         2304
+  //   15       2        15         2256  ← 超出静默上限
+  //
+  // N=8 与 N=10 成本相同（2304），选 8 因为静默更短。
+  reportEvery: 8,
   message: '',
   debugLog: false,
 }
 
+/**
+ * 普通轮次的 steer 消息（E-415）
+ *
+ * ★ 关键设计：这一条会被**重复注入几十次**，
+ *   所以必须极短。它只负责三件事：
+ *     ① 提醒任务没完成
+ *     ② 给出停止判据
+ *     ③ 约束输出长度
+ *
+ * 详细的行为准则放在 system prompt 里（只注入一次），
+ * 不在这里重复 —— 否则每轮都在付同样的 token。
+ */
 const DEFAULT_MESSAGE = [
-  '### 继续自主迭代',
+  '### 继续',
   '',
-  '当前回合已结束，但任务尚未完成。请继续执行。',
+  '任务未完成。直接做下一步，不要复述计划。',
+  '停止条件：无剩余可验证工作，或需要用户信息。',
+  '输出：1-2 句说明做了什么，不写过程。',
+].join('\n')
+
+/**
+ * 周期汇报消息（E-415）
+ *
+ * 每 N 轮触发一次，要求结构化汇报。
+ * 因为它出现频率低（1/5），可以比普通消息长一些。
+ */
+const REPORT_MESSAGE = [
+  '### 周期汇报点',
   '',
-  '判断依据：',
-  '- 上一轮是否真的完成了某个**可验证**的目标？"提交+总结"不算完成',
-  '- 是否还有可验证的下一步？有就直接做，不要写"下一步我会做X"',
-  '- 只有在真正无剩余工作、或必须用户提供信息时才停止',
+  '先按下面四行汇报，然后直接继续，不要等确认：',
   '',
-  '如果确实没有值得继续的工作，请明确说明并结束。',
+  '```',
+  '进度: <已完成的可验证项>',
+  '发现: <真结论，无则写"无">',
+  '卡点: <阻塞项，无则写"无">',
+  '下一步: <一句话>',
+  '```',
+  '',
+  '每行不超过 40 字，不写过程。',
 ].join('\n')
 
 /** 生成一个消息 id（等价于 DSH 内部的 brandString(randomUUID())） */
@@ -276,10 +319,27 @@ export function createLifecycleSupervisor(cfg, log) {
         // steer() 是同步调用（只是往 inbox 推消息），所以置位后立即释放即可；
         // 它的作用是防止同一次 dispatch 内重入，而不是阻止同一 turn 的多次
         // 合法续跑（turn 号在 steer 后不会变，用 turn 号做防重入会永久锁死）。
+        //
+        // E-415：周期性插入汇报请求，而不是每轮都要求总结。
+        //   普通轮次 → 静默继续（省 token）
+        //   每 reportEvery 轮 → 结构化汇报（累积成果）
+        const reportEvery = conf.reportEvery ?? 5
+        const isReportTurn = reportEvery > 0 &&
+          s.consecutive > 0 &&
+          s.consecutive % reportEvery === 0
+
         s.steerInFlight = true
         try {
-          const text = conf.message || DEFAULT_MESSAGE
+          const text = isReportTurn
+            ? REPORT_MESSAGE
+            : (conf.message || DEFAULT_MESSAGE)
           agent.steer(makeUserMessage(text))
+          if (isReportTurn) {
+            log('lifecycle-report-turn', {
+              turn, consecutive: s.consecutive,
+              every: reportEvery,
+            })
+          }
         } finally {
           s.steerInFlight = false
         }

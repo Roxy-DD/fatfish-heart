@@ -1,0 +1,10 @@
+{
+ "experiment": "E-416",
+ "n_pass": 15,
+ "n_total": 15,
+ "default_chars": 72,
+ "report_chars": 120,
+ "current_N": 8,
+ "calibrated_N": 8,
+ "max_silent_limit": 10
+}
