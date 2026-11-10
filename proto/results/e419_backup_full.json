@@ -1,0 +1,20 @@
+{
+ "experiment": "E-419",
+ "n_pass": 20,
+ "n_total": 20,
+ "n_tables": 10,
+ "tables": [
+  "audit_log",
+  "environment_events",
+  "ep_fts",
+  "episodes",
+  "episodes_history",
+  "meta",
+  "notes",
+  "notes_history",
+  "todos",
+  "vectors"
+ ],
+ "old_verified": 3,
+ "new_verified": 10
+}

@@ -99,6 +99,8 @@ CLIENT_CHECKS = [
     ("自动关联", "run_e417_mesh_ep.py"),
     # E-418：关联覆盖率指标（主张6 的进度条）
     ("关联率", "run_e418_link_ratio.py"),
+    # E-419：备份全表校验（R1 红线：全部无损，不是三张表无损）
+    ("备份全表", "run_e419_backup_full.py"),
 ]
 
 

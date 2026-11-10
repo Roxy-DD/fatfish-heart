@@ -4,7 +4,7 @@
  "n_total": 9,
  "episodes_test_like": 0,
  "real_test_topic": 12,
- "env_total": 27,
- "env_valid": 25,
+ "env_total": 29,
+ "env_valid": 27,
  "env_invalid": 2
 }

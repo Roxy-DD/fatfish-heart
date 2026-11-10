@@ -70,15 +70,60 @@ def backup_db(db_path: str, out_path: str | None = None,
     return result
 
 
+def all_user_tables(db_path: str) -> list:
+    """
+    列出所有用户表（排除 FTS5 内部影子表）。
+
+    E-419：为什么需要这个
+      verify_backup 原来只校验 3 张表（episodes/vectors/meta），
+      但实际库里有 14 张表，未校验的 11 张共 1631 行：
+        notes / todos / episodes_history / audit_log / environment_events
+        ep_fts 及其影子表（_data/_idx/_docsize/_config）
+
+      这意味着**备份校验有盲区**：
+        notes 或 todos 丢了，校验仍然报 ok。
+
+      这与 R1「无损迁移」冲突 —— 那是要求「全部无损」，不是「三张表无损」。
+
+    ★ 为什么排除 FTS 影子表：
+      它们由 FTS5 内部维护（_data / _idx / _docsize / _config），
+      不能直接 COUNT 比较语义；而且 ep_fts 本身能代表内容。
+      重建 FTS 索引是可确定性重建的（R3），所以不需要逐行校验。
+    """
+    try:
+        con = sqlite3.connect(db_path)
+        names = [r[0] for r in con.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' "
+            "AND name NOT LIKE 'sqlite_%' ORDER BY name")]
+        # 找出所有 FTS 表名，排除它们的影子表
+        fts_bases = [n for n in names if n.endswith("_fts")
+                     or n == "ep_fts"]
+        shadow = set()
+        for base in fts_bases:
+            for suf in ("_data", "_idx", "_docsize", "_config",
+                        "_content", "_segments", "_segdir", "_stat"):
+                shadow.add(base + suf)
+        con.close()
+        return [n for n in names if n not in shadow]
+    except Exception:
+        return []
+
+
 def verify_backup(db_path: str, backup_path: str,
-                  tables: tuple = ("episodes", "vectors", "meta")) -> dict:
+                  tables: tuple = None) -> dict:
     """
     校验备份与源库的记录数是否一致。
 
-    返回 {"ok": bool, "counts": {表: (源, 备份)}}
+    E-419：tables=None 时自动校验**全部用户表**（除 FTS 影子表）。
+      原实现只校验 3 张表，notes/todos/history/audit 都在盲区里。
+
+    返回 {"ok": bool, "counts": {表: (源, 备份)}, "tables": [...]}
     """
     if not os.path.exists(backup_path):
         return {"ok": False, "error": "备份文件不存在"}
+
+    if tables is None:
+        tables = all_user_tables(db_path)
 
     counts = {}
     all_ok = True
@@ -102,7 +147,8 @@ def verify_backup(db_path: str, backup_path: str,
         if n1 is None or n2 is None or n1 != n2:
             all_ok = False
 
-    return {"ok": all_ok, "counts": counts}
+    return {"ok": all_ok, "counts": counts,
+            "tables": list(tables)}
 
 
 def restore_db(backup_path: str, db_path: str) -> dict:
