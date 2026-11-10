@@ -1,0 +1,10 @@
+{
+ "experiment": "E-394",
+ "n_pass": 19,
+ "n_total": 19,
+ "defaults": {
+  "autoInjectMaxChars": 1500,
+  "autoInjectMaxTotal": 6000
+ },
+ "estimated_total": 3592
+}

@@ -100,6 +100,9 @@ const DEFAULTS = {
   autoInjectMaxChars: 1500,
   // E-320：低于此分数的检索结果不注入（避免不相关记忆污染上下文）
   minInjectScore: 1.0,
+  // E-393：总注入量上限（含 L0/L1 全文 + 普通结果）
+  // autoInjectMaxChars 只管 body，这个管总量，防止 L0/L1 增长后失控
+  autoInjectMaxTotal: 6000,
   // E-381：注入策略开关（默认 false = 只注入一次，保持现状）
   //
   //   false → 会话首轮注入相关记忆，后续靠模型主动 mem_search（当前设计）
@@ -136,6 +139,7 @@ if (_Schema && typeof _Schema.object === 'function') {
     autoInjectMaxChars: _Schema.number().default(DEFAULTS.autoInjectMaxChars),
     minInjectScore: _Schema.number().default(DEFAULTS.minInjectScore),
     injectEveryTurn: _Schema.boolean().default(DEFAULTS.injectEveryTurn),
+    autoInjectMaxTotal: _Schema.number().default(DEFAULTS.autoInjectMaxTotal),
     autoRemember: _Schema.boolean().default(DEFAULTS.autoRemember),
     reviewWindow: _Schema.number().default(DEFAULTS.reviewWindow),
     reviewProvider: _Schema.string().default(DEFAULTS.reviewProvider),
@@ -2345,23 +2349,35 @@ export function apply(ctx, config) {
       // E-231：L0/L1 首轮给全文，后续只给标题（省 token 且避免挤占用户记忆）
       const protectedText = formatProtected(protectedItems, isFirstTurn)
 
-      // E-288 修：普通记忆必须用**真正剩余**的预算。
+      // 预算语义（E-393 澄清并修正）
       //
-      // 原代码：
-      //   const remainChars = Math.max(300,
-      //     (cfg.autoInjectMaxChars ?? 1500) - (st.injected ? 0 : 0))
-      //                                              ^^^^^^^^^^^^^^^^^^^
-      //   两个三元分支都是 0 —— 等于没扣任何东西！
+      // 原实现的问题：
+      //   remainChars = max(300, totalBudget - protectedChars)
+      //   实测 protectedChars = 2856，totalBudget = 1500
+      //   → remainChars = max(300, -1356) = 300
+      //   → 总注入 = 2856 + 300 = 3156 字 = 预算的 2.1 倍
       //
-      // 后果：首轮 L0/L1 全文 2856 字 + 检索结果 1500 字 = 4356 字，
-      //       是预算（1500）的 2.9 倍，用户记忆被常驻准则挤爆。
+      //   autoInjectMaxChars 名字说「最大注入字符数」，
+      //   实际只限制了 body，L0/L1 全文不受任何限制。
+      //   这是**名字与行为不一致**，会误导使用者。
       //
-      // 现在：从总预算里扣掉常驻实际占用的字符数，再给检索结果。
-      const totalBudget = cfg.autoInjectMaxChars ?? 1500
+      // 修正后的语义（两个独立预算）：
+      //   autoInjectMaxChars  只管普通检索结果（body）的预算
+      //   autoInjectMaxTotal  （新增）管总注入量，超了就压缩 body
+      //
+      // L0/L1 为什么不能压缩：
+      //   它们是红线与常驻准则，缺一条行为就变。
+      //   压缩它们等于破坏设计意图（E-231 / docs/72）。
+      //   所以正确做法是：L0/L1 全额注入，用独立的总量上限保护极值。
+      const bodyBudget = cfg.autoInjectMaxChars ?? 1500
+      const maxTotal = cfg.autoInjectMaxTotal ?? 6000
       const protectedChars = (protectedText || '').length
+
+      // body 的可用预算 = min(body 预算, 总量上限剩余)
+      // 至少留 200 字，避免 L0/L1 过长时 body 完全为 0
       const remainChars = Math.max(
-        300,                                   // 至少留一点，避免为 0
-        totalBudget - protectedChars
+        200,
+        Math.min(bodyBudget, maxTotal - protectedChars)
       )
       // E-320：低分结果不注入（避免不相关记忆污染上下文）
       //

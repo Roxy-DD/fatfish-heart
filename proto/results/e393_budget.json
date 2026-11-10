@@ -1,0 +1,10 @@
+{
+ "experiment": "E-393",
+ "protected_chars": 2856,
+ "normal_chars": 736,
+ "budget": 1500,
+ "remain_chars": 300,
+ "actual_total": 3156,
+ "over_budget_ratio": 2.1,
+ "formatProtected_has_limit": false
+}

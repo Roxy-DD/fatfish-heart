@@ -79,6 +79,8 @@ CLIENT_CHECKS = [
     ("话题检测", "run_e389_falsified.py"),
     # E-391：注入观测字段（让 E-348/E-350 的修复可被验证）
     ("注入观测", "run_e391_observability.py"),
+    # E-394：注入预算的两种语义（body 预算 vs 总量上限）
+    ("注入预算", "run_e394_budget.py"),
 ]
 
 
