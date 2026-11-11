@@ -120,6 +120,18 @@ if len(after) >= 1:
     check("同一 turn 内 toolCalls 不减", monotonic,
           f"{len(by_turn)} 个 turn")
 
+    # E-426：实测 turn 280 的序列 484 → 493 → 504，证明计数在真实增长
+    for turn, vals in by_turn.items():
+        if len(vals) >= 2 and all(v is not None for v in vals):
+            grew = vals[-1] > vals[0]
+            check(f"turn {turn} 的 toolCalls 有增长",
+                  grew, f"{vals[0]} → {vals[-1]}")
+
+    # 打印所有 turn 的序列，便于人工核对
+    print("\n   各 turn 的 toolCalls 序列：")
+    for turn in sorted(by_turn):
+        print(f"     turn {turn}: {by_turn[turn]}")
+
 # ---------- ⑤ no-progress 是否还会误判 ----------
 print("\n⑤ no-progress 误判情况")
 

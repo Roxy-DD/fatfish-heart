@@ -71,9 +71,15 @@ const DEFAULT_CONFIG = {
   // N=8 与 N=10 成本相同（2304），选 8 因为静默更短。
   reportEvery: 8,
   // E-423：诊断开关——把 agent.session 的真实结构打一次日志。
-  //   用于确认 countToolCalls 到底该读什么（E-422 改过一次仍返回 0）。
-  //   确认后应关掉，避免每次会话都写一条大日志。
-  debugShape: true,
+  //
+  // 已于 11-11 08:31 完成诊断，结论：
+  //   agent.session.surface.nodes + eventAt(seq) 是正确的读法
+  //   事件类型是 tool/result（不是 tool/call）
+  //   实测 toolCalls: 484 → 493 → 504 单调递增，进展检测正常
+  //
+  // 因此关掉，避免每次会话都写一条大日志（含 1028 个 node 的类型统计）。
+  // 需要重新诊断时改成 true 即可。
+  debugShape: false,
   message: '',
   debugLog: false,
 }
