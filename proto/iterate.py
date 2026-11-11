@@ -105,6 +105,8 @@ CLIENT_CHECKS = [
     ("字段比对", "run_e420_field_level.py"),
     # E-421：R4 可塑性直接验证（四条红线里唯一曾缺直接测试的）
     ("R4可塑性", "run_e421_r4.py"),
+    # E-424：toolCalls 真实计数证据（从日志验证，不只靠假 agent）
+    ("真实计数", "run_e424_toolcalls.py"),
 ]
 
 
