@@ -405,6 +405,22 @@ export function createLifecycleSupervisor(cfg, log) {
               streak: s.noProgressStreak, limit,
               action: 'give-up',
             })
+            // E-425：give-up 后必须重置 streak，否则永久锁死
+            //
+            // 实测证据（11-11 08:22~08:23）：
+            //   streak: 3 → give-up
+            //   streak: 4 → give-up
+            //   streak: 5 → give-up
+            //   streak: 6 → give-up
+            //   之后每一轮都是 give-up，永不再 steer。
+            //
+            // 原代码在这里直接 return，streak 保持 >= limit，
+            // 所以下一次判定必然又 >= limit —— 等于永久禁用续跑。
+            //
+            // 修法：放行这一次，然后把 streak 归零，
+            // 让后续轮次重新获得 maxNoProgress 次机会。
+            // （安全边界仍在：consecutive 受 maxConsecutive 约束）
+            s.noProgressStreak = 0
             return
           }
           log('lifecycle-no-progress', {

@@ -213,6 +213,25 @@ console.log('\n【4】进展检测：没有新工具调用时不 steer')
   check('记录了 no-progress 日志', noProg.length > 0, `${noProg.length} 条`)
   const gaveUp = noProg.filter((l) => l.action === 'give-up')
   check('记录了 give-up 动作', gaveUp.length >= 1, `${gaveUp.length} 条`)
+
+  // ★ E-425：give-up 后不能永久锁死
+  //
+  // 实测证据（11-11 08:22~08:23）：
+  //   streak: 3 → give-up
+  //   streak: 4 → give-up
+  //   streak: 5 → give-up
+  //   streak: 6 → give-up
+  // 之后每一轮都是 give-up，永不再 steer。
+  //
+  // 原代码 give-up 时直接 return，streak 保持 >= limit，
+  // 下一次判定必然又 >= limit → 永久禁用续跑。
+  // 修复：give-up 后把 streak 归零，让后续轮次重新获得机会。
+  const beforeRetry = agent.steerCalls.length
+  await ctx.fire('agent/turn-stopping', { agent, turn: 5 })
+  const afterRetry = agent.steerCalls.length
+  check('give-up 之后能重新 steer（不永久锁死）',
+    afterRetry > beforeRetry,
+    `${beforeRetry} → ${afterRetry}`)
 }
 
 // ---------- ⑤ 用户消息清零 ----------
