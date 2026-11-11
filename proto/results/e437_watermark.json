@@ -1,0 +1,9 @@
+{
+ "experiment": "E-437",
+ "n_pass": 8,
+ "n_total": 8,
+ "watermark": 448,
+ "n_episodes": 448,
+ "watermark_catches_net_decrease": true,
+ "watermark_catches_delete_plus_add": false
+}

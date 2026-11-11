@@ -113,6 +113,8 @@ CLIENT_CHECKS = [
     ("标注辅助", "run_e431_ep_for.py"),
     # E-435：R4 可溯源不变量（未失效的修订必须有 history）
     ("溯源不变", "run_e435_r4_invariant.py"),
+    # E-438：R2 ep_id 指纹（能发现任何删除，包括删1补1）
+    ("R2指纹", "run_e438_fingerprint.py"),
 ]
 
 

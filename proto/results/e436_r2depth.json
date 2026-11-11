@@ -1,0 +1,6 @@
+{
+ "experiment": "E-436",
+ "has_watermark": false,
+ "row_count_check_blind": true,
+ "n_delete_statements": 0
+}

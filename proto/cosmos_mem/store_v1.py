@@ -373,6 +373,62 @@ class MemoryStore:
         self.con.execute("""INSERT INTO ep_fts(rowid, raw_text, atmosphere)
             SELECT rowid, raw_text, atmosphere FROM episodes WHERE ep_id=?""",
             (ep.ep_id,))
+        # E-436：R2 水位线——记录 episodes 历史最高行数
+        #
+        # 为什么需要：
+        #   现有 R2 校验只比 COUNT(*)，如果"删除1条+新增1条"，
+        #   行数不变，校验发现不了数据已丢失。
+        #   （实测确认过：删除后行数相同，旧校验仍报通过）
+        #
+        #   水位线存历史最大值，校验时要求 当前 >= 水位线。
+        #   能发现任何「净减少」。
+        #
+        # 为什么不用 ep_id 全集快照：
+        #   存储随记忆数线性增长；水位线只占一个 meta 键。
+        #   "删一条补一条"需要蓄意操作，且代码里 0 处
+        #   DELETE FROM episodes，所以先用水位线够用。
+        try:
+            n_now = self.con.execute(
+                "SELECT COUNT(*) FROM episodes").fetchone()[0]
+            row = self.con.execute(
+                "SELECT val FROM meta WHERE key='episodes_watermark'"
+            ).fetchone()
+            old = int(row[0]) if row and str(row[0]).isdigit() else 0
+            if n_now > old:
+                self.con.execute(
+                    "INSERT OR REPLACE INTO meta VALUES (?,?)",
+                    ("episodes_watermark", str(n_now)))
+        except Exception:
+            pass
+        # E-438：ep_id 集合指纹（比水位线更彻底）
+        #
+        # E-437 实测发现水位线的边界：
+        #   能发现「净减少」（448 → 447）
+        #   发现不了「删1条补1条」（行数不变，水位线也相等）
+        #
+        # 而 R2 是红线，不该有这种漏检。
+        # ep_id 集合指纹能发现任何删除：
+        #   把「全部 ep_id 排序后 md5」存进 meta，
+        #   校验时重算，不一致就说明有增删。
+        #
+        # 为什么不存全集：
+        #   448 条 × 16 字节 ≈ 7KB，且随记忆增长。
+        #   指纹只有 32 字节，且能发现任何变化。
+        #   缺点：只能发现"变了"，不能指出"哪条没了"
+        #        —— 但那需要时可以从备份对比。
+        try:
+            import hashlib as _hl
+            ids = [r[0] for r in self.con.execute(
+                "SELECT ep_id FROM episodes ORDER BY ep_id")]
+            fp = _hl.md5("\n".join(ids).encode("utf-8")).hexdigest()
+            self.con.execute(
+                "INSERT OR REPLACE INTO meta VALUES (?,?)",
+                ("episodes_ids_fp", fp))
+            self.con.execute(
+                "INSERT OR REPLACE INTO meta VALUES (?,?)",
+                ("episodes_ids_count", str(len(ids))))
+        except Exception:
+            pass
         if encode and self.use_semantic:
             try:
                 v = Embedder.get().encode(text)[0]

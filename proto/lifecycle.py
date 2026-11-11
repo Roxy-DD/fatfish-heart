@@ -376,17 +376,30 @@ def migrate_to(vid: str, reason: str = "",
         f"代码迁移到 {target['commit']}: {'✅' if code == 0 else '❌ ' + out[:100]}")
 
     # ---------- ③ 迁移数据 ----------
-    for name, rel in (target.get("artifacts") or {}).items():
+    # E-435：artifacts 为空时，下面这个循环一次都不执行，
+    # 迁移报告里也不会出现任何"数据"字样 → 看起来成功，实际只迁了代码。
+    # 这是"静默失败"（返回 ok 但没做该做的事），必须显式说出来。
+    artifacts = target.get("artifacts") or {}
+    if not artifacts:
+        report["steps"].append(
+            f"⚠ 数据: 版本 {vid} 无快照（artifacts 为空）"
+            f" → 代码已迁移，但记忆库保持当前内容，未回滚")
+        report["data_migrated"] = False
+    for name, rel in artifacts.items():
         src = os.path.join(_HERE, rel)
         dst = VERSION_PARTS.get(name)
         if not dst or not os.path.exists(src):
             report["steps"].append(f"数据 {name}: 跳过（源不存在）")
+            report["data_migrated"] = False
             continue
         try:
             shutil.copy2(src, dst)
             report["steps"].append(f"数据 {name}: ✅ 已恢复")
         except Exception as e:
             report["steps"].append(f"数据 {name}: ❌ {e}")
+            report["data_migrated"] = False
+    if "data_migrated" not in report and artifacts:
+        report["data_migrated"] = True
 
     # ---------- ④ 更新清单 ----------
     m["current"] = vid
@@ -396,6 +409,87 @@ def migrate_to(vid: str, reason: str = "",
     _save_manifest(m)
 
     report["ok"] = code == 0
+    return report
+
+
+def register_tag(vid: str, commit: str | None = None,
+                 status: str = "ok", reason: str = "",
+                 note: str = "", with_artifacts: bool = False) -> dict:
+    """
+    把一个**已存在的 git tag** 登记进 versions.json（不新建 commit / 不复制 DB）。
+
+    E-434：实查发现 git 有 79 个 tag，versions.json 只登记了 8 个，
+    导致 migrate_to() 对 71 个 tag 一律抛 VersionError。
+    本函数只补登记，让版本级环（主张3「旧版本可继续独立存在」）从"tag 在但不可达"
+    变成"可在清单里被迁移"。
+
+    诚实边界：
+      · with_artifacts=False（默认）→ 只登记代码版本，artifacts 为空，
+        迁移时记忆库**不会**回滚。E-435 起这种情况会在报告里明说。
+      · 要真正的"数据也回滚"，必须有当时的 DB 快照，而历史 tag 大多没有。
+    """
+    m = _load_manifest()
+    if _find(m, vid):
+        raise VersionError(f"版本已登记: {vid}")
+
+    tags = set(all_tags())
+    if vid not in tags:
+        raise VersionError(f"git 里没有这个 tag: {vid}")
+
+    code, out = _git("rev-list", "-n", "1", vid)
+    real_commit = out.strip() if code == 0 else ""
+    if not real_commit:
+        raise VersionError(f"无法解析 tag {vid} 的 commit")
+
+    # 该 tag 的提交时间（用于排序，不能全用 time.time()）
+    c2, ts = _git("log", "-1", "--format=%ct", vid)
+    at = int(ts.strip()) if c2 == 0 and ts.strip().isdigit() else time.time()
+
+    artifacts = {}
+    if with_artifacts:
+        for name, src in VERSION_PARTS.items():
+            ext = os.path.splitext(src)[1]
+            dst = os.path.join(_SNAP, f"{vid}{'.' + name if name != 'db' else ''}{ext}")
+            if os.path.exists(dst):
+                artifacts[name] = os.path.relpath(dst, _HERE)
+
+    entry = {
+        "id": vid, "at": at, "commit": real_commit[:7],
+        "note": note or "补登记（E-434）",
+        "artifacts": artifacts, "status": status,
+        "reason": reason, "verified": False,
+    }
+    m.setdefault("versions", []).append(entry)
+    _save_manifest(m)
+    return entry
+
+
+def backfill_tags(limit: int | None = None, dry_run: bool = True) -> dict:
+    """
+    批量补登记所有"git 有 tag 但 versions.json 没有"的版本。
+
+    dry_run=True（默认）只报告差多少，不写入。
+
+    返回 {"missing": [...], "newly": [...], "skipped": [...], "dry_run": bool}
+    """
+    m = _load_manifest()
+    registered = {v["id"] for v in m.get("versions", [])}
+    tags = all_tags()
+    missing = [t for t in tags if t not in registered]
+    report = {"total_tags": len(tags), "registered_before": len(registered),
+              "missing": missing, "newly": [], "dry_run": dry_run}
+    if dry_run:
+        return report
+
+    todo = missing[:limit] if limit else missing
+    for vid in todo:
+        try:
+            register_tag(vid)
+            report["newly"].append(vid)
+        except VersionError:
+            pass
+    m2 = _load_manifest()
+    report["registered_after"] = len(m2.get("versions", []))
     return report
 
 
