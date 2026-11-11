@@ -1,0 +1,11 @@
+{
+ "experiment": "E-442",
+ "n_pass": 10,
+ "n_total": 10,
+ "n_tags": 78,
+ "n_registered": 8,
+ "n_covered": 5,
+ "coverage_rate": 6.4,
+ "bad_commits": 0,
+ "current": "E-235-baseline"
+}

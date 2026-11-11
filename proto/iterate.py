@@ -119,6 +119,8 @@ CLIENT_CHECKS = [
     ("R3分数", "run_e439_r3_scores.py"),
     # E-440：版本谱系完整性（登记覆盖率 + 迁移不许静默丢数据）
     ("版本谱系", "run_e440_version_reg.py"),
+    # E-442：版本谱系覆盖率监控（只监控结构健全，不设覆盖率门槛）
+    ("谱系监控", "run_e442_version_monitor.py"),
 ]
 
 

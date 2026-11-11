@@ -1,0 +1,31 @@
+{
+ "experiment": "E-441",
+ "n_tags": 78,
+ "n_registered": 0,
+ "n_covered": 0,
+ "n_missing": 78,
+ "coverage_rate": 0.0,
+ "missing_sample": [
+  "E-231",
+  "E-232",
+  "E-233",
+  "E-234",
+  "E-235",
+  "E-235-baseline",
+  "E-236",
+  "E-238",
+  "E-240",
+  "E-241",
+  "E-243",
+  "E-244",
+  "E-247",
+  "E-250",
+  "E-252",
+  "E-253",
+  "E-254",
+  "E-255",
+  "E-257",
+  "E-262"
+ ],
+ "current": "E-235-baseline"
+}
