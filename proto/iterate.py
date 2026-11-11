@@ -115,6 +115,10 @@ CLIENT_CHECKS = [
     ("溯源不变", "run_e435_r4_invariant.py"),
     # E-438：R2 ep_id 指纹（能发现任何删除，包括删1补1）
     ("R2指纹", "run_e438_fingerprint.py"),
+    # E-439：R3 重建后分数必须一致（不只是 ep_id 顺序）
+    ("R3分数", "run_e439_r3_scores.py"),
+    # E-440：版本谱系完整性（登记覆盖率 + 迁移不许静默丢数据）
+    ("版本谱系", "run_e440_version_reg.py"),
 ]
 
 

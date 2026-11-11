@@ -624,6 +624,26 @@ def main():
                 print(f"      原因: {v['reason'][:60]}")
         return
 
+    if cmd == "backfill":
+        dry = "--apply" not in sys.argv
+        r = backfill_tags(dry_run=dry)
+        print("=" * 70)
+        print(f"版本补登记（{'dry-run，不写入' if dry else '写入'}）")
+        print("=" * 70)
+        print(f"  git tag 总数 : {r['total_tags']}")
+        print(f"  已登记(前)   : {r['registered_before']}")
+        print(f"  未登记       : {len(r['missing'])}")
+        if r["missing"]:
+            print(f"  未登记样例   : {', '.join(r['missing'][:12])}")
+        if not dry:
+            print(f"  本次新登记   : {len(r['newly'])}")
+            print(f"  已登记(后)   : {r['registered_after']}")
+            print("\n  注意：补登记只登记代码版本，artifacts 为空。")
+            print("  迁移到这些版本时记忆库不会回滚（E-435 起报告会明说）。")
+        else:
+            print("\n  这是 dry-run。加 --apply 才真正写入。")
+        return
+
     if cmd == "health":
         h = health_check()
         print("=" * 70)

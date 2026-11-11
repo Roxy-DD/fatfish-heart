@@ -2,7 +2,7 @@
  "experiment": "E-424",
  "n_pass": 4,
  "n_total": 4,
- "n_steers": 44,
- "n_gt_zero": 8,
- "latest_toolcalls": 565
+ "n_steers": 45,
+ "n_gt_zero": 9,
+ "latest_toolcalls": 589
 }
