@@ -1,0 +1,154 @@
+{
+ "experiment": "E-427",
+ "n_files": 34,
+ "n_findings": 154,
+ "by_kind": {
+  "return_none": 5,
+  "other": 79,
+  "pass": 50,
+  "return_empty_list": 6,
+  "return_empty_dict": 3,
+  "return_false": 8,
+  "return_zero": 3
+ },
+ "by_file": {
+  "affect_v4.py": 5,
+  "audit.py": 3,
+  "backup.py": 7,
+  "chain.py": 3,
+  "channel.py": 6,
+  "cli_mcp.py": 41,
+  "compose.py": 3,
+  "conflict.py": 5,
+  "consolidate.py": 12,
+  "environment.py": 5,
+  "history.py": 2,
+  "hook.py": 5,
+  "kernel_server.py": 6,
+  "notebook.py": 10,
+  "seed.py": 8,
+  "store_v1.py": 13,
+  "store_v2.py": 9,
+  "triage.py": 2,
+  "merge.py": 4,
+  "store3.py": 4,
+  "store4.py": 1
+ },
+ "high_risk": [
+  {
+   "file": "backup.py",
+   "line": 108,
+   "kind": "return_empty_list"
+  },
+  {
+   "file": "backup.py",
+   "line": 212,
+   "kind": "pass"
+  },
+  {
+   "file": "chain.py",
+   "line": 102,
+   "kind": "return_empty_list"
+  },
+  {
+   "file": "chain.py",
+   "line": 179,
+   "kind": "pass"
+  },
+  {
+   "file": "channel.py",
+   "line": 68,
+   "kind": "pass"
+  },
+  {
+   "file": "channel.py",
+   "line": 89,
+   "kind": "pass"
+  },
+  {
+   "file": "channel.py",
+   "line": 107,
+   "kind": "pass"
+  },
+  {
+   "file": "channel.py",
+   "line": 111,
+   "kind": "pass"
+  },
+  {
+   "file": "environment.py",
+   "line": 152,
+   "kind": "return_empty_list"
+  },
+  {
+   "file": "environment.py",
+   "line": 209,
+   "kind": "return_empty_list"
+  },
+  {
+   "file": "hook.py",
+   "line": 213,
+   "kind": "pass"
+  },
+  {
+   "file": "store_v1.py",
+   "line": 410,
+   "kind": "pass"
+  },
+  {
+   "file": "store_v1.py",
+   "line": 418,
+   "kind": "pass"
+  },
+  {
+   "file": "store_v1.py",
+   "line": 440,
+   "kind": "pass"
+  },
+  {
+   "file": "store_v1.py",
+   "line": 455,
+   "kind": "pass"
+  },
+  {
+   "file": "store_v1.py",
+   "line": 472,
+   "kind": "pass"
+  },
+  {
+   "file": "store_v1.py",
+   "line": 686,
+   "kind": "pass"
+  },
+  {
+   "file": "store_v1.py",
+   "line": 719,
+   "kind": "pass"
+  },
+  {
+   "file": "store_v1.py",
+   "line": 752,
+   "kind": "pass"
+  },
+  {
+   "file": "store_v1.py",
+   "line": 802,
+   "kind": "pass"
+  },
+  {
+   "file": "store_v2.py",
+   "line": 160,
+   "kind": "pass"
+  },
+  {
+   "file": "store_v2.py",
+   "line": 184,
+   "kind": "pass"
+  },
+  {
+   "file": "store_v2.py",
+   "line": 199,
+   "kind": "pass"
+  }
+ ]
+}

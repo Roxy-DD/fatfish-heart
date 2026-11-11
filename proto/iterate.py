@@ -107,6 +107,8 @@ CLIENT_CHECKS = [
     ("R4可塑性", "run_e421_r4.py"),
     # E-424：toolCalls 真实计数证据（从日志验证，不只靠假 agent）
     ("真实计数", "run_e424_toolcalls.py"),
+    # E-428：空表校验必须报失败（不能"遍历0次就通过"）
+    ("空表校验", "run_e428_empty_tables.py"),
 ]
 
 

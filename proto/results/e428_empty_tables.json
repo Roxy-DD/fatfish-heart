@@ -1,0 +1,7 @@
+{
+ "experiment": "E-428",
+ "n_tables": 10,
+ "empty_returns_ok": false,
+ "bug_fixed": true,
+ "verify_counts": 10
+}

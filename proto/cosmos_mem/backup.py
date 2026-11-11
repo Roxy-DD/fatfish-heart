@@ -125,6 +125,20 @@ def verify_backup(db_path: str, backup_path: str,
     if tables is None:
         tables = all_user_tables(db_path)
 
+    # E-428：tables 为空必须报失败，不能"遍历 0 次后返回 ok"
+    #
+    # 实测缺陷：verify_backup(db, db, tables=()) 返回 ok=True。
+    # 这意味着如果 all_user_tables() 因异常返回 []，
+    # 或调用方传了空元组，会得到"备份校验通过"的错误结论。
+    #
+    # 这和 E-419 是同一类问题：
+    #   校验因为没东西可校验而通过。
+    # E-419 修了"默认只校验 3 张表"，但没处理"表列表为空"。
+    if not tables:
+        return {"ok": False,
+                "error": "没有可校验的表（tables 为空）",
+                "counts": {}, "tables": []}
+
     counts = {}
     all_ok = True
 
