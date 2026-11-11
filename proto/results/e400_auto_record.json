@@ -2,16 +2,19 @@
  "experiment": "E-400",
  "n_pass": 10,
  "n_total": 10,
- "total_events": 43,
- "regression_events": 19,
+ "total_events": 49,
+ "regression_events": 22,
  "latest": {
-  "event_id": "9d1b1a2bfa9e40e5",
-  "at": 1794357206.2605157,
+  "event_id": "73303897c90344c4",
+  "at": 1794357694.863795,
   "kind": "test_pass",
   "source": "iterate.py check",
-  "outcome": "32/32",
+  "outcome": "33/33",
   "detail": "全部回归通过",
-  "ep_ids": [],
+  "ep_ids": [
+   "eb12dbbe27604068",
+   "c1b73e3df1054c9a"
+  ],
   "task": "regression"
  }
 }

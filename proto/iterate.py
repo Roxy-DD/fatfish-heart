@@ -109,6 +109,8 @@ CLIENT_CHECKS = [
     ("真实计数", "run_e424_toolcalls.py"),
     # E-428：空表校验必须报失败（不能"遍历0次就通过"）
     ("空表校验", "run_e428_empty_tables.py"),
+    # E-431：ep_for 辅助标注工具（降低标注摩擦，但不自动标注）
+    ("标注辅助", "run_e431_ep_for.py"),
 ]
 
 

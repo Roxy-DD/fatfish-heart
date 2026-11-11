@@ -2,7 +2,7 @@
  "experiment": "E-418",
  "n_pass": 8,
  "n_total": 8,
- "total": 44,
- "linked": 2,
- "link_ratio": 0.045
+ "total": 50,
+ "linked": 4,
+ "link_ratio": 0.08
 }
