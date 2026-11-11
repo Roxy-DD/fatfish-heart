@@ -49,7 +49,7 @@ function makeAgent({ toolCalls = 0 } = {}) {
     evs.set(seq, ev)
   }
   for (let i = 0; i < toolCalls; i++) {
-    push({ type: 'tool/call', n: i })
+    push({ type: 'tool/result', n: i })
   }
   return {
     steerCalls: [],
@@ -58,7 +58,7 @@ function makeAgent({ toolCalls = 0 } = {}) {
     },
     // 测试辅助：模拟新增一次工具调用
     addToolCall() {
-      push({ type: 'tool/call', n: nodes.length })
+      push({ type: 'tool/result', n: nodes.length })
     },
     session: {
       surface: { nodes },
@@ -313,6 +313,34 @@ console.log('\n【8】countToolCalls 不能恒返回 0（E-422）')
     const brokenAgent = { session: { foo: 1 } }
     check('不支持的 session 形状 → 0（不谎报）',
       counter(brokenAgent) === 0, String(counter(brokenAgent)))
+
+    // ★ E-423：真实环境里工具调用记为 tool/result，不是 tool/call
+    //   这条断言防止将来又猜错事件类型（E-422 就栽在这里）
+    const realShape = {
+      session: {
+        surface: { nodes: [1, 2, 3] },
+        eventAt(seq) {
+          const types = {
+            1: 'assistant/message',
+            2: 'tool/result',
+            3: 'user/message',
+          }
+          return { type: types[seq] }
+        },
+      },
+    }
+    check('真实类型分布下能数出 1 次（tool/result）',
+      counter(realShape) === 1, String(counter(realShape)))
+
+    // 全是 assistant/message → 0 次工具调用
+    const noTools = {
+      session: {
+        surface: { nodes: [1, 2] },
+        eventAt(seq) { return { type: 'assistant/message' } },
+      },
+    }
+    check('全是 assistant/message → 0', counter(noTools) === 0,
+      String(counter(noTools)))
   }
 }
 

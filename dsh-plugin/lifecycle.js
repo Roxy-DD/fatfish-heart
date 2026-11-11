@@ -70,6 +70,10 @@ const DEFAULT_CONFIG = {
   //
   // N=8 与 N=10 成本相同（2304），选 8 因为静默更短。
   reportEvery: 8,
+  // E-423：诊断开关——把 agent.session 的真实结构打一次日志。
+  //   用于确认 countToolCalls 到底该读什么（E-422 改过一次仍返回 0）。
+  //   确认后应关掉，避免每次会话都写一条大日志。
+  debugShape: true,
   message: '',
   debugLog: false,
 }
@@ -174,6 +178,8 @@ export function createLifecycleSupervisor(cfg, log) {
         noProgressStreak: 0,
         // E-371：steer 是否正在进行中（替代 turn 号防重入）
         steerInFlight: false,
+        // E-423：诊断结构是否已 dump 过（只 dump 一次）
+        shapeDumped: false,
       }
       states.set(agent, s)
     }
@@ -194,11 +200,22 @@ export function createLifecycleSupervisor(cfg, log) {
    *       this.session.eventAt(seq)    → 取事件
    *     这段用法在 agent-loop 第 244-245 行有现成例子
    *
-   * 为什么这个 bug 之前没被发现：
-   *   返回值恒为 0，而 lastToolCalls 初始 -1，
-   *   第一次 0 > -1 通过，看起来"正常"。
-   *   之后每次都是 0 <= 0 → 判为无进展 → streak 累加 → give-up。
-   *   表现就是"跑几轮后永久停止"。
+   * E-423 修（E-422 改过一次仍返回 0，这次是实测结构）：
+   *
+   * 17:45:46 的 lifecycle-shape 诊断给出了真实类型分布：
+   *
+   *   assistant/message   493
+   *   tool/result         472   ← 工具调用记在这里
+   *   user/message         61
+   *   system/message        1
+   *   developer/message     1
+   *
+   * **没有 tool/call 这种事件。**
+   * 之前 E-422 改对了读法（surface.nodes + eventAt），
+   * 但事件类型猜错了（tool/call），所以计数仍是 0。
+   *
+   * 工具调用在 session 里落在 tool/result 上：
+   * 一次工具执行 = 一条 tool/result，语义与 tool/call 等价。
    */
   function countToolCalls(agent) {
     try {
@@ -212,16 +229,19 @@ export function createLifecycleSupervisor(cfg, log) {
         for (const seq of sess.surface.nodes) {
           const ev = sess.eventAt(seq)
           if (!ev) continue
-          // 工具调用在 session 里记为 tool/call 或 tool-call
           const t = ev.type
-          if (t === 'tool/call' || t === 'tool-call') n++
+          // 实测：工具执行记为 tool/result（没有 tool/call）
+          if (t === 'tool/result' || t === 'tool/call' ||
+              t === 'tool-call') {
+            n++
+          }
         }
         return n
       }
 
       // 退化路径：万一将来接口变了，尽量不静默返回 0
       if (typeof sess.countOf === 'function') {
-        const c = sess.countOf('tool/call')
+        const c = sess.countOf('tool/result')
         if (typeof c === 'number') return c
       }
 
@@ -321,6 +341,59 @@ export function createLifecycleSupervisor(cfg, log) {
         //     连续达到 maxNoProgress（默认 3）才真正放行
         //   · 这样纯文本回合也能被连续追几次，而不是一次后就永久放行
         const tc = countToolCalls(agent)
+
+        // E-423：一次诊断——把 agent.session 的真实结构打出来
+        //
+        // E-422 改成 session.surface.nodes + eventAt 后，
+        // 17:44:13 的日志里 toolCalls 仍是 0。
+        // 说明要么接口还是不对，要么的事件类型不是 'tool/call'。
+        // 不再猜，直接 dump 结构。
+        if (conf.debugShape && !s.shapeDumped) {
+          s.shapeDumped = true
+          let shape = { err: null }
+          try {
+            const a = agent || {}
+            const ss = a.session
+            shape.agentKeys = Object.keys(a).slice(0, 40)
+            shape.hasSession = !!ss
+            if (ss) {
+              shape.sessionKeys = Object.keys(ss).slice(0, 40)
+              shape.surfaceType = typeof ss.surface
+              if (ss.surface) {
+                shape.surfaceKeys = Object.keys(ss.surface).slice(0, 20)
+                shape.nodesIsArray = Array.isArray(ss.surface.nodes)
+                shape.nodesLen = shape.nodesIsArray
+                  ? ss.surface.nodes.length : null
+              }
+              shape.hasEventAt = typeof ss.eventAt
+              // 取前 5 个事件看 type
+              if (Array.isArray(ss.surface && ss.surface.nodes) &&
+                  typeof ss.eventAt === 'function') {
+                const types = []
+                for (const seq of ss.surface.nodes.slice(0, 5)) {
+                  const ev = ss.eventAt(seq)
+                  types.push(ev ? ev.type : '(null)')
+                }
+                shape.firstTypes = types
+              }
+              // 统计所有 type 的分布
+              if (Array.isArray(ss.surface && ss.surface.nodes) &&
+                  typeof ss.eventAt === 'function') {
+                const cnt = {}
+                for (const seq of ss.surface.nodes) {
+                  const ev = ss.eventAt(seq)
+                  const t = ev && ev.type ? ev.type : '(null)'
+                  cnt[t] = (cnt[t] || 0) + 1
+                }
+                shape.typeCounts = cnt
+              }
+            }
+          } catch (e) {
+            shape.err = String(e && e.message)
+          }
+          log('lifecycle-shape', shape)
+        }
+
         const hasProgress = !(s.lastToolCalls >= 0 && tc <= s.lastToolCalls)
 
         if (conf.requireProgress && !hasProgress) {
