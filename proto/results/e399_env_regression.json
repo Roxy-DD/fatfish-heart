@@ -4,22 +4,22 @@
  "n_total": 14,
  "event_kinds": 11,
  "stats": {
-  "total": 58,
+  "total": 60,
   "by_kind": {
    "exec_fail": 2,
-   "exec_ok": 27,
+   "exec_ok": 28,
    "file_exists": 1,
    "file_missing": 1,
    "http_error": 1,
    "http_ok": 1,
    "test_fail": 2,
-   "test_pass": 23
+   "test_pass": 24
   },
-  "ok": 52,
+  "ok": 54,
   "fail": 6,
-  "success_rate": 0.897,
+  "success_rate": 0.9,
   "invalid": 2,
-  "linked": 5,
-  "link_ratio": 0.086
+  "linked": 6,
+  "link_ratio": 0.1
  }
 }

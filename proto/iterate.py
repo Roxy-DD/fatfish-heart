@@ -111,6 +111,8 @@ CLIENT_CHECKS = [
     ("空表校验", "run_e428_empty_tables.py"),
     # E-431：ep_for 辅助标注工具（降低标注摩擦，但不自动标注）
     ("标注辅助", "run_e431_ep_for.py"),
+    # E-435：R4 可溯源不变量（未失效的修订必须有 history）
+    ("溯源不变", "run_e435_r4_invariant.py"),
 ]
 
 

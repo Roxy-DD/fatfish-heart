@@ -1,0 +1,10 @@
+{
+ "experiment": "E-432",
+ "n_episodes": 448,
+ "n_history": 230,
+ "n_rev_gt1": 377,
+ "n_with_hist": 74,
+ "n_without_hist": 303,
+ "coverage_rate": 0.196,
+ "revise_writes_history": false
+}
