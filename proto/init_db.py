@@ -77,8 +77,68 @@ def main():
     tables = [r[0] for r in st.con.execute(
         "SELECT name FROM sqlite_master WHERE type='table' "
         "AND name NOT LIKE 'sqlite_%' ORDER BY name")]
-    print(f"   ✅ 建成 {len(tables)} 张表")
-    for t in tables:
+    print(f"   ✅ MemoryStore 建成 {len(tables)} 张表")
+
+    # ---------- 补齐其他模块的表 ----------
+    #
+    # 为什么需要这一步（模拟外部贡献者时发现）：
+    #   MemoryStore._init() 只建 meta / episodes / vectors / ep_fts。
+    #   但还有 4 个模块各自建表：
+    #     audit.py       → audit_log
+    #     notebook.py    → notes / todos
+    #     environment.py → environment_events
+    #     history.py     → episodes_history / notes_history
+    #
+    #   这些表只在"第一次调用到该模块"时才创建。
+    #   结果就是：新建的库跑实验脚本会报 no such table: audit_log
+    #   —— 外人完全不知道要调哪个模块。
+    #
+    #   这里主动调用各模块的初始化函数，一次性建齐。
+    print("\n①b 补齐其他模块的表")
+
+    EXTRA = [
+        ("audit", "audit_log"),
+        ("notebook", "notes/todos"),
+        ("environment", "environment_events"),
+        ("history", "episodes_history"),
+    ]
+    for mod_name, desc in EXTRA:
+        try:
+            mod = __import__(mod_name)
+            inited = False
+            # 常见初始化函数名（含下划线私有形式，audit.py 用的是 _init）
+            for fn in ("_init", "init", "ensure_schema", "ensure_table",
+                       "init_db", "_ensure_schema", "ensure"):
+                f = getattr(mod, fn, None)
+                if not callable(f):
+                    continue
+                try:
+                    f(st)
+                    inited = True
+                    break
+                except TypeError:
+                    try:
+                        f(st.con)
+                        inited = True
+                        break
+                    except Exception:
+                        continue
+                except Exception:
+                    continue
+            if inited:
+                print(f"   ✅ {mod_name:<12} → {desc}")
+            else:
+                print(f"   ⚠ {mod_name:<12} → 未找到初始化函数")
+        except ImportError:
+            print(f"   · {mod_name:<12} → 模块不存在，跳过")
+        except Exception as e:
+            print(f"   ⚠ {mod_name:<12} → {str(e)[:50]}")
+
+    tables2 = [r[0] for r in st.con.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' "
+        "AND name NOT LIKE 'sqlite_%' ORDER BY name")]
+    print(f"\n   现在共 {len(tables2)} 张表:")
+    for t in tables2:
         print(f"      · {t}")
 
     # ---------- 灌种子 ----------
