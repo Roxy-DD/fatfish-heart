@@ -1422,6 +1422,58 @@ export function apply(ctx, config) {
 
   // ================= 显式工具 =================
 
+  // E-479：supervisor 需要被 mem_done 工具访问到。
+  //
+  // 试过三种方式，只有 globalThis 可靠：
+  //   ctx.get('cosmosMemLifecycle')  → 工具 execute 里返回 undefined
+  //   模块级闭包变量                 → 热重载后模块被替换，旧闭包失效
+  //   globalThis                     → 跨重载保留（E-307 验证过）
+  //
+  // 这也符合项目已有约定：「跨 apply() 要保持的状态必须挂 globalThis」。
+  let lifecycleSup = null
+  let lifecycleErr = null
+  // E-484：用「不受 debugLog 开关影响」的方式记录阶段标记
+  //
+  // 为什么需要：E-479 排查时 debugLog=False，
+  // 导致我完全看不到 apply 跑到哪一步就停了。
+  // 阶段标记必须无条件可见，否则下次还得猜。
+  try {
+    globalThis.__FFH_APPLY_STAGE__ = 'before-lifecycle'
+    globalThis.__FFH_APPLY_AT__ = new Date().toISOString()
+  } catch { /* ignore */ }
+  try {
+    // 注意：debugLog 的签名是 (cfg, kind, data)，
+    // lifecycle 里调用的是 log(kind, data)，所以这里要包一层适配。
+    const lcLog = (kind, data) => debugLog(cfg, kind, data)
+    const sup = createLifecycleSupervisor(cfg, lcLog)
+    sup.attach(ctx)
+    ctx.set('cosmosMemLifecycle', sup)
+    lifecycleSup = sup
+    globalThis.__FFH_LIFECYCLE_SUP__ = sup
+  } catch (e) {
+    // E-484：把异常写进 debugLog（不只是 console.error）
+    //
+    // 为什么改这里：E-479 排查时，attach 失败只走 console.error，
+    // 而 console.error 的输出不进 plugin-debug.jsonl，
+    // 于是「attach 失败」在日志里完全不可见 ——
+    // 我只能看到「supervisor 未挂载」这个结果，看不到原因。
+    //
+    // 教训：错误日志必须写到**能被检索到的地方**。
+    lifecycleErr = String((e && e.message) || e)
+    try {
+      debugLog(cfg, 'lifecycle-attach-failed', {
+        error: lifecycleErr,
+        stack: String((e && e.stack) || '').slice(0, 500),
+      })
+    } catch { /* ignore */ }
+    console.error('[fatfish-heart] lifecycle attach failed:', lifecycleErr)
+  }
+
+  // E-484：把 attach 结果记进 globalThis，供 mem_done 诊断时读取
+  try {
+    globalThis.__FFH_LIFECYCLE_ERR__ = lifecycleErr
+  } catch { /* ignore */ }
+
   ctx.tools.register({
     name: 'mem_add',
     description: '写入一条记忆。用于用户明确要求记住的事实、约定、密码、偏好、承诺等。请把内容写完整。',
@@ -1730,7 +1782,15 @@ export function apply(ctx, config) {
       if (!sup || typeof sup.declareDone !== 'function') {
         return {
           error: 'lifecycle supervisor 未挂载',
-          debug: diag,
+          debug: {
+            ...diag,
+            // E-484：attach 时的异常，直接显示出来
+            attachError: globalThis.__FFH_LIFECYCLE_ERR__ || null,
+            // E-484：apply 走到哪一步了
+            applyStage: globalThis.__FFH_APPLY_STAGE__ || null,
+            applyAt: globalThis.__FFH_APPLY_AT__ || null,
+            applyComplete: globalThis.__FFH_APPLY_COMPLETE__ || null,
+          },
         }
       }
 
@@ -2200,27 +2260,6 @@ export function apply(ctx, config) {
   //   → 在 turn-stopping 事件里 steer，回合就不会结束。
   //
   // 安全边界（防止无限空转）：最大次数 / 进展检测 / 同 turn 防重入。
-  // E-479：supervisor 需要被 mem_done 工具访问到。
-  //
-  // 试过三种方式，只有 globalThis 可靠：
-  //   ctx.get('cosmosMemLifecycle')  → 工具 execute 里返回 undefined
-  //   模块级闭包变量                 → 热重载后模块被替换，旧闭包失效
-  //   globalThis                     → 跨重载保留（E-307 验证过）
-  //
-  // 这也符合项目已有约定：「跨 apply() 要保持的状态必须挂 globalThis」。
-  let lifecycleSup = null
-  try {
-    // 注意：debugLog 的签名是 (cfg, kind, data)，
-    // lifecycle 里调用的是 log(kind, data)，所以这里要包一层适配。
-    const lcLog = (kind, data) => debugLog(cfg, kind, data)
-    const sup = createLifecycleSupervisor(cfg, lcLog)
-    sup.attach(ctx)
-    ctx.set('cosmosMemLifecycle', sup)
-    lifecycleSup = sup
-    globalThis.__FFH_LIFECYCLE_SUP__ = sup
-  } catch (e) {
-    console.error('[fatfish-heart] lifecycle attach failed:', e && e.message)
-  }
 
   // ================= 自重启（E-296）=================
   //
@@ -2831,4 +2870,13 @@ export function apply(ctx, config) {
   ctx.effect(() => () => {
     try { shutdownKernels() } catch { /* ignore */ }
   })
+
+  // E-484：apply 跑完的标记
+  // 配合 __FFH_APPLY_STAGE__ 可以判断 apply 是在哪一步中断的：
+  //   有 stage 无 complete  → 中途抛异常
+  //   有 stage 有 complete  → 跑完了，问题在别处
+  try {
+    globalThis.__FFH_APPLY_COMPLETE__ = new Date().toISOString()
+    globalThis.__FFH_APPLY_STAGE__ = 'complete'
+  } catch { /* ignore */ }
 }
