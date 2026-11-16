@@ -228,6 +228,44 @@ console.log('\n【8】reloadVerified：dryRun 不判定')
   check('dryRun 有说明', !!r.hint, (r.hint || '').slice(0, 30))
 }
 
+// ---------- ⑨ E-480：diagnose 能识别「磁盘代码比运行中新」 ----------
+//
+// 为什么需要这个：
+//   E-479 排查时，改完代码 /selfreload 报 reloaded=True，
+//   但工具始终不可用。最后发现 DSH 进程启动于 10:47，
+//   改动写入是 12:35 —— 进程在跑一个多小时前的代码。
+//
+//   「reload 返回成功」和「代码真的在用」是两件事。
+//   必须能在 diagnose 里一眼看出落后。
+console.log('\n【9】diagnose 报告磁盘/运行版本差异（E-480）')
+{
+  const ctx = makeCtx({ withCE: true })
+  ce_setup(ctx)
+  const sr = createSelfReloader(ctx, {}, log)
+  const d = sr.diagnose()
+
+  check('diagnose 返回 stale 字段', !!d.stale,
+    JSON.stringify(d.stale || null).slice(0, 60))
+  check('stale 含 diskMtime', !!(d.stale && d.stale.diskMtime),
+    String(d.stale && d.stale.diskMtime))
+  check('diagnose 返回 verdict', typeof d.verdict === 'string'
+    && d.verdict.length > 0, (d.verdict || '').slice(0, 50))
+
+  // 没有 marker 时必须明确说「可能从未加载最新代码」
+  // 而不是含糊地说「无法判断」
+  if (!d.__marker) {
+    check('无 marker 时给出可操作结论',
+      d.verdict.includes('重启') || d.verdict.includes('从未加载'),
+      (d.verdict || '').slice(0, 60))
+  } else {
+    // 有 marker 时 diskNewer 必须是布尔值，不能是 null
+    // （null 表示无法比较，那等于没检测）
+    check('有 marker 时能判断先后（必须是布尔）',
+      typeof (d.stale && d.stale.diskNewer) === 'boolean',
+      String(d.stale && d.stale.diskNewer))
+  }
+}
+
 // ---------- 汇总 ----------
 console.log('\n' + '='.repeat(66))
 console.log(`结果：${pass}/${pass + fail} 通过`)

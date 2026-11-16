@@ -51,9 +51,11 @@
  * 本模块实现 A 和 C，B 需要更复杂的自举。
  */
 
-import { readFileSync, writeFileSync, existsSync, readdirSync, unlinkSync }
+import { readFileSync, writeFileSync, existsSync, readdirSync, unlinkSync,
+         statSync }
   from 'node:fs'
 import { join, dirname, basename } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { homedir } from 'node:os'
 
 /** 去掉 reload 标记行，用于比较"正文是否变化" */
@@ -309,6 +311,44 @@ export function createSelfReloader(ctx, cfg, log) {
     let marker = null
     try { marker = globalThis.__COSMOS_RELOAD_MARKER__ || null } catch {}
 
+    // E-480：磁盘代码是否比运行中的新？
+    //
+    // 为什么需要这个：
+    //   E-479 排查时，我改完 index.js 后 /selfreload 报 reloaded=True，
+    //   但工具始终不可用。最后发现 DSH 进程启动于 10:47，
+    //   而改动写入是 12:35 —— 进程在跑一个多小时前的代码。
+    //
+    //   「reload 返回成功」和「代码真的在用」是两件事。
+    //   原来的 diagnose 只看 marker（是否重新执行过 apply），
+    //   但如果从来没重载成功，marker 一直是旧的，看不出「落后多少」。
+    //
+    //   所以直接比对：磁盘文件 mtime vs 本次 apply 时间。
+    //   如果磁盘更新 → 明确告诉用户「需要重启宿主」。
+    let stale = null
+    try {
+      const here = fileURLToPath(import.meta.url)
+      const selfPath = join(dirname(here), 'index.js')
+      const diskMs = statSync(selfPath).mtimeMs
+      // marker 形如 apply@2026-11-16T04:35:35.429Z#abc123
+      let applyMs = null
+      if (marker && marker.startsWith('apply@')) {
+        const iso = marker.slice(6).split('#')[0]
+        const t = Date.parse(iso)
+        if (!Number.isNaN(t)) applyMs = t
+      }
+      const gapSec = applyMs === null ? null
+        : Math.round((diskMs - applyMs) / 1000)
+      stale = {
+        diskMtime: new Date(diskMs).toISOString(),
+        lastApply: applyMs === null ? null : new Date(applyMs).toISOString(),
+        // >5 秒即视为落后（文件系统时间精度 + 写入延迟的余量）
+        diskNewer: gapSec === null ? null : gapSec > 5,
+        gapSec,
+      }
+    } catch (e) {
+      stale = { error: String(e && e.message) }
+    }
+
     const found = findMyEntry()
     const ce = ctx.get('configEditor')
     const pm = ctx.get('pluginManager')
@@ -323,6 +363,22 @@ export function createSelfReloader(ctx, cfg, log) {
       } : null,
       entriesTotal: found.entries || 0,
       __marker: marker,
+      // E-480：磁盘 vs 运行中
+      stale,
+      // 一句话结论，避免用户/模型自己推断
+      verdict: (() => {
+        if (!stale || stale.error) return '? 无法判断：' + (stale && stale.error)
+        if (stale.diskNewer === true) {
+          return '⚠ 磁盘代码比运行中的新（落后 ' + stale.gapSec
+            + ' 秒）→ 必须重启 DSH 宿主才会生效，自重启无效'
+        }
+        if (stale.diskNewer === false) {
+          return '✅ 运行中的代码就是磁盘上的最新版本'
+        }
+        // 没有 marker：本次运行从未执行过 apply()（或 marker 被清了）
+        return '⚠ 没有 apply marker —— 当前进程可能从未加载过本插件的最新代码，'
+          + '建议重启 DSH 宿主后重试'
+      })(),
       reason: found.reason || null,
       sample: found.sample || null,
       attempts: state.attempts,
