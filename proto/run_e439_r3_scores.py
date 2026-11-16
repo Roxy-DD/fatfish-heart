@@ -237,8 +237,11 @@ out = {
     "delete_rebuild_diff": len(diff3),
 }
 p = os.path.join(_HERE, "results", "e439_r3_scores.json")
-with open(p, "w", encoding="utf-8") as f:
-    json.dump(out, f, ensure_ascii=False, indent=1)
+if os.environ.get("FFH_NO_WRITE") == "1":
+    print("（FFH_NO_WRITE=1，跳过写盘）")
+else:
+    with open(p, "w", encoding="utf-8") as f:
+        json.dump(out, f, ensure_ascii=False, indent=1)
 print(f"写入 results/e439_r3_scores.json")
 
 sys.exit(0 if n_ok == len(results) else 1)

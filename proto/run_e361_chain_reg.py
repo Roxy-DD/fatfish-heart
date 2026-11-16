@@ -130,8 +130,11 @@ out = {
     "data_fresh": bool(last_inject and last_inject > FIX_TIME),
 }
 p = os.path.join(_HERE, "results", "e361_chain_regression.json")
-with open(p, "w", encoding="utf-8") as f:
-    json.dump(out, f, ensure_ascii=False, indent=1)
+if os.environ.get("FFH_NO_WRITE") == "1":
+    print("（FFH_NO_WRITE=1，跳过写盘）")
+else:
+    with open(p, "w", encoding="utf-8") as f:
+        json.dump(out, f, ensure_ascii=False, indent=1)
 print(f"\n写入 results/e361_chain_regression.json")
 
 st.con.close()

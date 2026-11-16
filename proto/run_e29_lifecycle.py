@@ -151,8 +151,12 @@ print("=" * 76)
 out = {"experiment": "E-29", "n_pass": n_ok, "n_total": len(results),
        "results": results}
 os.makedirs(os.path.join(_HERE, "results"), exist_ok=True)
-with open(os.path.join(_HERE, "results", "e29_lifecycle.json"), "w",
-          encoding="utf-8") as f:
-    json.dump(out, f, ensure_ascii=False, indent=1)
-print(f"\n写入 results/e29_lifecycle.json")
+# E-467：回归过程中不写盘（避免产生无意义的 results diff）
+if os.environ.get("FFH_NO_WRITE") == "1":
+    print("（FFH_NO_WRITE=1，跳过写盘）")
+else:
+    with open(os.path.join(_HERE, "results", "e29_lifecycle.json"), "w",
+              encoding="utf-8") as f:
+        json.dump(out, f, ensure_ascii=False, indent=1)
+    print(f"\n写入 results/e29_lifecycle.json")
 sys.exit(0 if n_ok == len(results) else 1)

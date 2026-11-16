@@ -205,6 +205,16 @@ def run_regression(verbose: bool = True) -> dict:
     env["PYTHONIOENCODING"] = "utf-8"
     env.setdefault("HF_HOME", os.path.join(_ROOT, ".hf"))
 
+    # E-467：回归过程中不写 results/*.json
+    #
+    # 问题：跑一次全量回归会改动 15 个 results 文件，
+    #       内容只有运行时噪声（游标时间戳、随机 ep_id、环境事件计数），
+    #       测试结论没变。但每次都会产生 diff，干扰提交。
+    #
+    # 修法：注入 FFH_NO_WRITE=1，各脚本读它后跳过写盘。
+    #       单独跑脚本（不带这个变量）时仍然会写，方便留证据。
+    env["FFH_NO_WRITE"] = "1"
+
     results = {}
     for name, script, timeout in REGRESSION_SUITE:
         path = os.path.join(_HERE, script)

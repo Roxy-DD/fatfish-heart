@@ -148,8 +148,11 @@ print("=" * 72)
 out = {"experiment": "E-252", "n_pass": n_ok, "n_total": len(results),
        "results": results}
 p = os.path.join(_HERE, "results", "e252_silent_regression.json")
-with open(p, "w", encoding="utf-8") as f:
-    json.dump(out, f, ensure_ascii=False, indent=1)
+if os.environ.get("FFH_NO_WRITE") == "1":
+    print("（FFH_NO_WRITE=1，跳过写盘）")
+else:
+    with open(p, "w", encoding="utf-8") as f:
+        json.dump(out, f, ensure_ascii=False, indent=1)
 print(f"写入 results/e252_silent_regression.json")
 
 sys.exit(0 if n_ok == len(results) else 1)

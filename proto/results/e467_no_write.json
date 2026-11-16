@@ -1,0 +1,27 @@
+{
+ "experiment": "E-467",
+ "changed": [
+  "run_e252_silent_regression.py",
+  "run_e361_chain_reg.py",
+  "run_e377_criteria.py",
+  "run_e378_same_turn.py",
+  "run_e399_env_reg.py",
+  "run_e400_verify.py",
+  "run_e408_hygiene.py",
+  "run_e418_link_ratio.py",
+  "run_e420_field_level.py",
+  "run_e421_r4.py",
+  "run_e424_toolcalls.py",
+  "run_e435_r4_invariant.py",
+  "run_e438_fingerprint.py",
+  "run_e439_r3_scores.py"
+ ],
+ "skipped": [
+  {
+   "file": "run_e29_lifecycle.py",
+   "why": "未找到写盘块"
+  }
+ ],
+ "failed": [],
+ "n_syntax": 0
+}

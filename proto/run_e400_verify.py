@@ -143,8 +143,11 @@ out = {
     "latest": regs[0] if regs else None,
 }
 p = os.path.join(_HERE, "results", "e400_auto_record.json")
-with open(p, "w", encoding="utf-8") as f:
-    json.dump(out, f, ensure_ascii=False, indent=1)
+if os.environ.get("FFH_NO_WRITE") == "1":
+    print("（FFH_NO_WRITE=1，跳过写盘）")
+else:
+    with open(p, "w", encoding="utf-8") as f:
+        json.dump(out, f, ensure_ascii=False, indent=1)
 print(f"写入 results/e400_auto_record.json")
 
 st.con.close()

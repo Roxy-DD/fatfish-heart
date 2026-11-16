@@ -1,6 +1,6 @@
 {
  "experiment": "E-378",
- "n_turns_with_steer": 19,
+ "n_turns_with_steer": 20,
  "multi_turns": [
   {
    "turn": 86,
@@ -16,7 +16,7 @@
   },
   {
    "turn": 90,
-   "n": 8
+   "n": 10
   },
   {
    "turn": 257,
@@ -37,9 +37,13 @@
   {
    "turn": 280,
    "n": 9
+  },
+  {
+   "turn": 288,
+   "n": 4
   }
  ],
  "turn274_count": 12,
  "n_reentry": 0,
- "n_action_logs": 28
+ "n_action_logs": 31
 }
