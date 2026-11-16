@@ -44,8 +44,25 @@ total = real["total_tags"]
 reg = real["registered_before"]
 missing = len(real["missing"])
 print(f"  git tag={total}  已登记={reg}  未登记={missing}")
-check("git tag 可枚举", total > 0, f"{total} 个")
-check("登记数 <= tag 数（一致性）", reg + missing == total)
+
+# E-478：浅克隆（--depth 1）没有 tag，这不是缺陷
+#
+# 外部贡献者几乎都是用 `git clone --depth 1` 拿代码的，
+# 那样拿不到任何 tag。原来的断言「git tag 可枚举 total > 0」
+# 会判他们失败 —— 而他们什么都没做错。
+#
+# 检测方式：.git/shallow 存在即为浅克隆。
+_shallow = os.path.exists(
+    os.path.join(os.path.dirname(os.path.dirname(
+        os.path.abspath(__file__))), ".git", "shallow"))
+
+if _shallow and total == 0:
+    print("  ⏭ 浅克隆环境（无 tag），跳过版本谱系断言")
+    print("     要完整验证请用: git fetch --tags --unshallow")
+    check("浅克隆：tag 断言跳过（非失败）", True, "shallow")
+else:
+    check("git tag 可枚举", total > 0, f"{total} 个")
+    check("登记数 <= tag 数（一致性）", reg + missing == total)
 # 这是"现状告警"而不是失败阈值：脱节本身不致命，但必须被看见
 if missing > reg:
     print(f"  ⚠ 未登记({missing}) 远多于已登记({reg})"
