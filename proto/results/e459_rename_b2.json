@@ -1,0 +1,29 @@
+{
+ "experiment": "E-459",
+ "changed": [
+  {
+   "file": "index.js",
+   "replacements": 6
+  },
+  {
+   "file": "client.js",
+   "replacements": 6
+  }
+ ],
+ "syntax_errors": [],
+ "remaining_cosmos_mem": [
+  [
+   "index.js",
+   5
+  ],
+  [
+   "lifecycle.js",
+   1
+  ],
+  [
+   "selfreload.js",
+   1
+  ]
+ ],
+ "pkg_name": "@local/dsh-fatfish-heart"
+}

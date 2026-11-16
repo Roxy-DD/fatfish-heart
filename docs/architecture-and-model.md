@@ -1,8 +1,8 @@
-# 肥鱼之心 · 情景记忆系统 — 当前架构图与模型图
+# 肥鱼之心（Fat Fish Heart）· 情景记忆系统 — 当前架构图与模型图
 
 > 生成依据：E-338 对真实代码的只读探查（`proto/_inspect_arch.py`），不是凭印象绘制。
 > 生成时间：2026-11-10
-> 状态：代码版本 E-333，数据库 `proto/cosmos_mem/dsh_mem.db`
+> 状态：代码版本 E-333，数据库 `proto/fatfish_heart/dsh_mem.db`
 > **行数均为 E-338 探查时刻的实测快照；DB 在持续运行，后续迭代会变化。**
 
 ---
@@ -78,7 +78,7 @@ flowchart TB
     ST1 <--> DB
     ST1 <--> GPU
     SELF -.->|"改 cordis.patch.yml<br/>触发 Loader reconcile"| DSH
-    CLI -.->|"HTTP /cosmos-mem/*"| IDX
+    CLI -.->|"HTTP /fatfish-heart/*"| IDX
     DB -.->|sqlite3 backup API| BAK
     HIST --> DB
     FS -.->|可回退版本| DSH
@@ -379,8 +379,8 @@ total=16, normal=5, forced=11
 | 配置 | 默认值 | 作用 | 说明 |
 |---|---|---|---|
 | `pythonPath` | `'python'` | 运行内核的 Python | 保持 `python` 即可 |
-| `kernelDir` | `'C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto\\cosmos_mem'` | 内核脚本目录 | cosmos_mem 所在路径 |
-| `dbPath` | `'C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto\\cosmos_mem\\dsh_mem.db'` | SQLite 数据库路径 | 全部记忆存这一个文件 |
+| `kernelDir` | `'<项目路径>\\proto\\fatfish_heart'` | 内核脚本目录 | fatfish_heart 所在路径 |
+| `dbPath` | `'<项目路径>\\proto\\fatfish_heart\\dsh_mem.db'` | SQLite 数据库路径 | 全部记忆存这一个文件 |
 | `autoInject` | `true` | 是否自动注入记忆 | 关掉则完全靠模型主动 mem_search |
 | `autoInjectTopK` | `5` | 检索返回条数 | 普通结果占这么多名额，L0/L1 额外追加 |
 | `autoInjectMaxChars` | `1500` | **普通检索结果**的字符预算 | 只用限制 body；E-393 起明确不管 L0/L1 |
@@ -399,7 +399,7 @@ total=16, normal=5, forced=11
 | `prewarmKernel` | `true` | 是否预热内核 | 避免首次检索等模型加载 |
 | `warmupWaitMs` | `30000` | 预热等待上限 | 超时则不等，避免首响应卡太久 |
 | `debugLog` | `true` | 是否写调试日志 | 排障时开；正常关掉省 IO |
-| `httpBase` | `'/cosmos-mem'` | HTTP 路由前缀 | 管理界面调用这些端点 |
+| `httpBase` | `'/fatfish-heart'` | HTTP 路由前缀 | 管理界面调用这些端点 |
 | `lifecycle` | `{ enabled: true` | 生命周期监督器配置 | 拦截 turn-stopping 续跑；含 maxConsecutive / maxNoProgress |
 
 ### 注入相关的两个预算（容易混）

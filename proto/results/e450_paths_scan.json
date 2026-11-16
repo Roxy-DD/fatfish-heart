@@ -1,0 +1,237 @@
+{
+ "experiment": "E-450",
+ "n_hits": 136,
+ "n_files": 78,
+ "by_file": {
+  "README.md": 2,
+  "docs/architecture-and-model.md": 2,
+  "dsh-plugin/index.js": 3,
+  "proto/cosmos_mem/archive_legacy/affect_v2.py": 1,
+  "proto/cosmos_mem/archive_legacy/store3.py": 1,
+  "proto/cosmos_mem/rerank_v1.py": 1,
+  "proto/cosmos_mem/store_v1.py": 1,
+  "proto/results/e129_strategy.json": 1,
+  "proto/results/e197_download.json": 1,
+  "proto/results/e199_download.json": 1,
+  "proto/results/e1_e6_20261025_030550.json": 2,
+  "proto/results/mem_analysis.json": 2,
+  "proto/run_e110_dedup.py": 2,
+  "proto/run_e111_latency.py": 2,
+  "proto/run_e112_cost.py": 1,
+  "proto/run_e113_warmup.py": 2,
+  "proto/run_e121_type_match.py": 2,
+  "proto/run_e197_download.py": 1,
+  "proto/run_e197b_retry.py": 1,
+  "proto/run_e197c_hf.py": 1,
+  "proto/run_e199_download_int8.py": 1,
+  "proto/run_e199b_requests.py": 1,
+  "proto/run_e199c_resume.py": 1,
+  "proto/run_e199d_resume2.py": 1,
+  "proto/run_e199e_direct.py": 1,
+  "proto/run_e199f_direct.py": 1,
+  "proto/run_e201_gpu_check.py": 2,
+  "proto/run_e202_gpu_latency.py": 1,
+  "proto/run_e203_fp16.py": 2,
+  "proto/run_e203b_fp16_resume.py": 1,
+  "proto/run_e203c_mirror.py": 1,
+  "proto/run_e204_embed_latency.py": 1,
+  "proto/run_e206_fp16_gpu.py": 2,
+  "proto/run_e219_smoke.py": 2,
+  "proto/run_e220_e2e.py": 2,
+  "proto/run_e222_kernel_e2e.py": 3,
+  "proto/run_e224_fields.py": 2,
+  "proto/run_e225_sleep.py": 2,
+  "proto/run_e226_audit.py": 2,
+  "proto/run_e22_integration.py": 1,
+  "proto/run_e22b_integration.py": 1,
+  "proto/run_e272_gpu.py": 1,
+  "proto/run_e274_warmup.py": 1,
+  "proto/run_e276_note_check.py": 2,
+  "proto/run_e277_record.py": 2,
+  "proto/run_e299_patch_reload.py": 1,
+  "proto/run_e360_chain.py": 1,
+  "proto/run_e39_bge.py": 2,
+  "proto/run_e40_cost.py": 2,
+  "proto/run_e41_optimize.py": 2,
+  "proto/run_e422_asar.py": 2,
+  "proto/run_e42_scale.py": 3,
+  "proto/run_e43_fixed.py": 3,
+  "proto/run_e44_ann.py": 3,
+  "proto/run_e45_encode.py": 3,
+  "proto/run_e46_threads.py": 3,
+  "proto/run_e47_availability.py": 3,
+  "proto/run_e48_importance.py": 3,
+  "proto/run_e49_importance_v2.py": 3,
+  "proto/run_e50_layered.py": 3,
+  "proto/run_e51_compress.py": 3,
+  "proto/run_e52_compress_strict.py": 3,
+  "proto/run_e59_affect.py": 1,
+  "proto/run_e64_affect_methods.py": 1,
+  "proto/run_e65_calib.py": 1,
+  "proto/run_e66_three_proto.py": 1,
+  "proto/run_e67_explicit.py": 1,
+  "proto/run_e80_lightweight.py": 1,
+  "proto/run_factory_reset.py": 3,
+  "proto/run_fix_seed_dup.py": 2,
+  "proto/run_iterate_selftest.py": 1,
+  "proto/run_lc_register.py": 1,
+  "proto/run_lc_verify.py": 1,
+  "proto/run_mem_analysis.py": 3,
+  "proto/run_mem_final_verify.py": 2,
+  "proto/run_mem_verify.py": 2,
+  "proto/run_seed_physics.py": 3,
+  "proto/run_seed_verify.py": 2
+ },
+ "samples": [
+  {
+   "file": "README.md",
+   "line": 231,
+   "text": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\.hf"
+  },
+  {
+   "file": "README.md",
+   "line": 253,
+   "text": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\dsh-plugin"
+  },
+  {
+   "file": "docs/architecture-and-model.md",
+   "line": 382,
+   "text": "C:\\\\Users\\\\xuee\\\\Desktop\\\\肥鱼之心\\\\proto\\\\cosmos_mem"
+  },
+  {
+   "file": "docs/architecture-and-model.md",
+   "line": 383,
+   "text": "C:\\\\Users\\\\xuee\\\\Desktop\\\\肥鱼之心\\\\proto\\\\cosmos_mem\\\\dsh_mem.db"
+  },
+  {
+   "file": "dsh-plugin/index.js",
+   "line": 51,
+   "text": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\dsh-plugin"
+  },
+  {
+   "file": "dsh-plugin/index.js",
+   "line": 96,
+   "text": "C:\\\\Users\\\\xuee\\\\Desktop\\\\肥鱼之心\\\\proto\\\\cosmos_mem"
+  },
+  {
+   "file": "dsh-plugin/index.js",
+   "line": 97,
+   "text": "C:\\\\Users\\\\xuee\\\\Desktop\\\\肥鱼之心\\\\proto\\\\cosmos_mem\\\\dsh_mem.db"
+  },
+  {
+   "file": "proto/cosmos_mem/archive_legacy/affect_v2.py",
+   "line": 20,
+   "text": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\models\\bge-small-zh"
+  },
+  {
+   "file": "proto/cosmos_mem/archive_legacy/store3.py",
+   "line": 36,
+   "text": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\models\\bge-small-zh"
+  },
+  {
+   "file": "proto/cosmos_mem/rerank_v1.py",
+   "line": 24,
+   "text": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\models\\bge-reranker-v2-m3-fp16"
+  },
+  {
+   "file": "proto/cosmos_mem/store_v1.py",
+   "line": 38,
+   "text": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\models\\bge-small-zh"
+  },
+  {
+   "file": "proto/results/e129_strategy.json",
+   "line": 3,
+   "text": "C:\\\\Users\\\\xuee\\\\Desktop\\\\肥鱼之心\\\\proto\\\\work\\\\e128\\\\e128_1000.db"
+  },
+  {
+   "file": "proto/results/e197_download.json",
+   "line": 3,
+   "text": "C:\\\\Users\\\\xuee\\\\Desktop\\\\肥鱼之心\\\\models\\\\bge-reranker-v2-m3"
+  },
+  {
+   "file": "proto/results/e199_download.json",
+   "line": 3,
+   "text": "C:\\\\Users\\\\xuee\\\\Desktop\\\\肥鱼之心\\\\models\\\\bge-reranker-v2-m3-int8"
+  },
+  {
+   "file": "proto/results/e1_e6_20261025_030550.json",
+   "line": 154,
+   "text": "C:\\\\Users\\\\xuee\\\\Desktop\\\\肥鱼之心\\\\proto\\\\work\\\\e4_brain.meta.json"
+  },
+  {
+   "file": "proto/results/e1_e6_20261025_030550.json",
+   "line": 155,
+   "text": "C:\\\\Users\\\\xuee\\\\Desktop\\\\肥鱼之心\\\\proto\\\\work\\\\e4_brain.vectors.npz"
+  },
+  {
+   "file": "proto/results/mem_analysis.json",
+   "line": 313,
+   "text": "C:\\\\Users\\\\xuee\\\\Desktop\\\\肥鱼之心\\\\proto\\\\work\\\\e143\\\\packs.json"
+  },
+  {
+   "file": "proto/results/mem_analysis.json",
+   "line": 747,
+   "text": "C:\\\\Users\\\\xuee\\\\Desktop\\\\肥鱼之心\\\\proto\\\\work\\\\e214\\\\rewrite_tasks.json，共"
+  },
+  {
+   "file": "proto/run_e110_dedup.py",
+   "line": 4,
+   "text": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto\\cosmos_mem"
+  },
+  {
+   "file": "proto/run_e110_dedup.py",
+   "line": 12,
+   "text": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\.hf"
+  },
+  {
+   "file": "proto/run_e111_latency.py",
+   "line": 4,
+   "text": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto\\cosmos_mem"
+  },
+  {
+   "file": "proto/run_e111_latency.py",
+   "line": 8,
+   "text": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\.hf"
+  },
+  {
+   "file": "proto/run_e112_cost.py",
+   "line": 3,
+   "text": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto\\cosmos_mem"
+  },
+  {
+   "file": "proto/run_e113_warmup.py",
+   "line": 3,
+   "text": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto\\cosmos_mem"
+  },
+  {
+   "file": "proto/run_e113_warmup.py",
+   "line": 52,
+   "text": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto\\cosmos_mem\\dsh_mem.db"
+  },
+  {
+   "file": "proto/run_e121_type_match.py",
+   "line": 20,
+   "text": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto\\cosmos_mem"
+  },
+  {
+   "file": "proto/run_e121_type_match.py",
+   "line": 25,
+   "text": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto\\e121.db"
+  },
+  {
+   "file": "proto/run_e197_download.py",
+   "line": 18,
+   "text": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\models\\bge-reranker-v2-m3"
+  },
+  {
+   "file": "proto/run_e197b_retry.py",
+   "line": 17,
+   "text": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\models\\bge-reranker-v2-m3"
+  },
+  {
+   "file": "proto/run_e197c_hf.py",
+   "line": 11,
+   "text": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\models\\bge-reranker-v2-m3"
+  }
+ ]
+}

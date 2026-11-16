@@ -1,4 +1,4 @@
-# 肥鱼之心 · 情景记忆系统
+# 肥鱼之心（Fat Fish Heart）· 情景记忆系统
 
 > 更新 2026-11-07。**所有内容只写本地，未写入思源任何笔记或数据库。**
 
@@ -17,7 +17,7 @@
 
 | 模块 | 状态 | 说明 |
 |---|---|---|
-| 核心记忆系统 | ✅ 生产可用 | `proto/cosmos_mem/`，17 个模块 |
+| 核心记忆系统 | ✅ 生产可用 | `proto/fatfish_heart/`，17 个模块 |
 | DSH 插件 | ✅ 符合官方规范 | `dsh-plugin/`，6 个 Tab UI |
 | 记忆数据 | ✅ 种子基线 + 零私人数据 | 12 条通用种子，可直接分发给他人 |
 | 性能 | ✅ 2000 条下检索 26.6ms | 优化前 1383ms |
@@ -64,7 +64,7 @@
 ```bash
 # 私人记忆失效（不删除，可溯源），种子保留
 mem_seed action=factory
-# 或 HTTP: POST /cosmos-mem/seed  {"action":"factory"}
+# 或 HTTP: POST /fatfish-heart/seed  {"action":"factory"}
 ```
 
 ---
@@ -175,7 +175,7 @@ mem_seed action=factory
 │   └── 72 记忆分层与保护设计.md      ★ L0~L4 分层保护
 │
 ├── proto/
-│   ├── cosmos_mem/                  ★ 生产代码（14 模块）
+│   ├── fatfish_heart/                  ★ 生产代码（14 模块）
 │   │   ├── store_v1.py              真值层 + 检索 + 分层保护
 │   │   ├── store_v2.py              派生层（能力范围 + 矛盾）
 │   │   ├── hook.py                  ★ 五层保护（L0~L4）
@@ -228,7 +228,7 @@ RTX 3060 6GB（cross-encoder 精排用，不强制）
 
 ```powershell
 $env:KMP_DUPLICATE_LIB_OK="TRUE"; $env:PYTHONIOENCODING="utf-8"
-$env:HF_HOME="C:\Users\xuee\Desktop\肥鱼之心\.hf"
+$env:HF_HOME="<项目路径>\.hf"
 cd proto
 
 # 红线回归（每次改动必跑）
@@ -250,7 +250,7 @@ python -u run_e223_regression.py
 ### 安装插件
 
 ```powershell
-dsh plugin --profile <name> add C:\Users\xuee\Desktop\肥鱼之心\dsh-plugin
+dsh plugin --profile <name> add <项目路径>\dsh-plugin
 ```
 
 插件契约（官方规范）：
@@ -305,4 +305,4 @@ dsh plugin --profile <name> add C:\Users\xuee\Desktop\肥鱼之心\dsh-plugin
 
 ---
 
-#情景记忆 #cosmos-mem #DSH插件 #红线 #分层保护
+#情景记忆 #fatfish-heart #DSH插件 #红线 #分层保护

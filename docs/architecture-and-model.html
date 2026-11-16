@@ -121,7 +121,7 @@ flowchart TB
     ST1 <--> DB
     ST1 <--> GPU
     SELF -.->|"改 cordis.patch.yml<br/>触发 Loader reconcile"| DSH
-    CLI -.->|"HTTP /cosmos-mem/*"| IDX
+    CLI -.->|"HTTP /fatfish-heart/*"| IDX
     DB -.->|sqlite3 backup API| BAK
     FS -.->|可回退版本| DSH
     style L1 fill:#e8f4f8,stroke:#2b7a78

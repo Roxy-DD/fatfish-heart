@@ -181,7 +181,7 @@
 ```
 肥鱼之心/
 ├─ proto/
-│  ├─ cosmos_mem/            记忆系统本体（21 个 Python 模块）
+│  ├─ fatfish_heart/            记忆系统本体（21 个 Python 模块）
 │  │  ├─ store_v1.py         真值层：SQLite / FTS5 / 向量 / 四红线
 │  │  ├─ store_v2.py         组装层：能力范围 / 完整性闸 / 情绪
 │  │  ├─ cli_mcp.py          30 个命令实现
@@ -219,7 +219,7 @@ cd proto && python run_e355_sync_docs.py
 # 提取 HTML 里的 mermaid 块 → npx @mermaid-js/mermaid-cli
 
 # 自重启插件（改完代码后）
-curl -X POST http://127.0.0.1:<port>/cosmos-mem/selfreload \
+curl -X POST http://127.0.0.1:<port>/fatfish-heart/selfreload \
      -H "Content-Type: application/json" -d '{"strategy":"patch"}'
 ```
 

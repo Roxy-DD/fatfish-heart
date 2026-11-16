@@ -1,7 +1,7 @@
 {
  "experiment": "E-377",
- "n_inject": 29,
- "n_kernels": 44,
+ "n_inject": 33,
+ "n_kernels": 54,
  "n_sessions": 3,
  "real_violations": 0,
  "seg0_count": 10

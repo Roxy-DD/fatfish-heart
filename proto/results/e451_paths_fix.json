@@ -1,0 +1,295 @@
+{
+ "experiment": "E-451",
+ "stats": {
+  "py_proto": 0,
+  "py_mem": 0,
+  "md": 2,
+  "js": 1,
+  "json_skip": 5,
+  "other": 0
+ },
+ "n_changed": 3,
+ "n_remaining": 70,
+ "remaining": [
+  {
+   "file": "proto/cosmos_mem/archive_legacy/affect_v2.py",
+   "count": 1
+  },
+  {
+   "file": "proto/cosmos_mem/archive_legacy/store3.py",
+   "count": 1
+  },
+  {
+   "file": "proto/cosmos_mem/rerank_v1.py",
+   "count": 1
+  },
+  {
+   "file": "proto/cosmos_mem/store_v1.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e110_dedup.py",
+   "count": 2
+  },
+  {
+   "file": "proto/run_e111_latency.py",
+   "count": 2
+  },
+  {
+   "file": "proto/run_e112_cost.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e113_warmup.py",
+   "count": 2
+  },
+  {
+   "file": "proto/run_e121_type_match.py",
+   "count": 2
+  },
+  {
+   "file": "proto/run_e197_download.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e197b_retry.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e197c_hf.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e199_download_int8.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e199b_requests.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e199c_resume.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e199d_resume2.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e199e_direct.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e199f_direct.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e201_gpu_check.py",
+   "count": 2
+  },
+  {
+   "file": "proto/run_e202_gpu_latency.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e203_fp16.py",
+   "count": 2
+  },
+  {
+   "file": "proto/run_e203b_fp16_resume.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e203c_mirror.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e204_embed_latency.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e206_fp16_gpu.py",
+   "count": 2
+  },
+  {
+   "file": "proto/run_e219_smoke.py",
+   "count": 2
+  },
+  {
+   "file": "proto/run_e220_e2e.py",
+   "count": 2
+  },
+  {
+   "file": "proto/run_e222_kernel_e2e.py",
+   "count": 3
+  },
+  {
+   "file": "proto/run_e224_fields.py",
+   "count": 2
+  },
+  {
+   "file": "proto/run_e225_sleep.py",
+   "count": 2
+  },
+  {
+   "file": "proto/run_e226_audit.py",
+   "count": 2
+  },
+  {
+   "file": "proto/run_e22_integration.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e22b_integration.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e272_gpu.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e274_warmup.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e276_note_check.py",
+   "count": 2
+  },
+  {
+   "file": "proto/run_e277_record.py",
+   "count": 2
+  },
+  {
+   "file": "proto/run_e299_patch_reload.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e360_chain.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e39_bge.py",
+   "count": 2
+  },
+  {
+   "file": "proto/run_e40_cost.py",
+   "count": 2
+  },
+  {
+   "file": "proto/run_e41_optimize.py",
+   "count": 2
+  },
+  {
+   "file": "proto/run_e422_asar.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e42_scale.py",
+   "count": 3
+  },
+  {
+   "file": "proto/run_e43_fixed.py",
+   "count": 3
+  },
+  {
+   "file": "proto/run_e44_ann.py",
+   "count": 3
+  },
+  {
+   "file": "proto/run_e45_encode.py",
+   "count": 3
+  },
+  {
+   "file": "proto/run_e46_threads.py",
+   "count": 3
+  },
+  {
+   "file": "proto/run_e47_availability.py",
+   "count": 3
+  },
+  {
+   "file": "proto/run_e48_importance.py",
+   "count": 3
+  },
+  {
+   "file": "proto/run_e49_importance_v2.py",
+   "count": 3
+  },
+  {
+   "file": "proto/run_e50_layered.py",
+   "count": 3
+  },
+  {
+   "file": "proto/run_e51_compress.py",
+   "count": 3
+  },
+  {
+   "file": "proto/run_e52_compress_strict.py",
+   "count": 3
+  },
+  {
+   "file": "proto/run_e59_affect.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e64_affect_methods.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e65_calib.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e66_three_proto.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e67_explicit.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_e80_lightweight.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_factory_reset.py",
+   "count": 3
+  },
+  {
+   "file": "proto/run_fix_seed_dup.py",
+   "count": 2
+  },
+  {
+   "file": "proto/run_iterate_selftest.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_lc_register.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_lc_verify.py",
+   "count": 1
+  },
+  {
+   "file": "proto/run_mem_analysis.py",
+   "count": 3
+  },
+  {
+   "file": "proto/run_mem_final_verify.py",
+   "count": 2
+  },
+  {
+   "file": "proto/run_mem_verify.py",
+   "count": 2
+  },
+  {
+   "file": "proto/run_seed_physics.py",
+   "count": 3
+  },
+  {
+   "file": "proto/run_seed_verify.py",
+   "count": 2
+  }
+ ]
+}

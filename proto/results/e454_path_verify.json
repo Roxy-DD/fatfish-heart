@@ -1,0 +1,215 @@
+{
+ "experiment": "E-454",
+ "n_hits": 610,
+ "n_files": 516,
+ "n_problems": 23,
+ "problems": [
+  {
+   "file": "proto/archive/cosmos_lite/core.py",
+   "line": 599,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto/archive",
+   "next_seg": "_selftest",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto/archive\\_selftest",
+   "exists": false
+  },
+  {
+   "file": "proto/archive/cosmos_lite/retina.py",
+   "line": 23,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto/archive",
+   "next_seg": "data",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto/archive\\data",
+   "exists": false
+  },
+  {
+   "file": "proto/archive/cosmos_lite/retina.py",
+   "line": 25,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto/archive",
+   "next_seg": "mobilenet_v2.pth",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto/archive\\mobilenet_v2.pth",
+   "exists": false
+  },
+  {
+   "file": "proto/archive/cosmos_lite/retina.py",
+   "line": 219,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto/archive",
+   "next_seg": "cache",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto/archive\\cache",
+   "exists": false
+  },
+  {
+   "file": "proto/run_e192_gain.py",
+   "line": 21,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心",
+   "next_seg": "results",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\results",
+   "exists": false
+  },
+  {
+   "file": "proto/run_e198_probe_gguf.py",
+   "line": 11,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心",
+   "next_seg": "results",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\results",
+   "exists": false
+  },
+  {
+   "file": "proto/run_e199_download_int8.py",
+   "line": 16,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心",
+   "next_seg": "results",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\results",
+   "exists": false
+  },
+  {
+   "file": "proto/run_e205_fusion.py",
+   "line": 23,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心",
+   "next_seg": "results",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\results",
+   "exists": false
+  },
+  {
+   "file": "proto/run_e208_fusion.py",
+   "line": 5,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心",
+   "next_seg": "results",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\results",
+   "exists": false
+  },
+  {
+   "file": "proto/run_e218_final.py",
+   "line": 5,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心",
+   "next_seg": "work",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\work",
+   "exists": false
+  },
+  {
+   "file": "proto/run_e218_final.py",
+   "line": 6,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心",
+   "next_seg": "results",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\results",
+   "exists": false
+  },
+  {
+   "file": "proto/run_e218b_judge_prep.py",
+   "line": 9,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心",
+   "next_seg": "work",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\work",
+   "exists": false
+  },
+  {
+   "file": "proto/run_e221_cat5.py",
+   "line": 9,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心",
+   "next_seg": "work",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\work",
+   "exists": false
+  },
+  {
+   "file": "proto/run_e221_final.py",
+   "line": 16,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心",
+   "next_seg": "work",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\work",
+   "exists": false
+  },
+  {
+   "file": "proto/run_e221_final.py",
+   "line": 17,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心",
+   "next_seg": "results",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\results",
+   "exists": false
+  },
+  {
+   "file": "proto/run_e221_judge_prep.py",
+   "line": 14,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心",
+   "next_seg": "work",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\work",
+   "exists": false
+  },
+  {
+   "file": "proto/run_e221_merge_score.py",
+   "line": 6,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心",
+   "next_seg": "work",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\work",
+   "exists": false
+  },
+  {
+   "file": "proto/run_e221_merge_score.py",
+   "line": 7,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心",
+   "next_seg": "results",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\results",
+   "exists": false
+  },
+  {
+   "file": "proto/run_e221_merge_score2.py",
+   "line": 16,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心",
+   "next_seg": "work",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\work",
+   "exists": false
+  },
+  {
+   "file": "proto/run_e221_merge_score2.py",
+   "line": 17,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心",
+   "next_seg": "results",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\results",
+   "exists": false
+  },
+  {
+   "file": "proto/run_e221_score.py",
+   "line": 9,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心",
+   "next_seg": "work",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\work",
+   "exists": false
+  },
+  {
+   "file": "proto/run_e221_score.py",
+   "line": 10,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心",
+   "next_seg": "results",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\results",
+   "exists": false
+  },
+  {
+   "file": "proto/run_e440_version_reg.py",
+   "line": 18,
+   "n_ups": 1,
+   "resolved_to": "C:\\Users\\xuee\\Desktop\\肥鱼之心",
+   "next_seg": "cosmos_mem",
+   "candidate": "C:\\Users\\xuee\\Desktop\\肥鱼之心\\cosmos_mem",
+   "exists": false
+  }
+ ]
+}

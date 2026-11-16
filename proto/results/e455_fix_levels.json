@@ -1,0 +1,128 @@
+{
+ "experiment": "E-455",
+ "n_fixed": 478,
+ "n_bad_paths": 26,
+ "bad": [
+  {
+   "file": "proto/archive/cosmos_lite/core.py",
+   "line": 599,
+   "seg": "_selftest",
+   "candidate": "C:\\Users\\xuee\\Desktop\\_selftest"
+  },
+  {
+   "file": "proto/archive/cosmos_lite/retina.py",
+   "line": 23,
+   "seg": "data",
+   "candidate": "C:\\Users\\xuee\\Desktop\\data"
+  },
+  {
+   "file": "proto/archive/cosmos_lite/retina.py",
+   "line": 25,
+   "seg": "mobilenet_v2.pth",
+   "candidate": "C:\\Users\\xuee\\Desktop\\mobilenet_v2.pth"
+  },
+  {
+   "file": "proto/archive/cosmos_lite/retina.py",
+   "line": 219,
+   "seg": "cache",
+   "candidate": "C:\\Users\\xuee\\Desktop\\cache"
+  },
+  {
+   "file": "proto/archive/run_e0_calibration.py",
+   "line": 29,
+   "seg": "results",
+   "candidate": "C:\\Users\\xuee\\Desktop\\results"
+  },
+  {
+   "file": "proto/cosmos_mem/store_v1.py",
+   "line": 38,
+   "seg": "models",
+   "candidate": "C:\\Users\\xuee\\Desktop\\models"
+  },
+  {
+   "file": "proto/run_e192_gain.py",
+   "line": 21,
+   "seg": "results",
+   "candidate": "C:\\Users\\xuee\\Desktop\\results"
+  },
+  {
+   "file": "proto/run_e198_probe_gguf.py",
+   "line": 11,
+   "seg": "results",
+   "candidate": "C:\\Users\\xuee\\Desktop\\results"
+  },
+  {
+   "file": "proto/run_e199_download_int8.py",
+   "line": 16,
+   "seg": "results",
+   "candidate": "C:\\Users\\xuee\\Desktop\\results"
+  },
+  {
+   "file": "proto/run_e205_fusion.py",
+   "line": 23,
+   "seg": "results",
+   "candidate": "C:\\Users\\xuee\\Desktop\\results"
+  },
+  {
+   "file": "proto/run_e208_fusion.py",
+   "line": 5,
+   "seg": "results",
+   "candidate": "C:\\Users\\xuee\\Desktop\\results"
+  },
+  {
+   "file": "proto/run_e218_final.py",
+   "line": 5,
+   "seg": "work",
+   "candidate": "C:\\Users\\xuee\\Desktop\\work"
+  },
+  {
+   "file": "proto/run_e218_final.py",
+   "line": 6,
+   "seg": "results",
+   "candidate": "C:\\Users\\xuee\\Desktop\\results"
+  },
+  {
+   "file": "proto/run_e218b_judge_prep.py",
+   "line": 9,
+   "seg": "work",
+   "candidate": "C:\\Users\\xuee\\Desktop\\work"
+  },
+  {
+   "file": "proto/run_e221_cat5.py",
+   "line": 9,
+   "seg": "work",
+   "candidate": "C:\\Users\\xuee\\Desktop\\work"
+  },
+  {
+   "file": "proto/run_e221_final.py",
+   "line": 16,
+   "seg": "work",
+   "candidate": "C:\\Users\\xuee\\Desktop\\work"
+  },
+  {
+   "file": "proto/run_e221_final.py",
+   "line": 17,
+   "seg": "results",
+   "candidate": "C:\\Users\\xuee\\Desktop\\results"
+  },
+  {
+   "file": "proto/run_e221_judge_prep.py",
+   "line": 14,
+   "seg": "work",
+   "candidate": "C:\\Users\\xuee\\Desktop\\work"
+  },
+  {
+   "file": "proto/run_e221_merge_score.py",
+   "line": 6,
+   "seg": "work",
+   "candidate": "C:\\Users\\xuee\\Desktop\\work"
+  },
+  {
+   "file": "proto/run_e221_merge_score.py",
+   "line": 7,
+   "seg": "results",
+   "candidate": "C:\\Users\\xuee\\Desktop\\results"
+  }
+ ],
+ "n_syntax": 2
+}

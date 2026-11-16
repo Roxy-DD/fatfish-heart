@@ -61,7 +61,8 @@ print("-" * 60)
 for cat in sorted(by_cat):
     d = by_cat[cat]
     r = d["correct"] / d["n"]
-    print(f"  {CAT_NAMES.get(cat, cat):<10}{f'{d[\"correct\"]}/{d[\"n\"]}':<14}"
+    ratio = "{}/{}".format(d["correct"], d["n"])
+    print(f"  {CAT_NAMES.get(cat, cat):<10}{ratio:<14}"
           f"{r:<12.4f}{d['unknown']}")
 
 print(f"""
