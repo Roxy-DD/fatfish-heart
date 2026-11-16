@@ -2,8 +2,8 @@
  "experiment": "E-421",
  "n_pass": 19,
  "n_total": 19,
- "initial_episodes": 456,
- "final_episodes": 460,
- "history_before": 230,
- "history_after": 231
+ "initial_episodes": 460,
+ "final_episodes": 464,
+ "history_before": 232,
+ "history_after": 233
 }
