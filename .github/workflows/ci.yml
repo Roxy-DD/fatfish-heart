@@ -1,0 +1,184 @@
+name: CI
+
+# ============================================================
+# 为什么只跑这一部分
+#
+# 完整回归有 39 项，但绝大多数需要嵌入模型（bge-small-zh，约 100MB）
+# 和真实数据库。GitHub Actions 上下载模型太慢、也不适合每次推送都跑。
+#
+# 所以 CI 分层：
+#   本 workflow   → 不需要模型的代码层检查（结构、语法、契约）
+#   本地回归      → 需要模型的 36 项（见 CONTRIBUTING.md）
+#
+# 这不是偷懒：能在 CI 抓到的，绝不留给人工。
+# 抓不到的部分，明确写在 CONTRIBUTING 里要求提交前本地跑。
+# ============================================================
+
+on:
+  push:
+    branches: [master, develop]
+  pull_request:
+    branches: [master, develop]
+
+jobs:
+  # ---------- 语法与结构 ----------
+  syntax:
+    name: 语法与结构
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Python 全部文件语法检查
+        run: |
+          python - <<'EOF'
+          import ast, pathlib, sys
+          bad = []
+          n = 0
+          for p in pathlib.Path('proto').rglob('*.py'):
+              if '__pycache__' in str(p):
+                  continue
+              n += 1
+              try:
+                  ast.parse(p.read_text(encoding='utf-8', errors='replace'))
+              except SyntaxError as e:
+                  bad.append((p, e.lineno, e.msg))
+          print(f'检查 {n} 个文件')
+          for p, l, m in bad:
+              print(f'  ❌ {p}:{l} {m}')
+          sys.exit(1 if bad else 0)
+          EOF
+
+      - name: JavaScript 语法检查
+        run: |
+          for f in dsh-plugin/*.js; do
+            node --check "$f" || exit 1
+            echo "✅ $f"
+          done
+
+  # ---------- 插件契约（不需要模型的检查）----------
+  plugin-checks:
+    name: 插件检查
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 前端安全检查
+        working-directory: proto
+        run: node check-client.mjs
+
+      - name: 生命周期拦截
+        working-directory: proto
+        run: node check-lifecycle.mjs
+
+      - name: 自重启
+        working-directory: proto
+        run: node check-selfreload.mjs
+
+      - name: 消息提取
+        working-directory: proto
+        run: node check-scan-cursor.mjs
+
+      - name: 注入控制
+        working-directory: proto
+        run: node check-inject-once.mjs
+
+  # ---------- 文档与版本一致性 ----------
+  consistency:
+    name: 一致性检查
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0        # check_version.py 需要读 tag
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 版本号一致性
+        run: python proto/check_version.py
+
+      - name: 注入策略判据
+        working-directory: proto
+        run: python run_e386_regression.py
+
+      - name: 否证记录完整性
+        working-directory: proto
+        run: python run_e389_falsified.py
+
+      - name: 汇报机制标定
+        working-directory: proto
+        run: python run_e416_n_calib.py
+
+      - name: 版本谱系
+        working-directory: proto
+        run: python run_e440_version_reg.py
+
+      - name: 谱系监控
+        working-directory: proto
+        run: python run_e442_version_monitor.py
+
+  # ---------- 安全性 ----------
+  security:
+    name: 敏感文件扫描
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 确认无数据库/密钥被跟踪
+        run: |
+          set -e
+          BAD=$(git ls-files | grep -E '\.db$|\.db\.backup|\.seed\.json$|\.env$' || true)
+          if [ -n "$BAD" ]; then
+            echo "❌ 发现不应提交的文件:"
+            echo "$BAD"
+            exit 1
+          fi
+          echo "✅ 无数据库/密钥文件"
+
+      - name: 确认无硬编码个人路径（核心模块）
+        run: |
+          set -e
+          # 核心模块（cosmos_mem）不允许硬编码绝对路径
+          BAD=$(grep -rn 'C:\\Users\\' proto/cosmos_mem/*.py || true)
+          if [ -n "$BAD" ]; then
+            echo "❌ 核心模块含硬编码路径:"
+            echo "$BAD"
+            exit 1
+          fi
+          echo "✅ 核心模块无硬编码路径"
+
+      - name: 确认历史中无 SQLite 数据库
+        run: |
+          set -e
+          # 扫描历史 blob 的魔数（只查前 16 字节）
+          FOUND=0
+          for sha in $(git rev-list --objects --all | awk '{print $1}' | head -500); do
+            SIZE=$(git cat-file -s "$sha" 2>/dev/null || echo 0)
+            if [ "$SIZE" -gt 16 ] && [ "$SIZE" -lt 5000000 ]; then
+              if git cat-file -p "$sha" 2>/dev/null | head -c 15 | grep -q "SQLite format"; then
+                echo "❌ 历史中含 SQLite 数据库: $sha"
+                FOUND=1
+              fi
+            fi
+          done
+          if [ "$FOUND" -eq 1 ]; then exit 1; fi
+          echo "✅ 历史中无 SQLite 数据库"

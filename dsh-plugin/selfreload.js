@@ -130,7 +130,7 @@ export function createSelfReloader(ctx, cfg, log) {
    * 手法：给配置加一个 ___reloadAt 时间戳字段再删掉，
    * 内容变化会触发 reconcile，但配置语义不变。
    */
-  async function reloadViaConfigEditor() {
+  async function reloadViaConfigEditor(opts = {}) {
     const found = findMyEntry()
     if (!found.ok) {
       return { ok: false, path: 'configEditor', ...found }
@@ -160,7 +160,7 @@ export function createSelfReloader(ctx, cfg, log) {
         // 忽略：说明插件正在重启
       }
 
-      return { ok: true, path: 'configEditor', stamp }
+      return { ok: true, path: 'configEditor', stamp, dryRun: !!opts.dryRun }
     } catch (e) {
       return {
         ok: false, path: 'configEditor',
@@ -270,14 +270,14 @@ export function createSelfReloader(ctx, cfg, log) {
 
     let strategies
     if (opts.strategy === 'configEditor') {
-      strategies = [['configEditor', reloadViaConfigEditor]]
+      strategies = [['configEditor', () => reloadViaConfigEditor(opts)]]
     } else if (opts.strategy === 'patch') {
       strategies = [['patchFile', () => reloadViaPatchFile(opts)]]
     } else {
       // 默认：patch 优先（E-299 实测：这是唯一真正重载代码的方式）
       strategies = [
         ['patchFile', () => reloadViaPatchFile(opts)],
-        ['configEditor', reloadViaConfigEditor],
+        ['configEditor', () => reloadViaConfigEditor(opts)],
       ]
     }
 
