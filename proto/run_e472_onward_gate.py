@@ -67,6 +67,15 @@ check("扫描器排除自身（避免自我误判）",
       "SELF_FILES" in src and "proto/onward.py" in src,
       "已排除" if "SELF_FILES" in src else "未排除 → 会自我误判")
 
+# E-477：只检查实际代码行，不把注释里的说明当问题
+#
+# 反例：dsh-plugin/index.js 注释里写了
+#   //   C:\Users\xuee\Desktop\肥鱼之心\dsh-plugin 解析不到
+# 这是解释文字，不是配置值。纯文本扫描会误判。
+check("检查排除注释行（避免误判）",
+      "has_live_path" in src and "startswith" in src,
+      "已实现" if "has_live_path" in src else "未实现 → 注释会误伤")
+
 # 复制一份分类逻辑（保持与 onward.py 一致）
 BLOCKED_PATTERNS = [
     r"\.db$", r"\.db-wal$", r"\.db-shm$", r"\.db\.backup",

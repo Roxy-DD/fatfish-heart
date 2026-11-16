@@ -1,18 +1,51 @@
+# ============================================================
+# 肥鱼之心（Fat Fish Heart）· 插件默认配置
+#
+# ★ 这个文件随包分发，所以**不能含任何作者本机路径**。
+#
+# 下面的 pythonPath / kernelDir / dbPath 是占位值：
+#   · kernelDir 和 dbPath 会在插件加载时从自身位置自动推导
+#     （见 index.js 的 _derivePaths），通常不需要改
+#   · pythonPath 默认 'python'，如果你的 Python 不在 PATH 里，
+#     改成绝对路径，例如：
+#       Windows: 'D:\anaconda3\python.exe'
+#       macOS/Linux: '/usr/bin/python3'
+#
+# 先跑一次环境自检确认依赖齐全：
+#     python proto/doctor.py
+#
+# 然后初始化记忆库（首次）：
+#     python proto/init_db.py
+# ============================================================
+
 - insert:
-    - id: cosmos-mem
+    - id: fatfish-heart
       name: '@local/dsh-cosmos-mem'
       config:
-        pythonPath: 'D:\anaconda3\python.exe'
-        kernelDir: 'C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem'
-        dbPath: 'C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem\dsh_mem.db'
+        # 如果你的 Python 不在 PATH 里，改成绝对路径
+        pythonPath: 'python'
+
+        # 留空即自动推导（从插件所在位置上溯到项目根）
+        # 只有在插件被单独复制到别处时才需要手动指定
+        kernelDir: ''
+        dbPath: ''
+
+        # ---- 自动记忆 ----
         autoInject: true
         autoRemember: true
         autoInjectTopK: 5
+
+        # ---- 注入预算（两个独立上限）----
+        # autoInjectMaxChars 只管普通检索结果
         autoInjectMaxChars: 1500
+        # autoInjectMaxTotal 管总注入量（含 L0/L1 全文）
+        autoInjectMaxTotal: 6000
+
+        # ---- 复盘 ----
         reviewWindow: 8
-        reviewProvider: 'workbuddy'
-        reviewModel: 'deepseek-v4.1-flash'
         reviewMaxTokens: 800
         minImportance: 0.5
         minCost: 0.7
-        debugLog: true
+
+        # ---- 调试 ----
+        debugLog: false

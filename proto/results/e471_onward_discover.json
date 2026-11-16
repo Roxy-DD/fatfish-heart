@@ -2,7 +2,7 @@
  "experiment": "E-471",
  "branch": "master",
  "ahead_commits": 0,
- "dirty_files": 6,
+ "dirty_files": 11,
  "candidates": [
   {
    "status": "M",
@@ -11,27 +11,52 @@
   },
   {
    "status": "M",
+   "path": "dsh-plugin/cordis.patch.yml",
+   "kind": "ok"
+  },
+  {
+   "status": "M",
+   "path": "dsh-plugin/index.js",
+   "kind": "ok"
+  },
+  {
+   "status": "M",
    "path": "proto/iterate.py",
    "kind": "ok"
   },
   {
-   "status": "??",
-   "path": ".github/ISSUE_TEMPLATE/",
-   "kind": "other"
+   "status": "M",
+   "path": "proto/onward.py",
+   "kind": "ok"
   },
   {
-   "status": "??",
-   "path": ".github/pull_request_template.md",
+   "status": "M",
+   "path": "proto/results/e471_onward_discover.json",
+   "kind": "blocked"
+  },
+  {
+   "status": "M",
+   "path": "proto/results/e472_onward_gate.json",
+   "kind": "blocked"
+  },
+  {
+   "status": "M",
+   "path": "proto/run_e472_onward_gate.py",
    "kind": "ok"
   },
   {
    "status": "??",
-   "path": "proto/results/e475_contrib_entry.json",
+   "path": "docs/INSTALL.md",
+   "kind": "ok"
+  },
+  {
+   "status": "??",
+   "path": "proto/results/e476_plugin_portable.json",
    "kind": "blocked"
   },
   {
    "status": "??",
-   "path": "proto/run_e475_contrib_entry.py",
+   "path": "proto/run_e476_plugin_portable.py",
    "kind": "ok"
   }
  ],

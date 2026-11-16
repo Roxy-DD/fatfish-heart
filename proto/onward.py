@@ -166,7 +166,37 @@ for f in changed_files:
         c = open(p, encoding="utf-8", errors="replace").read()
     except Exception:
         continue
-    if re.search(r"C:\\Users\\[^\\]+\\", c):
+
+    # E-477：只检查**实际代码行**，排除注释
+    #
+    # 问题：dsh-plugin/index.js 的注释里写了
+    #   //   C:\Users\xuee\Desktop\肥鱼之心\dsh-plugin 解析不到
+    # 这是解释性问题说明，不是配置值。
+    # 但早期的纯文本扫描把它当成"含本机路径"→ 阻断贡献。
+    #
+    # 这和 E-373 是同一类错误：
+    #   「字符串出现」≠「代码里真的用了它」。
+    # 检查代码必须排除注释。
+    def has_live_path(text, ext):
+        for line in text.split("\n"):
+            s = line.strip()
+            # 跳过注释行
+            if ext in (".py",):
+                if s.startswith("#"):
+                    continue
+            elif ext in (".js", ".mjs"):
+                if s.startswith("//") or s.startswith("*"):
+                    continue
+                if s.startswith("/*"):
+                    continue
+            elif ext == ".md":
+                pass          # 文档里的路径都是示例，不阻断
+            if re.search(r"C:\\Users\\[^\\]+\\", line):
+                return True
+        return False
+
+    ext = os.path.splitext(f)[1]
+    if has_live_path(c, ext):
         local_path_files.append(f)
 
 if local_path_files:

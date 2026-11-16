@@ -129,6 +129,8 @@ CLIENT_CHECKS = [
     ("分支状态", "run_e473_branch_state.py"),
     # E-475：贡献入口完整性（issue/PR 模板 + README 可达性）
     ("贡献入口", "run_e475_contrib_entry.py"),
+    # E-476：插件可移植性（配置不含作者本机路径 + 自动推导）
+    ("插件可移植", "run_e476_plugin_portable.py"),
 ]
 
 

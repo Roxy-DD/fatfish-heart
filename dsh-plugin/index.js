@@ -57,7 +57,9 @@ export const inject = ['tools', 'llm', 'webServer']
 //   保证 DSH 不会因缺 ~standard 而崩。
 import { createRequire } from 'node:module'
 import { homedir } from 'node:os'
-import { join as _join } from 'node:path'
+import { join as _join, dirname as _dirname } from 'node:path'
+// E-476：需要把 import.meta.url 转成真实文件路径（会跟随符号链接）
+import { fileURLToPath } from 'node:url'
 // E-290：自主生命周期管理（拦截 turn-stopping，必要时 steer 续跑）
 import { createLifecycleSupervisor } from './lifecycle.js'
 // E-296：自重启（通过 configEditor / patch 文件触发 Loader reconcile）
@@ -91,10 +93,52 @@ function _loadSchemastery() {
 
 const _Schema = _loadSchemastery()
 
+/**
+ * E-476：从插件自身位置推导内核目录与数据库路径
+ *
+ * 为什么必须这样做（生态视角下的阻断级问题）：
+ *   原 DEFAULTS 硬编码了作者本机路径：
+ *     kernelDir: 'C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto\\cosmos_mem'
+ *     dbPath:    'C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto\\cosmos_mem\\dsh_mem.db'
+ *
+ *   后果：别人安装插件后，默认配置指向一个**不存在的路径**，
+ *        内核启动直接失败。而他们不知道该改成什么。
+ *        → 插件在别人机器上完全不可用，fork 的谱系断在第一次运行。
+ *
+ * 推导方式：
+ *   插件装在 <项目根>/dsh-plugin/，通过符号链接被引用。
+ *   import.meta.url 解析后仍指向真实目录（Node 会跟随符号链接），
+ *   所以从 dsh-plugin/ 上溯一级就是项目根，再进 proto/cosmos_mem。
+ *
+ *   如果推导失败（例如插件被单独复制到别处），退回 'proto/cosmos_mem'
+ *   相对路径，让用户在配置里自己改 —— 至少不是一条绝对死路径。
+ */
+function _derivePaths() {
+  const fallback = {
+    kernelDir: 'proto/cosmos_mem',
+    dbPath: 'proto/cosmos_mem/dsh_mem.db',
+  }
+  try {
+    const here = fileURLToPath(import.meta.url)      // .../dsh-plugin/index.js
+    const pluginDir = _dirname(here)                 // .../dsh-plugin
+    const projectRoot = _dirname(pluginDir)          // .../  (项目根)
+    const kernelDir = _join(projectRoot, 'proto', 'cosmos_mem')
+    return {
+      kernelDir,
+      dbPath: _join(kernelDir, 'dsh_mem.db'),
+    }
+  } catch {
+    return fallback
+  }
+}
+
+const _DERIVED = _derivePaths()
+
 const DEFAULTS = {
   pythonPath: 'python',
-  kernelDir: 'C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto\\cosmos_mem',
-  dbPath: 'C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto\\cosmos_mem\\dsh_mem.db',
+  // E-476：不再硬编码作者本机路径，改为从插件位置推导
+  kernelDir: _DERIVED.kernelDir,
+  dbPath: _DERIVED.dbPath,
   autoInject: true,
   autoInjectTopK: 5,
   autoInjectMaxChars: 1500,
@@ -1103,6 +1147,16 @@ export function apply(ctx, config) {
   } catch { /* ignore */ }
 
   const cfg = { ...DEFAULTS, ...(config || {}) }
+
+  // E-476：空字符串视为「未配置」，退回自动推导的默认值
+  //
+  // 为什么需要这一步：
+  //   cordis.patch.yml 里 kernelDir/dbPath 留空（''），
+  //   但 { ...DEFAULTS, ...config } 会让 '' 覆盖掉推导出的真路径。
+  //   结果 cfg.kernelDir === ''，resolve('', 'kernel_server.py')
+  //   会得到相对路径，内核启动失败。
+  if (!cfg.kernelDir) cfg.kernelDir = _DERIVED.kernelDir
+  if (!cfg.dbPath) cfg.dbPath = _DERIVED.dbPath
 
   // E-298：每次 apply() 都是新的加载周期，旧的 ctx.effect 已被 dispose，
   // webServer 上的路由已被移除，必须清空去重记录重新注册。

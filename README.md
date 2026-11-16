@@ -363,11 +363,30 @@ python -u run_e223_regression.py
 
 ### 安装插件
 
-```powershell
-dsh plugin --profile <name> add <项目路径>\dsh-plugin
+前置条件：需要先装好 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)。
+
+```bash
+dsh --version                              # 1. 确认 DSH 可用
+dsh profile list                           # 2. 查 profile 名（desktop / web）
+dsh plugin --profile <profile> add <项目绝对路径>/dsh-plugin   # 3. 安装
 ```
 
-插件契约（官方规范）：
+然后重启 DSH。
+
+配置通常不用改——插件会从自身位置自动推导内核目录和数据库路径。
+
+只有这几种情况需要手动配置：
+
+| 情况 | 改什么 |
+|---|---|
+| Python 不在 PATH 里 | `pythonPath` 改成绝对路径 |
+| 插件被单独复制到别处 | `kernelDir` / `dbPath` |
+| 想换记忆库位置 | `dbPath` |
+
+完整步骤（含常见问题、不用 DSH 的用法、卸载）见
+[docs/INSTALL.md](docs/INSTALL.md)。
+
+插件契约（DSH 官方规范）：
 
 | 要求 | 状态 |
 |---|---|
@@ -377,6 +396,7 @@ dsh plugin --profile <name> add <项目路径>\dsh-plugin
 | `dsh.manifestVersion` | ✅ |
 | `engines.node` | ✅ |
 | `files` 含 patch 与入口 | ✅ |
+| 配置不含作者本机路径 | ✅ 自动推导 |
 
 ---
 
