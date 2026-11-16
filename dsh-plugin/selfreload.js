@@ -127,6 +127,108 @@ export function createSelfReloader(ctx, cfg, log) {
   }
 
   /**
+   * 路径 C：pluginManager 先禁用再启用自己（E-488）
+   *
+   * 为什么需要这条路（实测确认）：
+   *   · 路径 A configEditor.edit → ce.entries() 返回 []，
+   *     因为插件是通过 **bundle** 加载的，不是 profile 条目。
+   *     diagnose 一直报 entryFound:false / entriesTotal:0。
+   *   · 路径 B patchFile → 只往 cordis.patch.yml 写注释，
+   *     Cordis 判定 bodyUnchanged:true，模块缓存命中，
+   *     apply() 根本不重新执行（reloaded:false）。
+   *
+   *   两条路都不重载代码，所以改完插件后必须重启 DSH。
+   *   这条路径用 pluginManager 真正把插件卸载再装回，
+   *   会让 Node 丢弃模块缓存并重新 apply()。
+   *
+   * 依据（cordis_inspect_query 查到的真实签名）：
+   *   listPlugins(): Promise<PluginInfo[]>
+   *     PluginInfo 含 entryId / moduleName / fiberPhase
+   *   setPluginEnabled(id: PluginEntryId, enabled: boolean): Promise<ChangeResult>
+   *     ChangeResult.application: 'applied' | 'restart-required' | ...
+   *
+   * 做法：找到自己 → setPluginEnabled(false) → setPluginEnabled(true)
+   *
+   * ★ 风险：禁用自己后，本进程内这段代码可能被卸载，
+   *   重新启用的调用必须在这之前发出（不 await 禁用结果）。
+   */
+  async function reloadViaPluginManager(opts = {}) {
+    const pm = ctx.get('pluginManager')
+    if (!pm || typeof pm.listPlugins !== 'function' ||
+        typeof pm.setPluginEnabled !== 'function') {
+      return { ok: false, path: 'pluginManager', reason: 'pluginManager unavailable' }
+    }
+
+    // 找自己的 entryId
+    let list = []
+    try {
+      list = await pm.listPlugins()
+    } catch (e) {
+      return { ok: false, path: 'pluginManager',
+               reason: 'listPlugins failed: ' + String(e && e.message) }
+    }
+    if (!Array.isArray(list)) {
+      return { ok: false, path: 'pluginManager', reason: 'listPlugins not array' }
+    }
+
+    const mine = list.find((e) => {
+      const s = String((e && (e.moduleName || e.name || e.id)) || '')
+        .toLowerCase()
+      return s.includes('cosmos-mem') || s.includes('fatfish')
+    })
+    if (!mine) {
+      return {
+        ok: false, path: 'pluginManager', reason: 'my entry not found',
+        entries: list.length,
+        sample: list.slice(0, 6).map((e) => ({
+          entryId: e.entryId, moduleName: e.moduleName,
+          fiberPhase: e.fiberPhase,
+        })),
+      }
+    }
+
+    const id = mine.entryId
+    const stamp = new Date().toISOString()
+
+    if (opts.dryRun) {
+      return {
+        ok: true, path: 'pluginManager', dryRun: true, stamp,
+        entryId: String(id), moduleName: mine.moduleName,
+        fiberPhase: mine.fiberPhase,
+        wouldDo: 'disable then enable',
+      }
+    }
+
+    // 先记下「重载意图」，让重新 apply 后能确认是自己触发的
+    try {
+      globalThis.__FFH_RELOAD_INTENT__ = { at: stamp, via: 'pluginManager' }
+    } catch { /* ignore */ }
+
+    // 不 await 禁用：禁用后本代码可能被卸载，等不到返回
+    try {
+      pm.setPluginEnabled(id, false)
+    } catch (e) {
+      return { ok: false, path: 'pluginManager',
+               reason: 'disable failed: ' + String(e && e.message) }
+    }
+
+    // 稍等一拍再启用，让卸载完成
+    await new Promise((r) => setTimeout(r, 300))
+    try {
+      const res = await pm.setPluginEnabled(id, true)
+      return {
+        ok: true, path: 'pluginManager', stamp,
+        entryId: String(id), moduleName: mine.moduleName,
+        application: res && res.application,
+        changed: res && res.changed,
+      }
+    } catch (e) {
+      return { ok: false, path: 'pluginManager',
+               reason: 'enable failed: ' + String(e && e.message) }
+    }
+  }
+
+  /**
    * 路径 A：通过 configEditor.edit 触发 reconcile
    *
    * 手法：给配置加一个 ___reloadAt 时间戳字段再删掉，
@@ -275,9 +377,20 @@ export function createSelfReloader(ctx, cfg, log) {
       strategies = [['configEditor', () => reloadViaConfigEditor(opts)]]
     } else if (opts.strategy === 'patch') {
       strategies = [['patchFile', () => reloadViaPatchFile(opts)]]
+    } else if (opts.strategy === 'pluginManager') {
+      strategies = [['pluginManager', () => reloadViaPluginManager(opts)]]
     } else {
-      // 默认：patch 优先（E-299 实测：这是唯一真正重载代码的方式）
+      // E-488：默认顺序改成 pluginManager 优先
+      //
+      // 实测结论（两条旧路径都不重载代码）：
+      //   · configEditor → entries() 为空（插件是 bundle 加载，非 profile 条目）
+      //   · patchFile    → 只写注释，bodyUnchanged，模块缓存命中，
+      //                    apply() 不重新执行（reloaded:false）
+      //
+      //   pluginManager 走「卸载再装回」，会让 Node 丢缓存并重新 apply()。
+      //   虽然慢一点（要重新连内核），但它是唯一真正生效的。
       strategies = [
+        ['pluginManager', () => reloadViaPluginManager(opts)],
         ['patchFile', () => reloadViaPatchFile(opts)],
         ['configEditor', () => reloadViaConfigEditor(opts)],
       ]
