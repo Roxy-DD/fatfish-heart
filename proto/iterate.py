@@ -63,6 +63,8 @@ CLIENT_CHECKS = [
     ("自重启", "check-selfreload.mjs"),
     # E-483：全新进程端到端验证 mem_done（提前验证重启后可用性）
     ("自主停止", "check-mem-done-e2e.mjs"),
+    # E-497：孤儿内核修复（重载后只保留一代内核）
+    ("孤儿内核", "check-orphan-kernel.mjs"),
     # E-329：消息提取游标（含 log 重置边界）
     ("消息提取", "check-scan-cursor.mjs"),
     # E-348：只注入一次（首轮判断顺序 + 并发防重）

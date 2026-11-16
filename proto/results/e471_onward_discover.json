@@ -6,18 +6,18 @@
  "candidates": [
   {
    "status": "M",
-   "path": "proto/iterate.py",
+   "path": "dsh-plugin/index.js",
    "kind": "ok"
   },
   {
    "status": "M",
-   "path": "proto/results/e471_onward_discover.json",
-   "kind": "blocked"
+   "path": "proto/iterate.py",
+   "kind": "ok"
   },
   {
-   "status": "M",
-   "path": "proto/results/e493_auto_backup.json",
-   "kind": "blocked"
+   "status": "??",
+   "path": "proto/check-orphan-kernel.mjs",
+   "kind": "ok"
   }
  ],
  "issues": [],

@@ -465,7 +465,22 @@ function recentUserMessages(log, n, sid) {
  *   请求 {"id":1,"cmd":"search","payload":{...}}
  *   响应 {"id":1,"ok":true,...}
  */
-const kernelPools = new Map()   // dbPath -> { proc, pending: Map, nextId, ready }
+// E-497：内核池挂 globalThis，跨模块重载保留
+//
+// 根因（实测 2026-11-16 17:43）：
+//   原实现是模块级 `const kernelPools = new Map()`。
+//   pluginManager 重载插件 → 模块被替换 → Map 重建 → 旧 pool 引用丢失。
+//   插件卸载时的 ctx.effect cleanup 拿不到旧 pool，
+//   shutdownKernels() 杀不到旧内核 → 孤儿进程连着同一个 DB。
+//
+//   实测现象：reloaded=True 后同时存在两个内核（14:20 的旧的 + 17:43 的新的），
+//   都连 dsh_mem.db，父进程都是 DeepSeek Harness.exe。
+//
+// 修法：pool 挂 globalThis，新模块能拿到旧 pool 并清理；
+//       配合 apply 开头的 shutdownKernels() 主动收尾。
+// 这与项目已有约定一致：「跨 apply() 要保留的状态放 globalThis」（行 329 注释）。
+const kernelPools = globalThis.__FFH_KERNEL_POOLS__
+  || (globalThis.__FFH_KERNEL_POOLS__ = new Map())
 
 function getKernel(cfg) {
   const key = cfg.dbPath
@@ -485,7 +500,9 @@ function getKernel(cfg) {
       stdio: ['pipe', 'pipe', 'pipe'],
     })
 
-  k = { proc, pending: new Map(), nextId: 1, buffer: '', ready: false, startedAt: Date.now(), readyWaiters: [] }
+  k = { proc, pending: new Map(), nextId: 1, buffer: '', ready: false,
+        startedAt: Date.now(), readyWaiters: [],
+        applySeq: globalThis.__FFH_APPLY_SEQ__ || 0 }   // E-497：归属标记
   kernelPools.set(key, k)
 
   // 累积 stdout 按行切分
@@ -591,6 +608,30 @@ function shutdownKernels() {
     try { k.proc.kill() } catch { /* ignore */ }
   }
   kernelPools.clear()
+}
+
+/**
+ * E-497：清理「上一代」内核，保留当前 apply 刚建的。
+ *
+ * 为什么不能直接用 shutdownKernels()：
+ *   pluginManager 重载时，新 apply 可能已经建了新内核，
+ *   无差别 shutdown 会把正在服务的也杀掉。
+ *
+ * 做法：给每个 pool 打 apply 序号；只杀序号小于当前的。
+ * apply 序号用 globalThis 计数器，跨模块重载递增。
+ */
+function shutdownStaleKernels() {
+  try {
+    globalThis.__FFH_APPLY_SEQ__ = (globalThis.__FFH_APPLY_SEQ__ || 0) + 1
+    const cur = globalThis.__FFH_APPLY_SEQ__
+    for (const [key, k] of kernelPools) {
+      if ((k.applySeq || 0) < cur) {
+        try { k.proc.stdin.end() } catch { /* ignore */ }
+        try { k.proc.kill() } catch { /* ignore */ }
+        kernelPools.delete(key)
+      }
+    }
+  } catch { /* ignore */ }
 }
 
 /** 通用：调模型拿文本（非流式收集） */
@@ -1134,6 +1175,13 @@ function resetRoutesForNewApply(ctx, myKey) {
 }
 
 export function apply(ctx, config) {
+  // E-497：先清掉上一代遗留的内核进程
+  //
+  // ★ 必须在 getKernel() 之前调用，也不依赖任何新内核存在。
+  //   重载时旧内核若还活着，这里按 applySeq 关掉它；
+  //   本 apply 之后新建的内核 applySeq = 当前值，不会被误杀。
+  try { shutdownStaleKernels() } catch { /* ignore */ }
+
   // E-302：重载指纹
   //
   // 用途：验证自重启（mem_selfreload）是否真的重新执行了模块代码，
