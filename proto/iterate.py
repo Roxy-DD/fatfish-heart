@@ -123,6 +123,8 @@ CLIENT_CHECKS = [
     ("谱系监控", "run_e442_version_monitor.py"),
     # E-466：版本号一致性（package.json vs git tag）
     ("版本号", "check_version.py"),
+    # E-472：回馈机制门禁（防止私人数据被自动推到公共仓库）
+    ("回馈门禁", "run_e472_onward_gate.py"),
 ]
 
 

@@ -2,17 +2,27 @@
  "experiment": "E-471",
  "branch": "master",
  "ahead_commits": 0,
- "dirty_files": 2,
+ "dirty_files": 4,
  "candidates": [
   {
-   "status": "??",
-   "path": "proto/onward.py",
+   "status": "M",
+   "path": "proto/iterate.py",
    "kind": "ok"
   },
   {
-   "status": "??",
+   "status": "M",
    "path": "proto/results/e471_onward_discover.json",
    "kind": "blocked"
+  },
+  {
+   "status": "??",
+   "path": "proto/results/e472_onward_gate.json",
+   "kind": "blocked"
+  },
+  {
+   "status": "??",
+   "path": "proto/run_e472_onward_gate.py",
+   "kind": "ok"
   }
  ],
  "issues": [],
