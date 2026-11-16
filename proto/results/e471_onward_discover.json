@@ -1,0 +1,20 @@
+{
+ "experiment": "E-471",
+ "branch": "master",
+ "ahead_commits": 0,
+ "dirty_files": 2,
+ "candidates": [
+  {
+   "status": "??",
+   "path": "proto/onward.py",
+   "kind": "ok"
+  },
+  {
+   "status": "??",
+   "path": "proto/results/e471_onward_discover.json",
+   "kind": "blocked"
+  }
+ ],
+ "issues": [],
+ "ready_to_contribute": true
+}
