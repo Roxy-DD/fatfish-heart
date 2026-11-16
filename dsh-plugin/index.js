@@ -21,7 +21,7 @@
  */
 import { spawn } from 'node:child_process'
 import { resolve, join } from 'node:path'
-import { appendFileSync, statSync, renameSync } from 'node:fs'
+import { appendFileSync, statSync, renameSync, existsSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 
 // ============================================================
@@ -1155,6 +1155,29 @@ export function apply(ctx, config) {
       kernelDir: cfg.kernelDir,
       dbPath: cfg.dbPath,
       derived: _DERIVED,
+    }
+  } catch { /* ignore */ }
+
+  // E-491：路径不存在时给出明确指引，而不是让内核静默启动失败
+  //
+  // 场景：插件被单独复制到别处（不走 git clone 整个仓库）。
+  // 此时从插件位置上溯得到的 proto/cosmos_mem 并不存在，
+  // 内核 spawn 会失败，而报错信息通常只有「kernel exited」之类的现象，
+  // 用户不知道该怎么改。
+  try {
+    if (!existsSync(cfg.kernelDir)) {
+      console.error(
+        '[fatfish-heart] 内核目录不存在: ' + cfg.kernelDir + '\n'
+        + '  这通常意味着插件被单独复制到了别处。\n'
+        + '  请二选一：\n'
+        + '   1) 把整个项目 clone 下来，插件用 <项目根>/dsh-plugin\n'
+        + '   2) 在 profile 的 cordis.patch.yml 里手动指定 kernelDir 和 dbPath\n'
+        + '      kernelDir: <项目根>/proto/cosmos_mem\n'
+        + '      dbPath:    <项目根>/proto/cosmos_mem/dsh_mem.db')
+      globalThis.__FFH_PATH_ERROR__ =
+        'kernelDir not found: ' + cfg.kernelDir
+    } else {
+      globalThis.__FFH_PATH_ERROR__ = null
     }
   } catch { /* ignore */ }
 

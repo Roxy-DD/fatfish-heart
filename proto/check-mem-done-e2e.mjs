@@ -22,6 +22,8 @@
  */
 import { createRequire } from 'node:module'
 import { existsSync } from 'node:fs'
+import { join } from 'node:path'
+import { tmpdir } from 'node:os'
 
 const require = createRequire(import.meta.url)
 
@@ -366,6 +368,54 @@ console.log('\n【9】空配置时路径兜底（E-489）')
       /^[A-Za-z]:[\\/]/.test(p.kernelDir) || p.kernelDir.startsWith('/'),
       p.kernelDir.slice(0, 3))
   }
+}
+
+// ---------- ⑩ E-491：内核目录不存在时给出可操作指引 ----------
+//
+// 场景：用户把 dsh-plugin 单独复制到别处（没 clone 整个仓库）。
+// 此时从插件位置上溯得到的 proto/cosmos_mem 不存在，
+// 内核 spawn 会失败，而现象通常只有「kernel exited」，
+// 用户不知道该改什么。
+//
+// 要求在 apply 时就明确告知，并给出两条具体出路。
+console.log('\n【10】内核目录不存在时给出指引（E-491）')
+{
+  // 用一个绝对不存在的路径显式指定
+  const badDir = join(tmpdir(), 'ffh_definitely_missing_' + Date.now())
+  const ctx3 = {
+    tools: { register() {} }, provide() {}, set() {},
+    get() { return undefined },
+    on() { return () => {} },
+    effect(f) { try { f() } catch { /* ignore */ } return () => {} },
+  }
+
+  const errLines = []
+  const origErr = console.error
+  console.error = (...a) => { errLines.push(a.join(' ')) }
+  try {
+    await mod.apply(ctx3, {
+      debugLog: false,
+      kernelDir: badDir,
+      dbPath: join(badDir, 'x.db'),
+      prewarmKernel: false,
+    })
+  } finally {
+    console.error = origErr
+  }
+
+  const msg = errLines.join('\n')
+  check('检测到 kernelDir 不存在',
+    String(globalThis.__FFH_PATH_ERROR__ || '').includes(badDir),
+    String(globalThis.__FFH_PATH_ERROR__ || '').slice(0, 50))
+  check('提示了「复制到别处」这个原因',
+    msg.includes('复制') || msg.includes('别处'), '')
+  check('给出出路1：clone 整个项目',
+    msg.includes('clone') || msg.includes('整个项目'), '')
+  check('给出出路2：手动指定 kernelDir',
+    msg.includes('kernelDir'), '')
+  check('没有因为路径错误而中断 apply',
+    !!globalThis.__FFH_APPLY_COMPLETE__,
+    String(globalThis.__FFH_APPLY_COMPLETE__))
 }
 
 // ---------- 汇总 ----------
