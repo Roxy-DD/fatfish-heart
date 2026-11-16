@@ -17,7 +17,7 @@ import os
 import threading
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
-MODEL_DIR = r"C:\Users\xuee\Desktop\肥鱼之心\models\bge-small-zh"
+MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "models", "bge-small-zh")
 
 # 高唤醒原型：描述情境，刻意不含"害怕/开心"这类词
 PROTO_HIGH = [

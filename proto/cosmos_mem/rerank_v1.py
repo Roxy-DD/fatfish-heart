@@ -21,7 +21,7 @@ sys.path.insert(0, _HERE)
 import numpy as np
 
 # E-206 实测：int8 在 GPU 上回落 CPU（1830ms），fp16 才是 GPU 原生（52ms，快 35 倍）
-DEFAULT_MODEL = r"C:\Users\xuee\Desktop\肥鱼之心\models\bge-reranker-v2-m3-fp16"
+DEFAULT_MODEL = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "models", "bge-reranker-v2-m3-fp16")
 
 
 class CrossEncoderReranker:

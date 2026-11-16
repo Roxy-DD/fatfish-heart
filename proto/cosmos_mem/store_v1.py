@@ -35,7 +35,10 @@ sys.path.insert(0, _HERE)
 from fixes import extract_person_fixed, split_query_terms, scene_words_v2
 
 SCHEMA_VERSION = "cosmos-mem/1.0"
-MODEL_DIR = r"C:\Users\xuee\Desktop\肥鱼之心\models\bge-small-zh"
+MODEL_DIR = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(
+        os.path.abspath(__file__)))),
+    "models", "bge-small-zh")
 
 TIME_PAT = re.compile(
     r"(\d{1,2}月\d{1,2}[日号]?|\d{4}[-/年]\d{1,2}[-/月]\d{1,2}[日]?|"
