@@ -90,6 +90,16 @@ jobs:
         working-directory: proto
         run: node check-selfreload.mjs
 
+      # E-490：全新进程端到端验证 mem_done
+      #
+      # 这个测试最有价值的地方：它在全新 Node 进程里真正跑一遍 apply()，
+      # 等于提前做了一次「重启后能不能用」的验证。
+      # E-479/E-487 那些只在真实环境出现的 bug（ctx.set 需要 provide、
+      # supervisor 挂载顺序、空配置兜底），全靠它才抓到。
+      - name: 自主停止（端到端）
+        working-directory: proto
+        run: node check-mem-done-e2e.mjs
+
       - name: 消息提取
         working-directory: proto
         run: node check-scan-cursor.mjs
