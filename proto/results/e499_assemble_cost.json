@@ -1,0 +1,23 @@
+{
+ "experiment": "E-499",
+ "measurements": [
+  {
+   "logLen": 1000,
+   "msPerCall": 0.01
+  },
+  {
+   "logLen": 5000,
+   "msPerCall": 0.008
+  },
+  {
+   "logLen": 20000,
+   "msPerCall": 0.001
+  },
+  {
+   "logLen": 36908,
+   "msPerCall": 0.001
+  }
+ ],
+ "assemble_count": 2449,
+ "real_log_len": 36908
+}

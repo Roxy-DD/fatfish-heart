@@ -1,0 +1,28 @@
+{
+ "experiment": "E-500",
+ "measurements": {
+  "inject": {
+   "n_protected": 16,
+   "first_turn_chars": 4780,
+   "later_turn_chars": 127
+  },
+  "lifecycle": {
+   "default_chars": 68,
+   "report_chars": 109,
+   "report_every": 8
+  },
+  "traversal_ms": 0.001,
+  "session_20_turns": {
+   "turns": 20,
+   "steers": 10,
+   "inject_chars": 7193,
+   "lifecycle_chars": 721,
+   "total_chars": 7914,
+   "est_tokens": 3957,
+   "worst_case_chars": 96321,
+   "saving_pct": 91.8
+  },
+  "scale_independent": true
+ },
+ "verdict": "已高度优化，无需进一步改"
+}
