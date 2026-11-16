@@ -265,6 +265,67 @@ console.log('\n【7】工具注册抛异常时 supervisor 仍挂载（E-484）')
     String(globalThis.__FFH_APPLY_STAGE__))
 }
 
+// ---------- ⑧ E-487：ctx.set 抛异常时 supervisor 仍能挂载 ----------
+//
+// 真实报错（从 mem_done 诊断里读到的）：
+//   attachError: cannot set property "cosmosMemLifecycle" without provide
+//
+// Cordis 要求先 ctx.provide(name) 才能 ctx.set(name, val)。
+// 旧顺序是 ctx.set 在 globalThis 之前，
+// 于是 ctx.set 一抛异常，后面那行 globalThis 赋值永远执行不到 ——
+// 而 globalThis 才是 mem_done 真正读取的地方。
+//
+// ★ 这个用例必须存在，因为前面的 mock ctx.set 是空实现、从不抛异常 ——
+//   又是"mock 太友善掩盖真实缺陷"。
+console.log('\n【8】ctx.set 抛异常时 supervisor 仍挂载（E-487）')
+{
+  delete globalThis.__FFH_LIFECYCLE_SUP__
+  delete globalThis.__FFH_LIFECYCLE_ERR__
+  delete globalThis.__FFH_APPLY_COMPLETE__
+
+  const tools = new Map()
+  const strictCtx = {
+    tools: { register(d) { tools.set(d.name, d) } },
+    get() { return undefined },
+    // 模拟真实 Cordis：没有 provide 就不让 set
+    set(name) {
+      throw new Error(
+        `cannot set property "${name}" without provide`)
+    },
+    on() { return () => {} },
+    effect(f) { try { f() } catch { /* ignore */ } return () => {} },
+  }
+
+  let threw = null
+  try {
+    await mod.apply(strictCtx, {
+      debugLog: false, kernelDir: '', dbPath: '',
+      prewarmKernel: false,
+    })
+  } catch (e) {
+    threw = e
+  }
+
+  check('ctx.set 抛异常未中断 apply', threw === null,
+    threw ? String(threw.message).slice(0, 50) : 'ok')
+  check('supervisor 仍然挂载（关键）',
+    !!globalThis.__FFH_LIFECYCLE_SUP__,
+    globalThis.__FFH_LIFECYCLE_SUP__ ? 'ok' : '未挂载')
+  check('apply 跑完（有完成标记）',
+    !!globalThis.__FFH_APPLY_COMPLETE__,
+    String(globalThis.__FFH_APPLY_COMPLETE__))
+
+  // 再验一次：这样挂载的 supervisor 真能用
+  const tool = tools.get('mem_done')
+  check('mem_done 工具仍注册', !!tool)
+  if (tool && globalThis.__FFH_LIFECYCLE_SUP__) {
+    const agent = { steer() {}, session: { surface: { nodes: [] }, eventAt() {} } }
+    const r = await tool.execute({ action: 'status' }, { agent })
+    check('mem_done 能拿到 supervisor（端到端可用）',
+      !r.error, r.error || 'ok')
+  }
+}
+
 // ---------- 汇总 ----------
 const pass = results.filter((x) => x.ok).length
 const fail = results.length - pass

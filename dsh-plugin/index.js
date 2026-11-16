@@ -1447,9 +1447,36 @@ export function apply(ctx, config) {
     const lcLog = (kind, data) => debugLog(cfg, kind, data)
     const sup = createLifecycleSupervisor(cfg, lcLog)
     sup.attach(ctx)
-    ctx.set('cosmosMemLifecycle', sup)
     lifecycleSup = sup
+
+    // ★ E-487：先挂 globalThis，再碰 ctx.set
+    //
+    // 真实报错（诊断打出来的）：
+    //   attachError: cannot set property "cosmosMemLifecycle" without provide
+    //
+    // Cordis 要求先 ctx.provide(name) 才能 ctx.set(name, val)。
+    // 旧顺序是 ctx.set 在 globalThis 之前，于是 ctx.set 一抛异常，
+    // 后面那行 globalThis 赋值永远执行不到 ——
+    // 而 globalThis 才是 mem_done 真正读取的地方。
+    //
+    // 教训：**关键状态先写到最可靠的位置**，
+    // 再去碰可能失败的 API。
     globalThis.__FFH_LIFECYCLE_SUP__ = sup
+
+    // ctx.set 只是「顺便注册成服务」，失败不影响 mem_done
+    try {
+      if (typeof ctx.provide === 'function') {
+        ctx.provide('cosmosMemLifecycle')
+      }
+      ctx.set('cosmosMemLifecycle', sup)
+    } catch (e) {
+      // 不抛出：mem_done 走 globalThis，不依赖这个
+      try {
+        debugLog(cfg, 'lifecycle-service-skip', {
+          error: String(e && e.message),
+        })
+      } catch { /* ignore */ }
+    }
   } catch (e) {
     // E-484：把异常写进 debugLog（不只是 console.error）
     //
