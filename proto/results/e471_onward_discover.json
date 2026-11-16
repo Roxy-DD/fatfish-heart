@@ -6,17 +6,17 @@
  "candidates": [
   {
    "status": "M",
+   "path": "proto/results/e408_hygiene.json",
+   "kind": "blocked"
+  },
+  {
+   "status": "M",
    "path": "proto/results/e471_onward_discover.json",
    "kind": "blocked"
   },
   {
    "status": "M",
-   "path": "proto/results/e472_onward_gate.json",
-   "kind": "blocked"
-  },
-  {
-   "status": "M",
-   "path": "proto/run_e472_onward_gate.py",
+   "path": "proto/run_e412_exp_run_reg.py",
    "kind": "ok"
   }
  ],

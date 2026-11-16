@@ -42,7 +42,28 @@ def run_exp(script, timeout=120):
     return r.returncode, (r.stdout or "") + (r.stderr or "")
 
 
-def events_for(source_kw, limit=50):
+def events_for(source_kw, limit=2000):
+    """按 source 关键字取环境事件
+
+    E-486：limit 从 50/100 提到 2000
+
+    原 limit=100 会**悄悄漏掉**较早的记录：
+    生产库已有 123 条环境事件，recent(limit=100) 只取回最近 100 条，
+    最早的 23 条永远看不到。
+
+    于是「before/after 计数」在库变大后开始假失败：
+      before = 100（窗口外旧记录被丢掉）
+      after  = 100（新记录进来，最老的又被挤出窗口）
+      -> 计数不变 -> 断言失败
+
+    实测（E-486）：
+      总行数 123
+      limit=50  -> 取回 50，其中 e408 29 条
+      limit=100 -> 取回 100，其中 e408 54 条
+      limit=200 -> 取回 121，其中 e408 63 条
+
+    这是「测试假设数据库不会变大」的典型错误。
+    """
     st = MemoryStore(DB)
     out = [e for e in env.recent(st, limit=limit)
            if source_kw in str(e.get("source"))]
@@ -59,13 +80,13 @@ print("\n【1】成功路径")
 
 # 找一个会成功且很快的脚本
 OK_SCRIPT = "run_e408_hygiene.py"
-before = len(events_for("exp_run.py " + OK_SCRIPT, 100))
+before = len(events_for("exp_run.py " + OK_SCRIPT, 2000))
 
 code, out = run_exp(OK_SCRIPT)
 check("脚本执行成功", code == 0, f"exit={code}")
 
 time.sleep(0.3)
-evs = events_for("exp_run.py " + OK_SCRIPT, 100)
+evs = events_for("exp_run.py " + OK_SCRIPT, 2000)
 check("记录了新的环境事件", len(evs) > before,
       f"{before} → {len(evs)}")
 
@@ -107,12 +128,12 @@ except Exception as e:
     check("能创建失败测试脚本", False, str(e))
 
 if created_fail:
-    before_f = len(events_for("exp_run.py " + FAIL_SCRIPT, 100))
+    before_f = len(events_for("exp_run.py " + FAIL_SCRIPT, 2000))
     code_f, out_f = run_exp(FAIL_SCRIPT)
     check("脚本执行失败（预期）", code_f != 0, f"exit={code_f}")
 
     time.sleep(0.3)
-    evs_f = events_for("exp_run.py " + FAIL_SCRIPT, 100)
+    evs_f = events_for("exp_run.py " + FAIL_SCRIPT, 2000)
     check("记录了失败事件", len(evs_f) > before_f,
           f"{before_f} → {len(evs_f)}")
 
@@ -138,12 +159,12 @@ print("\n【3】脚本不存在")
 # 注意：source 里写的是完整脚本名 __no_such_script__.py
 # （E-412 第一次跑时我把检查关键词写成了 __no_such__，不匹配，误判为失败）
 MISS_KW = "__no_such_script__"
-before_m = len(events_for(MISS_KW, 100))
+before_m = len(events_for(MISS_KW, 2000))
 code_m, out_m = run_exp("__no_such_script__.py")
 check("返回非 0", code_m != 0, f"exit={code_m}")
 
 time.sleep(0.3)
-evs_m = events_for(MISS_KW, 100)
+evs_m = events_for(MISS_KW, 2000)
 check("记录了 file_missing 事件", len(evs_m) > before_m,
       f"{before_m} → {len(evs_m)}")
 if evs_m:

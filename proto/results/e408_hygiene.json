@@ -3,8 +3,8 @@
  "n_pass": 9,
  "n_total": 9,
  "episodes_test_like": 0,
- "real_test_topic": 12,
- "env_total": 75,
- "env_valid": 73,
+ "real_test_topic": 13,
+ "env_total": 111,
+ "env_valid": 109,
  "env_invalid": 2
 }
