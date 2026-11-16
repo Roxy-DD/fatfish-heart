@@ -308,7 +308,25 @@ class MemoryStore:
     def __init__(self, path="mem.db", use_semantic=True):
         self.path = path
         self.use_semantic = use_semantic
-        self.con = sqlite3.connect(path)
+        self.con = sqlite3.connect(path, timeout=30)
+        # E-498：并发写必须给足等待时间
+        #
+        # 实测缺陷（FISH-14 F10 故障注入）：
+        #   两个进程同时打开同一 DB → 第二个报
+        #     sqlite3.OperationalError: database is locked
+        #   崩在 _init() 的建表写入上，整个进程起不来。
+        #
+        # 这不是假想场景 —— 2026-11-16 真实发生过：
+        #   pluginManager 重载后留下孤儿内核，两个内核连同一个 DB。
+        #
+        # 修法：
+        #   · connect(timeout=30) 让 SQLite 在锁冲突时等待而非立刻失败
+        #   · busy_timeout 双保险（部分发行版 connect timeout 不生效）
+        #   · journal_mode=WAL 允许多读单写，配合 timeout 即可并发
+        try:
+            self.con.execute("PRAGMA busy_timeout=30000")
+        except Exception:
+            pass
         self.con.execute("PRAGMA journal_mode=WAL")
         self.invalidate_vector_cache()
         self._init()

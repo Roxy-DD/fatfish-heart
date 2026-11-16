@@ -1,0 +1,158 @@
+{
+ "experiment": "E-498",
+ "n_pass": 19,
+ "n_total": 19,
+ "faults": [
+  {
+   "fault": "F1 文件删除",
+   "recover": true,
+   "search": true,
+   "write": true
+  },
+  {
+   "fault": "F2 WAL 丢失",
+   "recover": true,
+   "note": "裸拷贝仅0条，备份恢复8条"
+  },
+  {
+   "fault": "F3 文件截断",
+   "recover": true,
+   "detected": true
+  },
+  {
+   "fault": "F4 备份损坏",
+   "detect": true
+  },
+  {
+   "fault": "F5 写入中kill",
+   "integrity": "ok",
+   "write": true
+  },
+  {
+   "fault": "F6 vectors损坏",
+   "episodes_intact": false,
+   "write": true
+  },
+  {
+   "fault": "F7 FTS损坏",
+   "dropped": true,
+   "search": true
+  },
+  {
+   "fault": "F8 路径迁移",
+   "recover": true,
+   "search": true
+  },
+  {
+   "fault": "F9 丢失窗口",
+   "lost": 15,
+   "backup_point": 10
+  },
+  {
+   "fault": "F10 并发双写",
+   "integrity": "ok",
+   "total": 65,
+   "workers": [
+    "30",
+    "30"
+   ]
+  }
+ ],
+ "results": [
+  {
+   "name": "F1 删库后恢复",
+   "ok": true,
+   "detail": "{'ok': True, 'restored': 12}"
+  },
+  {
+   "name": "F1 恢复后可检索",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "F2 直接拷贝主库会丢数据（证明 WAL 风险真实）",
+   "ok": true,
+   "detail": "主库拷贝 0 条 vs 备份恢复 8 条"
+  },
+  {
+   "name": "F2 从备份恢复完整",
+   "ok": true,
+   "detail": "8 条"
+  },
+  {
+   "name": "F3 截断能被发现（不是静默损坏）",
+   "ok": true,
+   "detail": "损坏被检出"
+  },
+  {
+   "name": "F3 从备份恢复",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "F3 恢复后可检索",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "F4 损坏的备份能被 verify 检出",
+   "ok": true,
+   "detail": "已检出"
+  },
+  {
+   "name": "F5 崩溃后库仍可打开",
+   "ok": true,
+   "detail": "ok"
+  },
+  {
+   "name": "F5 崩溃后可继续写入",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "F6 删掉 vectors 后 episodes 未受影响",
+   "ok": true,
+   "detail": "12 → 12"
+  },
+  {
+   "name": "F6 无向量时仍能写入（可重建）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "F7 删掉 ep_fts 后系统仍可用",
+   "ok": true,
+   "detail": "search=True"
+  },
+  {
+   "name": "F8 可恢复到新路径",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "F8 新路径可检索",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "F9 restore 本身成功",
+   "ok": true,
+   "detail": "{'ok': True, 'restored': 10}"
+  },
+  {
+   "name": "F9 恢复后回到备份点（丢失量可量化）",
+   "ok": true,
+   "detail": "备份点 10 → 写后 25 → 恢复 10，丢 15 条"
+  },
+  {
+   "name": "F10 双写后库完整性 ok",
+   "ok": true,
+   "detail": "ok"
+  },
+  {
+   "name": "F10 双写后数据都在",
+   "ok": true,
+   "detail": "65 条（预期 5+60）"
+  }
+ ]
+}

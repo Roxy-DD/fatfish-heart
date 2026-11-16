@@ -2,11 +2,11 @@
  "experiment": "E-471",
  "branch": "master",
  "ahead_commits": 0,
- "dirty_files": 3,
+ "dirty_files": 4,
  "candidates": [
   {
    "status": "M",
-   "path": "dsh-plugin/index.js",
+   "path": "proto/cosmos_mem/store_v1.py",
    "kind": "ok"
   },
   {
@@ -16,7 +16,12 @@
   },
   {
    "status": "??",
-   "path": "proto/check-orphan-kernel.mjs",
+   "path": "proto/results/e498_chaos_matrix.json",
+   "kind": "blocked"
+  },
+  {
+   "status": "??",
+   "path": "proto/run_e498_chaos_matrix.py",
    "kind": "ok"
   }
  ],

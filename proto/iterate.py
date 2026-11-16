@@ -139,6 +139,8 @@ CLIENT_CHECKS = [
     ("自动备份", "run_e493_auto_backup.py"),
     # E-495：按写入数触发备份（FISH-9 实验标定 N=20）
     ("写入触发备份", "run_e495_write_trigger.py"),
+    # E-498：容灾故障矩阵（10 类真实故障 × 恢复判据）
+    ("容灾故障矩阵", "run_e498_chaos_matrix.py"),
 ]
 
 
