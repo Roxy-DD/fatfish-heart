@@ -247,10 +247,17 @@ models/
 **验证**：
 
 ```bash
-cd proto
-python -c "import sys; sys.path.insert(0,'cosmos_mem'); import store_v1, os; print(store_v1.MODEL_DIR, os.path.exists(store_v1.MODEL_DIR))"
-# 应输出：<你的路径>/models/bge-small-zh True
+python proto/doctor.py
 ```
+
+这会逐项检查 Python 版本、依赖、模型文件、数据库，并**真的跑一次写入+检索**。
+全绿输出：
+
+```
+✅ 全部通过（11/11）—— 可以开始使用
+```
+
+缺什么它会直接告诉你怎么装，不用猜 `ImportError` 是什么意思。
 
 > 代码用 `os.path.dirname(__file__)` 相对推导模型路径，
 > 所以 clone 到任何位置都能用，不需要改配置。
