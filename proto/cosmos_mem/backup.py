@@ -168,6 +168,13 @@ def verify_backup(db_path: str, backup_path: str,
     #      只报告差异，不判失败
     VOLATILE = {"audit_log", "environment_events"}
 
+    # meta 表整体是稳定的，但其中有一个 key 是运行时计数器：
+    #   auto_backup:writes_since —— 备份触发后立即从 N 归零，
+    #   于是备份里存的是 N、源库是 0，行数相同但内容不同。
+    # 它不是记忆内容，只是「还差几条触发备份」的状态，
+    # 按 volatile 处理（只比较非 volatile 的 key）。
+    VOLATILE_META_KEYS = {"auto_backup:writes_since"}
+
     import hashlib
 
     def fp(p, t):
@@ -176,6 +183,10 @@ def verify_backup(db_path: str, backup_path: str,
             rows = c.execute(f"SELECT * FROM {t}").fetchall()
         finally:
             c.close()
+        # meta 表跳过 volatile key（如 auto_backup:writes_since）
+        if t == "meta" and VOLATILE_META_KEYS:
+            rows = [r for r in rows
+                    if not (len(r) >= 1 and r[0] in VOLATILE_META_KEYS)]
         h = hashlib.md5()
         for r in sorted(rows, key=lambda x: repr(x)):
             h.update(repr(r).encode("utf-8", "replace"))

@@ -2,7 +2,7 @@
  "experiment": "E-471",
  "branch": "master",
  "ahead_commits": 0,
- "dirty_files": 6,
+ "dirty_files": 8,
  "candidates": [
   {
    "status": "M",
@@ -20,18 +20,28 @@
    "kind": "ok"
   },
   {
-   "status": "M",
-   "path": "proto/results/e471_onward_discover.json",
+   "status": "??",
+   "path": "proto/cosmos_mem/auto_backup.py",
+   "kind": "ok"
+  },
+  {
+   "status": "??",
+   "path": "proto/exp_fish9_coverage.py",
+   "kind": "ok"
+  },
+  {
+   "status": "??",
+   "path": "proto/results/e495_write_trigger.json",
    "kind": "blocked"
   },
   {
    "status": "??",
-   "path": "proto/results/e493_auto_backup.json",
+   "path": "proto/results/fish9_backup_coverage.json",
    "kind": "blocked"
   },
   {
    "status": "??",
-   "path": "proto/run_e493_auto_backup.py",
+   "path": "proto/run_e495_write_trigger.py",
    "kind": "ok"
   }
  ],

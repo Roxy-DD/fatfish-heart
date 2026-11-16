@@ -287,6 +287,22 @@ def cmd_add(st, payload) -> dict:
                   "need_judge": bool(out.get("need_judge")),
                   "cost": out.get("cost"), "affect": out.get("affect")})
 
+    # E-495：按写入条数机械触发备份（FISH-9 实验标定 N=20）
+    #
+    # 只有真正写入新记忆才计数（去重命中在上面已 return，走不到这里）。
+    # ★ 备份失败绝不能阻断写入 —— 写入是主流程，备份是增益。
+    try:
+        import auto_backup as _ab
+        # auto_backup_every 仅供测试注入小阈值；生产用默认 20
+        _every = int(payload.get("auto_backup_every") or _ab.DEFAULT_EVERY)
+        r_ab = _ab.maybe_backup(st, every=_every)
+        if r_ab.get("triggered") and not r_ab.get("ok"):
+            _audit(st, "error", msg="按写入数自动备份失败",
+                   extra={"error": str(r_ab.get("error"))[:200]})
+        out["auto_backup"] = r_ab
+    except Exception:
+        pass   # 计数/备份异常不影响记忆写入
+
     return out
 
 

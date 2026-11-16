@@ -135,6 +135,8 @@ CLIENT_CHECKS = [
     ("插件可移植", "run_e476_plugin_portable.py"),
     # E-493：自动备份（睡眠整理后触发 + prune + 逐字段校验）
     ("自动备份", "run_e493_auto_backup.py"),
+    # E-495：按写入数触发备份（FISH-9 实验标定 N=20）
+    ("写入触发备份", "run_e495_write_trigger.py"),
 ]
 
 

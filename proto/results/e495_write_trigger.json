@@ -1,0 +1,77 @@
+{
+ "experiment": "E-495",
+ "n_pass": 14,
+ "n_total": 14,
+ "results": [
+  {
+   "name": "写入 1/4 未触发",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "写入 2/4 未触发",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "写了 4 条，0 份备份",
+   "ok": true,
+   "detail": "0 份"
+  },
+  {
+   "name": "计数 = 4",
+   "ok": true,
+   "detail": "{'count': '4'}"
+  },
+  {
+   "name": "第 N 条触发了备份",
+   "ok": true,
+   "detail": "{'ok': True, 'triggered': True, 'count': 0, 'every': 5, 'path': 'C:\\\\Users\\\\xuee\\\\Desktop\\\\肥鱼之心\\\\pro"
+  },
+  {
+   "name": "备份成功",
+   "ok": true,
+   "detail": "None"
+  },
+  {
+   "name": "生成 1 份备份",
+   "ok": true,
+   "detail": "1 份"
+  },
+  {
+   "name": "计数归零",
+   "ok": true,
+   "detail": "{'count': '0'}"
+  },
+  {
+   "name": "生成第二份备份",
+   "ok": true,
+   "detail": "2 份"
+  },
+  {
+   "name": "精确重复不增加计数",
+   "ok": true,
+   "detail": "0 → 0"
+  },
+  {
+   "name": "备份校验通过",
+   "ok": true,
+   "detail": "ok=True volatile=['audit_log'] 不一致表={'audit_log': (11, 10)} 错误=None"
+  },
+  {
+   "name": "FISH-9 实验结果存在",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "实验测出写入速率",
+   "ok": true,
+   "detail": "27.94"
+  },
+  {
+   "name": "生产阈值为 20（来自实验权衡）",
+   "ok": true,
+   "detail": "20"
+  }
+ ]
+}

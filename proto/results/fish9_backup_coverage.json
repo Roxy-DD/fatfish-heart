@@ -1,0 +1,77 @@
+{
+ "experiment": "FISH-9",
+ "at": "2026-11-16T15:17:29",
+ "write_rate": {
+  "n_episodes": 529,
+  "first": "2026-10-28",
+  "last": "2026-11-16",
+  "span_days": 18.93,
+  "per_day": 27.94,
+  "avg_gap_hours": 0.86
+ },
+ "sleep": {
+  "count_in_audit": 9,
+  "times": [
+   "2026-11-07 23:35",
+   "2026-11-09 14:29",
+   "2026-11-09 15:20",
+   "2026-11-10 14:51",
+   "2026-11-10 14:52",
+   "2026-11-10 16:49",
+   "2026-11-10 17:34",
+   "2026-11-16 12:18",
+   "2026-11-16 12:39"
+  ]
+ },
+ "audit_kinds": {
+  "remember": 303,
+  "recall": 89,
+  "inject": 38,
+  "conflict": 25,
+  "affect": 24,
+  "sleep": 9,
+  "todo": 7,
+  "note": 7,
+  "config": 3,
+  "chain": 2
+ },
+ "backup_cost": {
+  "count": 1,
+  "total_kb": 6260,
+  "avg_kb": 6260,
+  "samples": [
+   {
+    "size_kb": 6260,
+    "name": "dsh_mem.db.backup.20261116_150042_744_001"
+   }
+  ]
+ },
+ "simulation": {
+  "per_1_write": {
+   "backup_count": 529,
+   "max_loss_episodes": 0,
+   "cost_mb": 3233.93
+  },
+  "per_5_writes": {
+   "backup_count": 105,
+   "max_loss_episodes": 4,
+   "cost_mb": 641.89
+  },
+  "per_20_writes": {
+   "backup_count": 26,
+   "max_loss_episodes": 19,
+   "cost_mb": 158.95
+  },
+  "per_50_writes": {
+   "backup_count": 10,
+   "max_loss_episodes": 49,
+   "cost_mb": 61.13
+  },
+  "sleep_only": {
+   "backup_count": 9,
+   "max_loss_episodes": 52,
+   "cost_mb": 55.02
+  }
+ },
+ "conclusion_hint": "每天约 27.94 条写入。若接受最多丢 5 条，需约 5.6 次/天备份；若接受最多丢 20 条，需约 1.4 次/天。具体 N 由「丢失代价 vs 备份成本」权衡，这里只给数据，不预设门槛。"
+}
