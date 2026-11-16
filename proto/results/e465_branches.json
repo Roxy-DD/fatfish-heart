@@ -1,0 +1,9 @@
+{
+ "experiment": "E-465",
+ "branches": [
+  "master",
+  "develop",
+  "release/v0.1"
+ ],
+ "model": "GitHub Flow + 精简 Git Flow"
+}
