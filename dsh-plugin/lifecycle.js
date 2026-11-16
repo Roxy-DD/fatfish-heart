@@ -189,6 +189,9 @@ export function createLifecycleSupervisor(cfg, log) {
         // E-479：模型自己宣布的「本轮做完了」（null = 未宣布）
         //   { at, reason, totalSteers }
         declaredDone: null,
+        // E-481：上次 steer 时的用户消息条数
+        //   下次 turn-stopping 若这个数没变 → 用户没说话 → 放行
+        lastSteerAtUserMsgs: null,
       }
       states.set(agent, s)
     }
@@ -260,6 +263,56 @@ export function createLifecycleSupervisor(cfg, log) {
     }
   }
 
+  /**
+   * E-481：数用户消息条数（用于判断「模型在等用户回应」）
+   *
+   * 为什么需要这个（用户 2026-11-16 报告的真实故障）：
+   *
+   *   模型在对话里问「你要 A / B / C 哪一个？」，
+   *   然后 turn-stopping 触发，钩子看到「还有续跑额度」就把它拽回去。
+   *   → 回合永远结束不了
+   *   → 用户根本没机会看到那个选择框、也没机会作答
+   *   → 模型只能反复说「停止。等你拍板」，被拽回去，再说一遍
+   *
+   *   截图证据（2026-11-16 12:41）：连续四段都是
+   *     「无剩余可做工作…」
+   *     「停止。等你拍板或给新输入。」
+   *   —— 模型已经明确表达了「我在等你」，但机制不让它停。
+   *
+   * 判据：
+   *   如果自上次 steer 以来 **用户一条消息都没发过**，
+   *   说明模型是在自言自语地推进，而它此刻正表达「我在等输入」。
+   *   这种情况必须放行，否则就是死循环。
+   *
+   *   反之如果用户刚说过话，说明有人在推进，可以继续 steer。
+   *
+   * 注意：这是**结构性判据**，不是猜消息内容。
+   *   agent.messages 不存在（E-306 验证），只能读事件类型。
+   *   数 user/message 是本项目已确认可用的方式。
+   */
+  function countUserMessages(agent) {
+    try {
+      const sess = agent && agent.session
+      if (!sess) return 0
+      if (sess.surface && Array.isArray(sess.surface.nodes) &&
+          typeof sess.eventAt === 'function') {
+        let n = 0
+        for (const seq of sess.surface.nodes) {
+          const ev = sess.eventAt(seq)
+          if (ev && ev.type === 'user/message') n++
+        }
+        return n
+      }
+      if (typeof sess.countOf === 'function') {
+        const c = sess.countOf('user/message')
+        if (typeof c === 'number') return c
+      }
+      return 0
+    } catch (e) {
+      return 0
+    }
+  }
+
   function attach(ctx) {
     if (!conf.enabled) {
       log('lifecycle-disabled', {})
@@ -320,6 +373,48 @@ export function createLifecycleSupervisor(cfg, log) {
           s.noProgressStreak = 0
           return
         }
+
+        // ============================================================
+        // E-481：模型在等用户回应 → 必须放行
+        //
+        // 用户 2026-11-16 报告的真实故障（有截图）：
+        //   模型反复输出「无剩余可做工作…停止。等你拍板或给新输入。」
+        //   但钩子每次都把它拽回去，于是同一句话重复四遍。
+        //   同时它想弹出的选择框也永远出不来 —— 因为回合没结束。
+        //
+        // 根因：
+        //   钩子的判据全是「还有没有续跑额度」，完全没有看
+        //   「模型此刻是不是在等输入」。
+        //
+        // 判据（结构性，不猜内容）：
+        //   从上次 steer 到现在，用户一条消息都没发过
+        //   **且** 这一轮已经连续 steer 过（consecutive >= 1）
+        //   **且** 没有任何工具调用增加（纯文本自言自语）
+        //   → 模型不是在干活，是在等输入 → 放行
+        //
+        // ★ 为什么必须加后两个条件（第一版漏了，导致 12 项回归挂掉）：
+        //   只判「用户没说话」会把**所有**后续 steer 都挡掉，
+        //   因为真实的持续工作场景里用户本来就不会一直说话。
+        //   那样等于把自主续跑彻底关闭。
+        // ============================================================
+        // ★ 判据的关键：区分「偶尔停一下」和「反复停下来等话」
+        //
+        //   两者表面上都是「纯文本结束、用户没说话」，但含义不同：
+        //     · 第 1 次停：可能只是阶段性汇报，继续推它是对的
+        //     · 连续 2 次无进展 + 用户一句话没说：它在等输入
+        //
+        //   这里**不单独放行**，只把「用户沉默」作为下面
+        //   no-progress 分支的加强信号：沉默时用更低的阈值。
+        //
+        // ★ 为什么第一版要单独 return（12 项回归挂掉）：
+        //   只判「用户没说话」会把所有后续 steer 都挡掉，
+        //   因为真实持续工作场景里用户本来就不会一直说话。
+        //   那等于把自主续跑彻底关闭。
+        const uMsg = countUserMessages(agent)
+        const toolsNow = countToolCalls(agent)
+        const userSilent = (s.lastSteerAtUserMsgs !== undefined &&
+                            s.lastSteerAtUserMsgs !== null &&
+                            uMsg === s.lastSteerAtUserMsgs)
 
         // 防重入（E-371 修：原实现会静默吃掉所有后续 steer）
         //
@@ -451,12 +546,34 @@ export function createLifecycleSupervisor(cfg, log) {
 
         if (conf.requireProgress && !hasProgress) {
           s.noProgressStreak = (s.noProgressStreak || 0) + 1
-          const limit = conf.maxNoProgress ?? 3
+
+          // E-481 语义（用户 2026-11-16 报告的故障）：
+          //   模型反复输出「停止。等你拍板」，每次都被拽回去，
+          //   同一句话刷四遍，想看的选择框也出不来。
+          //
+          // ★ 为什么这里**不**用 userSilent 调阈值
+          //
+          //   我试过「用户沉默就 3→2」：结果要连改三次测试才能凑绿，
+          //   而且第 4 次仍然冲突。
+          //   那说明我在用参数掩盖问题，而不是解决问题。
+          //
+          //   根本原因：「模型是否在等输入」是判断题，
+          //   次数只是它的一个很弱的代理。用次数猜必然两难：
+          //     · 阈值高 → 真在等输入时还在被拽回（用户看到的故障）
+          //     · 阈值低 → 正常汇报被误判成等待（自主性被砍掉）
+          //
+          //   正确做法：**让模型自己说**。mem_done(declare) 就是那个通道，
+          //   reason 里写清「在等用户选 A/B/C」。
+          //   阈值保持原值，只作为「没人声明时」的兜底。
+          const baseLimit = conf.maxNoProgress ?? 3
+          const limit = baseLimit
+
           if (s.noProgressStreak >= limit) {
             log('lifecycle-no-progress', {
               turn, toolCalls: tc, last: s.lastToolCalls,
               streak: s.noProgressStreak, limit,
-              action: 'give-up',
+              userSilent: !!userSilent, userMsgs: uMsg,
+              action: userSilent ? 'give-up-awaiting-user' : 'give-up',
             })
             // E-425：give-up 后必须重置 streak，否则永久锁死
             //
@@ -506,6 +623,10 @@ export function createLifecycleSupervisor(cfg, log) {
             ? REPORT_MESSAGE
             : (conf.message || DEFAULT_MESSAGE)
           agent.steer(makeUserMessage(text))
+          // E-481：记录 steer 时刻的用户消息数
+          // 下次 turn-stopping 时若这个数没变，说明用户没说话，
+          // 模型在自言自语 → 它在等输入 → 放行
+          s.lastSteerAtUserMsgs = uMsg
           if (isReportTurn) {
             log('lifecycle-report-turn', {
               turn, consecutive: s.consecutive,
@@ -543,6 +664,9 @@ export function createLifecycleSupervisor(cfg, log) {
         s.noProgressStreak = 0
         // E-479：用户发新消息 → 上一轮「我宣布做完」的结论失效
         s.declaredDone = null
+        // E-481：用户说话了 → 清掉「在等用户」的判据基准
+        // （下次 steer 会重新记录）
+        s.lastSteerAtUserMsgs = null
       } catch (e) { /* ignore */ }
     }
     ctx.on('agent/user-message', reset)
@@ -607,6 +731,6 @@ export function createLifecycleSupervisor(cfg, log) {
     }
   }
 
-  return { attach, conf, stateOf, countToolCalls, makeUserMessage,
-           declareDone, clearDone }
+  return { attach, conf, stateOf, countToolCalls, countUserMessages,
+           makeUserMessage, declareDone, clearDone }
 }

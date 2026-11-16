@@ -40,13 +40,17 @@ function check(name, cond, detail = '') {
  *
  * 这就是"测试和生产用了同一个错误假设"的典型。
  */
-function makeAgent({ toolCalls = 0 } = {}) {
+function makeAgent({ toolCalls = 0, userMsgs = 1 } = {}) {
   const evs = new Map()
   const nodes = []
   function push(ev) {
     const seq = nodes.length + 1
     nodes.push(seq)
     evs.set(seq, ev)
+  }
+  // E-481：初始的 user/message（真实会话总有一条用户消息开启）
+  for (let i = 0; i < userMsgs; i++) {
+    push({ type: 'user/message', n: i })
   }
   for (let i = 0; i < toolCalls; i++) {
     push({ type: 'tool/result', n: i })
@@ -59,6 +63,17 @@ function makeAgent({ toolCalls = 0 } = {}) {
     // 测试辅助：模拟新增一次工具调用
     addToolCall() {
       push({ type: 'tool/result', n: nodes.length })
+    },
+    // E-481：模拟用户发了一条消息
+    //
+    // ★ 注意 userSilent 的语义：
+    //   steer 时记录当时的 userMsgs；
+    //   下次 turn-stopping 若这个数没变 → 用户没说话 → 阈值降到 2。
+    //
+    //   所以"用户在持续推进"的测试场景必须真的加一条消息，
+    //   否则会被当成"模型在等输入"提前放行。
+    addUserMsg() {
+      push({ type: 'user/message', n: nodes.length })
     },
     session: {
       surface: { nodes },
@@ -211,7 +226,9 @@ console.log('\n【4】进展检测：没有新工具调用时不 steer')
 
   const noProg = logs.filter((l) => l.kind === 'lifecycle-no-progress')
   check('记录了 no-progress 日志', noProg.length > 0, `${noProg.length} 条`)
-  const gaveUp = noProg.filter((l) => l.action === 'give-up')
+  // E-481：give-up 现在有两种 action（普通 / 等待用户），都算放弃
+  const gaveUp = noProg.filter((l) =>
+    l.action === 'give-up' || l.action === 'give-up-awaiting-user')
   check('记录了 give-up 动作', gaveUp.length >= 1, `${gaveUp.length} 条`)
 
   // ★ E-425：give-up 后不能永久锁死
@@ -450,6 +467,71 @@ console.log('\n【11】clearDone 主动撤销声明')
 
   const s = sup.stateOf(agent)
   check('state 里已无声明', !s.declaredDone)
+}
+
+// ---------- ⑫ E-481：模型等用户输入时的正确路径 ----------
+//
+// 复现用户 2026-11-16 报告的真实故障（有截图）：
+//   模型反复输出「无剩余可做工作…停止。等你拍板或给新输入。」
+//   但钩子每次都把它拽回去，同一句话重复四遍。
+//   它想弹出的选择框也永远出不来，因为回合结束不了。
+//
+// ★ 正确的解法不是让钩子猜「它在等输入」（次数只是弱代理，
+//   阈值高则故障照旧、阈值低则砍掉自主性），
+//   而是模型用 mem_done(declare) 明确说出来。
+console.log('\n【12】模型声明「在等输入」后必须放行（E-481）')
+{
+  const sup = createLifecycleSupervisor(
+    { lifecycle: { enabled: true, requireProgress: false,
+                   maxConsecutive: 20 } }, log)
+  const ctx = makeCtx()
+  sup.attach(ctx)
+
+  const agent = makeAgent({ toolCalls: 5, userMsgs: 1 })
+
+  // 第一次结束：会正常 steer
+  await ctx.fire('agent/turn-stopping', { agent, turn: 30 })
+  const after1 = agent.steerCalls.length
+  check('未声明时正常 steer', after1 === 1, `${after1}`)
+
+  // 模型明确声明：我在等用户选 A/B/C
+  sup.declareDone(agent, '在等用户选 A/B/C，无法自行决定')
+  await ctx.fire('agent/turn-stopping', { agent, turn: 30 })
+  check('声明后不再拽回去（选择框才能显示）',
+    agent.steerCalls.length === after1,
+    `${after1} → ${agent.steerCalls.length}`)
+
+  const honored = logs.filter((l) => l.kind === 'lifecycle-honor-done')
+  check('记录了 honor-done', honored.length >= 1, `${honored.length} 条`)
+}
+
+// ---------- ⑬ countUserMessages 正确性 ----------
+console.log('\n【13】countUserMessages')
+{
+  const sup = createLifecycleSupervisor(
+    { lifecycle: { enabled: true } }, log)
+
+  const a0 = makeAgent({ userMsgs: 0 })
+  check('0 条用户消息 → 0', sup.countUserMessages(a0) === 0,
+    String(sup.countUserMessages(a0)))
+
+  const a3 = makeAgent({ userMsgs: 3 })
+  check('3 条用户消息 → 3', sup.countUserMessages(a3) === 3,
+    String(sup.countUserMessages(a3)))
+
+  check('null agent 不抛异常', sup.countUserMessages(null) === 0)
+
+  // 混合类型不能误计
+  const mixed = makeAgent({ toolCalls: 10, userMsgs: 2 })
+  check('混入 tool/result 不误计',
+    sup.countUserMessages(mixed) === 2,
+    String(sup.countUserMessages(mixed)))
+
+  // 不支持的 session 形状 → 0（不谎报）
+  const weird = { session: { nope: true } }
+  check('不支持的形状 → 0（不谎报）',
+    sup.countUserMessages(weird) === 0,
+    String(sup.countUserMessages(weird)))
 }
 
 // ---------- 汇总 ----------

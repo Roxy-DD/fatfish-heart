@@ -258,12 +258,45 @@ console.log('\n【9】diagnose 报告磁盘/运行版本差异（E-480）')
       d.verdict.includes('重启') || d.verdict.includes('从未加载'),
       (d.verdict || '').slice(0, 60))
   } else {
-    // 有 marker 时 diskNewer 必须是布尔值，不能是 null
-    // （null 表示无法比较，那等于没检测）
-    check('有 marker 时能判断先后（必须是布尔）',
-      typeof (d.stale && d.stale.diskNewer) === 'boolean',
-      String(d.stale && d.stale.diskNewer))
+    // ★ E-482：这里原来的断言有漏洞。
+    //
+    //   前面的测试块把 marker 设成了 'marker-before-xyz'（不是 apply@ISO），
+    //   于是 Date.parse 失败 → diskNewer = null，
+    //   而断言却要求「必须是布尔」→ 假失败。
+    //
+    //   正确做法：分两种情况分别验证
+    //     · marker 可解析 → 必须能判断先后（布尔）
+    //     · marker 不可解析 → verdict 必须说明「无法判断」，不能瞎猜
+    const markerParsable = /^apply@/.test(String(d.__marker)) &&
+      !Number.isNaN(Date.parse(String(d.__marker).slice(6).split('#')[0]))
+    if (markerParsable) {
+      check('合法 marker → 能判断先后（布尔）',
+        typeof (d.stale && d.stale.diskNewer) === 'boolean',
+        String(d.stale && d.stale.diskNewer))
+    } else {
+      check('非法 marker → 明确说无法判断，不瞎猜',
+        d.stale && d.stale.diskNewer === null &&
+        String(d.verdict).includes('无法判断'),
+        `diskNewer=${d.stale && d.stale.diskNewer}`)
+    }
   }
+
+  // 主动造一个合法 marker，验证真正的比较逻辑
+  globalThis.__COSMOS_RELOAD_MARKER__ =
+    'apply@2020-01-01T00:00:00.000Z#test'
+  const d2 = sr.diagnose()
+  check('过去时刻的 marker → diskNewer 必须是 true（磁盘更新）',
+    d2.stale && d2.stale.diskNewer === true,
+    String(d2.stale && d2.stale.diskNewer))
+  check('  且 gapSec 为正数',
+    d2.stale && typeof d2.stale.gapSec === 'number' && d2.stale.gapSec > 0,
+    String(d2.stale && d2.stale.gapSec))
+  check('  verdict 提示需要重启',
+    String(d2.verdict).includes('重启'),
+    String(d2.verdict).slice(0, 50))
+
+  // 清理，避免污染后续测试
+  try { delete globalThis.__COSMOS_RELOAD_MARKER__ } catch {}
 }
 
 // ---------- 汇总 ----------

@@ -2,13 +2,8 @@
  "experiment": "E-471",
  "branch": "master",
  "ahead_commits": 0,
- "dirty_files": 3,
+ "dirty_files": 5,
  "candidates": [
-  {
-   "status": "M",
-   "path": "dsh-plugin/index.js",
-   "kind": "ok"
-  },
   {
    "status": "M",
    "path": "dsh-plugin/lifecycle.js",
@@ -16,8 +11,23 @@
   },
   {
    "status": "M",
+   "path": "dsh-plugin/selfreload.js",
+   "kind": "ok"
+  },
+  {
+   "status": "M",
    "path": "proto/check-lifecycle.mjs",
    "kind": "ok"
+  },
+  {
+   "status": "M",
+   "path": "proto/check-selfreload.mjs",
+   "kind": "ok"
+  },
+  {
+   "status": "M",
+   "path": "proto/results/e471_onward_discover.json",
+   "kind": "blocked"
   }
  ],
  "issues": [],

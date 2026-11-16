@@ -375,9 +375,16 @@ export function createSelfReloader(ctx, cfg, log) {
         if (stale.diskNewer === false) {
           return '✅ 运行中的代码就是磁盘上的最新版本'
         }
-        // 没有 marker：本次运行从未执行过 apply()（或 marker 被清了）
-        return '⚠ 没有 apply marker —— 当前进程可能从未加载过本插件的最新代码，'
-          + '建议重启 DSH 宿主后重试'
+        // diskNewer === null：无法比较。分两种原因，别混为一谈
+        //   (a) 根本没有 marker —— 从未 apply 过
+        //   (b) 有 marker 但格式不是 apply@<ISO> —— 解析失败
+        if (!marker) {
+          return '⚠ 没有 apply marker —— 当前进程可能从未加载过本插件的最新代码，'
+            + '建议重启 DSH 宿主后重试'
+        }
+        return '? 无法判断：marker 存在但格式不可解析（' + marker
+          + '）—— 无法比较磁盘与运行版本的先后，'
+          + '保守建议重启 DSH 宿主确认'
       })(),
       reason: found.reason || null,
       sample: found.sample || null,
