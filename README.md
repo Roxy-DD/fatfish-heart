@@ -217,6 +217,44 @@ mem_seed action=factory
 
 ## 快速开始
 
+### 0. 先下载模型（必需）
+
+模型权重**不进版本库**（合计约 1.3GB），需要自己放到 `models/` 下：
+
+```bash
+pip install huggingface_hub
+
+# 必需：嵌入模型（记忆的语义检索靠它）
+huggingface-cli download BAAI/bge-small-zh-v1.5 \
+  --local-dir models/bge-small-zh
+
+# 可选：精排模型（cross-encoder 重排，明显提升检索质量）
+huggingface-cli download BAAI/bge-reranker-v2-m3 \
+  --local-dir models/bge-reranker-v2-m3-fp16
+```
+
+放好后目录结构应为：
+
+```
+models/
+├── bge-small-zh/          ← 必需
+│   ├── config.json
+│   ├── model.safetensors
+│   └── tokenizer.json
+└── bge-reranker-v2-m3-fp16/   ← 可选
+```
+
+**验证**：
+
+```bash
+cd proto
+python -c "import sys; sys.path.insert(0,'cosmos_mem'); import store_v1, os; print(store_v1.MODEL_DIR, os.path.exists(store_v1.MODEL_DIR))"
+# 应输出：<你的路径>/models/bge-small-zh True
+```
+
+> 代码用 `os.path.dirname(__file__)` 相对推导模型路径，
+> 所以 clone 到任何位置都能用，不需要改配置。
+
 ### 环境
 
 ```
