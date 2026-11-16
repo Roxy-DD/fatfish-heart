@@ -1,22 +1,17 @@
 {
  "experiment": "E-471",
  "branch": "master",
- "ahead_commits": 0,
- "dirty_files": 3,
+ "ahead_commits": 1,
+ "dirty_files": 2,
  "candidates": [
   {
    "status": "M",
-   "path": "proto/results/e408_hygiene.json",
-   "kind": "blocked"
+   "path": "dsh-plugin/index.js",
+   "kind": "ok"
   },
   {
    "status": "M",
-   "path": "proto/results/e471_onward_discover.json",
-   "kind": "blocked"
-  },
-  {
-   "status": "M",
-   "path": "proto/run_e412_exp_run_reg.py",
+   "path": "proto/check-mem-done-e2e.mjs",
    "kind": "ok"
   }
  ],

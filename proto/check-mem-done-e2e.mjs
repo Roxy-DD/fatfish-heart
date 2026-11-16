@@ -21,6 +21,7 @@
  *     如果这里过了，重启后就应该能用。
  */
 import { createRequire } from 'node:module'
+import { existsSync } from 'node:fs'
 
 const require = createRequire(import.meta.url)
 
@@ -323,6 +324,47 @@ console.log('\n【8】ctx.set 抛异常时 supervisor 仍挂载（E-487）')
     const r = await tool.execute({ action: 'status' }, { agent })
     check('mem_done 能拿到 supervisor（端到端可用）',
       !r.error, r.error || 'ok')
+  }
+}
+
+// ---------- ⑨ E-489：空配置时路径兜底正确 ----------
+//
+// cordis.patch.yml 里 kernelDir/dbPath 留空（''），
+// 因为随包分发的配置不能含作者本机路径。
+// apply 里必须把它们兜底成从插件位置推导出的真实路径，
+// 否则内核会用相对路径启动、直接失败。
+console.log('\n【9】空配置时路径兜底（E-489）')
+{
+  delete globalThis.__FFH_EFFECTIVE_PATHS__
+
+  const ctx2 = {
+    tools: { register() {} }, provide() {}, set() {},
+    get() { return undefined },
+    on() { return () => {} },
+    effect(f) { try { f() } catch { /* ignore */ } return () => {} },
+  }
+
+  await mod.apply(ctx2, {
+    debugLog: false, kernelDir: '', dbPath: '',
+    prewarmKernel: false,
+  })
+
+  const p = globalThis.__FFH_EFFECTIVE_PATHS__
+  check('记录了最终生效路径', !!p, p ? '' : '缺失')
+  if (p) {
+    check('kernelDir 不是空串',
+      typeof p.kernelDir === 'string' && p.kernelDir.length > 0,
+      p.kernelDir)
+    check('dbPath 不是空串',
+      typeof p.dbPath === 'string' && p.dbPath.length > 0,
+      p.dbPath)
+    check('kernelDir 指向真实目录',
+      existsSync(p.kernelDir), p.kernelDir)
+    check('dbPath 父目录存在',
+      existsSync(p.dbPath.replace(/[^\\/]+$/, '')), p.dbPath)
+    check('路径是绝对路径（不是相对路径）',
+      /^[A-Za-z]:[\\/]/.test(p.kernelDir) || p.kernelDir.startsWith('/'),
+      p.kernelDir.slice(0, 3))
   }
 }
 

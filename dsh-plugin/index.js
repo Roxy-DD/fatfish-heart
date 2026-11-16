@@ -1147,6 +1147,16 @@ export function apply(ctx, config) {
   } catch { /* ignore */ }
 
   const cfg = { ...DEFAULTS, ...(config || {}) }
+  // E-489：兜底后把最终路径记下来，便于诊断「内核用的是哪个目录」
+  if (!cfg.kernelDir) cfg.kernelDir = _DERIVED.kernelDir
+  if (!cfg.dbPath) cfg.dbPath = _DERIVED.dbPath
+  try {
+    globalThis.__FFH_EFFECTIVE_PATHS__ = {
+      kernelDir: cfg.kernelDir,
+      dbPath: cfg.dbPath,
+      derived: _DERIVED,
+    }
+  } catch { /* ignore */ }
 
   // E-476：空字符串视为「未配置」，退回自动推导的默认值
   //
@@ -1155,8 +1165,6 @@ export function apply(ctx, config) {
   //   但 { ...DEFAULTS, ...config } 会让 '' 覆盖掉推导出的真路径。
   //   结果 cfg.kernelDir === ''，resolve('', 'kernel_server.py')
   //   会得到相对路径，内核启动失败。
-  if (!cfg.kernelDir) cfg.kernelDir = _DERIVED.kernelDir
-  if (!cfg.dbPath) cfg.dbPath = _DERIVED.dbPath
 
   // E-298：每次 apply() 都是新的加载周期，旧的 ctx.effect 已被 dispose，
   // webServer 上的路由已被移除，必须清空去重记录重新注册。
