@@ -164,7 +164,21 @@ out = (r.stdout or "") + (r.stderr or "")
 check("发现模式正常退出", r.returncode == 0,
       f"exit={r.returncode}")
 check("输出含安全检查", "安全检查" in out)
-check("输出含授权要求", "授权" in out or "必须由用户" in out)
+
+# E-485：授权要求只在「确实有可贡献项」时才出现
+#
+# 原断言无条件是 "授权" in out，
+# 但工作区只有实验产物时会走「没有可贡献项」分支，
+# 那里本就不该提示授权 —— 无条件要求是错的假设。
+has_contrib = "可贡献" in out and "没有可贡献项" not in out
+if has_contrib:
+    check("有可贡献项时提示需要授权",
+          "授权" in out or "必须由用户" in out,
+          "已提示" if "授权" in out else "缺失")
+else:
+    check("无贡献项时明确说明（不提示授权）",
+          "没有可贡献项" in out,
+          "已说明" if "没有可贡献项" in out else "缺失")
 
 # ---------- 汇总 ----------
 print("\n" + "=" * 72)
