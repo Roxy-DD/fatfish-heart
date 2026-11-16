@@ -1,5 +1,5 @@
 /**
- * cosmos-mem 管理界面（Client 半）
+ * 肥鱼之心（Fat Fish Heart）管理界面（Client 半）
  *
  * 严格照官方模板（templates/decoration/client.js，已读取确认）：
  *
