@@ -1638,6 +1638,129 @@ export function apply(ctx, config) {
     },
   })
 
+  // ================= 自主停止（E-479）=================
+  //
+  // 用户 2026-11-16 指出的问题：
+  //   「即使它自己想停止了，停止之后又会自动触发生命周期。
+  //     这个生命周期要不要继续触发，应该是在停止之前由模型自己决定，
+  //     而不是一定要按生命周期的钩子那种机制不停地触发。」
+  //
+  // 原设计：停止权完全在代码手里（consecutive>=20 / streak>=3）。
+  //         模型停下来，钩子看到还有额度就把它拽回去。
+  //
+  // 这违背项目自己的职责划分原则：
+  //   「需要判断的地方全部交给模型；不需要模型判断的地方系统接管。」
+  //   「任务是否完成」是判断题，必须由模型判断。
+  //
+  // 这个工具给模型一个显式的表决通道。
+  ctx.tools.register({
+    name: 'mem_done',
+    description: '宣布本轮任务已完成，让本轮自然结束（不再被自动续跑）。'
+      + '当确实没有剩余可验证工作、或必须等用户输入时调用。'
+      + '调用后这个生命周期不再自动触发，直到用户发新消息。'
+      + 'action=declare 宣布完成（必须写 reason，便于事后核对是否真做完了）；'
+      + 'action=clear 撤销（发现还有活要干）；action=status 查看状态。',
+    parameters: {
+      type: 'object',
+      properties: {
+        action: {
+          type: 'string',
+          description: 'declare | clear | status',
+        },
+        reason: {
+          type: 'string',
+          description: 'declare 必填：为什么判断已做完（验证过什么、还差什么）',
+        },
+      },
+      required: ['action'],
+    },
+    output: {
+      schema: { type: 'object' },
+      render: (_a, v) => {
+        if (!v) return [{ type: 'text', text: '无返回' }]
+        if (v.error) {
+          return [{ type: 'text', text: `mem_done 失败：${v.error}` }]
+        }
+        if (v.action === 'declare') {
+          return [{
+            type: 'text',
+            text: `已宣布完成，本轮不再自动续跑。\n理由：${v.reason || ''}`,
+          }]
+        }
+        if (v.action === 'clear') {
+          return [{
+            type: 'text',
+            text: v.had ? '已撤销完成声明' : '本来就没有声明',
+          }]
+        }
+        return [{
+          type: 'text',
+          text: v.declared
+            ? `已声明完成（${v.reason || ''}）`
+            : '未声明完成，仍会自动续跑',
+        }]
+      },
+    },
+    async execute(args, runCtx) {
+      // E-479：先记录诊断信息，定位到底哪一环拿不到
+      const diag = {
+        hasLocal: !!lifecycleSup,
+        hasGlobal: !!globalThis.__FFH_LIFECYCLE_SUP__,
+        hasCtxGet: !!ctx.get('cosmosMemLifecycle'),
+        hasAgent: !!(runCtx && runCtx.agent),
+        runCtxKeys: runCtx ? Object.keys(runCtx).slice(0, 12) : null,
+        globalKeys: Object.keys(globalThis)
+          .filter((k) => k.startsWith('__FFH') || k.startsWith('__COSMOS')),
+      }
+      try {
+        debugLog(cfg, 'mem_done-enter', diag)
+      } catch { /* ignore */ }
+
+      // E-479：三级回退取 supervisor
+      //   实测 ctx.get() 在工具里不可靠，globalThis 最稳
+      const sup = lifecycleSup
+        || (globalThis.__FFH_LIFECYCLE_SUP__)
+        || ctx.get('cosmosMemLifecycle')
+
+      if (!sup || typeof sup.declareDone !== 'function') {
+        return {
+          error: 'lifecycle supervisor 未挂载',
+          debug: diag,
+        }
+      }
+
+      const agent = runCtx && runCtx.agent
+      if (!agent) {
+        return { error: '拿不到当前 agent（工具上下文未提供）', debug: diag }
+      }
+
+      try {
+        if (args.action === 'declare') {
+          const reason = String(args.reason || '').trim()
+          if (!reason) {
+            return { error: 'reason 不能为空（要写清为什么判断已做完）' }
+          }
+          sup.declareDone(agent, reason)
+          return { action: 'declare', reason }
+        }
+        if (args.action === 'clear') {
+          const had = sup.clearDone(agent)
+          return { action: 'clear', had }
+        }
+        const s = sup.stateOf(agent)
+        return {
+          action: 'status',
+          declared: !!s.declaredDone,
+          reason: s.declaredDone && s.declaredDone.reason,
+          consecutive: s.consecutive,
+          totalSteers: s.totalSteers,
+        }
+      } catch (e) {
+        return { error: String(e && e.message) }
+      }
+    },
+  })
+
   ctx.tools.register({
     name: 'mem_sleep',
     description: '睡眠/巩固记忆：当一个任务或项目告一段落、一轮密集对话结束时，主动调用。系统会整理碎片（合并重复）、强化重要记忆、遗忘过时内容。像人睡觉时大脑自动巩固记忆。',
@@ -2072,6 +2195,15 @@ export function apply(ctx, config) {
   //   → 在 turn-stopping 事件里 steer，回合就不会结束。
   //
   // 安全边界（防止无限空转）：最大次数 / 进展检测 / 同 turn 防重入。
+  // E-479：supervisor 需要被 mem_done 工具访问到。
+  //
+  // 试过三种方式，只有 globalThis 可靠：
+  //   ctx.get('cosmosMemLifecycle')  → 工具 execute 里返回 undefined
+  //   模块级闭包变量                 → 热重载后模块被替换，旧闭包失效
+  //   globalThis                     → 跨重载保留（E-307 验证过）
+  //
+  // 这也符合项目已有约定：「跨 apply() 要保持的状态必须挂 globalThis」。
+  let lifecycleSup = null
   try {
     // 注意：debugLog 的签名是 (cfg, kind, data)，
     // lifecycle 里调用的是 log(kind, data)，所以这里要包一层适配。
@@ -2079,8 +2211,10 @@ export function apply(ctx, config) {
     const sup = createLifecycleSupervisor(cfg, lcLog)
     sup.attach(ctx)
     ctx.set('cosmosMemLifecycle', sup)
+    lifecycleSup = sup
+    globalThis.__FFH_LIFECYCLE_SUP__ = sup
   } catch (e) {
-    console.error('[cosmos-mem] lifecycle attach failed:', e && e.message)
+    console.error('[fatfish-heart] lifecycle attach failed:', e && e.message)
   }
 
   // ================= 自重启（E-296）=================

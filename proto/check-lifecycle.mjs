@@ -363,6 +363,95 @@ console.log('\n【8】countToolCalls 不能恒返回 0（E-422）')
   }
 }
 
+// ---------- ⑨ E-479：模型宣布完成后不再续跑 ----------
+console.log('\n【9】模型自主停止（E-479）：声明后必须停止续跑')
+{
+  const sup = createLifecycleSupervisor(
+    { lifecycle: { enabled: true, maxConsecutive: 20,
+                   requireProgress: false } },
+    log
+  )
+  const ctx = makeCtx()
+  sup.attach(ctx)
+
+  const agent = makeAgent({ toolCalls: 5 })
+
+  // 先正常跑一轮，确认会 steer
+  await ctx.fire('agent/turn-stopping', { agent, turn: 10 })
+  const afterNormal = agent.steerCalls.length
+  check('未声明时会正常 steer', afterNormal === 1, `${afterNormal}`)
+
+  // 模型宣布完成
+  const ok = sup.declareDone(agent, '回归全绿，无剩余可验证工作')
+  check('declareDone 返回 true', ok === true)
+
+  // 再触发 turn-stopping —— 这次不应 steer
+  await ctx.fire('agent/turn-stopping', { agent, turn: 10 })
+  check('声明后不再 steer（尊重模型判断）',
+    agent.steerCalls.length === afterNormal,
+    `${afterNormal} → ${agent.steerCalls.length}`)
+
+  // 且应该留下 honor-done 日志
+  const honored = logs.filter((l) => l.kind === 'lifecycle-honor-done')
+  check('记录了 honor-done 日志', honored.length === 1,
+    `${honored.length} 条`)
+  if (honored.length > 0) {
+    check('  日志里带了 reason',
+      String(honored[0].reason || '').length > 0,
+      String(honored[0].reason || '').slice(0, 30))
+  }
+
+  // 声明用掉后，再触发应恢复 steer（不是永久禁用）
+  await ctx.fire('agent/turn-stopping', { agent, turn: 11 })
+  check('声明用掉后恢复 steer（不是永久关闭）',
+    agent.steerCalls.length > afterNormal,
+    `${afterNormal} → ${agent.steerCalls.length}`)
+}
+
+// ---------- ⑩ 用户发消息会清除声明 ----------
+console.log('\n【10】用户发新消息 → 上一轮「做完」的结论失效')
+{
+  const sup = createLifecycleSupervisor(
+    { lifecycle: { enabled: true, requireProgress: false } }, log)
+  const ctx = makeCtx()
+  sup.attach(ctx)
+
+  const agent = makeAgent({ toolCalls: 3 })
+  sup.declareDone(agent, '临时声明')
+  const s1 = sup.stateOf(agent)
+  check('声明已写入 state', !!s1.declaredDone)
+
+  await ctx.fire('agent/user-message', { agent })
+  const s2 = sup.stateOf(agent)
+  check('用户消息后声明被清除', !s2.declaredDone)
+
+  // 清除后应恢复 steer
+  const before = agent.steerCalls.length
+  await ctx.fire('agent/turn-stopping', { agent, turn: 20 })
+  check('清除后恢复 steer', agent.steerCalls.length > before,
+    `${before} → ${agent.steerCalls.length}`)
+}
+
+// ---------- ⑪ clearDone 可主动撤销 ----------
+console.log('\n【11】clearDone 主动撤销声明')
+{
+  const sup = createLifecycleSupervisor(
+    { lifecycle: { enabled: true, requireProgress: false } }, log)
+  const ctx = makeCtx()
+  sup.attach(ctx)
+
+  const agent = makeAgent({ toolCalls: 2 })
+  sup.declareDone(agent, 'A')
+  const had = sup.clearDone(agent)
+  check('clearDone 返回 true（原本有声明）', had === true)
+
+  const again = sup.clearDone(agent)
+  check('重复 clearDone 返回 false', again === false)
+
+  const s = sup.stateOf(agent)
+  check('state 里已无声明', !s.declaredDone)
+}
+
 // ---------- 汇总 ----------
 console.log('\n' + '='.repeat(66))
 console.log(`结果：${pass}/${pass + fail} 通过`)

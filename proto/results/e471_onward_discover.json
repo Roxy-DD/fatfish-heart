@@ -2,18 +2,8 @@
  "experiment": "E-471",
  "branch": "master",
  "ahead_commits": 0,
- "dirty_files": 11,
+ "dirty_files": 3,
  "candidates": [
-  {
-   "status": "M",
-   "path": "README.md",
-   "kind": "ok"
-  },
-  {
-   "status": "M",
-   "path": "dsh-plugin/cordis.patch.yml",
-   "kind": "ok"
-  },
   {
    "status": "M",
    "path": "dsh-plugin/index.js",
@@ -21,42 +11,12 @@
   },
   {
    "status": "M",
-   "path": "proto/iterate.py",
+   "path": "dsh-plugin/lifecycle.js",
    "kind": "ok"
   },
   {
    "status": "M",
-   "path": "proto/onward.py",
-   "kind": "ok"
-  },
-  {
-   "status": "M",
-   "path": "proto/results/e471_onward_discover.json",
-   "kind": "blocked"
-  },
-  {
-   "status": "M",
-   "path": "proto/results/e472_onward_gate.json",
-   "kind": "blocked"
-  },
-  {
-   "status": "M",
-   "path": "proto/run_e472_onward_gate.py",
-   "kind": "ok"
-  },
-  {
-   "status": "??",
-   "path": "docs/INSTALL.md",
-   "kind": "ok"
-  },
-  {
-   "status": "??",
-   "path": "proto/results/e476_plugin_portable.json",
-   "kind": "blocked"
-  },
-  {
-   "status": "??",
-   "path": "proto/run_e476_plugin_portable.py",
+   "path": "proto/check-lifecycle.mjs",
    "kind": "ok"
   }
  ],

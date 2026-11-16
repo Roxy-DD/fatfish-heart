@@ -186,6 +186,9 @@ export function createLifecycleSupervisor(cfg, log) {
         steerInFlight: false,
         // E-423：诊断结构是否已 dump 过（只 dump 一次）
         shapeDumped: false,
+        // E-479：模型自己宣布的「本轮做完了」（null = 未宣布）
+        //   { at, reason, totalSteers }
+        declaredDone: null,
       }
       states.set(agent, s)
     }
@@ -273,6 +276,50 @@ export function createLifecycleSupervisor(cfg, log) {
         }
 
         const s = stateOf(agent)
+
+        // ============================================================
+        // E-479：模型宣布「做完了」→ 立刻尊重，不再 steer
+        //
+        // ★ 这段必须在**所有计数器判断之前**。
+        //
+        // 用户 2026-11-16 指出的问题：
+        //   「即使它自己想停止了，停止之后又会自动触发生命周期。
+        //     这个生命周期要不要继续触发，应该是在停止之前
+        //     由模型自己决定，而不是一定要按钩子那种机制不停地触发。」
+        //
+        // 原设计的问题：
+        //   · 停止完全由代码决定（consecutive >= 20 或 streak >= 3）
+        //   · 模型停下来，钩子看到「还有剩余额度」就把它拽回去继续
+        //   · 模型说「我做完了」，钩子不听，因为判断权在代码手里
+        //
+        //   → 模型对「任务是否完成」没有表决权。
+        //
+        // 这违背项目自己的职责划分原则（记忆 L1）：
+        //   「需要判断、需要做选择决策的地方全部交给模型自己分析判断；
+        //     不需要模型判断的地方由系统直接接管。」
+        //   「任务是否完成」是典型的判断题，必须由模型判断。
+        //   系统该做的只有：不误判、留痕、别把它锁死。
+        //
+        // 新语义：
+        //   模型显式声明完成 → 立即生效，不等计数器
+        //   模型没声明       → 计数器作为兜底（防止无限空转）
+        // ============================================================
+        if (s.declaredDone) {
+          const d = s.declaredDone
+          const ageSec = Math.round((Date.now() - d.at) / 1000)
+          log('lifecycle-honor-done', {
+            turn, consecutive: s.consecutive,
+            totalSteers: s.totalSteers,
+            ageSec, reason: d.reason,
+          })
+          // 用掉这次声明，避免同一声明反复生效
+          s.declaredDone = null
+          // 声明被尊重后，把计数清零：
+          // 用户下次发消息时相当于重新开始，而不是背着旧计数
+          s.consecutive = 0
+          s.noProgressStreak = 0
+          return
+        }
 
         // 防重入（E-371 修：原实现会静默吃掉所有后续 steer）
         //
@@ -494,6 +541,8 @@ export function createLifecycleSupervisor(cfg, log) {
         s.consecutive = 0
         s.lastToolCalls = -1
         s.noProgressStreak = 0
+        // E-479：用户发新消息 → 上一轮「我宣布做完」的结论失效
+        s.declaredDone = null
       } catch (e) { /* ignore */ }
     }
     ctx.on('agent/user-message', reset)
@@ -505,5 +554,59 @@ export function createLifecycleSupervisor(cfg, log) {
     })
   }
 
-  return { attach, conf, stateOf, countToolCalls, makeUserMessage }
+  /**
+   * E-479：由模型自己宣布「这一轮我做完了」
+   *
+   * 为什么需要这个（用户原话）：
+   *   「停不停止的那个开关，应该由你自己决定，而不是由我」
+   *   「生命周期要不要继续触发，应该是在停止之前由模型自己决定，
+   *     而不是一定要按钩子那种机制不停地触发」
+   *
+   * 语义：
+   *   declareDone(agent, reason) 之后，下一次 turn-stopping 不再 steer，
+   *   让这一轮自然结束。不需要等计数器到达上限，也不会被计数器否决。
+   *
+   * reason 会被写进日志，用于事后核对「我说做完时是不是真的做完了」。
+   *
+   * 边界（防止滥用）：
+   *   · 只对当前 agent 生效，不影响其他会话
+   *   · 用户发新消息时自动清除（reset 里做的事）
+   *   · 不阻止用户主动继续对话 —— 只是不再自动续跑
+   */
+  function declareDone(agent, reason) {
+    try {
+      if (!agent) return false
+      const s = stateOf(agent)
+      s.declaredDone = {
+        at: Date.now(),
+        reason: String(reason || '').slice(0, 300),
+        totalSteers: s.totalSteers,
+      }
+      log('lifecycle-declared-done', {
+        consecutive: s.consecutive,
+        totalSteers: s.totalSteers,
+        reason: s.declaredDone.reason,
+      })
+      return true
+    } catch (e) {
+      return false
+    }
+  }
+
+  /** 撤销「已完成」声明（发现还有活要干时） */
+  function clearDone(agent) {
+    try {
+      if (!agent) return false
+      const s = stateOf(agent)
+      const had = !!s.declaredDone
+      s.declaredDone = null
+      if (had) log('lifecycle-done-cleared', {})
+      return had
+    } catch (e) {
+      return false
+    }
+  }
+
+  return { attach, conf, stateOf, countToolCalls, makeUserMessage,
+           declareDone, clearDone }
 }
