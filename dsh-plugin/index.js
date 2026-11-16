@@ -1679,7 +1679,12 @@ export function apply(ctx, config) {
       render: (_a, v) => {
         if (!v) return [{ type: 'text', text: '无返回' }]
         if (v.error) {
-          return [{ type: 'text', text: `mem_done 失败：${v.error}` }]
+          // E-483：把诊断信息一起显示出来
+          //   原来只显示 error，debugLog=False 时就完全看不到卡在哪
+          const d = v.debug
+            ? '\n诊断: ' + JSON.stringify(v.debug)
+            : ''
+          return [{ type: 'text', text: `mem_done 失败：${v.error}${d}` }]
         }
         if (v.action === 'declare') {
           return [{
