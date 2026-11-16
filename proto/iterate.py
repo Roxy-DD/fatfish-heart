@@ -133,6 +133,8 @@ CLIENT_CHECKS = [
     ("贡献入口", "run_e475_contrib_entry.py"),
     # E-476：插件可移植性（配置不含作者本机路径 + 自动推导）
     ("插件可移植", "run_e476_plugin_portable.py"),
+    # E-493：自动备份（睡眠整理后触发 + prune + 逐字段校验）
+    ("自动备份", "run_e493_auto_backup.py"),
 ]
 
 

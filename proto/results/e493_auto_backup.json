@@ -1,0 +1,82 @@
+{
+ "experiment": "E-493",
+ "n_pass": 15,
+ "n_total": 15,
+ "results": [
+  {
+   "name": "临时库有记忆",
+   "ok": true,
+   "detail": "episodes=2"
+  },
+  {
+   "name": "sleep_apply 成功",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "返回 auto_backup 字段",
+   "ok": true,
+   "detail": "{'ok': True, 'path': 'C:\\\\Users\\\\xuee\\\\Desktop\\\\肥鱼之心\\\\proto\\\\e493_z7pj3s5o\\\\test.db.backup.20261116_"
+  },
+  {
+   "name": "备份成功",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "生成了备份文件",
+   "ok": true,
+   "detail": "1 份"
+  },
+  {
+   "name": "备份文件非空",
+   "ok": true,
+   "detail": "81920 B"
+  },
+  {
+   "name": "verify_backup 通过",
+   "ok": true,
+   "detail": "{'ok': True, 'counts': {'audit_log': (1, 1), 'ep_fts': (2, 2), 'episodes': (2, 2), 'meta': (7, 7), 'vectors': (2, 2)}, '"
+  },
+  {
+   "name": "逐字段指纹一致",
+   "ok": true,
+   "detail": "f5e09b72b3dd vs f5e09b72b3dd"
+  },
+  {
+   "name": "备份后审计增长，verify 仍通过",
+   "ok": true,
+   "detail": "volatile_diff=['audit_log'] counts=(2, 1)"
+  },
+  {
+   "name": "prune 成功",
+   "ok": true,
+   "detail": "{'ok': True, 'removed': 6, 'kept': 10, 'errors': []}"
+  },
+  {
+   "name": "备份数降到 10",
+   "ok": true,
+   "detail": "16 → 10"
+  },
+  {
+   "name": "记忆本体指纹未变",
+   "ok": true,
+   "detail": "94da65926b33 vs 94da65926b33"
+  },
+  {
+   "name": "关掉自动备份时整理仍成功",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "auto_backup 标记为跳过",
+   "ok": true,
+   "detail": "None"
+  },
+  {
+   "name": "*.db.backup.* 已被忽略",
+   "ok": true,
+   "detail": ".gitignore:24:*.db.backup.*\tproto/cosmos_mem/dsh_mem.db.backup.20991231_235959"
+  }
+ ]
+}

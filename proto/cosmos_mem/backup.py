@@ -27,6 +27,10 @@ from __future__ import annotations
 import os
 import sqlite3
 import time
+import itertools
+
+# E-493：进程内备份序号，避免同一时间戳下文件名碰撞
+_BACKUP_SEQ = itertools.count(1)
 
 
 def backup_db(db_path: str, out_path: str | None = None,
@@ -44,8 +48,15 @@ def backup_db(db_path: str, out_path: str | None = None,
         return {"ok": False, "error": f"源数据库不存在: {db_path}"}
 
     if not out_path:
+        # E-493：秒级时间戳会碰撞 —— 实测 14 次快速备份落在同一秒，
+        # 全部覆盖成同一个文件，只剩 2 份。
+        # 用「毫秒 + 进程内递增序号」保证同一进程内绝不重名；
+        # 不用 uuid 是为了保持文件名可读、可按时间排序。
+        import itertools
         ts = time.strftime("%Y%m%d_%H%M%S")
-        out_path = f"{db_path}.backup.{ts}"
+        ms = int(time.time() * 1000) % 1000
+        seq = next(_BACKUP_SEQ)
+        out_path = f"{db_path}.backup.{ts}_{ms:03d}_{seq:03d}"
 
     try:
         src = sqlite3.connect(db_path)
@@ -139,29 +150,65 @@ def verify_backup(db_path: str, backup_path: str,
                 "error": "没有可校验的表（tables 为空）",
                 "counts": {}, "tables": []}
 
+    # E-494：行数比对会产生**假失败**，改用逐字段指纹
+    #
+    # 实测（真实库首次自动备份）：
+    #   verify_backup 报 audit_log 505 vs 506 → ok=False
+    #   但排除 audit_log 后逐字段指纹完全一致。
+    #   原因：备份完成后又有一次写入（就是记录"备份完成"的审计），
+    #   源库 audit_log 比备份多 1 行 —— 备份本身没坏。
+    #
+    # 这正是 E-436 记录过的坑：
+    #   "行数相同不代表内容相同；内容相同也可能行数不同（有 volatile 表）。"
+    #
+    # 处理：
+    #   1. 逐字段指纹（所有行所有列排序后 hash）—— 比行数严格
+    #   2. audit_log / environment_events 是 volatile 表：
+    #      它们记录"正在发生的事"，备份后必然继续增长，
+    #      只报告差异，不判失败
+    VOLATILE = {"audit_log", "environment_events"}
+
+    import hashlib
+
+    def fp(p, t):
+        c = sqlite3.connect(p)
+        try:
+            rows = c.execute(f"SELECT * FROM {t}").fetchall()
+        finally:
+            c.close()
+        h = hashlib.md5()
+        for r in sorted(rows, key=lambda x: repr(x)):
+            h.update(repr(r).encode("utf-8", "replace"))
+        return h.hexdigest(), len(rows)
+
     counts = {}
+    fps = {}
     all_ok = True
+    volatile_diff = []
 
     for t in tables:
         try:
-            c1 = sqlite3.connect(db_path)
-            n1 = c1.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
-            c1.close()
+            h1, n1 = fp(db_path, t)
         except Exception:
-            n1 = None
-
+            h1, n1 = None, None
         try:
-            c2 = sqlite3.connect(backup_path)
-            n2 = c2.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
-            c2.close()
+            h2, n2 = fp(backup_path, t)
         except Exception:
-            n2 = None
+            h2, n2 = None, None
 
         counts[t] = (n1, n2)
-        if n1 is None or n2 is None or n1 != n2:
+        fps[t] = (h1, h2)
+
+        if h1 is None or h2 is None or h1 != h2:
+            if t in VOLATILE:
+                # volatile 表允许增长，但只接受"源 >= 备份"（增长方向）
+                if n1 is not None and n2 is not None and n1 >= n2:
+                    volatile_diff.append(t)
+                    continue
             all_ok = False
 
-    return {"ok": all_ok, "counts": counts,
+    return {"ok": all_ok, "counts": counts, "fps": fps,
+            "volatile_diff": volatile_diff,
             "tables": list(tables)}
 
 
@@ -225,8 +272,49 @@ def list_backups(db_path: str) -> list[dict]:
                     })
     except Exception:
         pass
-    out.sort(key=lambda x: -x["mtime"])
+    # E-493：mtime 在快速连续备份时可能相同（同一秒），
+    # 排序不稳定会导致 prune 删掉错误的那份。
+    # 文件名含时间戳+序号，字典序即时间序，按它倒排更可靠。
+    out.sort(key=lambda x: (x.get("mtime", 0), x["name"]), reverse=True)
     return out
 
 
-__all__ = ["backup_db", "verify_backup", "restore_db", "list_backups"]
+def prune_backups(db_path: str, keep: int = 10) -> dict:
+    """
+    只保留最近 keep 份备份（E-493）。
+
+    为什么不违反 R2「不遗忘」：
+      R2 保护的是**记忆本体**（episodes 等表的数据，只增不删、失效打标记）。
+      备份文件是**派生数据**——它是某一时刻记忆的快照，
+      删掉旧备份不会丢任何记忆（最新库里都还在）。
+      真正不能丢的旧值在 episodes_history 里，那是 R4 管的，不在这里。
+
+    不设上限的后果：每次睡眠整理生成一份 ~6MB 备份，
+    几个月后就是几百 MB —— 这不是容灾，是磁盘垃圾。
+    """
+    if keep < 1:
+        return {"ok": False, "error": "keep 必须 >= 1", "removed": 0}
+
+    items = list_backups(db_path)      # 已按 mtime 倒序（最新在前）
+    if len(items) <= keep:
+        return {"ok": True, "removed": 0, "kept": len(items)}
+
+    removed = 0
+    errors = []
+    for old in items[keep:]:
+        try:
+            os.remove(old["path"])
+            removed += 1
+        except Exception as e:
+            errors.append(f"{old['name']}: {e}")
+
+    return {
+        "ok": len(errors) == 0,
+        "removed": removed,
+        "kept": min(len(items), keep),
+        "errors": errors,
+    }
+
+
+__all__ = ["backup_db", "verify_backup", "restore_db",
+           "list_backups", "prune_backups"]

@@ -2,16 +2,36 @@
  "experiment": "E-471",
  "branch": "master",
  "ahead_commits": 0,
- "dirty_files": 2,
+ "dirty_files": 6,
  "candidates": [
   {
    "status": "M",
-   "path": "dsh-plugin/index.js",
+   "path": "proto/cosmos_mem/backup.py",
    "kind": "ok"
   },
   {
    "status": "M",
-   "path": "proto/check-mem-done-e2e.mjs",
+   "path": "proto/cosmos_mem/cli_mcp.py",
+   "kind": "ok"
+  },
+  {
+   "status": "M",
+   "path": "proto/iterate.py",
+   "kind": "ok"
+  },
+  {
+   "status": "M",
+   "path": "proto/results/e471_onward_discover.json",
+   "kind": "blocked"
+  },
+  {
+   "status": "??",
+   "path": "proto/results/e493_auto_backup.json",
+   "kind": "blocked"
+  },
+  {
+   "status": "??",
+   "path": "proto/run_e493_auto_backup.py",
    "kind": "ok"
   }
  ],

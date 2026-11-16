@@ -655,7 +655,46 @@ def cmd_sleep_apply(st, payload) -> dict:
                       "bumped": len(result.get("bumped", [])),
                       "skipped_hooks": len(result.get("skipped_hooks", [])),
                       "cursor": new_cursor})
-        return {"ok": True, "result": result, "cursor": new_cursor}
+
+        # E-493：睡眠整理成功后自动备份
+        #
+        # 为什么选这个时机（不预设门槛，先找天然的事务边界）：
+        #   · mem_sleep 是模型判断「一段工作告一段落」后主动触发的，
+        #     它本身就是有意义的检查点
+        #   · 备份点一定在所有写盘动作完成之后（apply 已返回）
+        #   · 由模型判断触发，而不是拍脑袋定「每 N 分钟」
+        #     —— 符合「判断交模型，机械交系统」的职责划分
+        #
+        # ★ 备份失败绝不能让整理失败：备份是增益，不是主流程。
+        #   包在 try/catch 里，失败只记审计、返回结果带 auto_backup 状态。
+        auto_backup = None
+        if payload.get("auto_backup", True):
+            try:
+                import backup as _bk
+                db_path = getattr(st, "path", None) or getattr(st, "db_path", "")
+                _b = _bk.backup_db(db_path, verify=True)
+                auto_backup = {
+                    "ok": bool(_b.get("ok")),
+                    "path": _b.get("path"),
+                    "bytes": _b.get("bytes"),
+                }
+                # 只保留最近 10 份（备份是派生数据，删旧份不违反 R2）
+                if _b.get("ok"):
+                    try:
+                        pr = _bk.prune_backups(db_path, keep=10)
+                        auto_backup["pruned"] = pr.get("removed", 0)
+                    except Exception:
+                        auto_backup["pruned"] = None
+                if not _b.get("ok"):
+                    _audit(st, "error", msg="睡眠后自动备份失败",
+                           extra={"error": str(_b.get("error"))[:200]})
+            except Exception as be:
+                auto_backup = {"ok": False, "error": str(be)[:200]}
+                _audit(st, "error", msg="睡眠后自动备份异常",
+                       extra={"error": str(be)[:200]})
+
+        return {"ok": True, "result": result, "cursor": new_cursor,
+                "auto_backup": auto_backup}
     except Exception as e:
         _audit(st, "error", msg="睡眠整理失败", extra={"error": str(e)})
         return {"ok": False, "error": f"{type(e).__name__}: {e}"}
