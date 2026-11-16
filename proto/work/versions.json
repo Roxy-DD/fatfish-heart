@@ -1,0 +1,109 @@
+{
+ "current": "E-235-baseline",
+ "versions": [
+  {
+   "id": "v0.1.0",
+   "at": 1794061924.5656433,
+   "commit": "dee197972",
+   "note": "已存在的版本（登记）",
+   "artifacts": {
+    "db": "work\\snapshots\\v0.1.0.db",
+    "seed": "work\\snapshots\\v0.1.0.seed.json"
+   },
+   "status": "ok",
+   "reason": "",
+   "verified": true
+  },
+  {
+   "id": "v0.1.1",
+   "at": 1794061924.6473887,
+   "commit": "5af460b59",
+   "note": "已存在的版本（登记）",
+   "artifacts": {
+    "db": "work\\snapshots\\v0.1.1.db",
+    "seed": "work\\snapshots\\v0.1.1.seed.json"
+   },
+   "status": "ok",
+   "reason": "",
+   "verified": true
+  },
+  {
+   "id": "v0.1.2",
+   "at": 1794061924.7215989,
+   "commit": "31757f145",
+   "note": "已存在的版本（登记）",
+   "artifacts": {
+    "db": "work\\snapshots\\v0.1.2.db",
+    "seed": "work\\snapshots\\v0.1.2.seed.json"
+   },
+   "status": "ok",
+   "reason": "",
+   "verified": true
+  },
+  {
+   "id": "E-231",
+   "at": 1794061924.7981057,
+   "commit": "ab5dd49f7",
+   "note": "已存在的版本（登记）",
+   "artifacts": {
+    "db": "work\\snapshots\\E-231.db",
+    "seed": "work\\snapshots\\E-231.seed.json"
+   },
+   "status": "ok",
+   "reason": "",
+   "verified": true
+  },
+  {
+   "id": "E-232",
+   "at": 1794061924.8740935,
+   "commit": "186db9413",
+   "note": "已存在的版本（登记）",
+   "artifacts": {
+    "db": "work\\snapshots\\E-232.db",
+    "seed": "work\\snapshots\\E-232.seed.json"
+   },
+   "status": "ok",
+   "reason": "",
+   "verified": true
+  },
+  {
+   "id": "E-233",
+   "at": 1794061924.9549446,
+   "commit": "5453940c6",
+   "note": "已存在的版本（登记）",
+   "artifacts": {
+    "db": "work\\snapshots\\E-233.db",
+    "seed": "work\\snapshots\\E-233.seed.json"
+   },
+   "status": "ok",
+   "reason": "",
+   "verified": true
+  },
+  {
+   "id": "E-234",
+   "at": 1794062122.0655859,
+   "commit": "f0a37fb99",
+   "note": "跨版本生命周期管理（双向无限跨度迁移+可删钩子）",
+   "artifacts": {
+    "db": "work\\snapshots\\E-234.db",
+    "seed": "work\\snapshots\\E-234.seed.json"
+   },
+   "status": "ok",
+   "reason": "",
+   "verified": true
+  },
+  {
+   "id": "E-235-baseline",
+   "at": 1794062200.0723984,
+   "commit": "8aa78584e",
+   "note": "E-236迭代前基线",
+   "artifacts": {
+    "db": "work\\snapshots\\E-235-baseline.db",
+    "seed": "work\\snapshots\\E-235-baseline.seed.json"
+   },
+   "status": "ok",
+   "reason": "",
+   "verified": false
+  }
+ ]
+}
