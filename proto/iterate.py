@@ -314,6 +314,32 @@ def run_regression(verbose: bool = True) -> dict:
                 print(f"  ❌ {name}  {e}")
 
     all_pass = all(v["pass"] is True for v in results.values())
+
+    # E-496（FISH-10）：失败必须可追查
+    #
+    # 问题：曾有一次回归报「❌ 有失败」，但只看了尾部摘要，
+    #       没抓失败项名称；重跑又全绿，窗口一过无法归因。
+    #
+    # 修法：每次运行把完整结果（含每项 stdout/stderr）写盘，
+    #       失败时额外把失败项详情打到 stderr。
+    #       这样偶发失败事后能查，而不是靠用户描述现象。
+    try:
+        _results_path = os.path.join(_HERE, "work", "last_regression.json")
+        os.makedirs(os.path.dirname(_results_path), exist_ok=True)
+        with open(_results_path, "w", encoding="utf-8") as _f:
+            json.dump({"at": time.time(), "all_pass": all_pass,
+                       "items": results}, _f, ensure_ascii=False, indent=1)
+        if not all_pass:
+            for _k, _v in results.items():
+                if _v.get("pass") is False:
+                    sys.stderr.write(
+                        f"\n[回归失败] {_k}\n"
+                        f"{(_v.get('output') or '')[-2000:]}\n")
+            sys.stderr.write(
+                f"[回归失败详情已写入] {_results_path}\n")
+    except Exception:
+        pass   # 日志失败不能影响回归本身
+
     # E-400：把回归结果记成环境事件
     #
     # 《环管群》主张6 要求记录真实环境反馈，
