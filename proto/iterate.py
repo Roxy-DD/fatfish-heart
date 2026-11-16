@@ -121,6 +121,8 @@ CLIENT_CHECKS = [
     ("版本谱系", "run_e440_version_reg.py"),
     # E-442：版本谱系覆盖率监控（只监控结构健全，不设覆盖率门槛）
     ("谱系监控", "run_e442_version_monitor.py"),
+    # E-466：版本号一致性（package.json vs git tag）
+    ("版本号", "check_version.py"),
 ]
 
 
