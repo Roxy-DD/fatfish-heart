@@ -1,8 +1,8 @@
 {
  "experiment": "E-424",
- "n_pass": 6,
- "n_total": 6,
- "n_steers": 54,
- "n_gt_zero": 18,
- "latest_toolcalls": 673
+ "n_pass": 7,
+ "n_total": 7,
+ "n_steers": 63,
+ "n_gt_zero": 27,
+ "latest_toolcalls": 595
 }

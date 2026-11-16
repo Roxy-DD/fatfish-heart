@@ -1,16 +1,16 @@
 {
  "experiment": "E-400",
- "n_pass": 9,
- "n_total": 9,
- "total_events": 65,
- "regression_events": 30,
+ "n_pass": 10,
+ "n_total": 10,
+ "total_events": 67,
+ "regression_events": 31,
  "latest": {
-  "event_id": "dcb60add02cd4d89",
-  "at": 1794796726.4985719,
-  "kind": "test_fail",
+  "event_id": "45f68d32b10d43db",
+  "at": 1794796918.5519094,
+  "kind": "test_pass",
   "source": "iterate.py check",
-  "outcome": "38/39",
-  "detail": "失败项: 谱系监控",
+  "outcome": "39/39",
+  "detail": "全部回归通过",
   "ep_ids": [],
   "task": "regression"
  }
