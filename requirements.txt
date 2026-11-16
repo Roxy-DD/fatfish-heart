@@ -1,0 +1,33 @@
+# ============================================================
+# 肥鱼之心（Fat Fish Heart）· 核心依赖
+#
+# 只列核心记忆系统（proto/cosmos_mem/）真正需要的。
+# 实验脚本（proto/run_e*.py）还会用 pandas / requests 等，
+# 那些在 requirements-dev.txt 里。
+#
+# 安装：
+#   pip install -r requirements.txt
+#
+# GPU 说明：
+#   onnxruntime-gpu 需要匹配的 CUDA。如果没有 GPU，
+#   可改装 onnxruntime（CPU 版），速度慢但能跑。
+# ============================================================
+
+# --- 数值与向量 ---
+numpy>=2.0
+
+# --- 嵌入模型（bge-small-zh）---
+# transformers 用于 GPU 加速路径；纯 CPU 可只装 numpy + onnxruntime
+torch>=2.0
+transformers>=4.40
+
+# --- 分词（中文检索必需）---
+jieba>=0.42
+
+# --- 向量推理引擎 ---
+# GPU 版：onnxruntime-gpu（需匹配 CUDA）
+# CPU 版：改成 onnxruntime
+onnxruntime-gpu>=1.18
+
+# --- 模型下载 ---
+huggingface-hub>=0.20
