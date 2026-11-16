@@ -142,10 +142,23 @@ print("\n③ 安全检查（贡献前必须全过）")
 issues = []
 
 # 3.1 本机路径
+#
+# E-474：必须排除 onward.py 自己
+#
+# 问题：这个脚本内部就含有检测本机路径的正则
+#       （r"C:\\Users\\[^\\]+\\"），所以它自己被扫描时会命中，
+#       导致「工具判定自己不合格」的死循环。
+#
+# 这不是特例，是**扫描器必然遇到的自我引用问题**。
+# 正确做法：明确排除扫描器自身，并说明原因。
+SELF_FILES = {"proto/onward.py"}
+
 r = git("diff", "--name-only")
 changed_files = [x for x in r.stdout.split("\n") if x.strip()]
 local_path_files = []
 for f in changed_files:
+    if f in SELF_FILES:
+        continue                      # 扫描器自身，跳过
     p = os.path.join(ROOT, f)
     if not os.path.exists(p) or not f.endswith((".py", ".js", ".md")):
         continue
@@ -301,9 +314,20 @@ print("\n③ 推送到 origin")
 r = git("push", "-u", "origin", new_branch)
 if r.returncode != 0:
     print(f"   ❌ 推送失败: {(r.stderr or '')[:300]}")
-    print("   （本地分支已保留，可稍后重试）")
+    # E-473：失败也要切回原分支，否则用户下次在错误分支上工作
+    git("checkout", branch)
+    print(f"   已切回 {branch}（本地分支 {new_branch} 保留，可重试）")
     sys.exit(1)
 print("   ✅ 已推送")
+
+# E-473：推送成功后切回原分支
+#
+# 原实现只在「提交失败」时切回，成功路径留在 onward/ 分支上。
+# 后果：用户下次运行发现自己不在原分支，后续 git 操作全部错位。
+# 这是状态污染，不是功能错误，但会让不熟 Git 的人彻底懵掉 ——
+# 而这个工具的目标用户恰好是不熟 Git 的人。
+git("checkout", branch)
+print(f"   ✅ 已切回 {branch}")
 
 # 3.4 开 PR
 print("\n④ 创建 PR")

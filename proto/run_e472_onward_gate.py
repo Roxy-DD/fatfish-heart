@@ -58,6 +58,15 @@ check("只推 onward 分支", "onward/" in src)
 # ---------- ② 分类函数行为 ----------
 print("\n【2】分类逻辑（用构造路径验证）")
 
+# E-474：扫描器自引用问题
+#
+# onward.py 内部含检测本机路径的正则，会命中自己，
+# 导致「工具判定自己不合格」的死循环。
+# 必须显式排除自身。
+check("扫描器排除自身（避免自我误判）",
+      "SELF_FILES" in src and "proto/onward.py" in src,
+      "已排除" if "SELF_FILES" in src else "未排除 → 会自我误判")
+
 # 复制一份分类逻辑（保持与 onward.py 一致）
 BLOCKED_PATTERNS = [
     r"\.db$", r"\.db-wal$", r"\.db-shm$", r"\.db\.backup",

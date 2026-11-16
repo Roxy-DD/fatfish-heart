@@ -125,6 +125,8 @@ CLIENT_CHECKS = [
     ("版本号", "check_version.py"),
     # E-472：回馈机制门禁（防止私人数据被自动推到公共仓库）
     ("回馈门禁", "run_e472_onward_gate.py"),
+    # E-473：层3 分支状态管理（三种结局都要切回原分支）
+    ("分支状态", "run_e473_branch_state.py"),
 ]
 
 
