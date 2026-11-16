@@ -1245,6 +1245,12 @@ export function apply(ctx, config) {
             prewarmSlots: cfg.prewarmSlots,
             reviewProvider: cfg.reviewProvider,
             reviewModel: cfg.reviewModel,
+            // E-492：暴露真实生效路径，便于诊断
+            //   （之前 /config 不返回这两个字段，
+            //    我看到 undefined 误以为是空字符串，
+            //    又误判成"兜底没生效"）
+            kernelDir: cfg.kernelDir,
+            dbPath: cfg.dbPath,
           },
         })
       }
