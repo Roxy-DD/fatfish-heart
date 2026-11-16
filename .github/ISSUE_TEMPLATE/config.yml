@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 不知道怎么开始
+    url: https://github.com/Roxy-DD/fatfish-heart/blob/master/README.md#快速开始
+    about: 先看 README 的「快速开始」：装模型 → doctor → init_db，四步能跑通
+  - name: 想贡献但不确定该做什么
+    url: https://github.com/Roxy-DD/fatfish-heart/blob/master/docs/ONWARD.md
+    about: 看回馈机制说明：不需要会 Git，系统会帮你把改动整理成 PR

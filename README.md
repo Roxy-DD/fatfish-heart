@@ -609,4 +609,36 @@ python proto/onward.py --push   # 层 3：授权后自动建分支/提交/开 PR
 
 ---
 
+## 参与进来
+
+这个项目的目的是形成「环管群」生态，所以**贡献本身就是设计的一部分**。
+
+### 三种参与方式，按门槛从低到高
+
+**① 只是使用**
+Fork → 跑起来 → 用它记自己的东西。这就已经是一个「环」了。
+
+**② 报告问题**
+[开一个 issue](https://github.com/Roxy-DD/fatfish-heart/issues/new/choose)，
+有 Bug / 想法 / 演化回馈三种模板。
+
+最低限度只需要：`python proto/doctor.py` 的输出 + 一句话描述。
+
+**③ 回馈改进**
+你的实例长出了对别人也有用的东西：
+
+```bash
+python proto/onward.py          # 自动发现可贡献项 + 安全检查
+python proto/onward.py --push   # 授权后自动建分支/提交/开 PR
+```
+
+**不需要会 Git、会写代码、会提 PR。** 详见 [docs/ONWARD.md](docs/ONWARD.md)。
+
+### 提交代码前
+
+读 [CONTRIBUTING.md](CONTRIBUTING.md)：分支模型、四条红线的含义、
+提交信息格式、以及哪些测试反模式本项目已经踩过。
+
+---
+
 #情景记忆 #fatfish-heart #DSH插件 #红线 #分层保护

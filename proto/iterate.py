@@ -127,6 +127,8 @@ CLIENT_CHECKS = [
     ("回馈门禁", "run_e472_onward_gate.py"),
     # E-473：层3 分支状态管理（三种结局都要切回原分支）
     ("分支状态", "run_e473_branch_state.py"),
+    # E-475：贡献入口完整性（issue/PR 模板 + README 可达性）
+    ("贡献入口", "run_e475_contrib_entry.py"),
 ]
 
 
