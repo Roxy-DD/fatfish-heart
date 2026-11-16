@@ -1,12 +1,13 @@
 """E-206 fp16 在 GPU 上的延迟测量（对比 int8 1830ms / CPU 1598ms）"""
+import os
 import sys
 import time
 
-sys.path.insert(0, r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem")
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem"))
 from rerank_v1 import CrossEncoderReranker
 
 # fp16 模型
-rk = CrossEncoderReranker(r"C:\Users\xuee\Desktop\肥鱼之心\models\bge-reranker-v2-m3-fp16")
+rk = CrossEncoderReranker(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "bge-reranker-v2-m3-fp16"))
 _ = rk.score("warmup", ["hello world", "another"])
 print("provider:", rk._sess.get_providers())
 

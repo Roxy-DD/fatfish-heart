@@ -15,7 +15,7 @@ import urllib.request
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 RESULTS = os.path.join(_HERE, "results")
-DEST = r"C:\Users\xuee\Desktop\肥鱼之心\models\bge-reranker-v2-m3"
+DEST = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "bge-reranker-v2-m3")
 
 REPO = "BAAI/bge-reranker-v2-m3"
 FILES = [

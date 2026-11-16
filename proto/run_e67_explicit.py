@@ -18,7 +18,7 @@ import sys
 _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(_HERE, "cosmos_mem"))
 RESULTS = os.path.join(_HERE, "results")
-MODEL_DIR = r"C:\Users\xuee\Desktop\肥鱼之心\models\bge-small-zh"
+MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "bge-small-zh")
 
 EVAL = [
     ("小时候被邻居家的狗追着咬过，小腿上留了疤", 8),

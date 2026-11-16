@@ -16,7 +16,7 @@ import sys
 import os
 import time
 
-sys.path.insert(0, r"C:\Users\xuee\Desktop\肥鱼之心\proto")
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto"))
 import lifecycle as lc
 
 results = []

@@ -19,7 +19,7 @@ import re
 import ast
 import json
 
-ROOT = r"C:\Users\xuee\Desktop\肥鱼之心"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CORE = os.path.join(ROOT, "proto", "cosmos_mem")
 
 print("=" * 74)

@@ -2,13 +2,13 @@
 import sys
 import os
 
-sys.path.insert(0, r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem")
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem"))
 
 from store_v2 import MemoryStore
 import cli_mcp
 
 # 用生产库
-db = r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem\dsh_mem.db"
+db = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem", "dsh_mem.db")
 st = MemoryStore(db)
 
 r = cli_mcp.cmd_list(st, {"top": 3})

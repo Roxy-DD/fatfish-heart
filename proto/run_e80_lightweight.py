@@ -27,7 +27,7 @@ WORK = os.path.join(_HERE, "work", "e80")
 os.makedirs(WORK, exist_ok=True)
 
 DIMS = ["existence", "identity", "time_exact", "time_range", "value", "location"]
-MODEL_DIR = r"C:\Users\xuee\Desktop\肥鱼之心\models\bge-small-zh"
+MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "bge-small-zh")
 
 # ================= M1 扩充规则 =================
 # time_range：补全"频率/季节/相对月"

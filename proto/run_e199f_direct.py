@@ -4,7 +4,7 @@ E-199f 直连下载（用 Session + trust_env=False 修正版）
 import os
 import time
 
-DEST = r"C:\Users\xuee\Desktop\肥鱼之心\models\bge-reranker-v2-m3-int8"
+DEST = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "bge-reranker-v2-m3-int8")
 REPO = "onnx-community/bge-reranker-v2-m3-ONNX"
 REMOTE = "onnx/model_int8.onnx"
 LOCAL = os.path.join(DEST, "model.onnx")

@@ -1,8 +1,9 @@
 """E-202 GPU 上 cross-encoder 延迟测量（对比 CPU 1598ms/50候选）"""
+import os
 import sys
 import time
 
-sys.path.insert(0, r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem")
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem"))
 from rerank_v1 import CrossEncoderReranker
 
 rk = CrossEncoderReranker()

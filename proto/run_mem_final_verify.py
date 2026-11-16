@@ -1,12 +1,13 @@
 """最终验证：13 条底层记忆 + 保护生效 + 检索可用"""
+import os
 import sys
 import json
 
-sys.path.insert(0, r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem")
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem"))
 from store_v2 import MemoryStore
 import hook as _hook
 
-DB = r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem\dsh_mem.db"
+DB = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem", "dsh_mem.db")
 st = MemoryStore(DB)
 results = []
 

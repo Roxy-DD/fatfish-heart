@@ -5,7 +5,7 @@ import urllib.request
 import re
 import os
 
-PLUGIN = r"C:\Users\xuee\Desktop\肥鱼之心\dsh-plugin\index.js"
+PLUGIN = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "dsh-plugin", "index.js")
 BASE = "http://127.0.0.1:61638/cosmos-mem"
 PATTERN = re.compile(r"const RELOAD_MARKER = '([^']*)'")
 

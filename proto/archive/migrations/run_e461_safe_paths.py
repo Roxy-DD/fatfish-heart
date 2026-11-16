@@ -20,7 +20,7 @@ import ast
 import json
 import subprocess
 
-ROOT = r"C:\Users\xuee\Desktop\肥鱼之心"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 print("=" * 74)
 print("E-461 安全修复核心模块路径")
@@ -37,18 +37,18 @@ ROOT_EXPR = ("os.path.dirname(" * UPS
              + ")" * UPS)
 
 # 匹配完整的原始字面量（含 r 前缀和引号）
-# r"C:\Users\xuee\Desktop\肥鱼之心\models\bge-small-zh"
+# os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "bge-small-zh")
 PATTERNS = [
     # models 目录
-    (re.compile(r'r"C:\\Users\\xuee\\Desktop\\肥鱼之心\\models\\bge-small-zh"'),
+    (re.compile(r'os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "bge-small-zh")'),
      ROOT_EXPR + ', "models", "bge-small-zh"'),
-    (re.compile(r'r"C:\\Users\\xuee\\Desktop\\肥鱼之心\\models\\bge-reranker-v2-m3-fp16"'),
+    (re.compile(r'os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "bge-reranker-v2-m3-fp16")'),
      ROOT_EXPR + ', "models", "bge-reranker-v2-m3-fp16"'),
-    (re.compile(r'r"C:\\Users\\xuee\\Desktop\\肥鱼之心\\models\\vad-macbert"'),
+    (re.compile(r'os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "vad-macbert")'),
      ROOT_EXPR + ', "models", "vad-macbert"'),
-    (re.compile(r'r"C:\\Users\\xuee\\Desktop\\肥鱼之心\\proto\\cosmos_mem"'),
+    (re.compile(r'os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem")'),
      ROOT_EXPR + ', "proto", "cosmos_mem"'),
-    (re.compile(r'r"C:\\Users\\xuee\\Desktop\\肥鱼之心"'),
+    (re.compile(r'os.path.dirname(os.path.dirname(os.path.abspath(__file__)))'),
      ROOT_EXPR),
 ]
 

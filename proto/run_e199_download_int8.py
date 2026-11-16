@@ -14,7 +14,7 @@ import time
 import urllib.request
 
 RESULTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results")
-DEST = r"C:\Users\xuee\Desktop\肥鱼之心\models\bge-reranker-v2-m3-int8"
+DEST = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "bge-reranker-v2-m3-int8")
 REPO = "onnx-community/bge-reranker-v2-m3-ONNX"
 
 FILES = [

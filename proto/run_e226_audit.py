@@ -2,12 +2,12 @@
 import sys
 import os
 
-sys.path.insert(0, r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem")
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem"))
 
 from store_v2 import MemoryStore
 import cli_mcp
 
-db = r"C:\Users\xuee\Desktop\肥鱼之心\proto\work\e226_audit.db"
+db = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "work", "e226_audit.db")
 for suf in ("", "-wal", "-shm"):
     p = db + suf
     if os.path.exists(p):

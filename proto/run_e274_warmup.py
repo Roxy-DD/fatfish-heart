@@ -75,7 +75,7 @@ st.con.close()
 """
 
 env = {**os.environ, "KMP_DUPLICATE_LIB_OK": "TRUE",
-       "HF_HOME": r"C:\Users\xuee\Desktop\肥鱼之心\.hf",
+       "HF_HOME": os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".hf"),
        "PYTHONIOENCODING": "utf-8"}
 
 

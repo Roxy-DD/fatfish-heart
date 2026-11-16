@@ -9,15 +9,15 @@ import sys
 import time
 import os
 
-_KERNEL = r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem\kernel_server.py"
-_DB = r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem\dsh_mem.db"
+_KERNEL = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem", "kernel_server.py")
+_DB = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem", "dsh_mem.db")
 _PY = r"D:\anaconda3\python.exe"
 
 def main():
     env = dict(os.environ)
     env["KMP_DUPLICATE_LIB_OK"] = "TRUE"
     env["PYTHONIOENCODING"] = "utf-8"
-    env["HF_HOME"] = r"C:\Users\xuee\Desktop\肥鱼之心\.hf"
+    env["HF_HOME"] = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".hf")
 
     print("启动 kernel_server ...")
     proc = subprocess.Popen(

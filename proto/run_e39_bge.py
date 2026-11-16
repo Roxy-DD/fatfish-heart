@@ -23,13 +23,13 @@ from collections import defaultdict
 
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
 os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
-os.environ["HF_HOME"] = r"C:\Users\xuee\Desktop\肥鱼之心\.hf"
+os.environ["HF_HOME"] = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".hf")
 _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _HERE)
 
 import numpy as np
 
-MODEL_DIR = r"C:\Users\xuee\Desktop\肥鱼之心\models\bge-small-zh"
+MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "bge-small-zh")
 RESULTS = os.path.join(_HERE, "results")
 K = 5
 TOPICS = ["记忆系统", "检索算法", "硬件设计", "产品运营", "数据分析"]

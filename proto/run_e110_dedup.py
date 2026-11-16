@@ -1,7 +1,8 @@
 """验证去重是否生效"""
+import os
 import json, subprocess, sys, os
 
-d = r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem"
+d = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem")
 db = os.path.join(d, "e110_dedup.db")
 for suf in ("", "-wal", "-shm"):
     p = db + suf
@@ -9,7 +10,7 @@ for suf in ("", "-wal", "-shm"):
         os.remove(p)
 
 env = {**os.environ, "PYTHONIOENCODING": "utf-8", "KMP_DUPLICATE_LIB_OK": "TRUE",
-       "HF_HOME": r"C:\Users\xuee\Desktop\肥鱼之心\.hf"}
+       "HF_HOME": os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".hf")}
 
 proc = subprocess.Popen([sys.executable, "-u", os.path.join(d, "kernel_server.py"), db],
                         stdin=subprocess.PIPE, stdout=subprocess.PIPE,

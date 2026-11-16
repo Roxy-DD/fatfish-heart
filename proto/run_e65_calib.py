@@ -22,7 +22,7 @@ import sys
 _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(_HERE, "cosmos_mem"))
 RESULTS = os.path.join(_HERE, "results")
-MODEL_DIR = r"C:\Users\xuee\Desktop\肥鱼之心\models\bge-small-zh"
+MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "bge-small-zh")
 
 # 与 E-64 同一评测集（25 句），保证可比
 EVAL = [

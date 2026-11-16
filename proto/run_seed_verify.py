@@ -3,15 +3,16 @@
 设计原则：不硬编码数量，全部从 seed_memory.json 动态读取。
 （硬编码会让每次加种子都要改测试——这是维护负担，也是测试脆弱性来源）
 """
+import os
 import sys
 import json
 
-sys.path.insert(0, r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem")
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem"))
 from store_v2 import MemoryStore
 import hook as _hook
 import seed as _seed
 
-DB = r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem\dsh_mem.db"
+DB = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem", "dsh_mem.db")
 st = MemoryStore(DB)
 results = []
 

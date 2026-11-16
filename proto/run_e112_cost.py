@@ -1,6 +1,6 @@
 """E-112 验证 cost 规则补充后，工作约定类记忆的重要性是否提升"""
 import sys, os
-sys.path.insert(0, r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem")
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem"))
 from store_v1 import estimate_cost
 
 CASES = [

@@ -3,7 +3,7 @@ import os
 import time
 import urllib.request
 
-DEST = r"C:\Users\xuee\Desktop\肥鱼之心\models\bge-reranker-v2-m3-fp16"
+DEST = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "bge-reranker-v2-m3-fp16")
 REPO = "onnx-community/bge-reranker-v2-m3-ONNX"
 os.makedirs(DEST, exist_ok=True)
 
@@ -17,7 +17,7 @@ FILES = [
 ]
 
 # 复用 int8 已下载的 tokenizer 文件（相同）
-SRC_INT8 = r"C:\Users\xuee\Desktop\肥鱼之心\models\bge-reranker-v2-m3-int8"
+SRC_INT8 = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "bge-reranker-v2-m3-int8")
 
 def download(url, dest, retries=8):
     for attempt in range(retries):

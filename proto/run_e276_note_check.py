@@ -1,14 +1,15 @@
 """E-276 查清：note 审计有 2 条，但 notes 表 0 条——矛盾"""
+import os
 import sys
 import warnings
 import json
 
 warnings.filterwarnings("ignore")
-sys.path.insert(0, r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem")
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem"))
 
 from store_v2 import MemoryStore
 
-st = MemoryStore(r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem\dsh_mem.db")
+st = MemoryStore(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem", "dsh_mem.db"))
 
 print("=" * 72)
 print("E-276 note 审计与 notes 表不一致")

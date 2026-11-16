@@ -9,10 +9,10 @@ import os
 import json
 from collections import Counter
 
-sys.path.insert(0, r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem")
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem"))
 from store_v2 import MemoryStore
 
-db = r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem\dsh_mem.db"
+db = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem", "dsh_mem.db")
 st = MemoryStore(db)
 
 rows = st.con.execute(
@@ -107,7 +107,7 @@ out = {
     "on_demand": n_demand,
     "test_data": n_test,
 }
-p = r"C:\Users\xuee\Desktop\肥鱼之心\proto\results\mem_analysis.json"
+p = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "results", "mem_analysis.json")
 with open(p, "w", encoding="utf-8") as f:
     json.dump(out, f, ensure_ascii=False, indent=1)
 print(f"\n写入 {p}")

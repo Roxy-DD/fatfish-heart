@@ -16,13 +16,14 @@ E-120 暴露的问题：
 
 只有当**值类型匹配**时，才认为是同一槽位的矛盾。
 """
+import os
 import sys, os, re
-sys.path.insert(0, r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem")
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem"))
 import numpy as np
 from store_v2 import MemoryStore
 from store_v1 import Embedder
 
-DB = r"C:\Users\xuee\Desktop\肥鱼之心\proto\e121.db"
+DB = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "e121.db")
 for suf in ("", "-wal", "-shm"):
     p = DB + suf
     if os.path.exists(p):

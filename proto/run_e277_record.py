@@ -6,15 +6,16 @@ E-245~275 连续做了 30 个实验，覆盖：
 
 现在把结论写入长期记忆，供未来读取。
 """
+import os
 import sys
 import warnings
 
 warnings.filterwarnings("ignore")
-sys.path.insert(0, r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem")
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem"))
 
 from store_v2 import MemoryStore
 
-DB = r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem\dsh_mem.db"
+DB = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem", "dsh_mem.db")
 st = MemoryStore(DB)
 
 print("=" * 74)

@@ -17,7 +17,7 @@ from store_v2 import MemoryStore
 import cli_mcp
 import audit as _audit_mod
 
-db = r"C:\Users\xuee\Desktop\肥鱼之心\proto\work\e22b_integration.db"
+db = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "work", "e22b_integration.db")
 for suf in ("", "-wal", "-shm"):
     p = db + suf
     if os.path.exists(p):

@@ -1,6 +1,7 @@
 """E-113 定位 7.2 秒预热的瓶颈：模型加载 vs 首次数值计算"""
+import os
 import time, sys, os
-sys.path.insert(0, r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem")
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem"))
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 t_start = time.time()
@@ -49,7 +50,7 @@ print(f"6. 稳态 encode           : {t_enc2:8.0f} ms")
 # 7. 建 store（含向量矩阵加载）
 t0 = time.time()
 from store_v2 import MemoryStore
-st = MemoryStore(r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem\dsh_mem.db")
+st = MemoryStore(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem", "dsh_mem.db"))
 t_store = (time.time() - t0) * 1000
 print(f"7. MemoryStore 初始化    : {t_store:8.0f} ms")
 

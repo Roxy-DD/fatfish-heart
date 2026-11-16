@@ -18,7 +18,7 @@ import re
 import json
 import subprocess
 
-ROOT = r"C:\Users\xuee\Desktop\肥鱼之心"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # 显示名替换规则（文档类）
 DOC_REPL = [

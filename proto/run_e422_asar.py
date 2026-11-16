@@ -19,7 +19,7 @@ import re
 import os
 
 ASAR = r"C:\Users\xuee\AppData\Local\Programs\DeepSeek Harness\resources\app.asar"
-OUT = r"C:\Users\xuee\Desktop\肥鱼之心\proto\results"
+OUT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "results")
 
 print("=" * 74)
 print("E-422 从 asar 提取 agent-loop 源码")

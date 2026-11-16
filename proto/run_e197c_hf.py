@@ -8,7 +8,7 @@ import os
 import sys
 import time
 
-DEST = r"C:\Users\xuee\Desktop\肥鱼之心\models\bge-reranker-v2-m3"
+DEST = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "bge-reranker-v2-m3")
 os.makedirs(DEST, exist_ok=True)
 
 from huggingface_hub import hf_hub_download

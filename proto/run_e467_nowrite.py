@@ -33,7 +33,7 @@ import os
 import re
 import json
 
-HERE = r"C:\Users\xuee\Desktop\肥鱼之心\proto"
+HERE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto")
 
 # 需要处理的文件（从 git status 里得到的 15 个）
 TARGETS = [

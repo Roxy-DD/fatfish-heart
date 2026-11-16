@@ -1,7 +1,7 @@
 """E-453 修正替换残留：r"os.path.dirname(...)" 变成字符串字面量
 
 E-452 的问题：
-  原文    MODEL_DIR = r"C:\\Users\\xuee\\Desktop\\肥鱼之心\\models\\bge-small-zh"
+  原文    MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "bge-small-zh")
   替换后  MODEL_DIR = r"os.path.dirname(os.path.abspath(__file__))"
 
   ★ 多了 r"..."，表达式成了字符串！
@@ -23,7 +23,7 @@ import json
 import subprocess
 import ast
 
-ROOT = r"C:\Users\xuee\Desktop\肥鱼之心"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 print("=" * 74)
 print("E-453 修正 r\"...\" 残留")

@@ -74,7 +74,7 @@ proc = subprocess.Popen(
     [sys.executable, concurrent_script],
     stdout=subprocess.PIPE, stderr=subprocess.PIPE,
     env={**os.environ, "KMP_DUPLICATE_LIB_OK": "TRUE",
-         "HF_HOME": r"C:\Users\xuee\Desktop\肥鱼之心\.hf"},
+         "HF_HOME": os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".hf")},
 )
 
 # 等它加载并开始压力测试

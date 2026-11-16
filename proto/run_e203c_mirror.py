@@ -3,7 +3,7 @@ import os
 import time
 import requests
 
-DEST = r"C:\Users\xuee\Desktop\肥鱼之心\models\bge-reranker-v2-m3-fp16"
+DEST = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "bge-reranker-v2-m3-fp16")
 LOCAL = os.path.join(DEST, "model.onnx")
 # 用 hf-mirror 镜像
 URL = "https://hf-mirror.com/onnx-community/bge-reranker-v2-m3-ONNX/resolve/main/onnx/model_fp16.onnx"

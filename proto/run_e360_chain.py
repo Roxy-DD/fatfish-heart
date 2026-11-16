@@ -1,8 +1,9 @@
+import os
 import sys
 import warnings
 
 warnings.filterwarnings("ignore")
-MEM = r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem"
+MEM = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem")
 sys.path.insert(0, MEM)
 
 import cli_mcp

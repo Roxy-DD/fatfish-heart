@@ -26,7 +26,7 @@ import re
 import json
 import subprocess
 
-ROOT = r"C:\Users\xuee\Desktop\肥鱼之心"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 print("=" * 74)
 print("E-455 统一修正路径层级")

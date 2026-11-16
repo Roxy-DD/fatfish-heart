@@ -14,13 +14,13 @@ import json
 import shutil
 import time
 
-sys.path.insert(0, r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem")
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem"))
 from store_v2 import MemoryStore
 import seed as _seed
 import hook as _hook
 
-DB = r"C:\Users\xuee\Desktop\肥鱼之心\proto\cosmos_mem\dsh_mem.db"
-WORK = r"C:\Users\xuee\Desktop\肥鱼之心\proto\work"
+DB = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "cosmos_mem", "dsh_mem.db")
+WORK = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "proto", "work")
 
 ts = time.strftime("%Y%m%d_%H%M%S")
 
