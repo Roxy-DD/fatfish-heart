@@ -80,7 +80,18 @@ const trueCount = (SRC.match(/st\.injecting = true/g) || []).length
 check('只有一处置位 true（无冗余）', trueCount === 1, `找到 ${trueCount} 处`)
 
 const falseCount = (SRC.match(/st\.injecting = false/g) || []).length
-check('有一处清除 false', falseCount === 1, `找到 ${falseCount} 处`)
+// E-517：从「恰好一处」放宽为「至少一处」
+//
+// 原来断言 === 1。但 E-516 加了第二处清除：
+// sessState() 里当 apply 代号变化时，要同时清 injected 和 injecting
+// （否则重载后卡在 true，记忆永久停止注入）。
+// 所以现在有 2 处是正确状态。
+//
+// 断言真正要防的是什么：**没有任何地方清除 injecting**
+// → 一旦置位就永远卡住 → 该会话再也不注入。
+// 所以判据应该是「至少有一处」，而不是「恰好一处」。
+check('至少有一处清除 false（否则置位后永久卡死）',
+  falseCount >= 1, `找到 ${falseCount} 处`)
 
 // ---------- ② 状态机模拟 ----------
 console.log('\n【2】并发状态机（模拟两个 assemble 同时进入）')

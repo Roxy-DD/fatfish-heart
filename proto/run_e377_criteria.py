@@ -74,15 +74,47 @@ print(f"   kernel-ready: {len(kernels)} 次")
 # ---------- ② 按会话 + 进程段统计 ----------
 print("\n② 按「会话 × 进程段」统计")
 
+# E-517：段号不能只靠 kernel-ready 日志
+#
+# 问题（实测 2026-11-17 20:13）：判据报本会话「段 60 注入 2 次」违规，
+# 但那两次是 16:03 和 20:03 —— 中间用户重启了 DSH，属于不同进程。
+#
+# 根因：seg_of 只看 kernel-ready 的时间戳，而 kernel-ready 是通过
+#   debugLog 写的，生产配置 debugLog=false。于是重启后没有新的
+#   kernel-ready 记录，两次注入都被算作「段 60」→ 假违规。
+#
+# 修法：段号 = kernel-ready 次数 + **长间隔切分**。
+#   如果两次注入间隔超过 30 分钟，中间必然发生过重启/长时间闲置，
+#   视为不同的段。阈值 30 分钟的依据：正常对话轮次间隔远小于此，
+#   而实测的重启间隔是 4 小时。
+GAP_SEC = 30 * 60
+_extra_seg_cut = []
+
+
 def seg_of(t):
+    """段号：kernel-ready 计数 + 长间隔切分"""
     n = 0
     for k in kernels:
         if k <= t:
             n += 1
         else:
             break
+    # 长间隔额外算一段
+    for cut in _extra_seg_cut:
+        if cut <= t:
+            n += 1
     return n
 
+
+# 预计算「长间隔切分点」：所有相邻注入间隔 > GAP_SEC 的后一个时间点
+_all_times = sorted(t for t, _ in rows if t)
+for i in range(1, len(_all_times)):
+    if _all_times[i] - _all_times[i - 1] > GAP_SEC:
+        _extra_seg_cut.append(_all_times[i])
+
+if _extra_seg_cut:
+    print(f"  （E-517）识别到 {len(_extra_seg_cut)} 个长间隔切分点"
+          f"（间隔 >{GAP_SEC // 60} 分钟视为不同进程段）")
 
 by_sid = defaultdict(list)
 for at, sid in rows:
