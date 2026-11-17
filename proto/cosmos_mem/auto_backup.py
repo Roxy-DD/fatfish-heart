@@ -24,6 +24,7 @@ auto_backup.py —— 按写入条数触发的机械备份（FISH-9）
 from __future__ import annotations
 
 import os
+import sqlite3
 
 
 # 触发阈值（FISH-9 实验标定）。可通过 meta 覆盖，便于日后调参。
@@ -41,18 +42,41 @@ def maybe_backup(st, every: int = DEFAULT_EVERY) -> dict:
     try:
         con = st.con
         # 读当前计数
+        # E-512：原子自增，避免并发丢失
+        #
+        # 原来的读-改-写（SELECT → +1 → INSERT OR REPLACE）不是原子操作：
+        #   · 两个进程同时读到 19
+        #   · 各自 +1 写成 20
+        #   · 实际发生 2 次写入，计数只涨 1 → 触发被推迟甚至永不触发
+        # 子代理实测：并发场景丢 77% 的计数。
+        #
+        # 改为单条 UPSERT 原子自增。SQLite 的单条语句在写锁内完成，
+        # 天然串行化，不会丢。
+        try:
+            con.execute(
+                "INSERT INTO meta(key, val) VALUES(?, '1') "
+                "ON CONFLICT(key) DO UPDATE SET val = "
+                "CAST(val AS INTEGER) + 1",
+                (KEY_COUNT,))
+        except sqlite3.OperationalError:
+            # 老版本 SQLite 不支持 ON CONFLICT DO UPDATE，退回读-改-写
+            _row = con.execute(
+                "SELECT val FROM meta WHERE key=?", (KEY_COUNT,)).fetchone()
+            try:
+                _c = int(_row[0]) if _row else 0
+            except (ValueError, TypeError):
+                _c = 0
+            con.execute(
+                "INSERT OR REPLACE INTO meta(key, val) VALUES(?, ?)",
+                (KEY_COUNT, str(_c + 1)))
+        con.commit()
+
         row = con.execute(
             "SELECT val FROM meta WHERE key=?", (KEY_COUNT,)).fetchone()
         try:
             count = int(row[0]) if row else 0
         except (ValueError, TypeError):
             count = 0
-
-        count += 1
-        con.execute(
-            "INSERT OR REPLACE INTO meta(key, val) VALUES(?, ?)",
-            (KEY_COUNT, str(count)))
-        con.commit()
 
         if count < every:
             return {"ok": True, "triggered": False, "count": count,

@@ -16,7 +16,7 @@
   {
    "name": "返回 auto_backup 字段",
    "ok": true,
-   "detail": "{'ok': True, 'path': 'C:\\\\Users\\\\xuee\\\\Desktop\\\\肥鱼之心\\\\proto\\\\e493_xsavwbyi\\\\test.db.backup.20261117_"
+   "detail": "{'ok': True, 'path': 'C:\\\\Users\\\\xuee\\\\Desktop\\\\肥鱼之心\\\\proto\\\\e493_j3jasrnx\\\\test.db.backup.20261117_"
   },
   {
    "name": "备份成功",
@@ -41,7 +41,7 @@
   {
    "name": "逐字段指纹一致",
    "ok": true,
-   "detail": "6454b8eb6983 vs 6454b8eb6983"
+   "detail": "8120e3bd90e1 vs 8120e3bd90e1"
   },
   {
    "name": "备份后审计增长，verify 仍通过",
@@ -61,7 +61,7 @@
   {
    "name": "记忆本体指纹未变",
    "ok": true,
-   "detail": "6317d1745611 vs 6317d1745611"
+   "detail": "c5903d0b53a0 vs c5903d0b53a0"
   },
   {
    "name": "关掉自动备份时整理仍成功",

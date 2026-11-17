@@ -183,11 +183,11 @@ PR 是跨谱系重组，issue 是环境筛选。详见
 
 | 模块 | 状态 | 说明 |
 |---|---|---|
-| 核心记忆系统 | ✅ 生产可用 | `proto/cosmos_mem/`，17 个模块 |
+| 核心记忆系统 | ✅ 生产可用 | `proto/cosmos_mem/`（生产代码） |
 | DSH 插件 | ✅ 符合官方规范 | `dsh-plugin/`，6 个 Tab UI |
 | 记忆数据 | ✅ 种子基线 + 零私人数据 | 12 条通用种子，可直接分发给他人 |
 | 性能 | ✅ 2000 条下检索 26.6ms | 优化前 1383ms |
-| 文档 | ✅ 20 份 | 覆盖设计到优化全链路 |
+| 文档 | ✅ 覆盖设计到优化全链路 | `docs/` |
 
 ---
 
@@ -208,7 +208,7 @@ PR 是跨谱系重组，issue 是环境筛选。详见
 
 **种子是产品的一部分，用户记忆是数据。**
 
-### 12 条种子记忆
+### 16 条种子记忆
 
 | 层级 | 标题 | 作用 |
 |---|---|---|
@@ -230,7 +230,7 @@ PR 是跨谱系重组，issue 是环境筛选。详见
 ```bash
 # 私人记忆失效（不删除，可溯源），种子保留
 mem_seed action=factory
-# 或 HTTP: POST /fatfish-heart/seed  {"action":"factory"}
+# 或 HTTP: POST /cosmos-mem/seed  {"action":"factory"}
 ```
 
 ---
@@ -459,7 +459,7 @@ python proto/init_db.py --force
 ### 环境
 
 ```
-Python 3.12 / onnxruntime-gpu 1.31.1 / CUDA 13
+Python 3.10+（推荐 3.12）/ onnxruntime-gpu 1.31.1 / CUDA 13
 RTX 3060 6GB（cross-encoder 精排用，不强制）
 ```
 
