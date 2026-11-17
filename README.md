@@ -58,6 +58,9 @@ python proto/doctor.py
 
 看到 `✅ 全部通过（11/11）` 就能用了。
 
+> **不想自己敲命令？** 把 [docs/INSTALL-BY-AI.md](docs/INSTALL-BY-AI.md)
+> 里的提示词复制给你的 AI，它会照着装好。
+
 <details>
 <summary>更多安装方式（DSH 插件 / 纯 Python / 常见问题）</summary>
 
