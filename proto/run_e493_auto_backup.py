@@ -187,8 +187,13 @@ print("=" * 72)
 out = {"experiment": "E-493", "n_pass": ok, "n_total": len(results),
        "results": results}
 p = os.path.join(HERE, "results", "e493_auto_backup.json")
-with open(p, "w", encoding="utf-8") as f:
-    json.dump(out, f, ensure_ascii=False, indent=1)
-print(f"写入 {p}")
+# E-504：回归自污染修复 —— 回归环境下不写盘，
+# 否则工作区被弄脏，会影响 onward.py 的「可贡献项」判断。
+if os.environ.get("FFH_NO_WRITE") == "1":
+    print(f"（FFH_NO_WRITE=1，跳过写盘：{p}）")
+else:
+    with open(p, "w", encoding="utf-8") as f:
+        json.dump(out, f, ensure_ascii=False, indent=1)
+    print(f"写入 {p}")
 
 sys.exit(0 if ok == len(results) else 1)

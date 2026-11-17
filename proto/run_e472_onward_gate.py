@@ -207,8 +207,18 @@ out_data = {
     "n_total": len(results),
 }
 p = os.path.join(HERE, "results", "e472_onward_gate.json")
-with open(p, "w", encoding="utf-8") as f:
-    json.dump(out_data, f, ensure_ascii=False, indent=1)
-print(f"写入 {p}")
+# E-504：回归自污染修复
+#
+# 本脚本会写 results/e472_onward_gate.json，
+# 而它测试的 onward.py 用 git status 判断"有无可贡献项"。
+# 于是全量回归里跑一次 → 工作区多一个改动 → 下次跑 onward 时
+# 走"没有可贡献项"分支 → 断言「有可贡献项时提示授权」失败。
+# 回归环境下不写盘即可解开这个循环。
+if os.environ.get("FFH_NO_WRITE") == "1":
+    print(f"（FFH_NO_WRITE=1，跳过写盘：{p}）")
+else:
+    with open(p, "w", encoding="utf-8") as f:
+        json.dump(out_data, f, ensure_ascii=False, indent=1)
+    print(f"写入 {p}")
 
 sys.exit(0 if n_ok == len(results) else 1)
