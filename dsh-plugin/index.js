@@ -19,7 +19,7 @@
  *
  * 选择权全在模型，不由规则决定。这是"模型自己迭代记忆"的实现。
  */
-import { spawn } from 'node:child_process'
+import { spawn, execFileSync } from 'node:child_process'
 import { resolve, join } from 'node:path'
 import { appendFileSync, statSync, renameSync, existsSync } from 'node:fs'
 import { createHash } from 'node:crypto'
@@ -620,17 +620,170 @@ function shutdownKernels() {
  * 做法：给每个 pool 打 apply 序号；只杀序号小于当前的。
  * apply 序号用 globalThis 计数器，跨模块重载递增。
  */
-function shutdownStaleKernels() {
+function shutdownStaleKernels(cfg) {
   try {
     globalThis.__FFH_APPLY_SEQ__ = (globalThis.__FFH_APPLY_SEQ__ || 0) + 1
     const cur = globalThis.__FFH_APPLY_SEQ__
+    const poolSizeBefore = kernelPools.size
+    const killed = []
     for (const [key, k] of kernelPools) {
       if ((k.applySeq || 0) < cur) {
         try { k.proc.stdin.end() } catch { /* ignore */ }
         try { k.proc.kill() } catch { /* ignore */ }
+        killed.push(key)
         kernelPools.delete(key)
       }
     }
+    // E-505 诊断：记录本次清理看到了什么（判断 E-497 哪一环断了）
+    //
+    // 不用 debugLog —— 生产配置里 debugLog: false，日志根本写不出去
+    // （我加了日志却读不到，白等一轮）。改挂 globalThis，
+    // 由 /config 端点暴露，不依赖任何开关。
+    try {
+      globalThis.__FFH_STALE_SWEEP__ = {
+        at: Date.now(), applySeq: cur,
+        poolSizeBefore: poolSizeBefore, killed,
+        poolSizeAfter: kernelPools.size,
+      }
+    } catch { /* ignore */ }
+  } catch { /* ignore */ }
+}
+
+/**
+ * E-505：按 dbPath 扫描并清理孤儿内核进程
+ *
+ * ★ 为什么必须这样做（实测证据，不是推理）
+ *   在 shutdownStaleKernels 里加了诊断，重载后读到：
+ *     poolSizeBefore: 0, killed: []
+ *   也就是说 **kernelPools 在重载后是空的** ——
+ *   globalThis.__FFH_KERNEL_POOLS__ 根本没跨重载保留
+ *   （DSH 重载时会换掉 globalThis 的插件沙箱，或模块被重新求值）。
+ *
+ *   所以 E-497「按 applySeq 关上一代」在原理上就不成立：
+ *   它要杀的旧 pool 早就不存在了，而真正的旧进程还在系统里跑。
+ *
+ * 正确做法：不看内存，直接查系统进程里有没有「命令行包含本插件
+ *   kernel_server.py 且连的是同一个 dbPath」的 python 进程，
+ *   且不是当前 pool 里的那个 → 它是孤儿，杀掉。
+ *
+ * 平台差异：
+ *   · Windows: wmic/PowerShell 拿 CommandLine（这里用 tasklist 太弱，用 CIM）
+ *   · macOS/Linux: ps -o pid,command
+ * 为了不引入额外依赖，用 Node 的 child_process 跑系统命令。
+ */
+function sweepOrphanKernelsByPath(cfg) {
+  try {
+    if (!cfg || !cfg.dbPath) return
+    const dbPath = String(cfg.dbPath)
+    const scriptName = 'kernel_server.py'
+
+    // 当前 pool 里的进程 pid（这些是"活的"，不能杀）
+    const alivePids = new Set()
+    for (const [, k] of kernelPools) {
+      try {
+        if (k && k.proc && k.proc.pid) alivePids.add(k.proc.pid)
+      } catch { /* ignore */ }
+    }
+
+    let out = ''
+    try {
+      if (process.platform === 'win32') {
+        // ★ 用 JSON 输出，避免拼接分隔符时的转义地狱
+        //   （第一版用 "pid|cmd" 拼接，PowerShell 引号转义把命令搞坏了，
+        //    结果 found=0 —— 看起来像"没有孤儿"，其实是命令没跑对）
+        //
+        // ★★ 编码坑（实测抓到）：中文路径在 PowerShell 输出里是 GBK，
+        //   Node 按 UTF-8 解码后变成 "����֮��"，
+        //   于是 cmd.includes(dbPath) 永远 false → found 恒为 0。
+        //   修法：让 PowerShell 用 UTF-8 输出（-OutputFormat Text + 前置 chcp），
+        //   并在读取时按 utf-8 解码后做一次容错替换。
+        out = execFileSync('powershell', ['-NoProfile', '-NonInteractive', '-Command',
+          "[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; " +
+          "$OutputEncoding=[System.Text.Encoding]::UTF8; " +
+          "Get-CimInstance Win32_Process -Filter \"name='python.exe'\" | " +
+          "Where-Object { $_.CommandLine -like '*kernel_server.py*' } | " +
+          "Select-Object ProcessId,CommandLine | ConvertTo-Json -Compress",
+        ], { encoding: 'utf-8', timeout: 15000, windowsHide: true })
+        out = '__JSON__' + out
+      } else {
+        out = execFileSync('ps', ['-eo', 'pid,command'],
+          { encoding: 'utf-8', timeout: 15000 })
+      }
+    } catch {
+      return   // 拿不到进程列表就放弃，不冒险乱杀
+    }
+
+    // 解析成 [{pid, cmd}]
+    let procs = []
+    let rawLen = 0
+    let parseErr = ''
+    if (out.startsWith('__JSON__')) {
+      const raw = out.slice('__JSON__'.length).trim()
+      rawLen = raw.length
+      if (!raw) {
+        // 命令跑了但没输出 —— 记录下来，不要静默
+        try {
+          globalThis.__FFH_ORPHAN_SWEEP__ = {
+            at: Date.now(), dbPath, stage: 'empty-output', rawLen: 0,
+          }
+        } catch { /* ignore */ }
+        return
+      }
+      let parsed
+      try { parsed = JSON.parse(raw) } catch (e) {
+        parseErr = String(e && e.message).slice(0, 100)
+        try {
+          globalThis.__FFH_ORPHAN_SWEEP__ = {
+            at: Date.now(), dbPath, stage: 'parse-error',
+            rawLen, parseErr, rawHead: raw.slice(0, 200),
+          }
+        } catch { /* ignore */ }
+        return
+      }
+      const arr = Array.isArray(parsed) ? parsed : [parsed]
+      for (const it of arr) {
+        const pid = Number(it && it.ProcessId)
+        const cmd = String((it && it.CommandLine) || '')
+        if (Number.isInteger(pid) && pid > 0) procs.push({ pid, cmd })
+      }
+    } else {
+      for (const line of out.split('\n')) {
+        const m = line.trim().match(/^(\d+)\s+(.*)$/)
+        if (m) procs.push({ pid: Number(m[1]), cmd: m[2] })
+      }
+    }
+
+    const orphans = []
+    // 兜底匹配：即使编码没救回来，也用「路径尾部」判断是不是同一个库。
+    // 例如 dbPath = C:\...\proto\cosmos_mem\dsh_mem.db
+    //   → tail = proto\cosmos_mem\dsh_mem.db
+    //   cmd 里即使目录名乱码，'proto\cosmos_mem\dsh_mem.db' 通常还在。
+    const tail = dbPath.replace(/\//g, '\\').split('\\').slice(-3).join('\\')
+    for (const { pid, cmd } of procs) {
+      if (!cmd.includes(scriptName)) continue
+      const exact = cmd.includes(dbPath)
+      const byTail = tail && cmd.includes(tail)
+      if (!exact && !byTail) continue
+      // 当前 pool 里的是活的，跳过
+      if (alivePids.has(pid)) continue
+      orphans.push({ pid, cmd: cmd.slice(0, 120) })
+    }
+
+    for (const o of orphans) {
+      try { process.kill(o.pid, 'SIGTERM') } catch { /* ignore */ }
+    }
+
+    try {
+      globalThis.__FFH_ORPHAN_SWEEP__ = {
+        at: Date.now(), dbPath, alivePids: Array.from(alivePids),
+        scanned: procs.length, found: orphans.length,
+        killed: orphans.map((o) => o.pid),
+        // 诊断：把扫到的前几条命令记下来，看清过滤为什么没匹配
+        sample: procs.slice(0, 3).map((p) => ({
+          pid: p.pid, cmd: String(p.cmd).slice(0, 150),
+        })),
+      }
+    } catch { /* ignore */ }
   } catch { /* ignore */ }
 }
 
@@ -1175,13 +1328,6 @@ function resetRoutesForNewApply(ctx, myKey) {
 }
 
 export function apply(ctx, config) {
-  // E-497：先清掉上一代遗留的内核进程
-  //
-  // ★ 必须在 getKernel() 之前调用，也不依赖任何新内核存在。
-  //   重载时旧内核若还活着，这里按 applySeq 关掉它；
-  //   本 apply 之后新建的内核 applySeq = 当前值，不会被误杀。
-  try { shutdownStaleKernels() } catch { /* ignore */ }
-
   // E-302：重载指纹
   //
   // 用途：验证自重启（mem_selfreload）是否真的重新执行了模块代码，
@@ -1198,6 +1344,20 @@ export function apply(ctx, config) {
   // E-489：兜底后把最终路径记下来，便于诊断「内核用的是哪个目录」
   if (!cfg.kernelDir) cfg.kernelDir = _DERIVED.kernelDir
   if (!cfg.dbPath) cfg.dbPath = _DERIVED.dbPath
+
+  // E-505：清理上一代遗留内核（移到 cfg 之后，才能记诊断日志）
+  //
+  // E-497 的修法在真实重载中**没生效** —— 实测出现 3 个内核连同一 DB
+  // （14:45 / 14:57 / 15:07）。加诊断后拿到决定性证据：
+  //   poolSizeBefore: 0, killed: []
+  // → globalThis 的 kernelPools 在重载后是空的，旧引用根本没保留。
+  //   所以「按 applySeq 关上一代」原理上就不成立。
+  //
+  // 现在两路都做：
+  //   ① 内存路径（保留，若将来 globalThis 真的能跨重载生效）
+  //   ② 按 dbPath 扫系统进程（可靠，不依赖内存）
+  try { shutdownStaleKernels(cfg) } catch { /* ignore */ }
+  try { sweepOrphanKernelsByPath(cfg) } catch { /* ignore */ }
   try {
     globalThis.__FFH_EFFECTIVE_PATHS__ = {
       kernelDir: cfg.kernelDir,
@@ -1299,6 +1459,14 @@ export function apply(ctx, config) {
             //    又误判成"兜底没生效"）
             kernelDir: cfg.kernelDir,
             dbPath: cfg.dbPath,
+            // E-505：暴露孤儿内核清理的诊断结果
+            //   生产配置 debugLog=false，日志写不出去，
+            //   所以把「上次 apply 清掉了什么」挂在这里，
+            //   GET /config 就能看到，不依赖任何开关。
+            staleSweep: globalThis.__FFH_STALE_SWEEP__ || null,
+            orphanSweep: globalThis.__FFH_ORPHAN_SWEEP__ || null,
+            kernelPoolSize: kernelPools.size,
+            applySeq: globalThis.__FFH_APPLY_SEQ__ || 0,
           },
         })
       }

@@ -45,10 +45,28 @@ check('有 applySeq 标记',
 check('有 shutdownStaleKernels()',
   src.includes('function shutdownStaleKernels'))
 check('apply 开头调用清理',
-  src.includes('shutdownStaleKernels() } catch') ||
-  src.includes('try { shutdownStaleKernels() }'))
+  src.includes('shutdownStaleKernels(cfg)') ||
+  src.includes('try { shutdownStaleKernels(cfg) }'))
 check('用序号比较而非无差别杀',
   src.includes('(k.applySeq || 0) < cur'))
+
+// ---------- E-505：按路径扫进程（真修法）----------
+//
+// E-497 的内存路径在真实重载中失效（实测 poolSizeBefore=0），
+// 所以 E-505 加了「按 dbPath 扫系统进程」这条可靠路径。
+console.log('\n【1b】E-505 按路径扫孤儿内核')
+check('有 sweepOrphanKernelsByPath()',
+  src.includes('function sweepOrphanKernelsByPath'))
+check('apply 里调用了它',
+  src.includes('sweepOrphanKernelsByPath(cfg)'))
+check('用 JSON 输出避免转义问题',
+  src.includes('ConvertTo-Json'))
+check('设置 UTF-8 输出编码（中文路径坑）',
+  src.includes('[Console]::OutputEncoding'))
+check('有路径尾部兜底匹配（编码救不回来时）',
+  src.includes('byTail'))
+check('跳过当前 pool 里的活进程',
+  src.includes('alivePids.has(pid)'))
 
 // ---------- 状态机模拟 ----------
 console.log('\n【2】两代内核交替（状态机）')
