@@ -407,16 +407,158 @@ def cmd_verify():
     return 0
 
 
+def cmd_restore(name=None, force=False):
+    """从远端拉回一份备份并恢复到本地库
+
+    这是灾难恢复的主路径：机器没了 → 新机器上跑这个 → 记忆回来。
+
+    安全设计：
+    · 恢复前**必须备份当前本地库**（万一拉下来的比本地还旧）
+    · 恢复前校验远端备份能打开（不能恢复一个坏文件覆盖好数据）
+    · 默认不覆盖，要显式 --force（防止误操作丢数据）
+    """
+    print("=" * 66)
+    print("从远端恢复记忆")
+    print("=" * 66)
+
+    # ---- 取远端清单 ----
+    ok, out = sh(["gh", "api", f"repos/{ALLOWED_REPO}/contents/MANIFEST.json",
+                  "--jq", ".content"], timeout=60)
+    if not ok:
+        print(f"\n❌ 拿不到 MANIFEST: {out[:150]}")
+        return 1
+
+    import base64
+    try:
+        manifest = json.loads(base64.b64decode(out.strip()).decode("utf-8"))
+    except Exception as e:
+        print(f"\n❌ MANIFEST 解析失败: {e}")
+        return 1
+
+    backups = manifest.get("backups") or []
+    if not backups:
+        print("\n❌ 远端没有备份记录")
+        return 1
+
+    # ---- 选哪一份 ----
+    if name:
+        target = next((b for b in backups if b["name"] == name), None)
+        if not target:
+            print(f"\n❌ 找不到备份: {name}")
+            print("   可用的：")
+            for b in backups[-8:]:
+                print(f"     {b['name']}")
+            return 1
+    else:
+        target = backups[-1]
+        print(f"\n  未指定名称，使用最新: {target['name']}")
+
+    print(f"  大小: {target['size'] // 1024} KB")
+    print(f"  时间: {time.strftime('%Y-%m-%d %H:%M',
+                                    time.localtime(target['at']))}")
+
+    # ---- 本地库存在时必须确认 ----
+    if os.path.exists(DB_PATH) and not force:
+        cur_size = os.path.getsize(DB_PATH)
+        print(f"\n  ⚠ 本地已有数据库（{cur_size // 1024} KB）")
+        print(f"    恢复会覆盖它。如果继续，我会先备份当前库。")
+        print(f"    确认请加 --force：")
+        print(f"      python offsite.py restore {target['name']} --force")
+        return 1
+
+    # ---- 下载 ----
+    ok, url_out = sh(["gh", "api",
+                      f"repos/{ALLOWED_REPO}/contents/{target['name']}",
+                      "--jq", ".download_url"], timeout=60)
+    if not ok or not url_out.strip():
+        print(f"\n❌ 拿不到 download_url: {url_out[:120]}")
+        return 1
+
+    tmpdir = tempfile.mkdtemp(prefix="restore_")
+    try:
+        dl = os.path.join(tmpdir, target["name"])
+        ok2, out2 = sh(["curl", "-sL", "-o", dl, url_out.strip()], timeout=600)
+        if not ok2 or not os.path.exists(dl):
+            print(f"\n❌ 下载失败: {out2[:150]}")
+            return 1
+
+        got_size = os.path.getsize(dl)
+        print(f"\n  下载: {got_size // 1024} KB")
+        if got_size != target["size"]:
+            print(f"  ❌ 大小不符（应为 {target['size'] // 1024} KB）")
+            return 1
+
+        got = fingerprint(dl)
+        if got != target["sha256"]:
+            print(f"  ❌ 指纹不符，拒绝恢复")
+            print(f"     期望 {target['sha256'][:16]} / 实际 {got[:16]}")
+            return 1
+        print(f"  ✅ 指纹一致: {got[:16]}")
+
+        # ---- 校验能打开 ----
+        try:
+            import sqlite3
+            c = sqlite3.connect(dl)
+            ic = c.execute("PRAGMA integrity_check").fetchone()[0]
+            n = c.execute("SELECT COUNT(*) FROM episodes").fetchone()[0]
+            v = c.execute("SELECT COUNT(*) FROM vectors").fetchone()[0]
+            c.close()
+            if ic != "ok":
+                print(f"  ❌ 完整性检查失败: {ic[:80]}")
+                return 1
+            print(f"  ✅ 可打开: episodes={n} vectors={v}")
+            if n == 0:
+                print(f"  ❌ 这是个空库，拒绝覆盖")
+                return 1
+        except Exception as e:
+            print(f"  ❌ 无法打开: {e}")
+            return 1
+
+        # ---- 备份当前库 ----
+        if os.path.exists(DB_PATH):
+            ts = time.strftime("%Y%m%d_%H%M%S")
+            safety = f"{DB_PATH}.before-restore.{ts}"
+            shutil.copy2(DB_PATH, safety)
+            print(f"\n  已备份当前库: {os.path.basename(safety)}")
+
+        # ---- 覆盖 ----
+        # WAL 模式下必须同时清掉 -wal/-shm，否则恢复后被旧的 WAL 覆盖
+        for suffix in ("-wal", "-shm"):
+            p = DB_PATH + suffix
+            if os.path.exists(p):
+                try:
+                    os.remove(p)
+                except Exception:
+                    pass
+        shutil.copy2(dl, DB_PATH)
+        print(f"  ✅ 已恢复: {DB_PATH}")
+
+        st = load_state()
+        st["last_restore_at"] = time.time()
+        st["last_restore_from"] = target["name"]
+        save_state(st)
+
+        print(f"\n  下一步：跑 python doctor.py 确认环境")
+        return 0
+    finally:
+        shutil.rmtree(tmpdir, ignore_errors=True)
+
+
 def main():
-    cmd = sys.argv[1] if len(sys.argv) > 1 else "status"
+    args = sys.argv[1:]
+    cmd = args[0] if args else "status"
     if cmd == "status":
         return cmd_status()
     if cmd == "push":
         return cmd_push()
     if cmd == "verify":
         return cmd_verify()
+    if cmd == "restore":
+        nm = args[1] if len(args) > 1 and not args[1].startswith("--") else None
+        force = "--force" in args
+        return cmd_restore(nm, force)
     print(f"未知命令: {cmd}")
-    print("可用: status | push | verify")
+    print("可用: status | push | verify | restore [name] [--force]")
     return 1
 
 
