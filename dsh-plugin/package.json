@@ -1,7 +1,6 @@
 {
-  "name": "@local/dsh-cosmos-mem",
-  "version": "1.0.0",
-  "private": true,
+  "name": "dsh-fatfish-heart",
+  "version": "1.1.0",
   "type": "module",
   "description": "cosmos-mem 记忆系统：情景记忆 + 模型自主复盘 + 主动回忆 + 睡眠巩固 + 可视化界面",
   "main": "./index.js",

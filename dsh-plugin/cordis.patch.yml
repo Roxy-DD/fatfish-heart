@@ -19,8 +19,8 @@
 # ============================================================
 
 - insert:
-    - id: cosmos-mem
-      name: '@local/dsh-cosmos-mem'
+    - id: fatfish-heart
+      name: 'dsh-fatfish-heart'
       config:
         # 如果你的 Python 不在 PATH 里，改成绝对路径
         pythonPath: 'python'

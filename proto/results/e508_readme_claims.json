@@ -1,0 +1,54 @@
+{
+ "experiment": "E-508",
+ "n_pass": 7,
+ "n_total": 8,
+ "actual": {
+  "tables": 14,
+  "total_rows": 4535,
+  "episodes": 586,
+  "vectors": 582,
+  "regression_tests": 49
+ },
+ "results": [
+  {
+   "name": "README 声称「44 项回归」不超过实际 49",
+   "ok": true,
+   "detail": "声称 44 / 实际 49"
+  },
+  {
+   "name": "README 声称「10 类故障」",
+   "ok": true,
+   "detail": "实际 10 类（F1-F10）"
+  },
+  {
+   "name": "README 声称「10 类故障」",
+   "ok": true,
+   "detail": "实际 10 类（F1-F10）"
+  },
+  {
+   "name": "README 声称「10 表」",
+   "ok": false,
+   "detail": "实际 14 表"
+  },
+  {
+   "name": "README 声称「2497 行」与实际 4535 同量级",
+   "ok": true,
+   "detail": "声称 2497 / 实际 4535"
+  },
+  {
+   "name": "README 声称「删光 448 条向量」",
+   "ok": true,
+   "detail": "实际 582 条"
+  },
+  {
+   "name": "README 声称「11/11」",
+   "ok": true,
+   "detail": "11/11"
+  },
+  {
+   "name": "README 声称「11/11」",
+   "ok": true,
+   "detail": "11/11"
+  }
+ ]
+}
