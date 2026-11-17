@@ -73,6 +73,14 @@ python proto/doctor.py
 
 ## 它凭什么可靠
 
+不是嘴上说可靠。下面这张图是**真实跑出来的**（`python proto/doctor.py`
+和 `python proto/iterate.py check` 的实际输出，没有手工修饰）：
+
+![环境自检与回归验证](docs/images/terminal-proof.png)
+
+上图上半：11 项环境自检全部通过，并真的写入+检索了一次。
+下半：全量回归全部通过（含容灾故障矩阵、自动备份、回馈门禁等）。
+
 **四条红线**，任何改动破坏其中一条就算失败：
 
 | 红线 | 要求 | 怎么验证 |
