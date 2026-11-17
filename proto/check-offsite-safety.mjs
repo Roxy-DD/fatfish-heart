@@ -142,6 +142,22 @@ check('没有用 add <单个文件>（那样不跟踪删除）',
 check('文件名用定长时间戳（字典序=时间序）',
   SRC.includes('%Y%m%d_%H%M%S'))
 
+// ---------- ⑦ restore 的安全设计 ----------
+console.log('\n【7】restore 必须防「恢复反而弄丢数据」')
+
+const restoreFn = SRC.slice(SRC.indexOf('def cmd_restore'),
+  SRC.indexOf('def main'))
+
+check('实现存在', restoreFn.length > 100)
+check('本地库存在时要求 --force', SRC.includes('--force'))
+check('覆盖前备份当前库', restoreFn.includes('before-restore'))
+check('覆盖前校验指纹', restoreFn.includes('指纹不符'))
+check('覆盖前校验 integrity_check', restoreFn.includes('integrity_check'))
+check('覆盖前拒绝空库', restoreFn.includes('空库'))
+// ★ 关键：WAL 模式下必须清 -wal/-shm，否则恢复后被旧 WAL 覆盖
+check('覆盖时清理 -wal/-shm', restoreFn.includes('"-wal"') &&
+  restoreFn.includes('"-shm"'))
+
 // ---------- 汇总 ----------
 const pass = results.filter((x) => x.ok).length
 console.log('\n' + '='.repeat(70))
