@@ -67,6 +67,8 @@ CLIENT_CHECKS = [
     ("孤儿内核", "check-orphan-kernel.mjs"),
     # E-515：包名在 5 处出现，任何一处不一致会让插件半死
     ("包名一致性", "check-package-identity.mjs"),
+    # E-507：Lean 形式化模型的穷举交叉验证（编译器未就绪时的独立检查）
+    ("形式化边界", "run_e507_lean_logic.py"),
     # E-329：消息提取游标（含 log 重置边界）
     ("消息提取", "check-scan-cursor.mjs"),
     # E-348：只注入一次（首轮判断顺序 + 并发防重）
