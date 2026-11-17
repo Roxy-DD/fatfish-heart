@@ -127,6 +127,21 @@ if (/shutil\.copy2\(DB_PATH/.test(SRC)) {
   check('没有直接 copy 主库', true)
 }
 
+// ---------- ⑥ 远端保留策略 ----------
+console.log('\n【6】远端保留策略（防无限增长）')
+
+check('有 KEEP_REMOTE 常量', /KEEP_REMOTE\s*=\s*\d+/.test(SRC))
+check('会删除超出数量的旧备份', SRC.includes('while len(old_dbs) > KEEP_REMOTE'))
+// ★ 关键：必须用 git add -A，否则删除不会被 stage，旧文件仍在仓库里
+check('用 git add -A（能 stage 删除）',
+  /"add",\s*"-A"/.test(SRC))
+check('没有用 add <单个文件>（那样不跟踪删除）',
+  !/"add",\s*name,/.test(SRC))
+
+// 文件名格式必须是定长时间戳，否则字典序 != 时间序
+check('文件名用定长时间戳（字典序=时间序）',
+  SRC.includes('%Y%m%d_%H%M%S'))
+
 // ---------- 汇总 ----------
 const pass = results.filter((x) => x.ok).length
 console.log('\n' + '='.repeat(70))

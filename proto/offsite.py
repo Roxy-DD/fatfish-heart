@@ -235,6 +235,33 @@ def cmd_push():
 
         # ---- 放进去，提交，推 ----
         shutil.copy2(snap, os.path.join(repo_dir, name))
+
+        # E-520：远端保留策略 —— 只留最近 KEEP_REMOTE 份
+        #
+        # 为什么需要：
+        #   每份全量 8MB，每周推一次 = 一年 400MB+。
+        #   Git 仓库即使删了文件也不会缩小（历史还在），
+        #   所以必须从一开始就控制文件数量，而不是等它涨到几个 G。
+        #
+        # 策略：只保留最近 KEEP_REMOTE 份 .db，其余 git rm。
+        #   MANIFEST 也只留对应记录（已经限制 20 条）。
+        #   注意：git 历史里仍有旧数据，真要彻底清理需要 rewrite history，
+        #   那是破坏性操作，不做。这里只控制「当前检出」的体积。
+        KEEP_REMOTE = 8
+        old_dbs = sorted(
+            [f for f in os.listdir(repo_dir)
+             if f.startswith("memory_") and f.endswith(".db")])
+        removed = []
+        while len(old_dbs) > KEEP_REMOTE:
+            victim = old_dbs.pop(0)
+            try:
+                os.remove(os.path.join(repo_dir, victim))
+                removed.append(victim)
+            except Exception:
+                pass
+        if removed:
+            print(f"\n  清理旧备份: {len(removed)} 份（保留最近 {KEEP_REMOTE} 份）")
+
         # 写一个清单，便于恢复时对照
         manifest_path = os.path.join(repo_dir, "MANIFEST.json")
         try:
@@ -246,17 +273,23 @@ def cmd_push():
             "size": size, "sha256": fp,
             "note": "记忆库快照（含私人内容，勿公开）",
         })
-        # 只保留最近 20 条记录
+        # 只保留最近 20 条记录，且必须与实际存在的文件对应
         manifest["backups"] = manifest["backups"][-20:]
         json.dump(manifest, open(manifest_path, "w", encoding="utf-8"),
                   ensure_ascii=False, indent=1)
 
         env2 = {**os.environ, "GIT_TERMINAL_PROMPT": "0"}
+        # ★ 用 add -A 而不是 add <file>：
+        #   add -A 会把「删除」也 stage 进去，
+        #   而 add <单个文件名> 不会跟踪删除 → 旧备份仍留在仓库里，
+        #   保留策略等于没做（第一版就是这个 bug）。
+        add_cmd = ["git", "add", "-A"]
         for cmd in (
-            ["git", "add", name, "MANIFEST.json"],
+            add_cmd,
             ["git", "-c", "user.name=fatfish-heart", "-c",
              "user.email=noreply@localhost", "commit", "-m",
-             f"backup: {name} ({size // 1024}KB)"],
+             f"backup: {name} ({size // 1024}KB)"
+             + (f", pruned {len(removed)}" if removed else "")],
             ["git", "push", "origin", "HEAD:main"],
         ):
             ok, out = sh(cmd, cwd=repo_dir, timeout=300, )
