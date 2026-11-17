@@ -276,9 +276,23 @@ out = {
     "ready_to_contribute": ready,
 }
 p = os.path.join(ROOT, "proto", "results", "e471_onward_discover.json")
-with open(p, "w", encoding="utf-8") as f:
-    json.dump(out, f, ensure_ascii=False, indent=1)
-print(f"\n写入 {p}")
+# E-504：写盘前检查 FFH_NO_WRITE
+#
+# 问题（实测 2026-11-17）：
+#   本脚本会写 results/e471_onward_discover.json，
+#   而它自己又用 `git status` 检测"未提交改动"来判断有没有可贡献项。
+#   于是：跑一次 → 写一个 json → 下次跑检测到"2 个改动"（其实是自己写的）
+#        → 报"没有可贡献项" → 回馈门禁测试失败。
+#   这是**自污染**：测试把自己产生的文件当成了待贡献的改动。
+#
+# 修法：回归测试环境下（FFH_NO_WRITE=1）不写盘。
+#   这与项目其他实验脚本的约定一致。
+if os.environ.get("FFH_NO_WRITE") == "1":
+    print(f"\n（FFH_NO_WRITE=1，跳过写盘：{p}）")
+else:
+    with open(p, "w", encoding="utf-8") as f:
+        json.dump(out, f, ensure_ascii=False, indent=1)
+    print(f"\n写入 {p}")
 
 # ============================================================
 # 层 3：执行（仅在 --push 且安全检查通过时）
