@@ -66,6 +66,34 @@ const tags = sh('git tag --list "v*" --sort=-v:refname')
   .split('\n')
   .filter(Boolean)
 
+// E-509：一致性检查 —— package.json 版本必须有对应 tag
+//
+// 问题（实测 2026-11-17）：改名后 package.json 升到 1.1.0，
+// 但忘了打 tag，结果索引里最新版本仍是 1.0.0。
+// 更糟的是脚本**不报错**，悄悄用旧 tag 生成一个看起来正常的索引，
+// 用户从市场装到的是旧版本号。
+//
+// 现在：如果 package.json 的版本没有对应 tag，直接失败退出，
+// 逼着发版的人补上 tag，而不是让错误流到用户手里。
+const pkgVer = pkg.version
+if (tags.length > 0 && pkgVer) {
+  const hasTag = tags.some((t) => t.replace(/^v/, '') === pkgVer)
+  if (!hasTag) {
+    console.error('')
+    console.error('❌ 版本不一致：package.json 是 ' + pkgVer +
+      '，但没有对应的 git tag')
+    console.error('   现有 tag: ' + tags.slice(0, 5).join(', '))
+    console.error('')
+    console.error('   修复方式（二选一）：')
+    console.error('     git tag -a v' + pkgVer + ' -m "v' + pkgVer + '"')
+    console.error('     或把 package.json 版本改回与最新 tag 一致')
+    console.error('')
+    console.error('   为什么必须拦住：市场索引按 tag 生成，')
+    console.error('   不改的话用户会装到旧版本号，而索引看起来是正常的。')
+    process.exit(1)
+  }
+}
+
 const versions = []
 
 if (tags.length > 0) {
