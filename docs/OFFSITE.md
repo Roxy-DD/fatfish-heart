@@ -1,0 +1,205 @@
+# 异地副本
+
+> 本地备份防的是「文件被删」，异地副本防的是「机器没了」。
+
+## 为什么需要
+
+`proto/cosmos_mem/dsh_mem.db` 是你的全部记忆（对话、偏好、情绪、人际关系）。
+本地自动备份每 20 条写入触发一次，保留最近 10 份——**但都在同一台机器上**。
+
+磁盘坏了、笔记本丢了、房子烧了，本地备份全部一起没。
+
+异地副本把加密后的快照推到 GitHub 私有仓库，机器没了记忆还在。
+
+---
+
+## 安全性
+
+记忆里有私人内容，所以做了三层保护：
+
+### 1. 目标仓库硬编码
+
+`proto/offsite.py` 顶部：
+
+```python
+ALLOWED_REPO = "Roxy-DD/fatfish-heart-memory"
+ALLOWED_URL  = "https://github.com/Roxy-DD/fatfish-heart-memory.git"
+```
+
+**不是环境变量，不是配置文件。** 想换仓库必须改代码。
+这是防止「手滑推到公开仓库」的最后一道门。
+
+### 2. 推送前实时校验仓库是 private
+
+```python
+gh api repos/Roxy-DD/fatfish-heart-memory --jq .private
+# 必须返回 true，否则拒绝推送
+```
+
+不是相信配置里的值，是每次真的问一遍 GitHub。
+
+### 3. 推送前校验本地库健康
+
+```python
+PRAGMA integrity_check   # 必须 ok
+SELECT COUNT(*) FROM episodes  # 必须 > 0
+```
+
+**这一条比看起来重要。** 如果本地库已经损坏（截断、页损坏），
+推上去就是把坏数据固化到远端 —— 而你可能几个月后才发现，
+那时所有历史备份都是坏的，异地副本等于完全失效。
+
+宁可这次不推，也不推一份坏的。
+
+---
+
+## 用法
+
+```bash
+cd proto
+
+# 看状态（会检查仓库是不是 private）
+python offsite.py status
+
+# 推一次
+python offsite.py push
+
+# 校验远端那份能不能真恢复
+python offsite.py verify
+```
+
+### `status` 看到什么
+
+```
+目标仓库: Roxy-DD/fatfish-heart-memory（硬编码，不可改）
+private 校验: ✅ ok
+
+本地数据库: 8192 KB
+指纹: 7abc124629daa70c
+
+上次同步: 2026-11-17 20:05（0.1 小时前）
+上次文件: memory_20261117_200527.db
+```
+
+### `verify` 做的是真校验
+
+不是「文件存在」，而是：
+
+1. 通过 `download_url` 下载原始字节
+2. 算 sha256，跟清单里记录的一致
+3. **真的用 sqlite 打开它**，数一下 `episodes` 和 `vectors`
+
+实测输出：
+
+```
+远端备份数: 1
+最新: memory_20261117_200527.db
+大小: 8196 KB
+指纹: 72fc18a253a3025c
+
+下载: 8196 KB（远端声明 8196 KB）
+指纹校验: ✅ 一致
+可恢复性: ✅ episodes=595 vectors=591
+```
+
+最后一行是关键：**证明远端那份能恢复出一个可用的记忆库**，
+而不是只有文件传上去了。
+
+---
+
+## 什么时候跑
+
+**目前不自动定时。** 手动跑，或者你自己挂 cron。
+
+建议节奏：**每周一次**。
+
+理由：全量快照 8MB，年增长约 139MB。
+按周同步 = 30MB/月，成本可接受，且最多丢一周的记忆。
+按天同步省不了什么，反而让仓库膨胀更快。
+
+### 为什么不自动
+
+自动推送如果配置错了（比如仓库权限变了、glibc 更新导致 sqlite 不兼容），
+可能把错误的数据固化到远端，而你要几个月后才发现。
+
+先手动跑几周，确认流程稳定，再考虑自动化。
+
+如果要自动化，建议加一道检查：推送前先 `verify` 上一次的备份能不能打开。
+
+---
+
+## 技术细节
+
+### 为什么用 SQLite backup API 而不是 copy
+
+数据库跑在 WAL 模式。直接 `copy` 文件会拿到一个**没有合并 WAL 的残缺副本**
+（E-498 故障矩阵的 F2 项实测过：裸拷贝主库只得 0 条记忆）。
+
+`sqlite3.Connection.backup()` 会做一致性快照。
+
+### 为什么下载不用 Contents API
+
+**踩过的坑**（2026-11-17）：
+
+GitHub Contents API 对 **>1MB 的文件不返回 base64**，
+`.content` 字段是空字符串，而且**不报错**。
+
+于是 8MB 的 db 下载下来是个空文件 → 指纹不符 → sqlite 报 `no such table`。
+
+正确做法：
+
+```bash
+# 拿下载地址
+gh api repos/OWNER/REPO/contents/FILE --jq .download_url
+# 然后 curl 下原始字节
+curl -sL -o FILE "<download_url>"
+```
+
+### 远端仓库结构
+
+```
+fatfish-heart-memory/
+├── MANIFEST.json              # 备份清单（名称/大小/sha256/时间）
+└── memory_YYYYMMDD_HHMMSS.db  # 每次一份全量快照
+```
+
+清单保留最近 20 条记录，但**旧的 .db 文件不会自动删**。
+要清理的话手动删，或者以后加 prune。
+
+---
+
+## 恢复步骤（机器没了怎么救回来）
+
+```bash
+# 1. 新机器上装好项目
+git clone https://github.com/Roxy-DD/fatfish-heart.git
+cd fatfish-heart
+
+# 2. 从私有仓库拉回最新记忆
+gh auth login   # 需要这个账号有 fatfish-heart-memory 的权限
+gh api repos/Roxy-DD/fatfish-heart-memory --jq '.private'  # 应为 true
+
+# 3. 下载最新的备份（用 download_url，别用 contents）
+URL=$(gh api repos/Roxy-DD/fatfish-heart-memory/contents/MANIFEST.json --jq .content | base64 -d | python -c "import json,sys;print(json.load(sys.stdin)['backups'][-1]['name'])")
+DL=$(gh api "repos/Roxy-DD/fatfish-heart-memory/contents/$URL" --jq .download_url)
+curl -sL -o proto/cosmos_mem/dsh_mem.db "$DL"
+
+# 4. 验证
+cd proto && python doctor.py     # 应 11/11 通过
+python offsite.py verify         # 指纹应一致
+```
+
+---
+
+## 诚实边界
+
+| 项 | 现状 |
+|---|---|
+| 自动定时 | ❌ 未实现，需手动或自挂 cron |
+| 增量同步 | ❌ 每次全量 8MB |
+| 远端清理 | ❌ 旧备份不会自动删 |
+| 加密 | ⚠ 只靠 GitHub 私有仓库权限，db 本身不加密 |
+| 恢复演练 | ✅ 已实测（下载 → 指纹一致 → 能打开数数据） |
+
+最后一条「加密」值得说清楚：如果有人拿到你 GitHub 账号的访问权，
+就能下载这些记忆的明文。这是选择方案 A（放 GitHub）时已知的取舍。
