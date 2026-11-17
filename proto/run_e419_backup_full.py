@@ -166,8 +166,15 @@ out = {
     "new_verified": len(tables),
 }
 p = os.path.join(_HERE, "results", "e419_backup_full.json")
-with open(p, "w", encoding="utf-8") as f:
-    json.dump(out, f, ensure_ascii=False, indent=1)
-print(f"写入 results/e419_backup_full.json")
+# E-518：回归环境下不写盘（与项目其他实验脚本约定一致）
+# 之前没有这个保护，全量回归时会：
+#   · 写 results/e419_backup_full.json → 污染工作区
+#   · 让 onward.py 的「可贡献项」判断变错 → 连锁导致回馈门禁失败
+if os.environ.get("FFH_NO_WRITE") == "1":
+    print("（FFH_NO_WRITE=1，跳过写盘）")
+else:
+    with open(p, "w", encoding="utf-8") as f:
+        json.dump(out, f, ensure_ascii=False, indent=1)
+    print(f"写入 results/e419_backup_full.json")
 
 sys.exit(0 if n_ok == len(results) else 1)

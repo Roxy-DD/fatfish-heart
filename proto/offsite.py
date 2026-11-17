@@ -166,6 +166,35 @@ def cmd_push():
         print(f"\n❌ 数据库不存在: {DB_PATH}")
         return 1
 
+    # ---- 第 2 道门：本地库必须健康，否则不推 ----
+    #
+    # 为什么要有这道门：
+    #   如果本地库已经损坏（截断、页损坏、索引坏），
+    #   推上去就是把坏数据固化到远端，而你可能几个月后才发现
+    #   —— 那时所有历史备份都是坏的，等于异地副本完全失效。
+    #
+    #   所以：宁可这次不推，也不要推一份坏的。
+    print(f"\n  校验本地库...")
+    try:
+        import sqlite3
+        _c = sqlite3.connect(DB_PATH)
+        _ic = _c.execute("PRAGMA integrity_check").fetchone()[0]
+        if _ic != "ok":
+            print(f"  ❌ 本地库完整性检查失败: {_ic[:100]}")
+            print(f"     拒绝推送。请先修复本地库。")
+            _c.close()
+            return 1
+        _n = _c.execute("SELECT COUNT(*) FROM episodes").fetchone()[0]
+        _c.close()
+        print(f"  ✅ 完整性 ok，episodes={_n}")
+        if _n == 0:
+            print(f"  ❌ episodes 为 0，这是个空库 —— 拒绝推送（防止把空库覆盖到远端）")
+            return 1
+    except Exception as e:
+        print(f"  ❌ 无法校验本地库: {type(e).__name__}: {e}")
+        print(f"     拒绝推送。库里可能已有损坏。")
+        return 1
+
     # ---- 准备备份文件 ----
     ts = time.strftime("%Y%m%d_%H%M%S")
     name = f"memory_{ts}.db"
