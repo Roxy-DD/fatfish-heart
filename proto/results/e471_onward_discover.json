@@ -2,29 +2,91 @@
  "experiment": "E-471",
  "branch": "master",
  "ahead_commits": 0,
- "dirty_files": 4,
+ "dirty_files": 16,
  "candidates": [
   {
    "status": "M",
-   "path": "proto/cosmos_mem/store_v1.py",
+   "path": "CONTRIBUTING.md",
    "kind": "ok"
   },
   {
    "status": "M",
-   "path": "proto/iterate.py",
+   "path": "docs/INSTALL.md",
+   "kind": "ok"
+  },
+  {
+   "status": "M",
+   "path": "dsh-plugin/index.js",
+   "kind": "ok"
+  },
+  {
+   "status": "M",
+   "path": "proto/check-inject-once.mjs",
+   "kind": "ok"
+  },
+  {
+   "status": "M",
+   "path": "proto/results/e377_criteria.json",
+   "kind": "blocked"
+  },
+  {
+   "status": "M",
+   "path": "proto/results/e421_r4.json",
+   "kind": "blocked"
+  },
+  {
+   "status": "M",
+   "path": "proto/results/e458_rename_b1.json",
+   "kind": "blocked"
+  },
+  {
+   "status": "M",
+   "path": "proto/results/e471_onward_discover.json",
+   "kind": "blocked"
+  },
+  {
+   "status": "M",
+   "path": "proto/results/e472_onward_gate.json",
+   "kind": "blocked"
+  },
+  {
+   "status": "M",
+   "path": "proto/results/e493_auto_backup.json",
+   "kind": "blocked"
+  },
+  {
+   "status": "M",
+   "path": "proto/run_e377_criteria.py",
+   "kind": "ok"
+  },
+  {
+   "status": "M",
+   "path": "scripts/capture-ui.mjs",
    "kind": "ok"
   },
   {
    "status": "??",
-   "path": "proto/results/e498_chaos_matrix.json",
+   "path": "docs/images/",
+   "kind": "other"
+  },
+  {
+   "status": "??",
+   "path": "proto/exp_e502_serial_vs_parallel.py",
+   "kind": "ok"
+  },
+  {
+   "status": "??",
+   "path": "proto/results/e502_serial_vs_parallel.json",
    "kind": "blocked"
   },
   {
    "status": "??",
-   "path": "proto/run_e498_chaos_matrix.py",
+   "path": "scripts/capture-terminal.mjs",
    "kind": "ok"
   }
  ],
- "issues": [],
- "ready_to_contribute": true
+ "issues": [
+  "1 个文件含本机路径"
+ ],
+ "ready_to_contribute": false
 }

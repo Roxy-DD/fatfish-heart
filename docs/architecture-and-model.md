@@ -2,7 +2,7 @@
 
 > 生成依据：E-338 对真实代码的只读探查（`proto/_inspect_arch.py`），不是凭印象绘制。
 > 生成时间：2026-11-10
-> 状态：代码版本 E-333，数据库 `proto/fatfish_heart/dsh_mem.db`
+> 状态：代码版本 E-333，数据库 `proto/cosmos_mem/dsh_mem.db`
 > **行数均为 E-338 探查时刻的实测快照；DB 在持续运行，后续迭代会变化。**
 
 ---
@@ -379,8 +379,8 @@ total=16, normal=5, forced=11
 | 配置 | 默认值 | 作用 | 说明 |
 |---|---|---|---|
 | `pythonPath` | `'python'` | 运行内核的 Python | 保持 `python` 即可 |
-| `kernelDir` | `'<项目路径>\\proto\\fatfish_heart'` | 内核脚本目录 | fatfish_heart 所在路径 |
-| `dbPath` | `'<项目路径>\\proto\\fatfish_heart\\dsh_mem.db'` | SQLite 数据库路径 | 全部记忆存这一个文件 |
+| `kernelDir` | `'<项目路径>\\proto\\cosmos_mem'` | 内核脚本目录 | cosmos_mem 所在路径 |
+| `dbPath` | `'<项目路径>\\proto\\cosmos_mem\\dsh_mem.db'` | SQLite 数据库路径 | 全部记忆存这一个文件 |
 | `autoInject` | `true` | 是否自动注入记忆 | 关掉则完全靠模型主动 mem_search |
 | `autoInjectTopK` | `5` | 检索返回条数 | 普通结果占这么多名额，L0/L1 额外追加 |
 | `autoInjectMaxChars` | `1500` | **普通检索结果**的字符预算 | 只用限制 body；E-393 起明确不管 L0/L1 |

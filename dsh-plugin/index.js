@@ -2711,6 +2711,11 @@ export function apply(ctx, config) {
       if (!injectEvery && (st.injected || st.injecting)) {
         // 已注入过，或正在注入中（E-348 防并发）：
         // 只补常驻指令（相关记忆不再自动塞）
+        //
+        // E-503 观察：这个守卫在 2711 行，但 st.injecting 原本要到后面的
+        // 2749 行才置位，中间还有 await（检索 1.5~6.3 秒）。
+        // 于是两个并发 assemble 都能通过守卫 → 同一会话注入两次。
+        // 已把置位提前到守卫之后立刻执行（见下方 E-503 修复）。
         const contexts = Array.isArray(result.contexts) ? result.contexts : []
         return {
           ...result,
@@ -2720,6 +2725,23 @@ export function apply(ctx, config) {
           ],
         }
       }
+      // E-503 修复：**立刻**置位防并发标记
+      //
+      // 问题（实测 2026-11-17，e377 判据抓到）：
+      //   守卫在 2711 行检查 (st.injected || st.injecting)，
+      //   但 st.injecting 原本要到后面（检索完、拼完 body 之后）才置位。
+      //   中间有 await（检索 1.5~6.3 秒），
+      //   于是两个并发 assemble 都能通过守卫 → 同一会话注入两次。
+      //   实测证据：同一 sid 在同一分钟内出现 2 条 inject 审计记录。
+      //
+      // 修法：守卫通过后**紧跟着**置位，不等待任何 await。
+      //   这样第二个并发调用走到 2711 行时就能看到 injecting=true 并跳过。
+      //
+      // 注意：置位必须在 isFirstTurn 计算**之前**，
+      //   但我们这里只置 injecting（不影响 injected），
+      //   isFirstTurn 仍然基于 st.injected 判断，语义不变。
+      if (!injectEvery) st.injecting = true
+
       // E-348 修：先记下"是否首轮"，再置位
       //
       // 原代码顺序错误：
@@ -2746,7 +2768,8 @@ export function apply(ctx, config) {
       // E-381：只有「只注入一次」模式才置位 injected。
       // 每轮注入模式必须保持 injected=false，否则下一轮会被守卫挡住。
       if (!injectEvery) st.injected = true
-      st.injecting = true
+      // 注：st.injecting 已在守卫之后（上方）提前置位，这里不再重复。
+      //     见 E-503 修复注释。
 
       // 等待前瞻完成（若还没跑完），超时保护，避免第一次响应卡太久
       if (st.prewarmPromise) {

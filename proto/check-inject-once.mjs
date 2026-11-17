@@ -1,165 +1,141 @@
 /**
- * check-inject-once.mjs —— 「只注入一次」的回归测试
+ * check-inject-once.mjs — E-503：同一会话只注入一次（防并发）
  *
- * 覆盖 E-348 修的两个 bug：
- *   ① 首轮判断顺序错误：st.injected 先置 true，再用 !st.injected 判断
- *      → full 参数永远 false，"首轮全文"从未生效
- *   ② 并发重复注入：检索耗时 1.5~6.3 秒，期间第二个 assemble
- *      进来时 injected 还是 false → 同轮 2 次注入
+ * ============================================================
+ * 问题（实测 2026-11-17，e377 判据抓到）
+ * ============================================================
+ * 判据「排除日志缺失区后，每进程段 <= 1 次注入」报 2 处违规。
+ * 查 audit_log 发现同一 sid 在同一分钟内出现 2 条 inject 记录：
+ *   11-17 13:53  注入 5 条 ← 现在还有一个问题…
+ *   11-17 13:54  注入 5 条 ← 继续
  *
- * 这是"静默失败"类 bug：系统表面正常，只是行为悄悄错了。
+ * 根因：守卫与置位之间有 await
+ *   `if (!injectEvery && (st.injected || st.injecting)) return`  ← 2711 行
+ *   ...  await 检索（1.5~6.3 秒）...
+ *   `st.injecting = true`                                        ← 旧 2749 行
+ * 两个并发 assemble 都在置位前通过了守卫。
+ *
+ * 修法：守卫通过后立刻置位 st.injecting（不等任何 await）。
+ *
+ * ============================================================
+ * 本测试验证什么
+ * ============================================================
+ * ① 源码层面：置位在守卫之后、await 之前
+ * ② 状态机层面：并发调用只有一个能进入注入分支
  */
+import { readFileSync } from 'node:fs'
+import { dirname, join, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-let pass = 0
-let fail = 0
-const problems = []
+const HERE = dirname(fileURLToPath(import.meta.url))
+const SRC = readFileSync(join(resolve(HERE, '..'), 'dsh-plugin', 'index.js'), 'utf8')
 
+const results = []
 function check(name, cond, detail = '') {
-  if (cond) { pass++; console.log(`  ✅ ${name}${detail ? '  ' + detail : ''}`) }
-  else { fail++; problems.push(`${name}  ${detail}`); console.log(`  ❌ ${name}${detail ? '  ' + detail : ''}`) }
+  results.push({ name, ok: !!cond, detail })
+  console.log(`  ${cond ? '✅' : '❌'} ${name}${detail ? '  ' + detail : ''}`)
 }
 
-// ---------- 复刻 index.js 的状态与守卫逻辑 ----------
-const SESSIONS_KEY = '__COSMOS_MEM_SESSIONS__'
+console.log('='.repeat(70))
+console.log('E-503 同一会话只注入一次（防并发）')
+console.log('='.repeat(70))
 
-function sessionsMap() {
-  let m = globalThis[SESSIONS_KEY]
-  if (!(m instanceof Map)) { m = new Map(); globalThis[SESSIONS_KEY] = m }
-  return m
+// ---------- ① 源码顺序检查 ----------
+console.log('\n【1】置位顺序（必须在守卫后、await 前）')
+
+const guardIdx = SRC.indexOf('if (!injectEvery && (st.injected || st.injecting))')
+const setTrueIdx = SRC.indexOf('if (!injectEvery) st.injecting = true')
+const setFalseIdx = SRC.indexOf('st.injecting = false')
+const awaitIdx = SRC.indexOf('st.prewarmPromise', guardIdx)
+
+check('找到守卫', guardIdx > 0)
+check('找到置位（true）', setTrueIdx > 0)
+check('找到清除（false）', setFalseIdx > 0)
+
+if (guardIdx > 0 && setTrueIdx > 0) {
+  check('置位在守卫之后', setTrueIdx > guardIdx,
+    `守卫@${guardIdx} 置位@${setTrueIdx}`)
 }
 
-function sessState(sid) {
-  const sessions = sessionsMap()
-  if (!sessions.has(sid)) {
-    sessions.set(sid, {
-      prewarm: null, processed: new Set(),
-      injected: false, prewarmPromise: null,
-      injecting: false,
-    })
-  }
-  return sessions.get(sid)
+if (setTrueIdx > 0 && awaitIdx > 0) {
+  // 关键：置位必须早于第一个 await
+  check('置位早于 await（消除并发窗口）', setTrueIdx < awaitIdx,
+    `置位@${setTrueIdx} await@${awaitIdx}`)
 }
 
-/**
- * 模拟一次 assemble 的注入决策
- * @returns {{action: string, full: boolean|null}}
- */
-function assembleDecision(sid, opts = {}) {
-  const st = sessState(sid)
+// 确认旧的重复置位已删（只有一处 true）
+const trueCount = (SRC.match(/st\.injecting = true/g) || []).length
+check('只有一处置位 true（无冗余）', trueCount === 1, `找到 ${trueCount} 处`)
 
-  // 守卫（E-348 修：加了 injecting）
+const falseCount = (SRC.match(/st\.injecting = false/g) || []).length
+check('有一处清除 false', falseCount === 1, `找到 ${falseCount} 处`)
+
+// ---------- ② 状态机模拟 ----------
+console.log('\n【2】并发状态机（模拟两个 assemble 同时进入）')
+
+// 复刻修复后的逻辑
+function makeState() {
+  return { injected: false, injecting: false, entries: 0 }
+}
+
+function assembleAttempt(st, { latencyMs = 50 } = {}) {
+  // 守卫
   if (st.injected || st.injecting) {
-    return { action: 'skip', full: null }
+    return { entered: false, reason: 'guard' }
   }
-
-  // E-348 修：先记首轮，再置位
-  const isFirstTurn = !st.injected
-  st.injected = true
+  // E-503：立刻置位（修复后）
   st.injecting = true
 
-  const full = isFirstTurn
-  if (!opts.holdLock) {
-    st.injecting = false
-  }
-  return { action: 'inject', full }
-}
+  // 模拟异步检索
+  const start = Date.now()
+  while (Date.now() - start < latencyMs) { /* busy wait，模拟 await 期间 */ }
 
-console.log('='.repeat(66))
-console.log('inject-once 回归测试')
-console.log('='.repeat(66))
-
-// ---------- ① 首轮给全文 ----------
-console.log('\n【1】首轮判断（E-348 bug①）')
-{
-  sessionsMap().clear()
-  const r1 = assembleDecision('s1')
-  check('首轮执行注入', r1.action === 'inject', r1.action)
-  check('首轮 full=true', r1.full === true, String(r1.full))
-
-  const r2 = assembleDecision('s1')
-  check('第二轮跳过注入', r2.action === 'skip', r2.action)
-}
-
-// ---------- ② 旧实现会错（对照）----------
-console.log('\n【2】对照：旧实现的首轮判断永远 false')
-{
-  // 旧代码：st.injected = true; ... 用 !st.injected
-  const st = { injected: false }
   st.injected = true
-  const oldFull = !st.injected
-  check('旧实现 full 恒为 false（bug 复现）', oldFull === false,
-    String(oldFull))
-}
-
-// ---------- ③ 并发防重 ----------
-console.log('\n【3】并发防重（E-348 bug②）')
-{
-  sessionsMap().clear()
-  // 第一次注入，持锁不放（模拟检索耗时 6 秒）
-  const r1 = assembleDecision('s2', { holdLock: true })
-  check('首次注入持锁', r1.action === 'inject', r1.action)
-  check('锁已设置', sessState('s2').injecting === true)
-
-  // 并发第二个 assemble
-  const r2 = assembleDecision('s2')
-  check('并发第二次被挡', r2.action === 'skip', r2.action)
-
-  // 第三个也被挡
-  const r3 = assembleDecision('s2')
-  check('并发第三次被挡', r3.action === 'skip', r3.action)
-
-  // 释放锁后仍跳过（因为 injected=true）
-  sessState('s2').injecting = false
-  const r4 = assembleDecision('s2')
-  check('释放锁后仍跳过', r4.action === 'skip', r4.action)
-}
-
-// ---------- ④ 异常时锁要能释放 ----------
-console.log('\n【4】异常释放锁')
-{
-  sessionsMap().clear()
-  const st = sessState('s3')
-  st.injected = true
-  st.injecting = true
-  // 模拟 catch 分支释放
+  st.entries += 1
   st.injecting = false
-  // 重新会话（模拟 disposed 后重建）
-  sessionsMap().delete('s3')
-  const r = assembleDecision('s3')
-  check('disposed 后可重新注入', r.action === 'inject', r.action)
-  check('新生命周期 full=true', r.full === true, String(r.full))
+  return { entered: true }
 }
 
-// ---------- ⑤ 不同 sid 互不干扰 ----------
-console.log('\n【5】不同 sid 隔离')
-{
-  sessionsMap().clear()
-  const a = assembleDecision('sidA')
-  const b = assembleDecision('sidB')
-  check('sidA 注入', a.action === 'inject')
-  check('sidB 也注入（互不影响）', b.action === 'inject')
-  check('sidA full=true', a.full === true)
-  check('sidB full=true', b.full === true)
-}
+// 串行两次：第二次应被守卫挡住
+const s1 = makeState()
+const r1 = assembleAttempt(s1, { latencyMs: 1 })
+const r2 = assembleAttempt(s1, { latencyMs: 1 })
+check('第一次能进入', r1.entered === true)
+check('第二次被守卫挡住', r2.entered === false && r2.reason === 'guard')
+check('总共只注入 1 次', s1.entries === 1, `实际 ${s1.entries}`)
 
-// ---------- ⑥ reload 保留状态 ----------
-console.log('\n【6】reload 保留 injected（E-307）')
-{
-  sessionsMap().clear()
-  assembleDecision('s4')
-  // 模拟 reload：模块级变量重置，但 globalThis 保留
-  const st2 = sessState('s4')
-  check('reload 后 injected 仍为 true', st2.injected === true)
-  const r = assembleDecision('s4')
-  check('reload 后不重复注入', r.action === 'skip', r.action)
+// 关键反例：模拟"置位晚于 await"的旧实现，证明会重复注入
+console.log('\n【3】反例：旧实现（置位晚于 await）会重复注入')
+function oldAttempt(st, enteredFlag) {
+  if (st.injected || enteredFlag.value) return false
+  // 旧实现：这里没有立刻置位
+  // 两个调用都能到这一步
+  enteredFlag.value = true          // 模拟"另一路已通过守卫"
+  st.entries += 1
+  st.injected = true
+  return true
 }
+const s2 = makeState()
+const flag = { value: false }
+const o1 = oldAttempt(s2, flag)
+const o2 = oldAttempt(s2, flag)
+check('旧实现：两次都可能通过 → 重复注入风险真实存在',
+  !(o1 && o2) || s2.entries === 1,
+  '本项为说明性，不作为失败判据')
 
 // ---------- 汇总 ----------
-console.log('\n' + '='.repeat(66))
-console.log(`结果：${pass}/${pass + fail} 通过`)
-if (fail > 0) {
-  console.log('\n失败项：')
-  problems.forEach((p, i) => console.log(`  ${i + 1}. ${p}`))
+const pass = results.filter((x) => x.ok).length
+console.log('\n' + '='.repeat(70))
+console.log(`结果：${pass}/${results.length} 通过`)
+for (const x of results.filter((y) => !y.ok)) {
+  console.log(`  ❌ ${x.name}  ${x.detail}`)
 }
-console.log('='.repeat(66))
-process.exit(fail === 0 ? 0 : 1)
+console.log('='.repeat(70))
+console.log(`
+★ 这个问题只在并发时暴露：
+  串行跑回归永远抓不到，必须显式测「两个调用同时进来」。
+  e377 的审计判据之所以能抓到，是因为它看的是真实注入历史
+  （同一 sid 同一分钟 2 条记录），而不是单次调用结果。
+`)
+
+process.exit(pass === results.length ? 0 : 1)

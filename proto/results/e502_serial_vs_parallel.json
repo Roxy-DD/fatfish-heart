@@ -1,0 +1,22 @@
+{
+ "experiment": "E-502",
+ "serial_total_s": 442.39,
+ "parallel_total_s": 235.48,
+ "speedup": 1.88,
+ "saved_s": 206.91,
+ "per_task": [
+  {
+   "name": "回归子集A",
+   "s": 208.08
+  },
+  {
+   "name": "回归子集B",
+   "s": 225.26
+  },
+  {
+   "name": "doctor自检",
+   "s": 9.05
+  }
+ ],
+ "verdict": "并行有效，提速 1.88x"
+}

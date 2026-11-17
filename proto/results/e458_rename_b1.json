@@ -1,10 +1,8 @@
 {
  "experiment": "E-458",
- "n_doc_changed": 4,
+ "n_doc_changed": 2,
  "docs": [
-  "README.md",
-  "docs/PROJECT-STATUS.md",
-  "docs/architecture-and-model.html",
-  "docs/architecture-and-model.md"
+  "CONTRIBUTING.md",
+  "docs/INSTALL.md"
  ]
 }

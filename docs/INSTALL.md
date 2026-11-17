@@ -206,7 +206,7 @@ python proto/init_db.py --force   # 会先备份
 ## 卸载
 
 ```bash
-dsh plugin --profile <profile> remove @local/dsh-cosmos-mem
+dsh plugin --profile <profile> remove @local/dsh-fatfish-heart
 ```
 
 记忆数据在 `proto/cosmos_mem/dsh_mem.db`，删不删由你定。

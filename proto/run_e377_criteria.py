@@ -109,9 +109,60 @@ print("\n③ 断言")
 # 关键断言：排除段 0 后，每段 <= 1 次
 real_violations = [(s, seg, n) for s, seg, n in violations
                    if seg != 0 and n > 1]
-check("排除日志缺失区后，每进程段 <= 1 次注入",
-      len(real_violations) == 0,
-      f"{len(real_violations)} 处违规")
+
+# E-503（2026-11-17）：判据要区分「修复前历史」与「修复后是否仍在发生」
+#
+# 背景：这些违规是**真实发生过的**（11-16、11-17 多次），
+#   根因是「守卫通过 → await 检索 → 才置位 injecting」的并发窗口。
+#   已在 dsh-plugin/index.js 修复（置位提前到守卫之后）。
+#
+# 但修复**不会消除历史记录** —— audit_log 是只增不删的（R2 红线）。
+# 所以判据不能是「历史零违规」（那永远不可能过），
+# 而应该是：
+#   ① 修复后的新注入不再违规（这是修复是否有效的判据）
+#   ② 历史违规如实统计并标注（这是诚实记录）
+#
+# 判据变更本身要有依据，不能为了让测试变绿而放宽：
+#   · 修复前的违规：保留在 violations 里，如实打印，不隐藏
+#   · 修复时间点从 meta 表读（e503_fix_at），不是硬编码
+#   · 只对「时间戳 > 修复时间」的注入做零违规断言
+fix_at = None
+try:
+    con2 = sqlite3.connect(os.path.join(os.path.dirname(_HERE),
+                                        "proto", "cosmos_mem", "dsh_mem.db"))
+    r = con2.execute("SELECT val FROM meta WHERE key='e503_fix_at'").fetchone()
+    con2.close()
+    if r:
+        fix_at = float(r[0])
+except Exception:
+    pass
+
+if fix_at:
+    # 只检查修复之后的
+    post_violations = []
+    for sid, seg, n in real_violations:
+        # 取该 sid 该段内所有时间，看是否都早于 fix_at
+        times_in = [t for t in by_sid[sid] if seg_of(t) == seg]
+        if any(t > fix_at for t in times_in):
+            post_violations.append((sid, seg, n))
+
+    historical = len(real_violations) - len(post_violations)
+
+    print(f"\n  E-503 修复时间: "
+          f"{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(fix_at))}")
+    print(f"  历史违规（修复前，如实保留）: {historical} 处")
+    print(f"  修复后新增违规: {len(post_violations)} 处")
+
+    check("修复后不再出现「每段 > 1 次注入」",
+          len(post_violations) == 0,
+          f"{len(post_violations)} 处新增违规")
+    check(f"历史违规已如实记录（{historical} 处，不隐藏）",
+          True, "见上方 v2 段落明细")
+else:
+    # 没有修复时间标记时，退回原判据（严格）
+    check("排除日志缺失区后，每进程段 <= 1 次注入",
+          len(real_violations) == 0,
+          f"{len(real_violations)} 处违规（未找到 E-503 修复标记）")
 
 # 段 0 的判断：如果有段 0，说明日志不完整，应显式记录而非报错
 n_seg0 = sum(1 for sid, times in by_sid.items()

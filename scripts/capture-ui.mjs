@@ -23,7 +23,7 @@
  *   node scripts/capture-ui.mjs [baseUrl] [outDir]
  */
 import { chromium } from 'playwright'
-import { mkdirSync, existsSync } from 'node:fs'
+import { mkdirSync, existsSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -41,7 +41,28 @@ console.log('='.repeat(66))
 console.log(`  DSH: ${BASE}`)
 console.log(`  输出: ${OUT}`)
 
-const browser = await chromium.launch({ headless: true })
+// 用本机已有的 chromium，不等 playwright 下载匹配版本
+// （playwright 要求 1255，机器上只有 1243；直接用 executablePath 绕过）
+function findChrome() {
+  const base = join(process.env.USERPROFILE || process.env.HOME || '', 'AppData', 'Local', 'ms-playwright')
+  if (!existsSync(base)) return undefined
+  for (const d of readdirSync(base)) {
+    if (!d.startsWith('chromium-')) continue
+    for (const rel of ['chrome-win64/chrome.exe', 'chrome-linux/chrome',
+                       'chrome-mac/Chromium.app/Contents/MacOS/Chromium']) {
+      const p = join(base, d, rel)
+      if (existsSync(p)) return p
+    }
+  }
+  return undefined
+}
+const chromePath = findChrome()
+if (chromePath) console.log(`  浏览器: ${chromePath}`)
+
+const browser = await chromium.launch({
+  headless: true,
+  executablePath: chromePath,     // undefined 时回退到 playwright 默认
+})
 const ctx = await browser.newContext({
   viewport: { width: 1440, height: 900 },
   deviceScaleFactor: 2,          // 高清，README 里不糊

@@ -181,7 +181,7 @@
 ```
 肥鱼之心/
 ├─ proto/
-│  ├─ fatfish_heart/            记忆系统本体（21 个 Python 模块）
+│  ├─ cosmos_mem/            记忆系统本体（21 个 Python 模块）
 │  │  ├─ store_v1.py         真值层：SQLite / FTS5 / 向量 / 四红线
 │  │  ├─ store_v2.py         组装层：能力范围 / 完整性闸 / 情绪
 │  │  ├─ cli_mcp.py          30 个命令实现
