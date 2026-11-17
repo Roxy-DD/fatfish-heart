@@ -1,0 +1,108 @@
+{
+ "experiment": "E-507",
+ "n_pass": 20,
+ "n_total": 20,
+ "results": [
+  {
+   "name": "定理1 declaredDone 永远优先（穷举 200 组合）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "定理2 达到 maxConsecutive 一定 giveUp",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "定理3 无进展 streak+1>=3 一定 giveUp",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "定理4 有余量时继续（穷举 80 组合）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "定理5 注入总量线性公式成立",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "定理6 注入量与记忆库规模无关",
+   "ok": true,
+   "detail": "1 种不同结果"
+  },
+  {
+   "name": "定理7 body 预算至少保留 200 字（穷举 7 种 L0L2 大小）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "定理8 第 n 次写入触发，第 n-1 次不触发",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "定理8b N=5 最大丢失窗口 4 条",
+   "ok": true,
+   "detail": "实际丢 4"
+  },
+  {
+   "name": "定理8b N=20 最大丢失窗口 19 条",
+   "ok": true,
+   "detail": "实际丢 19"
+  },
+  {
+   "name": "定理8b N=50 最大丢失窗口 49 条",
+   "ok": true,
+   "detail": "实际丢 49"
+  },
+  {
+   "name": "Lean 文件存在且非空",
+   "ok": true,
+   "detail": "12 定理"
+  },
+  {
+   "name": "  Lean 有定理 declared_done_always_honored",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "  Lean 有定理 max_consecutive_stops",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "  Lean 有定理 no_progress_stops",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "  Lean 有定理 continues_while_budget",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "  Lean 有定理 inject_total_linear",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "  Lean 有定理 inject_ignores_store",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "  Lean 有定理 remain_at_least_200",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "  Lean 有定理 max_loss_equals_n_minus_1",
+   "ok": true,
+   "detail": ""
+  }
+ ],
+ "note": "穷举验证，非 Lean 证明；Lean 编译待环境就绪"
+}
