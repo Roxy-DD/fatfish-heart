@@ -352,7 +352,32 @@ function sessState(sid) {
       injecting: false,
     })
   }
-  return sessions.get(sid)
+  const st = sessions.get(sid)
+
+  // E-516：`injected` 必须随 apply 换代失效
+  //
+  // 问题（实测 2026-11-17 16:32 之后注入永久停止，3.5 小时零注入）：
+  //   sessionsMap 挂 globalThis 是为了保住 `processed`（去重集合，E-307 的修复）。
+  //   但 `injected` 是「本会话只注入一次」的开关，语义完全不同：
+  //     · processed：跨重载要**保留** → 否则同一件事被记 2~3 次
+  //     · injected ：跨重载要**清除** → 否则重载后再也不注入（本 bug）
+  //   两种语义混在同一个 Map 里，一个策略套两种，必然有一个是错的。
+  //
+  //   症状极隐蔽：服务端 200、内核在跑、assemble 每轮触发，
+  //   只是守卫 `if (st.injected) return` 直接跳过，日志上看不出异常。
+  //
+  // 修法：给状态记「属于哪个 apply 代号」。代号变了 = 插件重载过 =
+  //       本会话应重新注入一次（新代码可能带来新的记忆策略）。
+  //       processed 不动，去重语义不受影响。
+  const curSeq = globalThis.__FFH_APPLY_SEQ__ || 0
+  if (st.injected && st.injectedSeq !== curSeq) {
+    st.injected = false
+    st.injecting = false
+    st.turnCount = 0
+  }
+  if (!st.injected) st.injectedSeq = curSeq
+
+  return st
 }
 
 /** 注入历史（内存，本次运行期间可见，供 UI「注入历史」展示） */
