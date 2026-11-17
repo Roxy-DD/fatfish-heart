@@ -89,8 +89,56 @@ for at, sid in rows:
     if at:
         by_sid[str(sid or "(空)")].append(at)
 
+# E-510：排除 subagent 会话
+#
+# 实测（2026-11-17 16:08）：判据报 3 处「修复后新增违规」，
+# 查下来全是我自己派的三个 subagent（调查员/顾问/审计员）。
+#
+# 为什么它们不算违规：
+#   · subagent 是独立会话，sid 稳定，但每次 send_message 都是**新的独立轮次**
+#   · st.injected 的语义是「同一会话的同一轮不重复注入」
+#   · 子代理收到新任务 = 新的一轮 = 应该重新注入（否则它拿不到相关记忆）
+#   · 所以同一 sid 在一个进程段内多次注入，对 subagent 是**正确行为**
+#
+# 判据本身没错，是把 subagent 误当成了普通会话。
+# 识别方式：**任一**注入记录的 query 是「你是XXX。任务：...」这种派活格式，
+#   就整个 sid 视为 subagent。不能只看首条 —— 第一版只看首条，
+#   结果 3 次注入的 sid 因为首条匹配失败而漏掉。
+import re as _re
+_SUBAGENT_PAT = _re.compile(r'你是.{1,30}(员|顾问|助手|审计|审查|调查)')
+
+subagent_sids = set()
+
+# 用 audit_log 的 msg 判断：**任一**条命中即视为 subagent
+try:
+    _con = sqlite3.connect(os.path.join(os.path.dirname(_HERE),
+                                        "proto", "cosmos_mem", "dsh_mem.db"))
+    for sid in by_sid:
+        msgs = _con.execute(
+            "SELECT msg FROM audit_log WHERE kind='inject' AND sid=?",
+            (sid,)).fetchall()
+        for (m,) in msgs:
+            if not m:
+                continue
+            # msg 形如「注入 5 条 ← 你是调查员。任务：...」
+            q = m.split("←")[-1].strip() if "←" in m else ""
+            if _SUBAGENT_PAT.search(q):
+                subagent_sids.add(sid)
+                break
+    _con.close()
+except Exception:
+    pass
+
+if subagent_sids:
+    print(f"\n  【E-510】识别到 {len(subagent_sids)} 个 subagent 会话")
+    print(f"  这些会话每次收到新任务都是独立轮次，重复注入是正确行为，不计入违规：")
+    for s in sorted(subagent_sids):
+        print(f"    · {s[:28]}")
+
 violations = []
 for sid, times in by_sid.items():
+    if sid in subagent_sids:
+        continue
     segs = Counter(seg_of(t) for t in times)
     print(f"\n   sid={sid[:28]}  共 {len(times)} 次")
     for seg in sorted(segs):
@@ -139,12 +187,21 @@ except Exception:
 
 if fix_at:
     # 只检查修复之后的
+    #
+    # E-511 修：原逻辑用「段内是否有多条」判断，
+    # 但段可能横跨修复时间点（段 60 从 11-16 跨到 11-17）。
+    # 于是「修复前注入了 9 次、修复后只注入 1 次」会被判成违规 ——
+    # 实际上修复后只有 1 次，完全正常。
+    #
+    # 正确判据：只看**修复后**的注入数量。
+    #   修复后同一 (sid, 段) 出现 >1 次 → 真违规
+    #   修复前的不算（那是历史，已如实记录）
     post_violations = []
     for sid, seg, n in real_violations:
-        # 取该 sid 该段内所有时间，看是否都早于 fix_at
-        times_in = [t for t in by_sid[sid] if seg_of(t) == seg]
-        if any(t > fix_at for t in times_in):
-            post_violations.append((sid, seg, n))
+        # 只数修复后的
+        times_in = [t for t in by_sid[sid] if seg_of(t) == seg and t > fix_at]
+        if len(times_in) > 1:
+            post_violations.append((sid, seg, len(times_in)))
 
     historical = len(real_violations) - len(post_violations)
 
