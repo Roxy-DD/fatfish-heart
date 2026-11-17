@@ -184,7 +184,7 @@ PR 是跨谱系重组，issue 是环境筛选。详见
 | 模块 | 状态 | 说明 |
 |---|---|---|
 | 核心记忆系统 | ✅ 生产可用 | `proto/cosmos_mem/`（生产代码） |
-| DSH 插件 | ✅ 符合官方规范 | `dsh-plugin/`，6 个 Tab UI |
+| DSH 插件 | ✅ 符合官方规范 | `dsh-plugin/`，7 个 Tab UI |
 | 记忆数据 | ✅ 种子基线 + 零私人数据 | 12 条通用种子，可直接分发给他人 |
 | 性能 | ✅ 2000 条下检索 26.6ms | 优化前 1383ms |
 | 文档 | ✅ 覆盖设计到优化全链路 | `docs/` |
@@ -331,7 +331,7 @@ mem_seed action=factory
 肥鱼之心/
 ├── README.md                       本文件
 ├── .gitignore
-├── docs/                           18 份文档
+├── docs/                           设计文档
 │   ├── 01~13                       原始 Cosmos-Net 原型迭代（E-1~E-18）
 │   ├── 14 审计日志系统集成.md        E-19~E-22
 │   ├── 15 性能优化-FTS5提速52倍.md   E-23~E-26
@@ -369,7 +369,7 @@ mem_seed action=factory
 ├── dsh-plugin/                      ★ DSH 插件
 │   ├── package.json                 符合官方规范
 │   ├── index.js                     导出 name/inject/Config/apply
-│   ├── client.js                    UI（6 个 Tab）
+│   ├── client.js                    UI（7 个 Tab）
 │   ├── cordis.patch.yml
 │   ├── locale/{zh,en}.json
 │   └── icon.svg
@@ -525,7 +525,7 @@ dsh plugin --profile <profile> add <项目绝对路径>/dsh-plugin   # 3. 安装
 
 ---
 
-## UI（6 个 Tab）
+## UI（7 个 Tab）
 
 ```
 记忆库

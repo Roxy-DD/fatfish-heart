@@ -9,6 +9,7 @@ import os
 import re
 import sqlite3
 import sys
+import json
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -101,6 +102,74 @@ for a, b in m5:
         check(f"README 声称「{a}/{b}」",
               int(a) == int(b), f"{a}/{b}")
 
+# ---------- E-513：扩展到所有硬编码数字 ----------
+#
+# 背景：reviewer 审计发现 5 处「同一份 README 内部前后矛盾」，
+# 根因不是文笔，是**同一事实在多处手写**。
+# 我已把能删的硬编码删掉，留下的必须能被脚本核对。
+# 这一节就是那个核对器 —— 从代码/文件系统取实数，不信手写。
+print(f"\n【E-513 扩展核对：所有硬编码数字】")
+
+# (a) Tab 数
+try:
+    _cj = open(os.path.join(ROOT, "dsh-plugin", "client.js"),
+               encoding="utf-8").read()
+    _i = _cj.find("function renderTab")
+    _seg = _cj[_i:_cj.find("function renderList", _i)]
+    _tabs = re.findall(r"tab === '([a-z]+)'", _seg)
+    n_tabs = len(_tabs)
+    for claim in re.findall(r'(\d+)\s*个\s*Tab', readme):
+        check(f"README 声称「{claim} 个 Tab」",
+              int(claim) == n_tabs, f"实际 {n_tabs} 个")
+except Exception as e:
+    check("Tab 数核对", False, f"{type(e).__name__}: {e}")
+
+# (b) 种子条数
+try:
+    _seed = json.load(open(os.path.join(HERE, "cosmos_mem", "seed_memory.json"),
+                           encoding="utf-8"))
+    n_seed = sum(len(v) for v in _seed.values() if isinstance(v, list))
+    for claim in re.findall(r'(\d+)\s*条种子', readme):
+        check(f"README 声称「{claim} 条种子」",
+              int(claim) == n_seed, f"实际 {n_seed} 条")
+except Exception as e:
+    check("种子条数核对", False, f"{type(e).__name__}: {e}")
+
+# (c) Python 版本要求（doctor.py 是权威）
+try:
+    _doc = open(os.path.join(HERE, "doctor.py"), encoding="utf-8").read()
+    _m = re.search(r"Python\s*>=\s*(\d+)\.(\d+)", _doc)
+    if _m:
+        need = f"{_m.group(1)}.{_m.group(2)}+"
+        # README 里提到 Python 版本时必须包含这个下限
+        for claim in re.findall(r'Python\s*(\d+\.\d+)\+?', readme):
+            check(f"README 声称 Python {claim} 不低于 {need}",
+                  tuple(map(int, claim.split("."))) >=
+                  (int(_m.group(1)), int(_m.group(2))),
+                  f"doctor 要求 {need}")
+except Exception as e:
+    check("Python 版本核对", False, f"{type(e).__name__}: {e}")
+
+# (d) 路由前缀（最严重的一类：照做会 404）
+#
+# reviewer 发现 README 写 POST /fatfish-heart/seed，实际是 /cosmos-mem。
+# 这里从插件源码取真实前缀，核对 README 里所有 /xxx/ 形式的路由。
+try:
+    _idx = open(os.path.join(ROOT, "dsh-plugin", "index.js"),
+                encoding="utf-8").read()
+    _hb = re.search(r"httpBase:\s*'([^']+)'", _idx)
+    if _hb:
+        real_base = _hb.group(1)          # 例如 /cosmos-mem
+        # README 里出现的、带 seed|stats|config 后缀的路由
+        for m_ in re.finditer(r'(/[a-z-]+)/(seed|stats|config|note|todo|audit)\b',
+                              readme):
+            prefix = m_.group(1)
+            check(f"README 路由前缀 {prefix} 与插件一致",
+                  prefix == real_base,
+                  f"真实前缀 {real_base}")
+except Exception as e:
+    check("路由前缀核对", False, f"{type(e).__name__}: {e}")
+
 # ---------- 4. 结论文本 ----------
 print("\n" + "=" * 72)
 n_pass = sum(1 for x in results if x["ok"])
@@ -115,7 +184,6 @@ else:
     print("  README 里的数字声称与实际情况一致")
 print("=" * 72)
 
-import json
 out = {"experiment": "E-508", "n_pass": n_pass, "n_total": len(results),
        "actual": {"tables": n_tables, "total_rows": total_rows,
                   "episodes": n_episodes, "vectors": n_vectors,

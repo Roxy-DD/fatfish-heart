@@ -1,10 +1,10 @@
 {
  "experiment": "E-508",
- "n_pass": 5,
- "n_total": 5,
+ "n_pass": 12,
+ "n_total": 12,
  "actual": {
   "tables": 14,
-  "total_rows": 4614,
+  "total_rows": 4618,
   "episodes": 593,
   "vectors": 589,
   "regression_tests": 49
@@ -34,6 +34,41 @@
    "name": "README 声称「11/11」",
    "ok": true,
    "detail": "11/11"
+  },
+  {
+   "name": "README 声称「7 个 Tab」",
+   "ok": true,
+   "detail": "实际 7 个"
+  },
+  {
+   "name": "README 声称「7 个 Tab」",
+   "ok": true,
+   "detail": "实际 7 个"
+  },
+  {
+   "name": "README 声称「7 个 Tab」",
+   "ok": true,
+   "detail": "实际 7 个"
+  },
+  {
+   "name": "README 声称「16 条种子」",
+   "ok": true,
+   "detail": "实际 16 条"
+  },
+  {
+   "name": "README 声称「16 条种子」",
+   "ok": true,
+   "detail": "实际 16 条"
+  },
+  {
+   "name": "README 声称 Python 3.10 不低于 3.10+",
+   "ok": true,
+   "detail": "doctor 要求 3.10+"
+  },
+  {
+   "name": "README 路由前缀 /cosmos-mem 与插件一致",
+   "ok": true,
+   "detail": "真实前缀 /cosmos-mem"
   }
  ]
 }
