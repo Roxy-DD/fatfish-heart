@@ -27,7 +27,13 @@
  * React.createElement(type, props, ...children) 才支持可变参数。
  */
 window.__ModuleLoader__.load({
-  id: '@local/dsh-cosmos-mem',
+  // E-515：这个 id 必须与 package.json 的 name 完全一致
+  //
+  // 改名时我只改了服务端（index.js / package.json / patch.yml），
+  // 漏了这里。结果：DSH 按新包名找客户端模块 → 找不到 → 整个 UI 不加载，
+  // 而且服务端 HTTP 仍然正常（/cosmos-mem/stats 返回 200），
+  // 所以症状是「插件好像还在，但记忆不注入了」——比直接报错更难查。
+  id: 'dsh-fatfish-heart',
   factory(require) {
     const React = require('react');
     const h = React.createElement;

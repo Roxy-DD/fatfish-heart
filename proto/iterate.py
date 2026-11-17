@@ -65,6 +65,8 @@ CLIENT_CHECKS = [
     ("自主停止", "check-mem-done-e2e.mjs"),
     # E-497：孤儿内核修复（重载后只保留一代内核）
     ("孤儿内核", "check-orphan-kernel.mjs"),
+    # E-515：包名在 5 处出现，任何一处不一致会让插件半死
+    ("包名一致性", "check-package-identity.mjs"),
     # E-329：消息提取游标（含 log 重置边界）
     ("消息提取", "check-scan-cursor.mjs"),
     # E-348：只注入一次（首轮判断顺序 + 并发防重）

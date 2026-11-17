@@ -1,0 +1,91 @@
+name: Release Market Index
+
+# ============================================================
+# 打 tag 时自动生成插件市场索引并发布到 GitHub Pages
+# ============================================================
+#
+# 为什么需要这个 workflow：
+#   市场索引（dist/market-index.json）是**生成物**，被 .gitignore 排除。
+#   但没有它，用户就无法从市场安装插件 —— 需要有人手工跑脚本 + 手工部署，
+#   而手工步骤一定会忘（我们已经忘过一次：改了版本号没打 tag）。
+#
+#   所以把它做成自动的：打 tag → 生成索引 → 部署到 gh-pages。
+#   用户把 gh-pages 上的 URL 加进 DSH 设置就能搜到插件。
+#
+# 触发条件：
+#   · push tag（v*）→ 正式发布
+#   · workflow_dispatch → 手动重跑（索引坏了时救急）
+#
+# 产出：
+#   https://Roxy-DD.github.io/fatfish-heart/market-index.json
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: market-index
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # 生成索引要读所有 tag 和它们的 commit，必须完整历史
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 生成市场索引
+        run: node scripts/build-market-index.mjs
+
+      - name: 校验索引（用 DSH 官方 parser）
+        run: |
+          cd proto
+          node check-market-index.mjs
+        continue-on-error: true
+        # 注：CI 里没有 DSH 的 asar，官方 parser 会降级为本地校验。
+        # 这一步失败不阻断发布（本地校验仍会跑），但不隐藏它的输出。
+
+      - name: 检查索引产物
+        run: |
+          if [ ! -f dist/market-index.json ]; then
+            echo "❌ 索引文件未生成"
+            exit 1
+          fi
+          echo "✅ 索引大小: $(wc -c < dist/market-index.json) 字节"
+          node -e "
+            const i = require('./dist/market-index.json');
+            console.log('format:', i.format);
+            console.log('插件:', i.plugins[0].name);
+            console.log('版本数:', i.plugins[0].versions.length);
+            console.log('最新:', i.plugins[0].versions[0].version);
+          "
+
+      - name: 部署到 gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+          commit_message: 'chore: 更新市场索引（${{ github.ref_name }}）'
+
+      - name: 输出索引地址
+        run: |
+          echo "### 市场索引已发布" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "用户可在 DSH 设置里添加这个 URL：" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "https://Roxy-DD.github.io/fatfish-heart/market-index.json" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY

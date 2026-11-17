@@ -52,16 +52,28 @@ check('找到守卫', guardIdx > 0)
 check('找到置位（true）', setTrueIdx > 0)
 check('找到清除（false）', setFalseIdx > 0)
 
-if (guardIdx > 0 && setTrueIdx > 0) {
-  check('置位在守卫之后', setTrueIdx > guardIdx,
-    `守卫@${guardIdx} 置位@${setTrueIdx}`)
-}
+// E-514：修「断言逃逸」
+//
+// 审计发现（test-auditor）：下面两条原本被 if 包裹，
+//   if (guardIdx > 0 && setTrueIdx > 0) { check('置位在守卫之后', ...) }
+// 当源码里找不到守卫/置位时，这些 check 根本不会 push 到 results，
+// 于是 pass === results.length 仍然成立 —— 断言逃逸，测试静默通过。
+//
+// 实测验证：把 st.injecting = true 整行删掉，
+// 旧版本仍报「置位早于 await ✅」（因为 if 不成立直接跳过）。
+//
+// 修法：把下标越界当作**失败**，而不是跳过。
+//   找不到 = 代码结构变了 = 必须人工确认，不能假装没看见。
+const idxOk = guardIdx > 0 && setTrueIdx > 0 && awaitIdx > 0
+check('三个关键位置都能定位到（否则后续断言无意义）',
+  idxOk,
+  idxOk ? '' : `guard=${guardIdx} setTrue=${setTrueIdx} await=${awaitIdx}`)
 
-if (setTrueIdx > 0 && awaitIdx > 0) {
-  // 关键：置位必须早于第一个 await
-  check('置位早于 await（消除并发窗口）', setTrueIdx < awaitIdx,
-    `置位@${setTrueIdx} await@${awaitIdx}`)
-}
+// 即使 idxOk 为 false 也照常断言 —— 让失败可见
+check('置位在守卫之后', setTrueIdx > guardIdx,
+  `守卫@${guardIdx} 置位@${setTrueIdx}`)
+check('置位早于 await（消除并发窗口）', setTrueIdx < awaitIdx,
+  `置位@${setTrueIdx} await@${awaitIdx}`)
 
 // 确认旧的重复置位已删（只有一处 true）
 const trueCount = (SRC.match(/st\.injecting = true/g) || []).length
