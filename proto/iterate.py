@@ -72,7 +72,7 @@ CLIENT_CHECKS = [
     # E-519：异地副本的安全边界（唯一会把私人记忆传外网的代码）
     ("异地安全", "check-offsite-safety.mjs"),
     # E-525：灾难恢复完整演练（模拟全新机器，从 GitHub 恢复到可用）
-    ("灾难恢复演练", "run_e525_disaster_drill.py"),
+    ("灾难恢复演练", "run_e525_disaster_drill.py", 420),
     # E-329：消息提取游标（含 log 重置边界）
     ("消息提取", "check-scan-cursor.mjs"),
     # E-348：只注入一次（首轮判断顺序 + 并发防重）
@@ -130,7 +130,7 @@ CLIENT_CHECKS = [
     # E-438：R2 ep_id 指纹（能发现任何删除，包括删1补1）
     ("R2指纹", "run_e438_fingerprint.py"),
     # E-439：R3 重建后分数必须一致（不只是 ep_id 顺序）
-    ("R3分数", "run_e439_r3_scores.py"),
+    ("R3分数", "run_e439_r3_scores.py", 360),
     # E-440：版本谱系完整性（登记覆盖率 + 迁移不许静默丢数据）
     ("版本谱系", "run_e440_version_reg.py"),
     # E-442：版本谱系覆盖率监控（只监控结构健全，不设覆盖率门槛）
