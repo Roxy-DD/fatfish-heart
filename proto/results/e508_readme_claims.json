@@ -4,9 +4,9 @@
  "n_total": 12,
  "actual": {
   "tables": 14,
-  "total_rows": 4736,
-  "episodes": 602,
-  "vectors": 598,
+  "total_rows": 4760,
+  "episodes": 603,
+  "vectors": 599,
   "regression_tests": 53
  },
  "results": [

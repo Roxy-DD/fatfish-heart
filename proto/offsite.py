@@ -296,17 +296,15 @@ def cmd_push():
              "user.email=noreply@localhost", "commit", "-m",
              f"backup: {name} ({size // 1024}KB)"
              + (f", pruned {len(removed)}" if removed else "")],
-            ["git", "push", "origin", "HEAD:main"],
+            # ★ 推送目标必须是 BRANCH（与读取时用的同一个分支）
+            #   实测 2026-11-18：这里原来硬编码 "HEAD:main"，
+            #   而读取用的是 BRANCH="master"，
+            #   于是数据进 main、verify 读 master —— 又一次"报成功但看不到"。
+            ["git", "push", "origin", f"HEAD:{BRANCH}"],
         ):
             ok, out = sh(cmd, cwd=repo_dir, timeout=300, )
             if not ok:
-                # push 到 main 失败时试 master（空仓库默认分支可能不同）
                 if "push" in cmd:
-                    ok2, out2 = sh(["git", "push", "origin", "HEAD:master"],
-                                   cwd=repo_dir, timeout=300)
-                    if ok2:
-                        ok, out = ok2, out2
-                if not ok:
                     print(f"\n❌ {' '.join(cmd[:3])} 失败:")
                     print(f"   {out[:300]}")
                     return 1
