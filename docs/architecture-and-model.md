@@ -384,6 +384,7 @@ total=16, normal=5, forced=11
 | `autoInject` | `true` | 是否自动注入记忆 | 关掉则完全靠模型主动 mem_search |
 | `autoInjectTopK` | `5` | 检索返回条数 | 普通结果占这么多名额，L0/L1 额外追加 |
 | `autoInjectMaxChars` | `1500` | **普通检索结果**的字符预算 | 只用限制 body；E-393 起明确不管 L0/L1 |
+| `autoInjectPerItemMax` | `300` | **单条记忆**注入上限（字） | E-534：0=不限制；防止一条超长记忆吃掉全部预算导致整批结果丢失 |
 | `minInjectScore` | `1.0` | 注入的最低检索分数 | E-321 标定 1.0：保留相关 100% / 过滤无关 60% |
 | `autoInjectMaxTotal` | `6000` | **总注入量**上限（含 L0/L1 全文） | E-393 新增，防止 L0/L1 增长后失控；默认 6000 |
 | `injectEveryTurn` | `false` | 注入策略开关 | false=只注入一次（默认）；true=每轮注入（实验用） |

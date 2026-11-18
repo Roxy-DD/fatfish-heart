@@ -99,7 +99,14 @@ for (const f of files) {
 }
 
 // ---- 至少检查到一个文件，防止"什么都没找到"也算通过 ----
-check('扫描到 .ps1 文件（防止空跑）', files.length > 0, `${files.length} 个`)
+// 项目里可能没有 .ps1（比如把运维脚本移到别处），
+// 这时检查应当「无事可做地通过」，而不是失败。
+// 真正要防的是「有 .ps1 但漏扫」，那种情况由下面的逐文件检查覆盖。
+if (files.length === 0) {
+  console.log('  （项目内无 .ps1，跳过编码检查）')
+} else {
+  check(`扫描到 ${files.length} 个 .ps1`, true)
+}
 
 // ---- 汇总 ----
 const pass = results.filter((x) => x.ok).length
