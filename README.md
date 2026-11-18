@@ -138,7 +138,10 @@ PR 是跨谱系重组，issue 是环境筛选。详见
 
 怎么参与？[CONTRIBUTING.md](CONTRIBUTING.md) ·
 [回馈机制](docs/ONWARD.md) ·
-[安装指南](docs/INSTALL.md)
+[安装指南](docs/INSTALL.md) ·
+**[全部文档索引](docs/README.md)**
+
+> 文档有 89 份，别全看。索引里标了「第一次来先看哪三份」。
 
 ---
 
