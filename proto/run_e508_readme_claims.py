@@ -171,6 +171,29 @@ except Exception as e:
     check("路由前缀核对", False, f"{type(e).__name__}: {e}")
 
 # ---------- 4. 结论文本 ----------
+# ---------- docs/README.md 的文档数量 ----------
+# E-529：索引里的数字也会漂移，必须核对
+docs_dir = os.path.join(ROOT, "docs")
+docs_md = [f for f in os.listdir(docs_dir)
+           if f.endswith(".md") and f != "README.md"]
+n_docs = len(docs_md)
+n_numbered = len([f for f in docs_md if f[0].isdigit()])
+
+print("\n【docs 索引】")
+print(f"  文档总数: {n_docs}（不含索引自己）")
+print(f"  带编号: {n_numbered}")
+
+idx_path = os.path.join(docs_dir, "README.md")
+if os.path.exists(idx_path):
+    idx_src = open(idx_path, encoding="utf-8").read()
+    check("docs 索引存在", True)
+    check(f"索引写的文档数 = 实际 {n_docs}",
+          f"{n_docs} 份" in idx_src, f"实际 {n_docs}")
+    check(f"索引写的编号数 = 实际 {n_numbered}",
+          f"{n_numbered} 份" in idx_src, f"实际 {n_numbered}")
+else:
+    check("docs 索引存在", False, "docs/README.md 缺失")
+
 print("\n" + "=" * 72)
 n_pass = sum(1 for x in results if x["ok"])
 print(f"结果：{n_pass}/{len(results)} 通过")

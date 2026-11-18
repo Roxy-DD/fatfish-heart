@@ -1,7 +1,7 @@
 {
  "experiment": "E-508",
- "n_pass": 12,
- "n_total": 12,
+ "n_pass": 15,
+ "n_total": 15,
  "actual": {
   "tables": 14,
   "total_rows": 4818,
@@ -69,6 +69,21 @@
    "name": "README 路由前缀 /cosmos-mem 与插件一致",
    "ok": true,
    "detail": "真实前缀 /cosmos-mem"
+  },
+  {
+   "name": "docs 索引存在",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "索引写的文档数 = 实际 89",
+   "ok": true,
+   "detail": "实际 89"
+  },
+  {
+   "name": "索引写的编号数 = 实际 82",
+   "ok": true,
+   "detail": "实际 82"
   }
  ]
 }
