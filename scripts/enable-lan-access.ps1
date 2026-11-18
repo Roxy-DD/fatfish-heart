@@ -1,4 +1,4 @@
-# 让 itsaplan 在局域网内可访问（iPhone 热点 / 同一 WiFi）
+﻿# 让 itsaplan 在局域网内可访问（iPhone 热点 / 同一 WiFi）
 #
 # 用法：
 #   1. 右键本文件 → "使用 PowerShell 运行"（必须在管理员窗口里）
