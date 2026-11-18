@@ -219,6 +219,24 @@ check('回读确认输出', SRC.includes('已恢复并回读确认'))
 check('条数不符时报错', SRC.includes('恢复后条数不符'))
 check('完整性失败时报错', SRC.includes('恢复后完整性检查失败'))
 
+// ---------- ⑫ prune 不能静默失效 ----------
+console.log('\n【12】prune 不能静默失效（E-526）')
+
+check('删之前先建立索引', SRC.includes('checkout", "-q", "HEAD", "--", "."') || SRC.includes('HEAD", "--", "."'))
+check('索引为空时警告', SRC.includes('git 索引为空'))
+check('rm 失败时打印错误', SRC.includes('无法从索引移除'))
+// ★ 清理类操作不能用 except: pass 吞掉 —— 它保证主流程不中断，
+//   也保证你永远不知道清理没生效（E-526 就是这样漏了 3 个月）
+const pruneBlock = SRC.slice(SRC.indexOf('while len(old_dbs) > KEEP_REMOTE'),
+  SRC.indexOf('清理旧备份'))
+// 区分两种 except: pass：
+//   · 删工作区文件失败 → 可接受（partial clone 下本来就没有）
+//   · git rm 失败但继续 → 不可接受（那样 prune 就静默失效了）
+check('git rm 失败时会报错而不是继续',
+  SRC.includes('无法从索引移除'))
+check('previously-silent 的 os.remove 现在有 git rm 兜底',
+  pruneBlock.includes('git", "rm", "--cached"'))
+
 // ---------- 汇总 ----------
 const pass = results.filter((x) => x.ok).length
 console.log('\n' + '='.repeat(70))
