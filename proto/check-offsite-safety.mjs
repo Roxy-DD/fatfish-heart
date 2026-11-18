@@ -158,6 +158,25 @@ check('覆盖前拒绝空库', restoreFn.includes('空库'))
 check('覆盖时清理 -wal/-shm', restoreFn.includes('"-wal"') &&
   restoreFn.includes('"-shm"'))
 
+// ---------- ⑧ 分支 ref 必须显式指定 ----------
+console.log('\n【8】API 必须显式指定分支（否则读到默认分支的旧数据）')
+
+check('有 BRANCH 常量', SRC.includes("BRANCH = "))
+
+// ★ 这个 bug 极其隐蔽：
+//   不指定 ref 时 GitHub 读**默认分支**。若默认分支是 main
+//   而数据推到 master，push 报成功、verify 也能过，
+//   但验证的永远是上一次的备份。
+// 只检查**真实调用**（gh api 那一行），不看注释里的示例。
+// 第一版把注释 L369 的 `contents/<name>` 示例也算了进去，报了假失败。
+const codeLines = SRC.split('\n').filter((l) => {
+  const t = l.trim()
+  return !t.startsWith('#') && !t.startsWith('//') && t.includes('contents')
+})
+const withoutRef = codeLines.filter((l) => !l.includes("ref={BRANCH}"))
+check('所有 contents API 都带 ref', withoutRef.length === 0,
+  withoutRef.length ? `裸调用: ${withoutRef[0].trim().slice(0, 60)}` : '')
+
 // ---------- 汇总 ----------
 const pass = results.filter((x) => x.ok).length
 console.log('\n' + '='.repeat(70))
