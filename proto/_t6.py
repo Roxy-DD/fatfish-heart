@@ -1,0 +1,6 @@
+import sys, json
+import importlib.util
+spec = importlib.util.spec_from_file_location("w", r"C:\Users\xuee\Desktop\肥鱼之心\proto\watch_itsaplan.py")
+w = importlib.util.module_from_spec(spec); spec.loader.exec_module(w)
+res = w.mcp_call("list_issues", {"projectKey":"FISH"}, timeout=30)
+print(json.dumps(res, ensure_ascii=False)[:1500])

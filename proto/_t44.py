@@ -1,0 +1,17 @@
+import sys, os, sqlite3, shutil, time
+sys.path.insert(0, os.path.join(os.getcwd(), "cosmos_mem"))
+import warnings; warnings.filterwarnings("ignore")
+src = os.path.join(os.getcwd(), "cosmos_mem", "dsh_mem.db")
+dst = os.path.join(os.getcwd(), "work", "r3_probe_copy.db")
+con = sqlite3.connect(src); tgt = sqlite3.connect(dst)
+con.backup(tgt); tgt.close(); con.close()
+print("copied")
+from store_v2 import MemoryStore
+st = MemoryStore(dst)
+print("before vectors:", st.con.execute("select count(*) from vectors").fetchone()[0])
+t0=time.time()
+n = st.rebuild_vectors()
+print("rebuilt", n, "in %.1fs" % (time.time()-t0))
+print("after vectors:", st.con.execute("select count(*) from vectors").fetchone()[0])
+print("episodes:", st.con.execute("select count(*) from episodes").fetchone()[0])
+st.con.close()

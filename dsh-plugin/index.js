@@ -142,6 +142,10 @@ const DEFAULTS = {
   autoInject: true,
   autoInjectTopK: 5,
   autoInjectMaxChars: 1500,
+  // E-534：单条记忆注入上限（字）。0 = 不限制。
+  // 依据：185 条有效记忆 p50=100/p90=861/max=4378，右偏长尾。
+  // 截断到 300 字后，长尾查询（如「token 开销优化」）注入量减半。
+  autoInjectPerItemMax: 300,
   // E-320：低于此分数的检索结果不注入（避免不相关记忆污染上下文）
   minInjectScore: 1.0,
   // E-393：总注入量上限（含 L0/L1 全文 + 普通结果）
@@ -181,6 +185,7 @@ if (_Schema && typeof _Schema.object === 'function') {
     autoInject: _Schema.boolean().default(DEFAULTS.autoInject),
     autoInjectTopK: _Schema.number().default(DEFAULTS.autoInjectTopK),
     autoInjectMaxChars: _Schema.number().default(DEFAULTS.autoInjectMaxChars),
+    autoInjectPerItemMax: _Schema.number().default(DEFAULTS.autoInjectPerItemMax),
     minInjectScore: _Schema.number().default(DEFAULTS.minInjectScore),
     injectEveryTurn: _Schema.boolean().default(DEFAULTS.injectEveryTurn),
     autoInjectMaxTotal: _Schema.number().default(DEFAULTS.autoInjectMaxTotal),
@@ -1227,13 +1232,14 @@ async function reviewAndRemember(ctx, cfg, sid, messages, signal) {
   return out
 }
 
-function formatMemories(items, maxChars, minScore = 0) {
+function formatMemories(items, maxChars, minScore = 0, perItemMax = 0) {
   if (!Array.isArray(items) || items.length === 0) {
-    return { text: '', skipped: 0, kept: 0 }
+    return { text: '', skipped: 0, kept: 0, truncated: 0 }
   }
   const lines = []
   let total = 0
   let skipped = 0
+  let truncated = 0
   for (const it of items) {
     // E-320：低分结果不注入
     //
@@ -1247,12 +1253,55 @@ function formatMemories(items, maxChars, minScore = 0) {
       skipped++
       continue
     }
-    const line = '- [' + it.ep_id + '] ' + it.text + (it.note ? '  (' + it.note + ')' : '')
-    if (total + line.length > maxChars) break
+
+    // ★ E-534：单条长度上限（perItemMax）
+    //
+    // 实测依据（2026-11-18，185 条有效记忆）：
+    //   p50=100 字，p90=861 字，p99=4256 字，max=4378 字
+    //   典型右偏长尾：最长的一条是平均值的 13 倍。
+    //
+    // 问题：原实现是「整条放不下就 break」，
+    //   一条 4378 字的记忆会直接吃掉 1500 字的全部预算，
+    //   后面的普通记忆（多数只有 100 字）一条都进不来。
+    //   实测：查询「token 开销优化」注入 7784 字，
+    //        而「记忆系统怎么优化」只有 3071 字 —— 差 2.5 倍，
+    //        就是因为前者捞出了超长记忆。
+    //
+    // 修法：单条超限时截断并加省略标记，而不是整条丢弃。
+    //   模型看到"…（已截断，需要全文请 mem_search）"会自己决定要不要查。
+    //   这样既保住预算，又不丢相关性信号。
+    //
+    // perItemMax=0 表示不限制（保持旧行为）。
+    let text = it.text
+    if (perItemMax > 0 && typeof text === 'string' && text.length > perItemMax) {
+      text = text.slice(0, perItemMax) +
+        '…（已截断，需要全文请 mem_search）'
+      truncated++
+    }
+
+    const line = '- [' + it.ep_id + '] ' + text +
+      (it.note ? '  (' + it.note + ')' : '')
+    if (total + line.length > maxChars) {
+      // 预算用尽。若这条本身放不下但预算还有空间，
+      // 尝试按剩余空间再截一次（避免小预算时一条都进不来）。
+      const room = maxChars - total
+      if (perItemMax > 0 && room > 40 && line.length > room) {
+        const keep = Math.max(20, room - 40)
+        const clipped = '- [' + it.ep_id + '] ' +
+          String(it.text).slice(0, keep) + '…（截断）'
+        if (total + clipped.length <= maxChars) {
+          lines.push(clipped)
+          total += clipped.length
+          truncated++
+          continue
+        }
+      }
+      break
+    }
     lines.push(line)
     total += line.length
   }
-  return { text: lines.join('\n'), skipped, kept: lines.length }
+  return { text: lines.join('\n'), skipped, kept: lines.length, truncated }
 }
 
 /**
@@ -3037,7 +3086,9 @@ export function apply(ctx, config) {
       // 1.0 是保守门槛：低于它的多半是"矮子里拔将军"。
       const minScore = typeof cfg.minInjectScore === 'number'
         ? cfg.minInjectScore : 1.0
-      const bodyResult = formatMemories(items, remainChars, minScore)
+      const perItemMax = typeof cfg.autoInjectPerItemMax === 'number'
+        ? cfg.autoInjectPerItemMax : DEFAULTS.autoInjectPerItemMax
+      const bodyResult = formatMemories(items, remainChars, minScore, perItemMax)
       const body = bodyResult.text
       if (bodyResult.skipped > 0) {
         debugLog(cfg, 'inject-score-filter', {
