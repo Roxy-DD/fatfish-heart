@@ -71,6 +71,8 @@ CLIENT_CHECKS = [
     ("形式化边界", "run_e507_lean_logic.py"),
     # E-519：异地副本的安全边界（唯一会把私人记忆传外网的代码）
     ("异地安全", "check-offsite-safety.mjs"),
+    # E-530：含中文的 .ps1 必须带 BOM，否则 PS 5.1 解析失败
+    ("PS1编码", "check-ps1-bom.mjs"),
     # E-525：灾难恢复完整演练（模拟全新机器，从 GitHub 恢复到可用）
     ("灾难恢复演练", "run_e525_disaster_drill.py", 420),
     # E-329：消息提取游标（含 log 重置边界）
