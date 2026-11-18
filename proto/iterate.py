@@ -286,7 +286,19 @@ def run_regression(verbose: bool = True) -> dict:
     # E-351：支持 .py，因为有些检查需要读 SQLite / 调 Python 侧 API
     import shutil as _sh
     node = _sh.which("node")
-    for name, script in CLIENT_CHECKS:
+    for entry in CLIENT_CHECKS:
+        # E-528：支持每项自定义超时（第三元素）
+        #
+        # 原来写死 `for name, script in CLIENT_CHECKS`，
+        # 所以即使元组里写了第三个超时值也**被静默丢弃**，
+        # 实际永远用 180 秒。
+        # 后果：我给 e525（实测 32s，但要下载 8.7MB）和 e439（实测 80s）
+        # 设的 420/360 完全不生效，回归里必然超时。
+        #
+        # 这类「配置写了但不生效」和今天那几个 bug 是同一类：
+        # 看起来做了，实际没做。
+        name, script = entry[0], entry[1]
+        item_timeout = entry[2] if len(entry) > 2 else 180
         path = os.path.join(_HERE, script)
         if not os.path.exists(path):
             results[name] = {"pass": None, "output": "脚本不存在",
@@ -306,7 +318,8 @@ def run_regression(verbose: bool = True) -> dict:
             continue
         try:
             r = subprocess.run([runner, path], cwd=_HERE, env=env,
-                               capture_output=True, text=True, timeout=180,
+                               capture_output=True, text=True,
+                               timeout=item_timeout,
                                encoding="utf-8", errors="replace")
             out = (r.stdout or "") + (r.stderr or "")
             ok = r.returncode == 0

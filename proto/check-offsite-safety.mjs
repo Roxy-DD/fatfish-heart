@@ -237,6 +237,20 @@ check('git rm 失败时会报错而不是继续',
 check('previously-silent 的 os.remove 现在有 git rm 兜底',
   pruneBlock.includes('git", "rm", "--cached"'))
 
+// ---------- ⑬ 下载必须走 git（raw 域名被限速）----------
+console.log('\n【13】下载优先用 git（E-527）')
+
+check('有 git 取文件逻辑', SRC.includes('git 取文件'))
+check('用 cat-file 取 blob', SRC.includes('cat-file'))
+check('失败时回退 curl（不丢可用性）', SRC.includes('回退 curl'))
+check('sh() 支持 binary_out（二进制不能走 text）',
+  SRC.includes('binary_out'))
+// raw.githubusercontent 实测 58 KB/s，git 约 400 KB/s
+// 用 split 计数而不是正则 —— 正则里引号转义容易写错（第一版就写错了）
+const blobNoneCount = SRC.split('--filter=blob:none').length - 1
+check('restore 里也用 git（不只是 verify）', blobNoneCount >= 2,
+  `出现 ${blobNoneCount} 次（应 >= 2：verify + restore）`)
+
 // ---------- 汇总 ----------
 const pass = results.filter((x) => x.ok).length
 console.log('\n' + '='.repeat(70))
