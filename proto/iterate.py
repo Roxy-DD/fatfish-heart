@@ -71,6 +71,8 @@ CLIENT_CHECKS = [
     ("形式化边界", "run_e507_lean_logic.py"),
     # E-519：异地副本的安全边界（唯一会把私人记忆传外网的代码）
     ("异地安全", "check-offsite-safety.mjs"),
+    # E-525：灾难恢复完整演练（模拟全新机器，从 GitHub 恢复到可用）
+    ("灾难恢复演练", "run_e525_disaster_drill.py"),
     # E-329：消息提取游标（含 log 重置边界）
     ("消息提取", "check-scan-cursor.mjs"),
     # E-348：只注入一次（首轮判断顺序 + 并发防重）
