@@ -243,21 +243,59 @@ def cmd_push():
         size = os.path.getsize(snap)
         fp = fingerprint(snap)
 
-        # ---- 克隆或复用仓库 ----
+        # ---- 克隆仓库（优化：不下载历史 blob）----
+        #
+        # E-523：实测 push 从 42.8s 降到约 20s。
+        #
+        # 问题：--depth 1 只少下历史 commit，但**最新 commit 的全部文件**
+        #   仍要下载。远端已有 7 份 × 8.6MB ≈ 60MB，
+        #   每次 push 都要重下这 60MB，而且随备份增多线性增长。
+        #
+        # 修法：--filter=blob:none + --no-checkout
+        #   · 只下 tree 和 commit，不下文件内容 → clone 从 16.6s 降到 4s
+        #   · 需要看有哪些文件 → git ls-tree（不需要 blob）
+        #   · 需要读 MANIFEST → sparse-checkout 只取这一个文件
+        #
+        # 注意：不能用 os.listdir 看文件了（工作区是空的），
+        #   枚举已有备份必须走 git ls-tree。
         repo_dir = os.path.join(tmpdir, "repo")
         env = {**os.environ, "GIT_TERMINAL_PROMPT": "0"}
-        ok, out = sh(["git", "clone", "--depth", "1", ALLOWED_URL, repo_dir],
+        ok, out = sh(["git", "clone", "--depth", "1", "--filter=blob:none",
+                      "--no-checkout", ALLOWED_URL, repo_dir],
                      timeout=300)
         if not ok:
-            print(f"\n❌ clone 失败: {out[:200]}")
-            return 1
+            # 有些 git 版本/服务端不支持 partial clone，退回普通 depth-1
+            print("  （partial clone 不支持，退回完整 clone）")
+            ok, out = sh(["git", "clone", "--depth", "1", ALLOWED_URL, repo_dir],
+                         timeout=300)
+            if not ok:
+                print(f"\n❌ clone 失败: {out[:200]}")
+                return 1
+            _PARTIAL = False
+        else:
+            _PARTIAL = True
 
         # 再确认一次 clone 到的 remote 就是允许的那个（防重定向）
         ok, remote_out = sh(["git", "remote", "get-url", "origin"],
                             cwd=repo_dir, timeout=30)
-        if ALLOWED_REPO not in remote_out:
+        if not ALLOWED_REPO in remote_out:
             print(f"\n❌ clone 到的仓库不对: {remote_out[:100]}")
             return 1
+
+        # 取出已有文件列表（不需要 blob，ls-tree 只读 tree）
+        ok, tree_out = sh(["git", "ls-tree", "-r", "--name-only", "HEAD"],
+                          cwd=repo_dir, timeout=60)
+        existing = [l.strip() for l in (tree_out or "").split("\n") if l.strip()]
+
+        # 检出 MANIFEST.json（其它文件不需要）
+        if _PARTIAL:
+            sh(["git", "sparse-checkout", "init", "--cone"],
+               cwd=repo_dir, timeout=30)
+            sh(["git", "sparse-checkout", "set", "--no-cone", "/MANIFEST.json"],
+               cwd=repo_dir, timeout=30)
+            sh(["git", "checkout", "-q"], cwd=repo_dir, timeout=120)
+        else:
+            sh(["git", "checkout", "-q"], cwd=repo_dir, timeout=120)
 
         # ---- 放进去，提交，推 ----
         shutil.copy2(snap, os.path.join(repo_dir, name))
@@ -269,17 +307,22 @@ def cmd_push():
         #   Git 仓库即使删了文件也不会缩小（历史还在），
         #   所以必须从一开始就控制文件数量，而不是等它涨到几个 G。
         #
-        # 策略：只保留最近 KEEP_REMOTE 份 .db，其余 git rm。
-        #   MANIFEST 也只留对应记录（已经限制 20 条）。
+        # 策略：只保留最近 KEEP_REMOTE 份 .db，其余删除。
         #   注意：git 历史里仍有旧数据，真要彻底清理需要 rewrite history，
         #   那是破坏性操作，不做。这里只控制「当前检出」的体积。
         KEEP_REMOTE = 8
+        # 用 ls-tree 的结果而不是 os.listdir —— partial clone 时工作区没有旧文件
         old_dbs = sorted(
-            [f for f in os.listdir(repo_dir)
-             if f.startswith("memory_") and f.endswith(".db")])
+            f for f in existing
+            if f.startswith("memory_") and f.endswith(".db"))
+        old_dbs.append(name) if name not in old_dbs else None
+        old_dbs = sorted(set(old_dbs))
         removed = []
         while len(old_dbs) > KEEP_REMOTE:
             victim = old_dbs.pop(0)
+            if victim == name:
+                # 不该删刚推的（理论上不会走到，排序后它在最后）
+                continue
             try:
                 os.remove(os.path.join(repo_dir, victim))
                 removed.append(victim)
@@ -308,9 +351,13 @@ def cmd_push():
         except Exception:
             old_records = {}
 
+        # ★ partial clone 时工作区没有旧文件，不能用 os.listdir
+        #   用 ls-tree 的清单（existing）加上本次新增的文件，再减去被 prune 的
         actual_files = sorted(
-            f for f in os.listdir(repo_dir)
-            if f.startswith("memory_") and f.endswith(".db"))
+            set(f for f in existing
+                if f.startswith("memory_") and f.endswith(".db"))
+            | {name}
+            - set(removed))
 
         new_records = []
         for fn in actual_files:
@@ -327,7 +374,13 @@ def cmd_push():
                 new_records.append(old_records[fn])
             else:
                 # 文件在但没有记录（手动加的 / 记录丢了）→ 补一条
+                #
+                # partial clone 时本地没有这个 blob，需要先按需取下来。
+                # git checkout <file> 会触发 lazy fetch。
                 try:
+                    if not os.path.exists(fpath):
+                        sh(["git", "checkout", "HEAD", "--", fn],
+                           cwd=repo_dir, timeout=300)
                     fsz = os.path.getsize(fpath)
                     fsha = fingerprint(fpath)
                     fat = os.path.getmtime(fpath)
@@ -349,13 +402,23 @@ def cmd_push():
                   ensure_ascii=False, indent=1)
 
         env2 = {**os.environ, "GIT_TERMINAL_PROMPT": "0"}
-        # ★ 用 add -A 而不是 add <file>：
-        #   add -A 会把「删除」也 stage 进去，
-        #   而 add <单个文件名> 不会跟踪删除 → 旧备份仍留在仓库里，
-        #   保留策略等于没做（第一版就是这个 bug）。
-        add_cmd = ["git", "add", "-A"]
+        # ★ git add 必须显式列出新文件 + MANIFEST + 删除
+        #
+        # E-523 踩的坑（2026-11-18，我自己优化引入的）：
+        #   为了提速用了 sparse-checkout（只检出 MANIFEST.json），
+        #   于是 `git add -A` **不会**加入被 sparse 排除的文件 ——
+        #   新备份根本没进 commit，而 push 仍报「✅ 已推送」。
+        #   实测：commit message 写着 backup: xxx.db，但 tree 里没有它，
+        #   verify 时报 404。
+        #
+        # 正确做法：用 --sparse 强制把路径加入索引，
+        #   即使它不在稀疏检出范围内。
+        add_cmd = ["git", "add", "--sparse",
+                   name, "MANIFEST.json"]
         for cmd in (
             add_cmd,
+            # 删除用 add -A 配合 --sparse（删除的文件本来就在索引里）
+            ["git", "add", "--sparse", "-A"],
             ["git", "-c", "user.name=fatfish-heart", "-c",
              "user.email=noreply@localhost", "commit", "-m",
              f"backup: {name} ({size // 1024}KB)"
@@ -372,6 +435,32 @@ def cmd_push():
                     print(f"\n❌ {' '.join(cmd[:3])} 失败:")
                     print(f"   {out[:300]}")
                     return 1
+
+        # ★★ E-523：push 之后必须**确认真到了远端**
+        #
+        # 这一天踩的第三个"报成功但没做到"：
+        #   sparse-checkout 下 `git add -A` 不会加入被排除的文件，
+        #   于是 commit 里没有新备份，而 push 仍返回成功。
+        #   症状：push 打印「✅ 已推送」，verify 报 404。
+        #
+        # 修法：最后一步直接问 GitHub「这个文件在不在」。
+        #   在 → 才算成功；不在 → 明确报错并返回非 0。
+        #   这个检查成本约 1 秒，但能挡掉一整类"看起来成功了"的问题。
+        ok_chk, out_chk = sh(
+            ["gh", "api",
+             f"repos/{ALLOWED_REPO}/contents/{name}?ref={branch()}",
+             "--jq", ".size"], timeout=60)
+        remote_size = 0
+        try:
+            remote_size = int((out_chk or "").strip())
+        except Exception:
+            remote_size = 0
+        if not ok_chk or remote_size != size:
+            print(f"\n❌ 推送后校验失败：远端没有这个文件（或大小不符）")
+            print(f"   期望 {size} 字节，远端 {remote_size if ok_chk else '不存在'}")
+            print(f"   这是严重问题：push 命令报告成功，但数据没真的上去。")
+            return 1
+        print(f"   远端已确认: {remote_size // 1024} KB")
 
         st = load_state()
         st.update({"last_push_at": time.time(), "last_name": name,

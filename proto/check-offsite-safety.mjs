@@ -132,10 +132,15 @@ console.log('\n【6】远端保留策略（防无限增长）')
 
 check('有 KEEP_REMOTE 常量', /KEEP_REMOTE\s*=\s*\d+/.test(SRC))
 check('会删除超出数量的旧备份', SRC.includes('while len(old_dbs) > KEEP_REMOTE'))
-// ★ 关键：必须用 git add -A，否则删除不会被 stage，旧文件仍在仓库里
-check('用 git add -A（能 stage 删除）',
-  /"add",\s*"-A"/.test(SRC))
-check('没有用 add <单个文件>（那样不跟踪删除）',
+// ★ 关键：必须能 stage 新文件**和**删除
+//   E-523 踩坑：改用 sparse-checkout 后，`git add -A` 不会加入
+//   被稀疏排除的文件 → commit 里没有新备份，但 push 仍报成功。
+//   现在用 `git add --sparse`，两条 add 都带 --sparse。
+check('add 带 --sparse（否则新文件进不了 commit）',
+  SRC.includes('"--sparse"'))
+check('能 stage 删除（-A 与 --sparse 同时使用）',
+  SRC.includes('"--sparse", "-A"') || /"add",\s*"--sparse",\s*"-A"/.test(SRC))
+check('没有用裸 add <单个文件>（那样不跟踪删除）',
   !/"add",\s*name,/.test(SRC))
 
 // 文件名格式必须是定长时间戳，否则字典序 != 时间序
@@ -197,6 +202,14 @@ check('会丢弃指向已删文件的记录',
   pushFn2.includes('dropped') || pushFn2.includes('丢弃已删除'))
 check('没有单纯 append 的旧写法',
   !pushFn2.includes('manifest["backups"].append'))
+
+// ---------- ⑩ push 后必须确认真到了远端 ----------
+console.log('\n【10】push 后必须确认真到了远端')
+
+check('push 末尾有远端确认', SRC.includes('远端已确认'))
+check('大小不符时返回非 0', SRC.includes('推送后校验失败'))
+// 存在原因：sparse-checkout 下 git add -A 不加入被排除的文件，
+// commit 里没有新备份但 push 仍报成功。只有直接问远端才能发现。
 
 // ---------- 汇总 ----------
 const pass = results.filter((x) => x.ok).length
