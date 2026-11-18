@@ -318,18 +318,44 @@ def cmd_push():
         old_dbs.append(name) if name not in old_dbs else None
         old_dbs = sorted(set(old_dbs))
         removed = []
+        if len(old_dbs) > KEEP_REMOTE:
+            # ★ E-526：--no-checkout 下 git 索引是**空的**（ls-files = 0），
+            #   所以 git rm --cached 会报 "pathspec did not match"。
+            #   必须先用 `git checkout HEAD -- .` 建立索引，再 rm。
+            #   （checkout 可能会因为 partial clone 按需拉 blob 而报读取错误，
+            #     但索引仍然建立成功 —— 实测 ls-files 从 0 变 11。）
+            sh(["git", "checkout", "-q", "HEAD", "--", "."],
+               cwd=repo_dir, timeout=600)
+
+            # 确认索引真的建起来了，否则 prune 会静默失效
+            ok_idx, idx_out = sh(["git", "ls-files"], cwd=repo_dir, timeout=60)
+            n_idx = len([l for l in (idx_out or "").split("\n") if l.strip()])
+            if n_idx == 0:
+                print(f"\n  ⚠ 警告：git 索引为空，prune 无法生效")
+                print(f"     远端将超过 {KEEP_REMOTE} 份上限继续增长")
+            else:
+                print(f"\n  索引已建立（{n_idx} 个文件），开始 prune")
+
         while len(old_dbs) > KEEP_REMOTE:
             victim = old_dbs.pop(0)
             if victim == name:
-                # 不该删刚推的（理论上不会走到，排序后它在最后）
+                # 不该删刚推的（排序后它在最后，理论上走不到）
                 continue
-            try:
-                os.remove(os.path.join(repo_dir, victim))
+            ok_rm, _o = sh(["git", "rm", "--cached", "-q", "--", victim],
+                           cwd=repo_dir, timeout=60)
+            if ok_rm:
+                try:
+                    os.remove(os.path.join(repo_dir, victim))
+                except Exception:
+                    pass
                 removed.append(victim)
-            except Exception:
-                pass
+            else:
+                # 不再静默 —— 删不掉要说话，否则保留策略又变成摆设
+                print(f"  ⚠ 无法从索引移除 {victim}（{_o[:80]}）")
         if removed:
             print(f"\n  清理旧备份: {len(removed)} 份（保留最近 {KEEP_REMOTE} 份）")
+        elif len(old_dbs) >= KEEP_REMOTE:
+            print(f"\n  （当前 {len(old_dbs)} 份，未超 {KEEP_REMOTE} 上限，无需清理）")
 
         # 写清单：**以实际文件为准**重建，不是盲目 append
         #

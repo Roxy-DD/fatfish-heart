@@ -4,16 +4,16 @@
  "n_total": 12,
  "actual": {
   "tables": 14,
-  "total_rows": 4788,
+  "total_rows": 4791,
   "episodes": 604,
   "vectors": 600,
-  "regression_tests": 53
+  "regression_tests": 54
  },
  "results": [
   {
-   "name": "README 声称「49 项回归」不超过实际 53",
+   "name": "README 声称「49 项回归」不超过实际 54",
    "ok": true,
-   "detail": "声称 49 / 实际 53"
+   "detail": "声称 49 / 实际 54"
   },
   {
    "name": "README 声称「10 类故障」",
