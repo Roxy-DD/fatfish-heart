@@ -1,0 +1,77 @@
+{
+ "experiment": "E-534-verify",
+ "budget": 1500,
+ "per_item_max": 300,
+ "query_count": 8,
+ "same_ids_count": 0,
+ "total_old_chars": 4798,
+ "total_new_chars": 11888,
+ "saved_chars": -7090,
+ "saved_pct": -147.8,
+ "results": [
+  {
+   "query": "记忆系统怎么优化",
+   "same_ids": false,
+   "old_kept": 6,
+   "new_kept": 7,
+   "old_chars": 1203,
+   "new_chars": 1486
+  },
+  {
+   "query": "token 开销优化",
+   "same_ids": false,
+   "old_kept": 3,
+   "new_kept": 6,
+   "old_chars": 1065,
+   "new_chars": 1486
+  },
+  {
+   "query": "继续完善记忆系统",
+   "same_ids": false,
+   "old_kept": 6,
+   "new_kept": 7,
+   "old_chars": 1203,
+   "new_chars": 1486
+  },
+  {
+   "query": "itsaplan 怎么部署",
+   "same_ids": false,
+   "old_kept": 0,
+   "new_kept": 5,
+   "old_chars": 0,
+   "new_chars": 1486
+  },
+  {
+   "query": "红线是什么",
+   "same_ids": false,
+   "old_kept": 5,
+   "new_kept": 6,
+   "old_chars": 1327,
+   "new_chars": 1486
+  },
+  {
+   "query": "Podman 端口转发",
+   "same_ids": false,
+   "old_kept": 0,
+   "new_kept": 5,
+   "old_chars": 0,
+   "new_chars": 1486
+  },
+  {
+   "query": "为什么登录失败",
+   "same_ids": false,
+   "old_kept": 0,
+   "new_kept": 5,
+   "old_chars": 0,
+   "new_chars": 1486
+  },
+  {
+   "query": "异地副本怎么恢复",
+   "same_ids": false,
+   "old_kept": 0,
+   "new_kept": 7,
+   "old_chars": 0,
+   "new_chars": 1486
+  }
+ ]
+}
