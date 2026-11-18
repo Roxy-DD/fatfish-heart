@@ -19,6 +19,15 @@
 
 $ErrorActionPreference = 'Stop'
 
+# ---- 只在交互窗口里暂停 ----
+# Read-Host 在非交互环境（如 -File 调用、CI、后台运行）会一直卡住，
+# 所以包一层：只有真正的交互式控制台才等待按键。
+function Pause-IfInteractive {
+    if ([Environment]::UserInteractive -and -not $env:FFH_NO_PAUSE) {
+        Read-Host "按回车退出"
+    }
+}
+
 # ---- 权限检查 ----
 $isAdmin = ([Security.Principal.WindowsPrincipal]`
   [Security.Principal.WindowsIdentity]::GetCurrent()
@@ -35,7 +44,7 @@ if (-not $isAdmin) {
     Write-Host "     cd '$PSScriptRoot'"
     Write-Host "     .\enable-lan-access.ps1"
     Write-Host ""
-    Read-Host "按回车退出"
+    Pause-IfInteractive
     exit 1
 }
 
@@ -58,7 +67,7 @@ $candidates = Get-NetIPAddress -AddressFamily IPv4 |
 if (-not $candidates) {
     Write-Host "  ❌ 没找到可用的局域网 IP" -ForegroundColor Red
     Write-Host "     请确认已连接 WiFi 或热点"
-    Read-Host "按回车退出"
+    Pause-IfInteractive
     exit 1
 }
 
@@ -164,4 +173,4 @@ Write-Host "撤销（恢复成本机访问）：" -ForegroundColor DarkGray
 Write-Host "    netsh interface portproxy reset" -ForegroundColor DarkGray
 Write-Host "    Get-NetFirewallRule -DisplayName 'itsaplan port *' | Remove-NetFirewallRule" -ForegroundColor DarkGray
 Write-Host ""
-Read-Host "按回车退出"
+Pause-IfInteractive

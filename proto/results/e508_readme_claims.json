@@ -4,7 +4,7 @@
  "n_total": 12,
  "actual": {
   "tables": 14,
-  "total_rows": 4815,
+  "total_rows": 4817,
   "episodes": 605,
   "vectors": 601,
   "regression_tests": 54
