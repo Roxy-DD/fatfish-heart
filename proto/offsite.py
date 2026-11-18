@@ -54,12 +54,32 @@ ROOT = os.path.dirname(HERE)
 # ════════════════════════════════════════════════════════════
 ALLOWED_REPO = "Roxy-DD/fatfish-heart-memory"
 ALLOWED_URL = "https://github.com/Roxy-DD/fatfish-heart-memory.git"
-# ★ 显式指定分支：不指定 ref 时 GitHub 读**默认分支**，
-#   而默认分支可能是 main，我们却把数据推到了 master。
-#   实测 2026-11-18：main 只有第 1 份，master 有 2 份，
-#   verify 读 main 所以永远验证旧数据。这个 bug 很隐蔽：
-#   push 报成功、verify 也能过，但验证的是上一次的备份。
-BRANCH = "master"
+# ★ 分支不能硬编码 —— 实测两次踩坑（2026-11-18）：
+#   第一次：读 API 不指定 ref → GitHub 读默认分支 → 读到旧数据
+#   第二次：改成 BRANCH="master" 后，又漏改 push 的目标 → 数据进 main
+#   两次的症状都是「push 报成功、verify 也过，但看到的不是这次的数据」。
+#
+# 现在改为**运行时解析默认分支**：
+#   · 先问 GitHub 这个仓库的 default_branch
+#   · 拿不到时才回退到 master
+# 这样即使仓库侧改了默认分支，也不会静默失效。
+_BRANCH_CACHE = {"value": None}
+
+
+def branch():
+    """当前应使用的分支名（运行时解析默认分支，带缓存）"""
+    if _BRANCH_CACHE["value"]:
+        return _BRANCH_CACHE["value"]
+    ok, out = sh(["gh", "api", f"repos/{ALLOWED_REPO}",
+                  "--jq", ".default_branch"], timeout=60)
+    name = out.strip() if ok else ""
+    # 只接受合理的分支名，防止 API 返回异常内容被当成分支用
+    if not name or "/" in name or " " in name or len(name) > 60:
+        name = "master"
+    _BRANCH_CACHE["value"] = name
+    return name
+
+
 DB_PATH = os.path.join(HERE, "cosmos_mem", "dsh_mem.db")
 STATE_PATH = os.path.join(HERE, "cosmos_mem", "offsite_state.json")
 
@@ -144,7 +164,7 @@ def cmd_status():
         print("\n  从未同步过")
 
     # 看远端有没有东西
-    ok2, out2 = sh(["gh", "api", f"repos/{ALLOWED_REPO}/contents?ref={BRANCH}",
+    ok2, out2 = sh(["gh", "api", f"repos/{ALLOWED_REPO}/contents?ref={branch()}",
                     "--jq", "length"], timeout=60)
     if ok2:
         print(f"\n  远端文件数: {out2.strip()}")
@@ -300,7 +320,7 @@ def cmd_push():
             #   实测 2026-11-18：这里原来硬编码 "HEAD:main"，
             #   而读取用的是 BRANCH="master"，
             #   于是数据进 main、verify 读 master —— 又一次"报成功但看不到"。
-            ["git", "push", "origin", f"HEAD:{BRANCH}"],
+            ["git", "push", "origin", f"HEAD:{branch()}"],
         ):
             ok, out = sh(cmd, cwd=repo_dir, timeout=300, )
             if not ok:
@@ -333,7 +353,7 @@ def cmd_verify():
     print("校验远端备份可恢复")
     print("=" * 66)
 
-    ok, out = sh(["gh", "api", f"repos/{ALLOWED_REPO}/contents/MANIFEST.json?ref={BRANCH}",
+    ok, out = sh(["gh", "api", f"repos/{ALLOWED_REPO}/contents/MANIFEST.json?ref={branch()}",
                   "--jq", ".content"], timeout=60)
     if not ok:
         print(f"\n  ⚠ 远端还没有 MANIFEST.json（可能从未同步过）")
@@ -369,7 +389,7 @@ def cmd_verify():
         #   于是解码后得到一个空/残缺文件，指纹不符、打不开。
         #   正确做法：拿 download_url 用 curl 下载原始字节。
         ok_url, url_out = sh(["gh", "api",
-                              f"repos/{ALLOWED_REPO}/contents/{latest['name']}?ref={BRANCH}",
+                              f"repos/{ALLOWED_REPO}/contents/{latest['name']}?ref={branch()}",
                               "--jq", ".download_url"], timeout=60)
         if not ok_url or not url_out.strip():
             print(f"\n  ⚠ 拿不到 download_url: {url_out[:150]}")
@@ -426,7 +446,7 @@ def cmd_restore(name=None, force=False):
     print("=" * 66)
 
     # ---- 取远端清单 ----
-    ok, out = sh(["gh", "api", f"repos/{ALLOWED_REPO}/contents/MANIFEST.json?ref={BRANCH}",
+    ok, out = sh(["gh", "api", f"repos/{ALLOWED_REPO}/contents/MANIFEST.json?ref={branch()}",
                   "--jq", ".content"], timeout=60)
     if not ok:
         print(f"\n❌ 拿不到 MANIFEST: {out[:150]}")
@@ -472,7 +492,7 @@ def cmd_restore(name=None, force=False):
 
     # ---- 下载 ----
     ok, url_out = sh(["gh", "api",
-                      f"repos/{ALLOWED_REPO}/contents/{target['name']}?ref={BRANCH}",
+                      f"repos/{ALLOWED_REPO}/contents/{target['name']}?ref={branch()}",
                       "--jq", ".download_url"], timeout=60)
     if not ok or not url_out.strip():
         print(f"\n❌ 拿不到 download_url: {url_out[:120]}")
