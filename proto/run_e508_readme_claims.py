@@ -52,6 +52,31 @@ print(f"  表数: {n_tables}")
 print(f"  总行数: {total_rows}")
 print(f"  episodes: {n_episodes}, vectors: {n_vectors}")
 
+# E-536：排除用户标记为 test_data 的记忆（用户 11-18 选 B）
+#
+# 背景：199 条早期演示数据（密码8848、车牌号等）在 11-07 测试期间
+# 被批量失效，它们让统计数字虚高（630 条里 199 条是测试残留）。
+# 标记存在 meta.test_data_ep_ids，不改 episodes 表（红线安全）。
+#
+# 这里读同一份标记，输出「含 / 排除」两个数字，避免数字口径不一致。
+con = sqlite3.connect(DB)
+try:
+    from test_data import breakdown as _td_breakdown
+    _td = _td_breakdown(con)
+    n_real_episodes = _td["real_total"]
+    n_real_valid = _td["real_valid"]
+    n_marked = _td["marked_total"]
+    print(f"  排除测试数据: episodes {n_real_episodes}（有效 {n_real_valid}）"
+          f"  [标记 {n_marked} 条]")
+except Exception as _e:
+    # 兼容旧环境：没有 test_data.py 或标记不存在时，按原口径
+    n_real_episodes = n_episodes
+    n_real_valid = None
+    n_marked = 0
+    print(f"  （测试数据标记不可用: {type(_e).__name__}）")
+finally:
+    con.close()
+
 # ---------- 2. 回归项数 ----------
 iterate_src = open(os.path.join(HERE, "iterate.py"), encoding="utf-8").read()
 # 匹配 ("名称", "脚本.xxx") 或 ("名称", "脚本.xxx", timeout)
