@@ -161,7 +161,13 @@ check('覆盖时清理 -wal/-shm', restoreFn.includes('"-wal"') &&
 // ---------- ⑧ 分支 ref 必须显式指定 ----------
 console.log('\n【8】API 必须显式指定分支（否则读到默认分支的旧数据）')
 
-check('有 BRANCH 常量', SRC.includes("BRANCH = "))
+// E-521 根治后：分支不再是常量，而是运行时解析默认分支
+check('有 branch() 运行时解析函数',
+  /def branch\(\)/.test(SRC) || SRC.includes('def branch():'))
+check('branch() 会问 GitHub 的 default_branch',
+  SRC.includes('.default_branch'))
+check('branch() 有回退值（拿不到时不崩）',
+  SRC.includes('name = "master"') || SRC.includes("name = 'master'"))
 
 // ★ 这个 bug 极其隐蔽：
 //   不指定 ref 时 GitHub 读**默认分支**。若默认分支是 main
@@ -173,7 +179,7 @@ const codeLines = SRC.split('\n').filter((l) => {
   const t = l.trim()
   return !t.startsWith('#') && !t.startsWith('//') && t.includes('contents')
 })
-const withoutRef = codeLines.filter((l) => !l.includes("ref={BRANCH}"))
+const withoutRef = codeLines.filter((l) => !l.includes("ref={branch()}"))
 check('所有 contents API 都带 ref', withoutRef.length === 0,
   withoutRef.length ? `裸调用: ${withoutRef[0].trim().slice(0, 60)}` : '')
 
