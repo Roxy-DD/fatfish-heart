@@ -211,6 +211,14 @@ check('大小不符时返回非 0', SRC.includes('推送后校验失败'))
 // 存在原因：sparse-checkout 下 git add -A 不加入被排除的文件，
 // commit 里没有新备份但 push 仍报成功。只有直接问远端才能发现。
 
+// ---------- ⑪ restore 后必须回读确认 ----------
+console.log('\n【11】restore 后必须回读确认（不能只凭 copy 没抛异常）')
+
+check('恢复了 expected_episodes 供比对', SRC.includes('expected_episodes'))
+check('回读确认输出', SRC.includes('已恢复并回读确认'))
+check('条数不符时报错', SRC.includes('恢复后条数不符'))
+check('完整性失败时报错', SRC.includes('恢复后完整性检查失败'))
+
 // ---------- 汇总 ----------
 const pass = results.filter((x) => x.ok).length
 console.log('\n' + '='.repeat(70))

@@ -667,6 +667,8 @@ def cmd_restore(name=None, force=False):
             if n == 0:
                 print(f"  ❌ 这是个空库，拒绝覆盖")
                 return 1
+            # 记下来，恢复后要用它回读比对
+            expected_episodes = n
         except Exception as e:
             print(f"  ❌ 无法打开: {e}")
             return 1
@@ -688,14 +690,46 @@ def cmd_restore(name=None, force=False):
                 except Exception:
                     pass
         shutil.copy2(dl, DB_PATH)
-        print(f"  ✅ 已恢复: {DB_PATH}")
+
+        # ★ E-524：恢复后必须回读确认，不能只凭 copy2 没抛异常就宣布成功
+        #
+        # 为什么：这一天已经踩过四个「报告成功但没做到」的 bug。
+        # copy2 成功只代表"文件写过去了"，不代表：
+        #   · 目标路径上现在真的是那份数据（可能被别的东西覆盖）
+        #   · 库能打开（可能复制过程中被截断）
+        #   · 数据条数对得上
+        # 而且 WAL 模式下如果 -wal 没清干净，恢复后立即被旧 WAL 覆盖回去。
+        #
+        # 所以：直接打开 DB_PATH，比对 episodes 数量和指纹，对不上就报错。
+        try:
+            import sqlite3 as _sq
+            _c = _sq.connect(DB_PATH)
+            _ic = _c.execute("PRAGMA integrity_check").fetchone()[0]
+            _n = _c.execute("SELECT COUNT(*) FROM episodes").fetchone()[0]
+            _c.close()
+        except Exception as e:
+            print(f"\n❌ 恢复后无法打开目标库: {type(e).__name__}: {e}")
+            print(f"   当前库可能已损坏。备份在: {os.path.basename(safety)}"
+                  if os.path.exists(DB_PATH) else "")
+            return 1
+
+        if _ic != "ok":
+            print(f"\n❌ 恢复后完整性检查失败: {_ic[:80]}")
+            return 1
+        if _n != expected_episodes:
+            print(f"\n❌ 恢复后条数不符：期望 {expected_episodes}，实际 {_n}")
+            print(f"   可能被旧 WAL 覆盖，或复制不完整。")
+            return 1
+
+        print(f"  ✅ 已恢复并回读确认: {DB_PATH}")
 
         st = load_state()
         st["last_restore_at"] = time.time()
         st["last_restore_from"] = target["name"]
         save_state(st)
 
-        print(f"\n  下一步：跑 python doctor.py 确认环境")
+        print(f"\n  恢复后确认: episodes={_n}（与远端一致）")
+        print(f"  下一步：跑 python doctor.py 确认环境")
         return 0
     finally:
         shutil.rmtree(tmpdir, ignore_errors=True)
