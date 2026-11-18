@@ -251,6 +251,19 @@ const blobNoneCount = SRC.split('--filter=blob:none').length - 1
 check('restore 里也用 git（不只是 verify）', blobNoneCount >= 2,
   `出现 ${blobNoneCount} 次（应 >= 2：verify + restore）`)
 
+
+// ---------- ⑭ 回归框架本身：配置要真的生效 ----------
+console.log('\n【14】iterate.py 的自定义超时必须被读取（E-528）')
+
+const iterSrc = readFileSync(join(ROOT, 'proto', 'iterate.py'), 'utf-8')
+check('CLIENT_CHECKS 逐条解包（不是只取前两个）',
+  iterSrc.includes('for entry in CLIENT_CHECKS'))
+check('读取第三元素作为超时',
+  iterSrc.includes('entry[2] if len(entry) > 2'))
+// ★ 这类 bug 的共同特征：语法合法、不报错，只是第三元素被忽略
+check('不再硬编码 timeout=180',
+  !/capture_output=True, text=True, timeout=180,/.test(iterSrc))
+
 // ---------- 汇总 ----------
 const pass = results.filter((x) => x.ok).length
 console.log('\n' + '='.repeat(70))
