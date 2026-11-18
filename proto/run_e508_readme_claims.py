@@ -191,6 +191,26 @@ if os.path.exists(idx_path):
           f"{n_docs} 份" in idx_src, f"实际 {n_docs}")
     check(f"索引写的编号数 = 实际 {n_numbered}",
           f"{n_numbered} 份" in idx_src, f"实际 {n_numbered}")
+    # E-529：索引里写的编号范围必须与实际最大编号一致
+    # 实测踩过：我写了「E-1 到 E-527」，而文档编号实际只到 78。
+    # 这类"编造范围"人工很难发现，必须机械核对。
+    import re as _re
+    m = _re.search(r"编号 (\d+) 到 (\d+)", idx_src)
+    # 文件名有多重格式：「00 方法论卡片.md」「52-原型v0.3复盘.md」
+    # 分隔符可能是空格或连字符，所以用正则取开头的数字，不能 split("-")
+    nums = []
+    for f in docs_md:
+        mm = _re.match(r"(\d+)", f)
+        if mm:
+            nums.append(int(mm.group(1)))
+    mx = max(nums or [0])
+    mn = min(nums or [0])
+    if m:
+        check(f"索引写的编号范围 = 实际 {mn}-{mx}",
+              int(m.group(1)) == mn and int(m.group(2)) == mx,
+              f"索引写 {m.group(1)}-{m.group(2)}")
+    else:
+        check("索引写出了编号范围", False, "未找到")
 else:
     check("docs 索引存在", False, "docs/README.md 缺失")
 

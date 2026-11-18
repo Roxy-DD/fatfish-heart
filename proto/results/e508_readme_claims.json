@@ -1,10 +1,10 @@
 {
  "experiment": "E-508",
- "n_pass": 15,
- "n_total": 15,
+ "n_pass": 16,
+ "n_total": 16,
  "actual": {
   "tables": 14,
-  "total_rows": 4818,
+  "total_rows": 4819,
   "episodes": 605,
   "vectors": 601,
   "regression_tests": 54
@@ -84,6 +84,11 @@
    "name": "索引写的编号数 = 实际 82",
    "ok": true,
    "detail": "实际 82"
+  },
+  {
+   "name": "索引写的编号范围 = 实际 0-78",
+   "ok": true,
+   "detail": "索引写 0-78"
   }
  ]
 }
