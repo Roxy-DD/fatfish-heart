@@ -183,6 +183,21 @@ const withoutRef = codeLines.filter((l) => !l.includes("ref={branch()}"))
 check('所有 contents API 都带 ref', withoutRef.length === 0,
   withoutRef.length ? `裸调用: ${withoutRef[0].trim().slice(0, 60)}` : '')
 
+// ---------- ⑨ 清单必须以实际文件为准 ----------
+console.log('\n【9】MANIFEST 必须与实际文件一致')
+
+const pushFn2 = SRC.slice(SRC.indexOf('def cmd_push'),
+  SRC.indexOf('def cmd_verify'))
+
+check('清单扫描实际文件（不是盲目 append）',
+  pushFn2.includes('actual_files'))
+check('有清单补录逻辑（文件在但没记录时）',
+  pushFn2.includes('清单补录'))
+check('会丢弃指向已删文件的记录',
+  pushFn2.includes('dropped') || pushFn2.includes('丢弃已删除'))
+check('没有单纯 append 的旧写法',
+  !pushFn2.includes('manifest["backups"].append'))
+
 // ---------- 汇总 ----------
 const pass = results.filter((x) => x.ok).length
 console.log('\n' + '='.repeat(70))

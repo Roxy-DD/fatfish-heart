@@ -288,19 +288,63 @@ def cmd_push():
         if removed:
             print(f"\n  清理旧备份: {len(removed)} 份（保留最近 {KEEP_REMOTE} 份）")
 
-        # 写一个清单，便于恢复时对照
+        # 写清单：**以实际文件为准**重建，不是盲目 append
+        #
+        # E-522：实测发现清单与实际文件会脱节。
+        #   2026-11-18 我手动把 main 上的一份备份合并进 master，
+        #   但没写进 MANIFEST —— 于是 restore 按名字找不到它。
+        #   append 的写法还有个问题：prune 删掉文件后，清单里的旧记录仍留着，
+        #   指向不存在的文件。
+        #
+        # 正确做法：扫目录里真实存在的 .db，逐个保证清单里有记录。
+        #   · 已有的记录保留（保留原来的 at/sha256，不重算）
+        #   · 只有文件没有记录的，补一条（用文件 mtime 当时间，实时算指纹）
+        #   · 有记录没文件的，丢掉（它已经不存在了）
         manifest_path = os.path.join(repo_dir, "MANIFEST.json")
         try:
-            manifest = json.load(open(manifest_path, encoding="utf-8"))
+            old_manifest = json.load(open(manifest_path, encoding="utf-8"))
+            old_records = {b["name"]: b for b in old_manifest.get("backups", [])
+                           if isinstance(b, dict) and b.get("name")}
         except Exception:
-            manifest = {"backups": []}
-        manifest["backups"].append({
-            "name": name, "at": time.time(),
-            "size": size, "sha256": fp,
-            "note": "记忆库快照（含私人内容，勿公开）",
-        })
-        # 只保留最近 20 条记录，且必须与实际存在的文件对应
-        manifest["backups"] = manifest["backups"][-20:]
+            old_records = {}
+
+        actual_files = sorted(
+            f for f in os.listdir(repo_dir)
+            if f.startswith("memory_") and f.endswith(".db"))
+
+        new_records = []
+        for fn in actual_files:
+            fpath = os.path.join(repo_dir, fn)
+            if fn == name:
+                # 本次刚推的，信息已经在手上
+                new_records.append({
+                    "name": fn, "at": time.time(),
+                    "size": size, "sha256": fp,
+                    "note": "记忆库快照（含私人内容，勿公开）",
+                })
+            elif fn in old_records:
+                # 之前就有记录的，原样保留（不重算指纹，省时间）
+                new_records.append(old_records[fn])
+            else:
+                # 文件在但没有记录（手动加的 / 记录丢了）→ 补一条
+                try:
+                    fsz = os.path.getsize(fpath)
+                    fsha = fingerprint(fpath)
+                    fat = os.path.getmtime(fpath)
+                    new_records.append({
+                        "name": fn, "at": fat, "size": fsz, "sha256": fsha,
+                        "note": "记忆库快照（含私人内容，勿公开）"
+                                "（清单补录）",
+                    })
+                    print(f"\n  清单补录: {fn}")
+                except Exception as e:
+                    print(f"\n  ⚠ 无法补录 {fn}: {e}")
+
+        dropped = [n for n in old_records if n not in actual_files]
+        if dropped:
+            print(f"  清单丢弃已删除记录: {len(dropped)} 条")
+
+        manifest = {"backups": new_records[-20:]}
         json.dump(manifest, open(manifest_path, "w", encoding="utf-8"),
                   ensure_ascii=False, indent=1)
 
