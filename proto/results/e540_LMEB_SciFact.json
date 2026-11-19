@@ -1,0 +1,132 @@
+{
+ "experiment": "E-540",
+ "task": "LMEB_SciFact",
+ "n_corpus": 1748,
+ "n_queries_evaluated": 20,
+ "n_skipped": 0,
+ "mean_ndcg10": 0.3293,
+ "mean_recall10": 0.3583,
+ "elapsed": 188.4,
+ "per_query": [
+  {
+   "qid": "0",
+   "ndcg10": 0.0,
+   "recall10": 0.0,
+   "n_gold": 3
+  },
+  {
+   "qid": "1",
+   "ndcg10": 1.0,
+   "recall10": 1.0,
+   "n_gold": 1
+  },
+  {
+   "qid": "2",
+   "ndcg10": 0.9325,
+   "recall10": 1.0,
+   "n_gold": 3
+  },
+  {
+   "qid": "3",
+   "ndcg10": 0.0,
+   "recall10": 0.0,
+   "n_gold": 1
+  },
+  {
+   "qid": "4",
+   "ndcg10": 0.0,
+   "recall10": 0.0,
+   "n_gold": 2
+  },
+  {
+   "qid": "5",
+   "ndcg10": 1.0,
+   "recall10": 1.0,
+   "n_gold": 1
+  },
+  {
+   "qid": "6",
+   "ndcg10": 0.0,
+   "recall10": 0.0,
+   "n_gold": 1
+  },
+  {
+   "qid": "7",
+   "ndcg10": 0.6309,
+   "recall10": 1.0,
+   "n_gold": 1
+  },
+  {
+   "qid": "8",
+   "ndcg10": 0.0,
+   "recall10": 0.0,
+   "n_gold": 3
+  },
+  {
+   "qid": "9",
+   "ndcg10": 0.0,
+   "recall10": 0.0,
+   "n_gold": 1
+  },
+  {
+   "qid": "10",
+   "ndcg10": 0.0,
+   "recall10": 0.0,
+   "n_gold": 1
+  },
+  {
+   "qid": "11",
+   "ndcg10": 0.7039,
+   "recall10": 0.6667,
+   "n_gold": 3
+  },
+  {
+   "qid": "12",
+   "ndcg10": 0.0,
+   "recall10": 0.0,
+   "n_gold": 1
+  },
+  {
+   "qid": "13",
+   "ndcg10": 0.0,
+   "recall10": 0.0,
+   "n_gold": 2
+  },
+  {
+   "qid": "14",
+   "ndcg10": 0.0,
+   "recall10": 0.0,
+   "n_gold": 1
+  },
+  {
+   "qid": "15",
+   "ndcg10": 1.0,
+   "recall10": 1.0,
+   "n_gold": 2
+  },
+  {
+   "qid": "16",
+   "ndcg10": 0.6131,
+   "recall10": 0.5,
+   "n_gold": 2
+  },
+  {
+   "qid": "17",
+   "ndcg10": 0.2463,
+   "recall10": 0.25,
+   "n_gold": 4
+  },
+  {
+   "qid": "18",
+   "ndcg10": 0.1952,
+   "recall10": 0.25,
+   "n_gold": 4
+  },
+  {
+   "qid": "19",
+   "ndcg10": 0.2641,
+   "recall10": 0.5,
+   "n_gold": 2
+  }
+ ]
+}
