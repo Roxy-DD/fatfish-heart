@@ -116,7 +116,7 @@ def build_db(path):
     from store_v2 import MemoryStore
     st = MemoryStore(path)
     for text, tag in CORPUS:
-        st.add(text, person=[tag])
+        st.add(text, atmosphere=tag)
     return st
 
 
@@ -245,16 +245,8 @@ def run_r3(tmp, res):
     st2 = MemoryStore(db)
     # 触发重建：调用 rebuild 相关方法（若存在）
     try:
-        if hasattr(st2, "rebuild_index"):
-            st2.rebuild_index()
-        elif hasattr(st2, "rebuild_vectors"):
-            st2.rebuild_vectors()
-        else:
-            # 兜底：重新 add 每条（会重建向量）
-            con2 = st2.con
-            rows = con2.execute("SELECT raw_text FROM episodes").fetchall()
-            for (text,) in rows:
-                st2.add(text)
+        # 真实方法名：rebuild_vectors（已从 inspect 确认）
+        st2.rebuild_vectors()
     except Exception as e:
         res.add("R3", "索引重建执行", False, f"{type(e).__name__}: {e}")
 

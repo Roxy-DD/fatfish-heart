@@ -1,51 +1,117 @@
 {
  "benchmark": "FFH-RedlineBench",
  "version": "1.0",
- "at": 1795051673.1550806,
- "elapsed": 0.14377212524414062,
- "all_pass": false,
+ "at": 1795052018.460296,
+ "elapsed": 14.882641315460205,
+ "all_pass": true,
  "by_redline": {
   "R1": {
-   "pass": 0,
-   "total": 1
+   "pass": 5,
+   "total": 5
   },
   "R2": {
-   "pass": 0,
-   "total": 1
+   "pass": 3,
+   "total": 3
   },
   "R3": {
-   "pass": 0,
-   "total": 1
+   "pass": 3,
+   "total": 3
   },
   "R4": {
-   "pass": 0,
-   "total": 1
+   "pass": 4,
+   "total": 4
   }
  },
  "results": [
   {
    "redline": "R1",
-   "name": "R1 执行异常",
-   "ok": false,
-   "detail": "TypeError: MemoryStore.add() got an unexpected keyword argument 'person'"
+   "name": "同库重载：episodes 逐字段一致",
+   "ok": true,
+   "detail": "cf1bbcd66ca08990"
+  },
+  {
+   "redline": "R1",
+   "name": "同库重载：检索结果逐 query 一致",
+   "ok": true,
+   "detail": "d8bda681e1341c47"
+  },
+  {
+   "redline": "R1",
+   "name": "跨文件复制：episodes 逐字段一致",
+   "ok": true,
+   "detail": "cf1bbcd66ca08990"
+  },
+  {
+   "redline": "R1",
+   "name": "跨文件复制：检索结果逐 query 一致",
+   "ok": true,
+   "detail": "d8bda681e1341c47"
+  },
+  {
+   "redline": "R1",
+   "name": "向量一致性：top1 分数偏差 0.000000",
+   "ok": true,
+   "detail": ""
   },
   {
    "redline": "R2",
-   "name": "R2 执行异常",
-   "ok": false,
-   "detail": "TypeError: MemoryStore.add() got an unexpected keyword argument 'person'"
+   "name": "失效后总行数不变（无物理删除）",
+   "ok": true,
+   "detail": "16 → 16"
+  },
+  {
+   "redline": "R2",
+   "name": "失效记忆被标记而非删除",
+   "ok": true,
+   "detail": "标记 1 条"
+  },
+  {
+   "redline": "R2",
+   "name": "重载后失效记录仍存在（可溯源）",
+   "ok": true,
+   "detail": ""
   },
   {
    "redline": "R3",
-   "name": "R3 执行异常",
-   "ok": false,
-   "detail": "TypeError: MemoryStore.add() got an unexpected keyword argument 'person'"
+   "name": "向量表已清空（16 → 0）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "redline": "R3",
+   "name": "重建后向量表恢复（16 条）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "redline": "R3",
+   "name": "重建后检索结果逐 query 一致",
+   "ok": true,
+   "detail": "0785832a0ea0aadb vs 0785832a0ea0aadb"
   },
   {
    "redline": "R4",
-   "name": "R4 执行异常",
-   "ok": false,
-   "detail": "TypeError: MemoryStore.add() got an unexpected keyword argument 'person'"
+   "name": "修订生效",
+   "ok": true,
+   "detail": "张伟的工号是A1024 → 张伟的工号是A9999（已更新"
+  },
+  {
+   "redline": "R4",
+   "name": "revision 递增（可溯源）",
+   "ok": true,
+   "detail": "revision=2"
+  },
+  {
+   "redline": "R4",
+   "name": "旧值保留在 history（1 条）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "redline": "R4",
+   "name": "失效记录指向取代者（可溯源）",
+   "ok": true,
+   "detail": ""
   }
  ],
  "corpus_size": 16,
