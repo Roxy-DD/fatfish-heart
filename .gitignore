@@ -99,3 +99,4 @@ proto/cosmos_mem/offsite_state.json
 
 # itsaplan 数据库备份（含敏感数据，不入库）
 scripts/backups/*.sql
+proto/archive/

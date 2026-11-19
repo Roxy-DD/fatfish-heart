@@ -5,16 +5,16 @@
  "top_k": 5,
  "chunk_size": 400,
  "total_questions": 100,
- "total_hit": 15,
- "hit_rate": 0.15,
+ "total_hit": 76,
+ "hit_rate": 0.76,
  "per_row": [
   {
    "row": 0,
-   "source": "factconsolidation_mh_6k_no0",
+   "source": "factconsolidation_sh_6k_no0",
    "n_chunks": 455,
    "n_questions": 100,
-   "hit": 15,
-   "rate": 0.15
+   "hit": 76,
+   "rate": 0.76
   }
  ],
  "note": "自实现评测：把 context 切块灌入记忆库后用问题检索，看 top-k 是否含正确答案子串。不依赖 LLM judge。"

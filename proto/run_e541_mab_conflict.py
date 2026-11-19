@@ -90,6 +90,8 @@ def main():
     ap.add_argument("--max-rows", type=int, default=2)
     ap.add_argument("--top", type=int, default=5)
     ap.add_argument("--chunk", type=int, default=400)
+    ap.add_argument("--row", type=int, default=None,
+                    help="指定第几行（sh 在 4-7，mh 在 0-3）")
     args = ap.parse_args()
 
     from datasets import load_dataset
@@ -102,7 +104,10 @@ def main():
     print("\n[1] 加载数据")
     ds = load_dataset("ai-hyz/MemoryAgentBench", split="Conflict_Resolution")
     print(f"    共 {len(ds)} 行")
-    rows = ds.select(range(min(args.max_rows, len(ds))))
+    if args.row is not None:
+        rows = ds.select([args.row])
+    else:
+        rows = ds.select(range(min(args.max_rows, len(ds))))
 
     all_stats = []
     for ri, row in enumerate(rows):
