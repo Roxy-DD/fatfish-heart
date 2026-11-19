@@ -1,0 +1,28 @@
+# Dependabot 配置（OpenSSF Scorecard: Dependency-Update-Tool）
+#
+# 作用：自动检查依赖更新并提 PR，避免依赖腐烂。
+# 项目依赖两类：
+#   1. Python（proto/requirements.txt 等）
+#   2. GitHub Actions（workflows 里引用的 action）
+
+version: 2
+updates:
+  # Python 依赖
+  - package-ecosystem: "pip"
+    directory: "/proto"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci(deps)"
