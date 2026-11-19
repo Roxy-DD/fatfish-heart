@@ -38,7 +38,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11d5960a3267 # v4.2.2
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
         with:
           # 生成索引要读所有 tag 和它们的 commit，必须完整历史
           fetch-depth: 0
