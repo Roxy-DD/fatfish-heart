@@ -1,0 +1,53 @@
+{
+ "benchmark": "FFH-RedlineBench",
+ "version": "1.0",
+ "at": 1795051673.1550806,
+ "elapsed": 0.14377212524414062,
+ "all_pass": false,
+ "by_redline": {
+  "R1": {
+   "pass": 0,
+   "total": 1
+  },
+  "R2": {
+   "pass": 0,
+   "total": 1
+  },
+  "R3": {
+   "pass": 0,
+   "total": 1
+  },
+  "R4": {
+   "pass": 0,
+   "total": 1
+  }
+ },
+ "results": [
+  {
+   "redline": "R1",
+   "name": "R1 执行异常",
+   "ok": false,
+   "detail": "TypeError: MemoryStore.add() got an unexpected keyword argument 'person'"
+  },
+  {
+   "redline": "R2",
+   "name": "R2 执行异常",
+   "ok": false,
+   "detail": "TypeError: MemoryStore.add() got an unexpected keyword argument 'person'"
+  },
+  {
+   "redline": "R3",
+   "name": "R3 执行异常",
+   "ok": false,
+   "detail": "TypeError: MemoryStore.add() got an unexpected keyword argument 'person'"
+  },
+  {
+   "redline": "R4",
+   "name": "R4 执行异常",
+   "ok": false,
+   "detail": "TypeError: MemoryStore.add() got an unexpected keyword argument 'person'"
+  }
+ ],
+ "corpus_size": 16,
+ "n_queries": 8
+}
