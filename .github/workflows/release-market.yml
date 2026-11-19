@@ -43,7 +43,7 @@ jobs:
           # 生成索引要读所有 tag 和它们的 commit，必须完整历史
           fetch-depth: 0
 
-      - uses: actions/setup-node@49933ea5288c # v4.4.0
+      - uses: actions/setup-node@66f83c8206e0997178c8fd7bf1da9efccf5dd388 # v4.4.0
         with:
           node-version: '20'
 

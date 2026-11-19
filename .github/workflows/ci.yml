@@ -32,7 +32,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      - uses: actions/setup-node@49933ea5288c # v4.4.0
+      - uses: actions/setup-node@66f83c8206e0997178c8fd7bf1da9efccf5dd388 # v4.4.0
         with:
           node-version: '22'
 
@@ -70,7 +70,7 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a3267 # v4.2.2
 
-      - uses: actions/setup-node@49933ea5288c # v4.4.0
+      - uses: actions/setup-node@66f83c8206e0997178c8fd7bf1da9efccf5dd388 # v4.4.0
         with:
           node-version: '22'
 
