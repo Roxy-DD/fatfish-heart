@@ -1,5 +1,7 @@
 # 肥鱼之心（Fat Fish Heart）
 
+[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
+
 > **换个模型，它还记得你。**
 > 换供应商、重启进程、重装系统，那些记忆都还在。
 
