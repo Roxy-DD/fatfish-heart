@@ -1683,6 +1683,31 @@ def cmd_scan_conflicts(st, payload) -> dict:
             "scanned": len(rows), "skipped": skipped}
 
 
+def _sensitive_expiry_note(st, ep_id):
+    """FISH-27：敏感信息过期提示
+
+    数据存 meta.sensitive_expiry（JSON），不删数据、不改表结构（R2/R4）。
+    过期时返回提示文本，由插件渲染到 note 字段，让模型知道"这条可能已失效"。
+    """
+    try:
+        row = st.con.execute(
+            "SELECT val FROM meta WHERE key=?", ("sensitive_expiry",)
+        ).fetchone()
+        if not row:
+            return None
+        marks = json.loads(row[0])
+        m = marks.get(ep_id)
+        if not m:
+            return None
+        import time as _t
+        exp = m.get("expires_at", 0)
+        if exp and exp < _t.time():
+            return ("⚠ 疑似已过期（%s）" % m.get("kind", "敏感信息"))
+    except Exception:
+        return None
+    return None
+
+
 def cmd_search(st, payload) -> dict:
     query = payload.get("query") or ""
     top = int(payload.get("top") or 5)
@@ -1715,6 +1740,10 @@ def cmd_search(st, payload) -> dict:
             sc = tup[1] if len(tup) > 1 else None
             note = tup[2] if len(tup) > 2 else None
             fl = tup[3] if len(tup) > 3 else 0
+            # FISH-27：叠加敏感信息过期提示
+            exp_note = _sensitive_expiry_note(st, ep.ep_id)
+            if exp_note:
+                note = (note + "；" + exp_note) if note else exp_note
             items.append({"ep_id": ep.ep_id, "text": ep.raw_text,
                           "score": sc, "note": note, "flag": fl})
         return {"ok": True, "query": query, "dims": qdims,
@@ -1729,8 +1758,10 @@ def cmd_search(st, payload) -> dict:
         fl = tup[2] if len(tup) > 2 else 0
         # E-231：返回 flag，让调用方能区分"受保护的 L0/L1"与"普通检索结果"
         # flag: 0=普通, 1=固定席位, 2=L0/L1 强制在场
+        # FISH-27：敏感信息过期提示
+        exp_note = _sensitive_expiry_note(st, ep.ep_id)
         items.append({"ep_id": ep.ep_id, "text": ep.raw_text,
-                      "score": sc, "flag": fl})
+                      "score": sc, "note": exp_note, "flag": fl})
 
     # 审计日志：recall（检索）
     _audit(st, "recall", msg="检索 " + query[:60],

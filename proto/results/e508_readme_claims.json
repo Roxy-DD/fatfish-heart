@@ -1,19 +1,19 @@
 {
  "experiment": "E-508",
- "n_pass": 16,
+ "n_pass": 15,
  "n_total": 16,
  "actual": {
   "tables": 14,
-  "total_rows": 5030,
-  "episodes": 631,
-  "vectors": 627,
-  "regression_tests": 55
+  "total_rows": 5135,
+  "episodes": 644,
+  "vectors": 640,
+  "regression_tests": 56
  },
  "results": [
   {
-   "name": "README 声称「49 项回归」不超过实际 55",
+   "name": "README 声称「49 项回归」不超过实际 56",
    "ok": true,
-   "detail": "声称 49 / 实际 55"
+   "detail": "声称 49 / 实际 56"
   },
   {
    "name": "README 声称「10 类故障」",
@@ -76,9 +76,9 @@
    "detail": ""
   },
   {
-   "name": "索引写的文档数 = 实际 90",
-   "ok": true,
-   "detail": "实际 90"
+   "name": "索引写的文档数 = 实际 91",
+   "ok": false,
+   "detail": "实际 91"
   },
   {
    "name": "索引写的编号数 = 实际 82",
