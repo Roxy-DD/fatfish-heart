@@ -1,0 +1,109 @@
+{
+ "experiment": "E-539",
+ "benchmark": "LMEB-style (local subset)",
+ "n_corpus": 24,
+ "n_queries": 8,
+ "mean_ndcg10": 0.8878,
+ "mean_recall10": 0.9375,
+ "rebuild_consistent": true,
+ "elapsed": 16.2,
+ "per_query": [
+  {
+   "query": "记忆能否跨模型迁移",
+   "ndcg10": 0.8665,
+   "recall10": 1.0,
+   "n_gold": 4,
+   "n_hit": 10,
+   "top3": [
+    "用户：记忆能跨模型迁移吗？助手：能，存在 SQLite 里",
+    "记忆存储在单个 SQLite 文件里，约 171KB",
+    "2026-03-15 在上海张江，我们讨论了记忆系统的架构"
+   ]
+  },
+  {
+   "query": "异地容灾怎么做",
+   "ndcg10": 0.906,
+   "recall10": 1.0,
+   "n_gold": 3,
+   "n_hit": 10,
+   "top3": [
+    "2026-04-02 用户在杭州出差时提到需要异地容灾",
+    "用户：备份怎么做？助手：pg_dump 或者复制 db 文件",
+    "要备份记忆：先 sqlite3 .backup，再推异地副本"
+   ]
+  },
+  {
+   "query": "四条红线是什么",
+   "ndcg10": 0.8396,
+   "recall10": 1.0,
+   "n_gold": 3,
+   "n_hit": 10,
+   "top3": [
+    "用户：为什么要四条红线？助手：因为记忆不能丢",
+    "要验证红线：跑 FFH-RedlineBench.py",
+    "数据只增不删，失效只打标记"
+   ]
+  },
+  {
+   "query": "向量用的是什么模型",
+   "ndcg10": 1.0,
+   "recall10": 1.0,
+   "n_gold": 2,
+   "n_hit": 10,
+   "top3": [
+    "用户：向量检索准吗？助手：配合 FTS5 混合检索",
+    "使用 bge-small-zh 做 512 维向量编码",
+    "要重建索引：删向量表，调用 rebuild_vectors"
+   ]
+  },
+  {
+   "query": "怎么重建索引",
+   "ndcg10": 1.0,
+   "recall10": 1.0,
+   "n_gold": 2,
+   "n_hit": 10,
+   "top3": [
+    "要重建索引：删向量表，调用 rebuild_vectors",
+    "索引可以从真值层确定性重建",
+    "用户：备份怎么做？助手：pg_dump 或者复制 db 文件"
+   ]
+  },
+  {
+   "query": "用户喜欢什么风格",
+   "ndcg10": 1.0,
+   "recall10": 1.0,
+   "n_gold": 1,
+   "n_hit": 10,
+   "top3": [
+    "2026-07-08 用户说他喜欢二次元风格的画",
+    "用户：为什么要四条红线？助手：因为记忆不能丢",
+    "用户：换供应商会丢记忆吗？助手：不会，格式无关"
+   ]
+  },
+  {
+   "query": "SQLite 有什么坑",
+   "ndcg10": 0.8772,
+   "recall10": 1.0,
+   "n_gold": 2,
+   "n_hit": 10,
+   "top3": [
+    "2026-08-19 发现 SQLite WAL 模式下的并",
+    "要备份记忆：先 sqlite3 .backup，再推异地副本",
+    "用户：记忆能跨模型迁移吗？助手：能，存在 SQLite 里"
+   ]
+  },
+  {
+   "query": "怎么加记忆",
+   "ndcg10": 0.6131,
+   "recall10": 0.5,
+   "n_gold": 2,
+   "n_hit": 10,
+   "top3": [
+    "要加记忆：调 mem_add，自动去重和冲突检测",
+    "记忆存储在单个 SQLite 文件里，约 171KB",
+    "要查记忆：调 mem_search 或 search_sco"
+   ]
+  }
+ ],
+ "note": "本地构造的 LMEB 风格子集，非官方数据集。官方 LMEB 需下载 1M-10M 行，口径相同但规模不同。"
+}

@@ -1,0 +1,72 @@
+{
+ "experiment": "E-540",
+ "task": "LMEBMLDR",
+ "n_corpus": 1536,
+ "n_queries_evaluated": 10,
+ "n_skipped": 0,
+ "mean_ndcg10": 0.3232,
+ "mean_recall10": 0.5,
+ "elapsed": 208.1,
+ "per_query": [
+  {
+   "qid": "0",
+   "ndcg10": 0.0,
+   "recall10": 0.0,
+   "n_gold": 1
+  },
+  {
+   "qid": "1",
+   "ndcg10": 1.0,
+   "recall10": 1.0,
+   "n_gold": 1
+  },
+  {
+   "qid": "2",
+   "ndcg10": 0.5,
+   "recall10": 1.0,
+   "n_gold": 1
+  },
+  {
+   "qid": "3",
+   "ndcg10": 0.0,
+   "recall10": 0.0,
+   "n_gold": 1
+  },
+  {
+   "qid": "4",
+   "ndcg10": 0.0,
+   "recall10": 0.0,
+   "n_gold": 1
+  },
+  {
+   "qid": "5",
+   "ndcg10": 1.0,
+   "recall10": 1.0,
+   "n_gold": 1
+  },
+  {
+   "qid": "6",
+   "ndcg10": 0.4307,
+   "recall10": 1.0,
+   "n_gold": 1
+  },
+  {
+   "qid": "7",
+   "ndcg10": 0.0,
+   "recall10": 0.0,
+   "n_gold": 1
+  },
+  {
+   "qid": "8",
+   "ndcg10": 0.0,
+   "recall10": 0.0,
+   "n_gold": 1
+  },
+  {
+   "qid": "9",
+   "ndcg10": 0.301,
+   "recall10": 1.0,
+   "n_gold": 1
+  }
+ ]
+}
