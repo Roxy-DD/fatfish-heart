@@ -37,6 +37,11 @@ import time
 import warnings
 
 warnings.filterwarnings("ignore")
+
+# ★ 必须先于 mteb/huggingface_hub 导入：
+#   修复 httpx2 BrotliDecoder 与 brotlicffi 的签名不兼容，
+#   否则所有 HF 数据集下载都报 output_buffer_limit 错误。
+import httpx2_compat  # noqa: F401
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "cosmos_mem"))
 
