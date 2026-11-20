@@ -1,0 +1,29 @@
+# Caddy 基础设施容器（纯局域网 HTTP 版）
+#
+# 作用：统一对外入口，反向代理到各项目容器
+# 特点：纯局域网 + HTTP，不用 HTTPS（因为无公网域名；
+#       itsaplan 用 NODE_ENV=development 绕过 Secure cookie 问题）
+#
+# 前置：先执行 docker network create proxy
+services:
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"          # HTTP 入口（纯局域网）
+      # HTTPS 暂时不开；需要时再加 443:443 并改 Caddyfile
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true       # 由 docker network create proxy 创建
+
+volumes:
+  caddy_data:
+  caddy_config:

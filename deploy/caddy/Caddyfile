@@ -1,0 +1,45 @@
+# Caddyfile —— 纯局域网 HTTP 反代
+#
+# 访问方式：http://172.20.10.100  （Windows 主机固定 IP）
+# 不用域名、不用 HTTPS。理由：
+#   1. 没有公网域名，Caddy 自动 HTTPS 用不了
+#   2. tls internal 自签证书需要每台设备装根证书，太麻烦
+#   3. itsaplan 用 NODE_ENV=development，HTTP 下 cookie 正常
+
+# itsaplan：所有请求转发到 web，/api/* 转发到 api（Caddy 去掉 /api 前缀）
+# 注意：itsaplan 官方路径形式的 API_URL 是 http://IP:3001/api，
+#       所以浏览器请求 /api/*，Caddy 要把 /api 前缀去掉再给 api 容器。
+:80 {
+    # ---- itsaplan API（必须先匹配 /api，路径最长优先）----
+    handle /api/* {
+        uri strip_prefix /api
+        reverse_proxy itsaplan-api:3000 {
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+        }
+    }
+
+    # ---- MCP OAuth discovery 文档也转发到 api ----
+    handle /.well-known/oauth-authorization-server* {
+        reverse_proxy itsaplan-api:3000
+    }
+    handle /.well-known/oauth-protected-resource* {
+        reverse_proxy itsaplan-api:3000
+    }
+    handle /.well-known/openid-configuration* {
+        reverse_proxy itsaplan-api:3000
+    }
+
+    # ---- itsaplan Web（其余所有请求）----
+    handle {
+        reverse_proxy itsaplan-web:3001 {
+            header_up X-Real-IP {remote_host}
+        }
+    }
+}
+
+# 说明：
+# - itsaplan-api / itsaplan-web 是容器名，靠 proxy 外部网络解析
+# - 端口写容器内部端口（3000/3001），不是宿主机映射端口
+# - 如果以后要加 HTTPS + 域名，把 :80 改成域名并把 tls internal 打开，
+#   同时 itsaplan 的 NODE_ENV 要改成 production
