@@ -20,6 +20,13 @@
     }
 
     # ---- MCP OAuth discovery 文档也转发到 api ----
+    # ★ 这里必须用 handle（保留完整路径），不能用 handle_path！
+    # 源码依据 apps/api/src/app.ts L318-320（RFC 8414 §3）：
+    #   issuer 带路径时，discovery 路径 = /.well-known/<文档>/<路径>
+    #   我们的 API_URL 带 /api，所以客户端请求：
+    #     /.well-known/oauth-authorization-server/api
+    #   api 内部路由 /.well-known/oauth-authorization-server/* 接住，* = "api" ✓
+    # 如果误用 handle_path 去掉前缀，反而匹配不到 api 的路由。
     handle /.well-known/oauth-authorization-server* {
         reverse_proxy itsaplan-api:3000
     }
