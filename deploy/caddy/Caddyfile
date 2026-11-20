@@ -11,8 +11,8 @@
 #       所以浏览器请求 /api/*，Caddy 要把 /api 前缀去掉再给 api 容器。
 :80 {
     # ---- itsaplan API（必须先匹配 /api，路径最长优先）----
-    handle /api/* {
-        uri strip_prefix /api
+    # handle_path 自动去掉 /api 前缀（比 handle + uri strip_prefix 更规范）
+    handle_path /api/* {
         reverse_proxy itsaplan-api:3000 {
             header_up X-Real-IP {remote_host}
             header_up X-Forwarded-For {remote_host}
