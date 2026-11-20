@@ -1,16 +1,11 @@
 {
+	# ★ 为什么必须用域名访问（itsaplan.lan）而不是裸 IP：
+	#   Windows 的 schannel（curl/Edge/Chrome 用的 TLS 栈）不支持对纯 IP 发 SNI：
+	#     curl 报 "using IP address, SNI is not supported by OS"
+	#   无 SNI 时 Caddy 匹配证书失败 → TLS alert 80。
+	#   解法：hosts 加 "172.20.10.5 itsaplan.lan"，用域名访问。
 	auto_https disable_redirects
 }
-
-# ★ 为什么用域名而不是 IP：
-#   Windows 的 schannel（curl/浏览器实际用的 TLS 栈）不支持对纯 IP 发 SNI：
-#     curl 报 "using IP address, SNI is not supported by OS"
-#   无 SNI 时 Caddy 找不到匹配的证书 → 返回 TLS alert 80。
-#
-#   解法：用域名访问，客户端会正常发 SNI。
-#   在 C:\Windows\System32\drivers\etc\hosts 里加一行：
-#     172.20.10.5  itsaplan.lan
-#   然后访问 https://itsaplan.lan
 
 itsaplan.lan:80 {
 	redir https://{host}{uri} permanent
@@ -19,9 +14,30 @@ itsaplan.lan:80 {
 itsaplan.lan:443 {
 	tls internal
 
+	# ============================================================
+	# ★★ 路由规则（实测得出的 api 内部真实路径）
+	#
+	# 直连 itsaplan-api:3000 实测：
+	#   /projects                -> 401   ← 去掉 /api 后存在
+	#   /mcp                     -> 405   ← 去掉 /api 后存在
+	#   /api/auth/sign-in/email  -> 400   ← ★ 必须保留 /api！
+	#   /auth/sign-in/email      -> 404   ← 去前缀就错
+	#
+	# 所以：auth 走 handle（保留 /api），其余走 handle_path（去掉 /api）。
+	# Caddy 的 handle 按路径长度排序，/api/auth/* 比 /api/* 长，会优先匹配。
+	# ============================================================
+
+	# ---- auth：保留 /api 前缀（api 内部就是 /api/auth/*）----
+	handle /api/auth/* {
+		reverse_proxy itsaplan-api:3000
+	}
+
+	# ---- 其余 API：去掉 /api 前缀（api 内部是 /projects、/mcp 等）----
 	handle_path /api/* {
 		reverse_proxy itsaplan-api:3000
 	}
+
+	# ---- MCP OAuth discovery（保留完整路径）----
 	handle /.well-known/oauth-authorization-server* {
 		reverse_proxy itsaplan-api:3000
 	}
@@ -31,6 +47,8 @@ itsaplan.lan:443 {
 	handle /.well-known/openid-configuration* {
 		reverse_proxy itsaplan-api:3000
 	}
+
+	# ---- 其余全部给 web ----
 	handle {
 		reverse_proxy itsaplan-web:3001
 	}
