@@ -1,0 +1,27 @@
+# Caddy 基础设施容器 —— 改用 host 网络模式
+#
+# 为什么：
+#   Docker Desktop 的端口转发层（com.docker.backend）会干扰 443 的 TLS 流量，
+#   表现为：容器内 TLS 握手正常，但主机侧收到 TLSV1_ALERT_INTERNAL_ERROR。
+#   已实测：80 端口正常，443 异常；改到 8443 也异常 → 与端口号无关，是转发层问题。
+#
+#   host 网络模式让容器直接用主机网络栈，跳过转发层。
+#
+# 代价：
+#   host 模式下容器不能再用 Docker DNS 解析其他容器名（itsaplan-web 等）。
+#   所以反代目标改成宿主机可达的地址：127.0.0.1:<itsaplan 映射端口>
+#   需要 itsaplan 的 web/api 映射到宿主机端口。
+services:
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy
+    restart: unless-stopped
+    network_mode: host        # ★ 关键：绕过 Docker 端口转发
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:

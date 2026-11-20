@@ -149,7 +149,7 @@ itsaplan.example.com {
     reverse_proxy itsaplan-web:3001
 }
 ```
-本地 CA 根证书在容器的 `/data/pki/authorities/local/root.crt`，**容器内无法自动装到 Windows 信任库，必须手动导出并导入每台客户端**（Caddy 官方明确说明这是管理员责任）。
+本地 CA 根证书在容器的 `/data/caddy/pki/authorities/local/root.crt`，**容器内无法自动装到 Windows 信任库，必须手动导出并导入每台客户端**（Caddy 官方明确说明这是管理员责任）。
 
 **最佳体验**：有你能管理的真实域名 + 内网 DNS 指向 LAN IP + DNS challenge 签真证书 → 内网也绿锁、不用每台装证书。
 
