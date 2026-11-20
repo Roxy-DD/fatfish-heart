@@ -1,28 +1,31 @@
-# Caddy 基础设施容器（纯局域网 HTTP 版）
+# Caddy 基础设施容器（B 路线：tls internal 自签 HTTPS）
 #
 # 作用：统一对外入口，反向代理到各项目容器
-# 特点：纯局域网 + HTTP，不用 HTTPS（因为无公网域名；
-#       itsaplan 用 NODE_ENV=development 绕过 Secure cookie 问题）
+# 特点：纯局域网 + 自签 HTTPS（无公网域名）
+#   · Caddy 用内置本地 CA 签证书
+#   · 每台客户端必须导入根证书，否则浏览器报安全警告
+#   · itsaplan 用 NODE_ENV=production（HTTPS 下 Secure cookie 正常）
 #
-# 前置：先执行 docker network create proxy
+# 前置：docker network create proxy
 services:
   caddy:
     image: caddy:2-alpine
     container_name: caddy
     restart: unless-stopped
     ports:
-      - "80:80"          # HTTP 入口（纯局域网）
-      # HTTPS 暂时不开；需要时再加 443:443 并改 Caddyfile
+      - "80:80"            # HTTP（自动跳转 443）
+      - "443:443"          # HTTPS 入口
+      - "443:443/udp"      # HTTP/3，可选
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy_data:/data
+      - caddy_data:/data   # ★ 本地 CA 根证书存这里，必须持久化
       - caddy_config:/config
     networks:
       - proxy
 
 networks:
   proxy:
-    external: true       # 由 docker network create proxy 创建
+    external: true
 
 volumes:
   caddy_data:

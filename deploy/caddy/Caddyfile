@@ -1,17 +1,20 @@
-# Caddyfile —— 纯局域网 HTTP 反代
+# Caddyfile —— B 路线：tls internal 自签 HTTPS（纯局域网）
 #
-# 访问方式：http://172.20.10.100  （Windows 主机固定 IP）
-# 不用域名、不用 HTTPS。理由：
-#   1. 没有公网域名，Caddy 自动 HTTPS 用不了
-#   2. tls internal 自签证书需要每台设备装根证书，太麻烦
-#   3. itsaplan 用 NODE_ENV=development，HTTP 下 cookie 正常
+# 使用前：把下面 <IP> 替换成 Windows 主机当前局域网 IP（如 <IP>）
+# 访问方式：https://<IP>
+# ⚠ 每台客户端必须先导入 Caddy 根证书，否则浏览器报 NET::ERR_CERT_AUTHORITY_INVALID
 
-# itsaplan：所有请求转发到 web，/api/* 转发到 api（Caddy 去掉 /api 前缀）
-# 注意：itsaplan 官方路径形式的 API_URL 是 http://IP:3001/api，
-#       所以浏览器请求 /api/*，Caddy 要把 /api 前缀去掉再给 api 容器。
-:80 {
-    # ---- itsaplan API（必须先匹配 /api，路径最长优先）----
-    # handle_path 自动去掉 /api 前缀（比 handle + uri strip_prefix 更规范）
+# 全局：用 Caddy 内置本地 CA（对所有 site 生效，IP 地址不会自动签，必须显式）
+{
+    local_certs
+}
+
+<IP>:443 {
+    # ★ 纯 IP 必须显式 tls internal（Caddy 默认不给裸 IP 签证书）
+    tls internal
+
+    # ---- itsaplan API ----
+    # handle_path 自动去掉 /api 前缀；API_URL=https://<IP>/api
     handle_path /api/* {
         reverse_proxy itsaplan-api:3000 {
             header_up X-Real-IP {remote_host}
@@ -19,14 +22,12 @@
         }
     }
 
-    # ---- MCP OAuth discovery 文档也转发到 api ----
-    # ★ 这里必须用 handle（保留完整路径），不能用 handle_path！
-    # 源码依据 apps/api/src/app.ts L318-320（RFC 8414 §3）：
-    #   issuer 带路径时，discovery 路径 = /.well-known/<文档>/<路径>
-    #   我们的 API_URL 带 /api，所以客户端请求：
-    #     /.well-known/oauth-authorization-server/api
+    # ---- MCP OAuth discovery ----
+    # ★ 必须用 handle（保留完整路径），不能用 handle_path！
+    # 源码 apps/api/src/app.ts L318-320（RFC 8414 §3）：
+    #   issuer 带路径时，discovery = /.well-known/<doc>/<路径>
+    #   API_URL 带 /api → 客户端请求 /.well-known/oauth-authorization-server/api
     #   api 内部路由 /.well-known/oauth-authorization-server/* 接住，* = "api" ✓
-    # 如果误用 handle_path 去掉前缀，反而匹配不到 api 的路由。
     handle /.well-known/oauth-authorization-server* {
         reverse_proxy itsaplan-api:3000
     }
@@ -37,7 +38,7 @@
         reverse_proxy itsaplan-api:3000
     }
 
-    # ---- itsaplan Web（其余所有请求）----
+    # ---- itsaplan Web（兜底）----
     handle {
         reverse_proxy itsaplan-web:3001 {
             header_up X-Real-IP {remote_host}
@@ -46,7 +47,9 @@
 }
 
 # 说明：
-# - itsaplan-api / itsaplan-web 是容器名，靠 proxy 外部网络解析
-# - 端口写容器内部端口（3000/3001），不是宿主机映射端口
-# - 如果以后要加 HTTPS + 域名，把 :80 改成域名并把 tls internal 打开，
-#   同时 itsaplan 的 NODE_ENV 要改成 production
+# - local_certs + tls internal 用 Caddy 自带 CA，签给 IP 的证书
+# - 根证书位置：容器 /data/pki/authorities/local/root.crt
+#   导出：docker cp caddy:/data/pki/authorities/local/root.crt ./caddy-root.crt
+#   然后在每台客户端导入"受信任的根证书颁发机构"
+# - 80 端口：Caddy 默认对 443 site 做 HTTP→HTTPS 跳转（本文件没写 :80 site，
+#   但 Caddy 会自动为 443 site 监听 80 并跳转）

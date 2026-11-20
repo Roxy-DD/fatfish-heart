@@ -348,8 +348,7 @@ itsaplan 官方文档要求 TLS reverse proxy，原因：
 | **B. Caddy `tls internal` 自签 HTTPS** | Caddy 签本地 CA 证书，每台客户端导入 root.crt | ⚠ 绿锁但要在每台设备装证书；itsaplan 认 HTTPS |
 | **C. 有真域名 + DNS challenge** | 需公网域名 | ❌ 你说没有，排除 |
 
-**建议路径**：先用 A 跑通（和旧环境行为一致，最省事）；
-需要 HTTPS 再切 B（届时每台设备导一次证书）。
+**用户已选 B 路线**：Caddy 	ls internal 自签 HTTPS + NODE_ENV=production，每台设备导根证书。
 
 ### 6.2 ★ 代理的坑（实测风险）
 
@@ -378,7 +377,7 @@ swap=1GB
 
 **Docker 方案下的改善**：
 - `API_URL`/`APP_URL` 不能写死动态 IP
-- 解法：给 Windows 网卡配**固定 IP**（如 `172.20.10.100`），
+- 解法：给 Windows 网卡配**固定 IP**（如 `<当前IP>`），
   或 IP 变了只改 `.env` 一处再 `docker compose up -d`（比 portproxy 简单得多）
 
 ---
@@ -388,5 +387,5 @@ swap=1GB
 - [x] 域名：无公网域名，纯局域网
 - [x] Docker Desktop：你自己装
 - [x] 旧 itsaplan：已删除，备份完好
-- [ ] HTTPS 路线：A（development + HTTP，推荐先用）还是 B（Caddy 自签 + 导证书）？
-- [ ] 是否给 Windows 配固定内网 IP（`172.20.10.100`）解决动态 IP 问题？
+- [x] HTTPS 路线：**B（Caddy 自签 + 导证书）**
+- [ ] 是否给 Windows 配固定内网 IP（`<当前IP>`）解决动态 IP 问题？
