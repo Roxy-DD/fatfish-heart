@@ -1,0 +1,1 @@
+﻿CertificateRevocation=0
