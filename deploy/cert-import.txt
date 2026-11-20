@@ -1,4 +1,0 @@
-﻿ROOT "受信任的根证书颁发机构"
-签名与公钥匹配
-证书 "Caddy Local Authority - 2026 ECC Root" 添加到存储。
-CertUtil: -addstore 命令成功完成。
