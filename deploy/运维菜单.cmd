@@ -120,18 +120,29 @@ goto MENU
 
 :IPCHECK
 cls
-echo === 当前网络 IP ===
+echo === 1. 当前网络 IP ===
 powershell -NoProfile -Command "Get-NetIPConfiguration -InterfaceAlias WLAN -ErrorAction SilentlyContinue | ForEach-Object { $_.IPv4Address.IPAddress }"
 echo.
-echo === hosts 里的 itsaplan.lan ===
+echo.
+echo === 2. hosts 里的 itsaplan.lan ===
 findstr /C:"itsaplan.lan" C:\Windows\System32\drivers\etc\hosts
 echo.
-echo === Caddy 配置里的地址 ===
-findstr /C:"itsaplan.lan" "%CADDY%\Caddyfile" | findstr /V "#"
+echo === 3. Caddy 端口绑定（必须是 0.0.0.0）===
+docker port caddy
+echo   注意：局域网能访问的前提是这里显示 0.0.0.0:443
+echo   如果显示 127.0.0.1:443，局域网其他设备连不上
+echo.
+echo === 4. networkingMode 检查（必须是 NAT / 注释掉 mirrored）===
+findstr /C:"networkingMode" "%USERPROFILE%\.wslconfig"
+echo   ^(如果输出里没有 networkingMode 或整行被注释 = NAT 模式，正确^)
+echo   ^(如果输出 networkingMode=mirrored = 局域网会连不上，必须注释掉^)
+echo.
+echo === 5. 防火墙规则 ===
+netsh advfirewall firewall show rule name="itsaplan-443-tcp" | findstr /C:"规则" /C:"Rule" /C:"已启用" /C:"Enabled"
 echo.
 echo 如果 IP 变了，运行：
 echo   python proto\set_lan_ip.py 新IP
-echo  然后重启 caddy 并改 hosts
+echo  然后重启 caddy 并改各客户端的 hosts
 echo.
 pause
 goto MENU
