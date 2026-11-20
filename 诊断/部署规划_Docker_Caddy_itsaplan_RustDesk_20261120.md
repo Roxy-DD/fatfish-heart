@@ -320,8 +320,73 @@ docker compose exec -T postgres psql -U itsaplan -d itsaplan < itsaplan_full_202
 
 ---
 
+## 第六部分：已确认的环境参数（2026-11-20 实测）
+
+| 项 | 值 |
+|---|---|
+| 域名 | **无公网域名，纯局域网** |
+| 热点 IP | `172.20.10.x`（DHCP 动态，每次重连可能变）|
+| 代理 | clash-verge，`127.0.0.1:7897`（系统代理 + git 都走它）|
+| 旧配置 | `API_URL=http://172.20.10.2:3000`、`NODE_ENV=development` |
+| Docker Desktop | 用户自己装 |
+| 旧 itsaplan | 已删除，备份完好 |
+
+### 6.1 ★ 纯局域网的关键矛盾（必须解决）
+
+itsaplan 官方文档要求 TLS reverse proxy，原因：
+> 生产环境 session cookie 带 `Secure` 属性，**HTTP 下登录成功但 session 不保持**。
+> `http://localhost` 是例外（Chrome/Firefox）。
+
+你之前能跑通，是因为用了 **`NODE_ENV=development`**（cookie 不加 Secure）。
+但在 Caddy + 纯 HTTP 局域网方案下，如果沿用生产配置就会**登录失败**。
+
+**三条可行路**：
+
+| 方案 | 做法 | 评价 |
+|---|---|---|
+| **A. 保持 development + HTTP（推荐先用）** | `NODE_ENV=development`，Caddy 只做 HTTP 反代，不启用 HTTPS | ✅ 最简单，和你之前能跑通的环境一致；代价是局域网明文 HTTP |
+| **B. Caddy `tls internal` 自签 HTTPS** | Caddy 签本地 CA 证书，每台客户端导入 root.crt | ⚠ 绿锁但要在每台设备装证书；itsaplan 认 HTTPS |
+| **C. 有真域名 + DNS challenge** | 需公网域名 | ❌ 你说没有，排除 |
+
+**建议路径**：先用 A 跑通（和旧环境行为一致，最省事）；
+需要 HTTPS 再切 B（届时每台设备导一次证书）。
+
+### 6.2 ★ 代理的坑（实测风险）
+
+系统代理开着（`127.0.0.1:7897`），影响：
+1. **镜像拉取**：`docker pull` 走系统代理可能失败（之前 git push 反复 `schannel` 握手失败）
+   → Docker Desktop：Settings → Resources → Proxies 填 `http://127.0.0.1:7897`
+2. **局域网访问**：浏览器访问 `http://172.20.10.x` 时，若 clash 全局代理无 bypass，
+   流量被代理转发出去 → 访问失败
+   → 确保 `172.20.0.0/16` 在 bypass/直连规则里
+3. **Caddy 自动 HTTPS**：走方案 A HTTP，不涉及
+
+### 6.3 Docker Desktop 安装后必做配置
+
+```ini
+# C:\Users\xuee\.wslconfig（当前已清空，写入）
+[wsl2]
+memory=4GB
+processors=4
+swap=1GB
+```
+避免 vmmemWSL 又吃 1.9GB。
+
+### 6.4 局域网固定地址问题（你之前的痛点）
+
+热点 IP 每次重连变（`172.20.10.2 → .4 → .5`），导致前端写死 IP → `failed to fetch`。
+
+**Docker 方案下的改善**：
+- `API_URL`/`APP_URL` 不能写死动态 IP
+- 解法：给 Windows 网卡配**固定 IP**（如 `172.20.10.100`），
+  或 IP 变了只改 `.env` 一处再 `docker compose up -d`（比 portproxy 简单得多）
+
+---
+
 ## 待你决策
 
-- [ ] 域名方案：有没有公网域名？纯局域网用 `tls internal` 自签证书（每台设备要导根证书），还是有真实域名走 Caddy 自动 HTTPS？
-- [x] ~~是否删 `D:\itsaplan`（1.5 GB 旧源码）~~ → **已删除**（2026-11-20，备份包已验证完好）
-- [ ] Docker Desktop 谁来装：你自己下载安装，还是让我用 winget 装（需管理员）？
+- [x] 域名：无公网域名，纯局域网
+- [x] Docker Desktop：你自己装
+- [x] 旧 itsaplan：已删除，备份完好
+- [ ] HTTPS 路线：A（development + HTTP，推荐先用）还是 B（Caddy 自签 + 导证书）？
+- [ ] 是否给 Windows 配固定内网 IP（`172.20.10.100`）解决动态 IP 问题？
