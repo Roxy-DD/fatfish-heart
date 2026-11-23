@@ -74,7 +74,7 @@ jobs:
           "
 
       - name: 部署到 gh-pages
-        uses: peaceiris/actions-gh-pages@84c30a85c199 # v4
+        uses: peaceiris/actions-gh-pages@07c55575f6ae295c977e10d22ae28bcfcbfa71ec # v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
