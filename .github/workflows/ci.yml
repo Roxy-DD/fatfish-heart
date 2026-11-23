@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a3267 # v4.2.2
 
-      - uses: actions/setup-python@a26af69be951 # v5.6.0
+      - uses: actions/setup-python@5043d30437de73e5e7500b5c41676e0c30aa54f2 # v5.6.0
         with:
           python-version: '3.12'
 
@@ -74,7 +74,7 @@ jobs:
         with:
           node-version: '22'
 
-      - uses: actions/setup-python@a26af69be951 # v5.6.0
+      - uses: actions/setup-python@5043d30437de73e5e7500b5c41676e0c30aa54f2 # v5.6.0
         with:
           python-version: '3.12'
 
@@ -117,7 +117,7 @@ jobs:
         with:
           fetch-depth: 0        # check_version.py 需要读 tag
 
-      - uses: actions/setup-python@a26af69be951 # v5.6.0
+      - uses: actions/setup-python@5043d30437de73e5e7500b5c41676e0c30aa54f2 # v5.6.0
         with:
           python-version: '3.12'
 
